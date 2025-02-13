@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
 public class ServiceEspace implements Iservice<Espace> {
 
     private Connection cnx;
@@ -20,7 +19,7 @@ public class ServiceEspace implements Iservice<Espace> {
 
     @Override
     public void add(Espace espace) {
-        String qry = "INSERT INTO `espace`(`nomEspace`, `adresse`, `capacite`, `disponibilite`, `prix`, `idUser`) VALUES (?,?,?,?,?,?)";
+        String qry = "INSERT INTO `espace`(`nomEspace`, `adresse`, `capacite`, `disponibilite`, `prix`, `idUser`, `Type_espace`) VALUES (?,?,?,?,?,?,?)";
         try {
             PreparedStatement pstm = cnx.prepareStatement(qry);
             pstm.setString(1, espace.getNomEspace());
@@ -29,6 +28,7 @@ public class ServiceEspace implements Iservice<Espace> {
             pstm.setString(4, espace.getDisponibilite());
             pstm.setFloat(5, espace.getPrix());
             pstm.setInt(6, espace.getIdUser());
+            pstm.setString(7, espace.getTypeEspace());
             pstm.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Erreur lors de l'ajout : " + e.getMessage());
@@ -50,7 +50,8 @@ public class ServiceEspace implements Iservice<Espace> {
                         rs.getInt("capacite"),
                         rs.getString("disponibilite"),
                         rs.getFloat("prix"),
-                        rs.getInt("idUser")
+                        rs.getInt("idUser"),
+                        rs.getString("Type_espace") // Récupération du champ Type_espace
                 );
                 espaces.add(espace);
             }
@@ -62,7 +63,7 @@ public class ServiceEspace implements Iservice<Espace> {
 
     @Override
     public void update(Espace espace) {
-        String qry = "UPDATE `espace` SET `nomEspace` = ?, `adresse` = ?, `capacite` = ?, `disponibilite` = ?, `prix` = ?, `idUser` = ? WHERE `idEspace` = ?";
+        String qry = "UPDATE `espace` SET `nomEspace` = ?, `adresse` = ?, `capacite` = ?, `disponibilite` = ?, `prix` = ?, `idUser` = ?, `Type_espace` = ? WHERE `idEspace` = ?";
         try {
             PreparedStatement pstm = cnx.prepareStatement(qry);
             pstm.setString(1, espace.getNomEspace());
@@ -71,7 +72,8 @@ public class ServiceEspace implements Iservice<Espace> {
             pstm.setString(4, espace.getDisponibilite());
             pstm.setFloat(5, espace.getPrix());
             pstm.setInt(6, espace.getIdUser());
-            pstm.setInt(7, espace.getIdEspace());
+            pstm.setString(7, espace.getTypeEspace());
+            pstm.setInt(8, espace.getIdEspace());
             pstm.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Erreur lors de la mise à jour : " + e.getMessage());
@@ -105,7 +107,8 @@ public class ServiceEspace implements Iservice<Espace> {
                         rs.getInt("capacite"),
                         rs.getString("disponibilite"),
                         rs.getFloat("prix"),
-                        rs.getInt("idUser")
+                        rs.getInt("idUser"),
+                        rs.getString("Type_espace") // Ajout de Type_espace dans findById
                 ));
             }
         } catch (SQLException e) {
