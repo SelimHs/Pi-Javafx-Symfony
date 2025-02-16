@@ -2,6 +2,7 @@ package tn.esprit.services;
 
 import tn.esprit.interfaces.Iservice;
 import tn.esprit.models.Billet;
+import tn.esprit.models.Event;
 import tn.esprit.utils.myDatabase;
 
 import java.sql.*;
@@ -28,7 +29,7 @@ public class ServiceBillet implements Iservice<Billet> {
             pstm.setInt(2, billet.getPrix());
             pstm.setString(3, billet.getDateAchat().format(formatter));
             pstm.setString(4, billet.getType().name()); // Enregistrer le type sous forme de chaîne
-            pstm.setInt(5, billet.getIdEvent());
+            pstm.setInt(5, billet.getEvent().getIdEvent());
             pstm.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -38,18 +39,25 @@ public class ServiceBillet implements Iservice<Billet> {
     @Override
     public List<Billet> getAll() {
         List<Billet> billets = new ArrayList<>();
-        String qry = "SELECT * FROM `billet`";
+        String qry = "SELECT b.*, e.nomEvent, e.date FROM billet b INNER JOIN event e ON b.idEvent = e.idEvent";
         try {
             Statement stm = cnx.createStatement();
             ResultSet rs = stm.executeQuery(qry);
             while (rs.next()) {
-                Billet billet = new Billet();
-                billet.setIdBillet(rs.getInt("idBillet"));
-                billet.setProprietaire(rs.getString("proprietaire"));
-                billet.setPrix(rs.getInt("prix"));
-                billet.setDateAchat(LocalDateTime.parse(rs.getString("dateAchat"), formatter));
-                billet.setType(Billet.TypeBillet.valueOf(rs.getString("type")));
-                billet.setIdEvent(rs.getInt("idEvent"));
+                Event event = new Event(
+                        rs.getInt("idEvent"),
+                        rs.getString("nomEvent"),
+                        rs.getString("date")
+                );
+
+                Billet billet = new Billet(
+                        rs.getInt("idBillet"),
+                        rs.getString("proprietaire"),
+                        rs.getInt("prix"),
+                        rs.getTimestamp("dateAchat").toLocalDateTime(),
+                        Billet.TypeBillet.valueOf(rs.getString("type")),
+                        event
+                );
                 billets.add(billet);
             }
         } catch (SQLException e) {
@@ -57,7 +65,6 @@ public class ServiceBillet implements Iservice<Billet> {
         }
         return billets;
     }
-
 
     @Override
     public void update(Billet billet) {
@@ -68,7 +75,7 @@ public class ServiceBillet implements Iservice<Billet> {
             pstm.setInt(2, billet.getPrix());
             pstm.setString(3, billet.getDateAchat().format(formatter));
             pstm.setString(4, billet.getType().name());
-            pstm.setInt(5, billet.getIdEvent());
+            pstm.setInt(5, billet.getEvent().getIdEvent());
             pstm.setInt(6, billet.getIdBillet());
             pstm.executeUpdate();
         } catch (SQLException e) {
@@ -90,20 +97,26 @@ public class ServiceBillet implements Iservice<Billet> {
 
     @Override
     public Billet findById(int id) {
-        String qry = "SELECT * FROM `billet` WHERE `idBillet` = ?";
+        String qry = "SELECT b.*, e.nomEvent, e.date FROM billet b INNER JOIN event e ON b.idEvent = e.idEvent WHERE b.idBillet = ?";
         try {
             PreparedStatement pstm = cnx.prepareStatement(qry);
             pstm.setInt(1, id);
             ResultSet rs = pstm.executeQuery();
             if (rs.next()) {
-                Billet billet = new Billet();
-                billet.setIdBillet(rs.getInt("idBillet"));
-                billet.setProprietaire(rs.getString("proprietaire"));
-                billet.setPrix(rs.getInt("prix"));
-                billet.setDateAchat(LocalDateTime.parse(rs.getString("dateAchat"), formatter));
-                billet.setType(Billet.TypeBillet.valueOf(rs.getString("type")));
-                billet.setIdEvent(rs.getInt("idEvent"));
-                return billet;
+                Event event = new Event(
+                        rs.getInt("idEvent"),
+                        rs.getString("nomEvent"),
+                        rs.getString("date")
+                );
+
+                return new Billet(
+                        rs.getInt("idBillet"),
+                        rs.getString("proprietaire"),
+                        rs.getInt("prix"),
+                        rs.getTimestamp("dateAchat").toLocalDateTime(),
+                        Billet.TypeBillet.valueOf(rs.getString("type")),
+                        event
+                );
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());

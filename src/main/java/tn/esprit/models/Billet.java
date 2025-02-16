@@ -2,15 +2,17 @@ package tn.esprit.models;
 
 import java.time.LocalDateTime;
 
-public class Billet {
-    public enum TypeBillet {
-        SIMPLE, DUO, VIP
-    }
 
-    private int idBillet, prix, idEvent;
+public class Billet {
+
+    public enum TypeBillet {
+        SIMPLE, DUO, VIP;
+    }
+    private int idBillet, prix;
     private String proprietaire;
     private LocalDateTime dateAchat; // Utilisation de LocalDateTime au lieu de Date
     private TypeBillet type;
+    private Event event;
 
     // Constructeur par défaut
     public Billet() {
@@ -19,18 +21,18 @@ public class Billet {
     }
 
     // Constructeur avec paramètres
-    public Billet(int idBillet, String proprietaire, int prix, LocalDateTime dateAchat, TypeBillet type, int idEvent) {
+    public Billet(int idBillet, String proprietaire, int prix, LocalDateTime dateAchat, TypeBillet type, Event event) {
         this.idBillet = idBillet;
         this.proprietaire = proprietaire;
         this.prix = prix;
         this.dateAchat = dateAchat;
         this.type = type;
-        this.idEvent = idEvent;
+        this.event = event;
     }
 
-    public Billet(int prix, int idEvent, String proprietaire, TypeBillet type) {
+    public Billet(int prix, Event event, String proprietaire, TypeBillet type) {
         this.prix = prix;
-        this.idEvent = idEvent;
+        this.event = event;
         this.proprietaire = proprietaire;
         this.type = type;
         this.dateAchat = LocalDateTime.now(); // Initialisation de la date à la création de l'objet
@@ -77,12 +79,12 @@ public class Billet {
         this.type = type;
     }
 
-    public int getIdEvent() {
-        return idEvent;
+    public Event getEvent() {
+        return event;
     }
 
-    public void setIdEvent(int idEvent) {
-        this.idEvent = idEvent;
+    public void setEvent(Event event) {
+        this.event = event;
     }
 
     // Méthode toString pour affichage
@@ -94,7 +96,7 @@ public class Billet {
                 ", prix=" + prix +
                 ", dateAchat=" + dateAchat +
                 ", type=" + type +
-                ", idEvent=" + idEvent +
+                ", event=" + event +
                 '}';
     }
 }

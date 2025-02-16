@@ -27,6 +27,12 @@ public class Event {
         this.date = date;
     }
 
+    public Event(int idEvent, String nomEvent, String date) {
+        this.idEvent = idEvent;
+        this.nomEvent = nomEvent;
+        this.date = date;
+    }
+
     public int getIdEvent() {
         return idEvent;
     }
