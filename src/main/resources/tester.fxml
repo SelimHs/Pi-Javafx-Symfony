@@ -26,13 +26,14 @@
                 <HBox spacing="10">
                     <TextField prefWidth="400.0" promptText="Rechercher un événement..." />
                     <Button text="Rechercher" />
-                    <Button fx:id="deleteBouton" layoutX="643.0" layoutY="109.0" mnemonicParsing="false" onAction="#delete" text="Supprimer" />
                 </HBox>
 
                 <!-- Zone d'affichage des événements -->
                 <ListView fx:id="eventListView" prefHeight="500.0" />
-                <Button onAction="#displayEvents" text="Afficher Événements" />
             </children>
         </VBox>
+          <Button layoutX="220.0" layoutY="595.0" onAction="#displayEvents" text="Afficher Événements" />
+           <Button fx:id="deleteBouton" layoutX="827.0" layoutY="595.0" mnemonicParsing="false" onAction="#delete" text="Supprimer" />
+      <Button fx:id="modifierBouton" layoutX="735.0" layoutY="595.0" onAction="#updateEvent" text="Modifier" />
     </children>
 </AnchorPane>

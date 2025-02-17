@@ -21,13 +21,13 @@ public class EventsMainController {
     ServiceEvent se = new ServiceEvent();
     @javafx.fxml.FXML
     private ListView eventListView;
-    @FXML
-    private Button delete;
     ObservableList<Event> eventNames = FXCollections.observableArrayList();
+
 
     @FXML
     public void displayEvents(javafx.event.ActionEvent actionEvent) {
         List<tn.esprit.models.Event> events = se.getAll();  // Supposons que sp.getAll() retourne une liste d'objets Event
+        eventListView.getItems().clear();
 
 
         for (Event e : events) {
@@ -74,6 +74,7 @@ public class EventsMainController {
     }
 
 
+    @FXML
     public void delete(javafx.event.ActionEvent actionEvent) {
         {
             Event eventSelectionne = (Event) eventListView.getSelectionModel().getSelectedItem();
@@ -87,9 +88,41 @@ public class EventsMainController {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Aucune sélection");
                 alert.setHeaderText(null);
-                alert.setContentText("Veuillez sélectionner un utilisateur à supprimer.");
+                alert.setContentText("Veuillez sélectionner un évènement à supprimer.");
                 alert.showAndWait();
             }
+        }
+    }
+
+    @FXML
+    public void updateEvent(javafx.event.ActionEvent actionEvent) {
+        Event eventSelectionne = (Event) eventListView.getSelectionModel().getSelectedItem();
+        if (eventSelectionne != null) {
+            // Load the FXML for the event modification form
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierEvent.fxml"));
+            Parent root = null;
+            try {
+                root = loader.load();
+                ModifierEventController modifierEventController = loader.getController();
+
+                // Pass the selected event to the controller to initialize the form fields
+                modifierEventController.initData(eventSelectionne);
+
+                // Show the modification window
+                Stage stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
+                Scene scene = new Scene(root);
+                stage.setScene(scene);
+                stage.show();
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        } else {
+            // Show an alert if no event is selected
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Aucune sélection");
+            alert.setHeaderText(null);
+            alert.setContentText("Veuillez sélectionner un événement à modifier.");
+            alert.showAndWait();
         }
     }
 }
