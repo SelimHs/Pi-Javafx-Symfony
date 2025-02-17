@@ -7,11 +7,13 @@
 
 <AnchorPane prefHeight="671.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EventsController">
    <children>
-      <TextField fx:id="tfName" layoutX="128.0" layoutY="122.0" />
+      <TextField layoutX="128.0" layoutY="122.0" />
       <TextField layoutX="129.0" layoutY="377.0" />
       <TextField layoutX="130.0" layoutY="259.0" />
       <Label layoutX="116.0" layoutY="84.0" text="Label" />
       <Label layoutX="115.0" layoutY="227.0" text="Label" />
       <Label layoutX="116.0" layoutY="336.0" text="Label" />
+      <Label fx:id="labelDisplay" layoutX="548.0" layoutY="114.0" prefHeight="339.0" prefWidth="356.0" text="Label" />
+      <Button fx:id="buttonDisplay" layoutX="592.0" layoutY="483.0" mnemonicParsing="false" onAction="#displayEvents" text="Button" />
    </children>
 </AnchorPane>
