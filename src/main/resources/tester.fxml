@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="671.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EventsController">
+    <children>
+        <!-- Barre latérale -->
+        <VBox layoutX="0.0" layoutY="0.0" prefWidth="200.0" prefHeight="671.0" style="-fx-background-color: #2C3E50;">
+            <children>
+                <Label text="Gestion Événements" textFill="white" style="-fx-font-size: 18px; -fx-padding: 10px;" />
+                <Button text="Accueil" style="-fx-background-color: transparent; -fx-text-fill: white;" />
+                <Button text="Ajouter" style="-fx-background-color: transparent; -fx-text-fill: white;" />
+                <Button text="Statistiques" style="-fx-background-color: transparent; -fx-text-fill: white;" />
+            </children>
+        </VBox>
+
+        <!-- Contenu principal -->
+        <VBox layoutX="220.0" layoutY="20.0" prefWidth="700.0">
+            <children>
+                <Label text="Liste des Événements" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+                <HBox spacing="10">
+                    <TextField fx:id="searchField" promptText="Rechercher un événement..." prefWidth="400.0" />
+                    <Button text="Rechercher"  />
+                </HBox>
+
+                <!-- Zone d'affichage des événements -->
+                <ListView fx:id="eventListView" prefHeight="500.0" />
+                <Button text="Afficher Événements" onAction="#displayEvents" />
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>
