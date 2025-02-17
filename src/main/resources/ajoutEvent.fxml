@@ -17,9 +17,9 @@
         <VBox layoutX="0.0" layoutY="0.0" prefHeight="671.0" prefWidth="200.0" style="-fx-background-color: linear-gradient(to bottom, #4b0082, #8a2be2);">
             <children>
                 <Label style="-fx-font-size: 18px; -fx-padding: 10px;" text="Gestion Événements" textFill="white" />
-                <Button style="-fx-background-color: transparent; -fx-text-fill: white;" text="Accueil" />
+                <Button onAction="#goToAjoutEvent" style="-fx-background-color: transparent; -fx-text-fill: white;" text="Ajouter Évènement" />
                 <Button onAction="#goToEventList" style="-fx-background-color: transparent; -fx-text-fill: white;" text="Liste des événements" />
-            </children>
+                </children>
         </VBox>
 
         <!-- Contenu principal -->

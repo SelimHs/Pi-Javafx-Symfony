@@ -1,4 +1,5 @@
 package controller;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -7,7 +8,11 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 import tn.esprit.models.Event;
 
 import tn.esprit.services.ServiceEvent;
@@ -39,17 +44,7 @@ public class EventsController {
         labelDisplay.setText(sp.getAll().toString());
     }*/
 
-    @Deprecated
-    public void displayEvents(javafx.event.ActionEvent actionEvent) {
-        List<Event> events = se.getAll();  // Supposons que sp.getAll() retourne une liste d'objets Event
-        ObservableList<String> eventNames = FXCollections.observableArrayList();
 
-        for (Event e : events) {
-            eventNames.add("Event: "+ e.getNomEvent() + " -Date: " + e.getDate() + " -Prix: " + e.getPrix() + " -Lieu: " + e.getNomEspace() + " -Détails: " + e.getDetails()); // Ajuste selon tes attributs
-        }
-
-        eventListView.setItems(eventNames);
-    }
 
     @FXML
     public void addEvent(ActionEvent actionEvent) {
@@ -67,5 +62,32 @@ public class EventsController {
 
     @FXML
     public void goToEventList(ActionEvent actionEvent) {
+
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/tester.fxml"));
+            Parent root = fxmlLoader.load();
+            Stage stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
+
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+
+    }
+
+    public void goToAjoutEvent(javafx.event.ActionEvent actionEvent) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ajoutEvent.fxml"));
+            Parent root = fxmlLoader.load();
+            Stage stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
+
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
     }
 }
