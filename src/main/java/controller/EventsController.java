@@ -58,6 +58,13 @@ public class EventsController {
         e.setNomEspace(eventEspace.getText());
 
         se.add(e);
+
+        eventNom.clear();
+        eventDate.setValue(null);
+        eventPrix.clear();
+        eventVisiteurs.clear();
+        eventDetails.clear();
+        eventEspace.clear();
     }
 
     @FXML

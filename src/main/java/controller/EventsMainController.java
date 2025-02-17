@@ -37,9 +37,6 @@ public class EventsMainController {
         eventListView.setItems(eventNames);
     }
 
-    @javafx.fxml.FXML
-    public void goToEventList(ActionEvent actionEvent) {
-    }
 
     @FXML
     public void goToEventList(javafx.event.ActionEvent actionEvent) {

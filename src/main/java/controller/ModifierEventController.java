@@ -82,7 +82,7 @@ public class ModifierEventController {
             Scene scene = new Scene(root);
             stageReturn.setScene(scene);
 
-            
+
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
