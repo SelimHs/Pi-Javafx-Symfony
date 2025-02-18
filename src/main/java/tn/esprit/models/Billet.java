@@ -90,13 +90,12 @@ public class Billet {
     // Méthode toString pour affichage
     @Override
     public String toString() {
-        return "Billet{" +
-                "idBillet=" + idBillet +
-                ", proprietaire='" + proprietaire + '\'' +
-                ", prix=" + prix +
-                ", dateAchat=" + dateAchat +
-                ", type=" + type +
-                ", event=" + event +
-                '}';
+        return "Billet ID=" + idBillet +
+                ", Propriétaire='" + proprietaire + '\'' +
+                ", Prix=" + prix +
+                ", Date d'achat=" + dateAchat +
+                ", Type=" + type +
+                ", Événement={" + event +
+                "}";
     }
 }

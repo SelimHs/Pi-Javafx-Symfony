@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+<AnchorPane prefHeight="671.0" prefWidth="950.0" style="-fx-background-color: linear-gradient(to bottom, #6a0dad, #b19cd9);" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.BilletsController">
+    <children>
+        <!-- Barre latérale -->
+        <VBox layoutX="0.0" layoutY="0.0" prefHeight="671.0" prefWidth="200.0" style="-fx-background-color: linear-gradient(to bottom, #4b0082, #8a2be2);">
+            <children>
+                <Label style="-fx-font-size: 18px; -fx-padding: 10px;" text="Gestion Billets" textFill="white" />
+                <Button  style="-fx-background-color: transparent; -fx-text-fill: white;" text="Ajouter Billet" />
+                <Button  style="-fx-background-color: transparent; -fx-text-fill: white;" text="Liste des billets" />
+            </children>
+        </VBox>
+
+        <!-- Contenu principal -->
+        <VBox layoutX="220.0" layoutY="20.0" prefWidth="700.0">
+            <children>
+                <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;" text="Ajouter un Billet" />
+
+                <GridPane hgap="10" vgap="10">
+                    <children>
+                        <Label text="Propriétaire :" textFill="white" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                        <TextField fx:id="billetProprietaire" promptText="Nom du propriétaire" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                        <Label text="Prix :" textFill="white" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <TextField fx:id="billetPrix" promptText="Prix en Dt" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                        <Label text="Date d'achat :" textFill="white" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                        <DatePicker fx:id="billetDateAchat" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                        <Label text="Type de billet :" textFill="white" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                        <ComboBox fx:id="billetType" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="SIMPLE" />
+                                    <String fx:value="DUO" />
+                                    <String fx:value="VIP" />
+                                </FXCollections>
+                            </items>
+                        </ComboBox>
+
+                        <Label text="Événement :" textFill="white" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                        <ComboBox fx:id="billetEvent" promptText="Sélectionner un événement" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                    </children>
+                    <columnConstraints>
+                        <ColumnConstraints />
+                        <ColumnConstraints />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                    </rowConstraints>
+                </GridPane>
+
+                <Button  style="-fx-background-color: #9932CC; -fx-text-fill: white; -fx-font-size: 14px;" text="Ajouter le Billet" />
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

@@ -2,9 +2,7 @@ package controller;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
@@ -71,7 +69,7 @@ public class EventsController {
     public void goToEventList(ActionEvent actionEvent) {
 
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/tester.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Events.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
 

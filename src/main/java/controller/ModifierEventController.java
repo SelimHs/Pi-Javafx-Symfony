@@ -75,7 +75,7 @@ public class ModifierEventController {
         se.update(newEvent); // Call the update method in your ServiceEvent class
 
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/tester.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Events.fxml"));
             Parent root = fxmlLoader.load();
             Stage stageReturn = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
 

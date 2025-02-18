@@ -12,8 +12,6 @@ import javafx.stage.Stage;
 import tn.esprit.models.Event;
 import tn.esprit.services.ServiceEvent;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.List;
 
@@ -42,7 +40,7 @@ public class EventsMainController {
     public void goToEventList(javafx.event.ActionEvent actionEvent) {
 
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/tester.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Events.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
 

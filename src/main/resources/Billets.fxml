@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="671.0" prefWidth="950.0" style="-fx-background-color: linear-gradient(to bottom, #6a0dad, #b19cd9);" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.BilletsMainController">
+    <children>
+        <!-- Barre latérale -->
+        <VBox layoutX="0.0" layoutY="0.0" prefHeight="671.0" prefWidth="200.0" style="-fx-background-color: linear-gradient(to bottom, #4b0082, #8a2be2);">
+            <children>
+                <Label style="-fx-font-size: 18px; -fx-padding: 10px;" text="Gestion des Billets" textFill="white" />
+                <Button  style="-fx-background-color: transparent; -fx-text-fill: white;" text="Liste des billets" />
+                <Button  style="-fx-background-color: transparent; -fx-text-fill: white;" text="Ajouter Billet" />
+            </children>
+        </VBox>
+
+        <!-- Contenu principal -->
+        <VBox layoutX="220.0" layoutY="20.0" prefWidth="700.0">
+            <children>
+                <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Liste des Billets" />
+                <HBox spacing="10">
+                    <TextField prefWidth="400.0" promptText="Rechercher un billet..." />
+                    <Button text="Rechercher" />
+                </HBox>
+
+                <!-- Zone d'affichage des billets -->
+                <ListView fx:id="billetListView" prefHeight="500.0" />
+            </children>
+        </VBox>
+
+        <Button layoutX="220.0" layoutY="595.0" onAction="#displayBillets" text="Afficher Billets" />
+        <Button fx:id="deleteBouton" layoutX="827.0" layoutY="595.0" mnemonicParsing="false" text="Supprimer" />
+        <Button fx:id="modifierBouton" layoutX="735.0" layoutY="595.0" text="Modifier" />
+    </children>
+</AnchorPane>
