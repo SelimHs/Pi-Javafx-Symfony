@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="tn.esprit.controllers.ModifierOrganisateur"
+            prefHeight="450.0" prefWidth="600.0"
+            style="-fx-background-color: linear-gradient(to bottom, #6a0dad, #b19cd9);">
+
+    <children>
+        <!-- 🔵 Title -->
+        <Label text="Modifier Organisateur" layoutX="200.0" layoutY="20.0"
+               style="-fx-font-size: 22px; -fx-text-fill: white; -fx-font-weight: bold;"/>
+
+        <VBox layoutX="50.0" layoutY="60.0" prefWidth="500.0" spacing="12"
+              style="-fx-background-color: rgba(255, 255, 255, 0.15);
+                     -fx-padding: 20px;
+                     -fx-border-radius: 10px;">
+            <children>
+
+                <!-- Nom -->
+                <HBox spacing="10">
+                    <Label text="👤 Nom :" textFill="white"/>
+                    <TextField fx:id="nomOrganisateur" promptText="Entrez le nom" prefWidth="300"/>
+                </HBox>
+
+                <!-- Prénom -->
+                <HBox spacing="10">
+                    <Label text="👤 Prénom :" textFill="white"/>
+                    <TextField fx:id="prenomOrganisateur" promptText="Entrez le prénom" prefWidth="300"/>
+                </HBox>
+
+                <!-- Téléphone -->
+                <HBox spacing="10">
+                    <Label text="📞 Téléphone :" textFill="white"/>
+                    <TextField fx:id="telefOrganisateur" promptText="Numéro de téléphone" prefWidth="300"/>
+                </HBox>
+
+                <!-- Description -->
+                <HBox spacing="10">
+                    <Label text="📝 Description :" textFill="white"/>
+                    <TextArea fx:id="descriptionOrganisateur" promptText="Ajoutez une description" prefWidth="300" prefHeight="80"/>
+                </HBox>
+
+                <!-- Boutons -->
+                <HBox spacing="20" alignment="CENTER">
+                    <Button fx:id="btnModifier" text="✔ Modifier"
+                            onAction="#modifierOrganisateur"
+                            style="-fx-background-color: #27ae60; -fx-text-fill: white;
+                                   -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-radius: 10px; -fx-padding: 10px;"/>
+
+                    <Button fx:id="btnRetour" text="⬅ Retour"
+                            onAction="#retourDetailEspace"
+                            style="-fx-background-color: #e74c3c; -fx-text-fill: white;
+                                   -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-radius: 10px; -fx-padding: 10px;"/>
+                </HBox>
+
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

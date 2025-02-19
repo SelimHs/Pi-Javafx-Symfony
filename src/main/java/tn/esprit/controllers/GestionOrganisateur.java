@@ -16,7 +16,7 @@ import java.io.IOException;
 
 public class GestionOrganisateur {
 
-    @FXML private TextField nomOrganisateur, prenomOrganisateur, telOrganisateur;
+    @FXML private TextField nomOrganisateur, prenomOrganisateur, telef;
     @FXML private TextArea descriptionOrganisateur;
     @FXML private Button btnAjouterOrganisateur, btnRetour;
 
@@ -43,7 +43,7 @@ public class GestionOrganisateur {
 
         String nom = nomOrganisateur.getText().trim();
         String prenom = prenomOrganisateur.getText().trim();
-        String tel = telOrganisateur.getText().trim();
+        String tel = telef.getText().trim();
         String description = descriptionOrganisateur.getText().trim();
 
         if (nom.isEmpty() || prenom.isEmpty() || tel.isEmpty() || description.isEmpty()) {
@@ -82,7 +82,7 @@ public class GestionOrganisateur {
     private void viderChamps() {
         nomOrganisateur.clear();
         prenomOrganisateur.clear();
-        telOrganisateur.clear();
+        telef.clear();
         descriptionOrganisateur.clear();
     }
 

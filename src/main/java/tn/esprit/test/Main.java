@@ -164,7 +164,8 @@ public class Main {
 
         Optional<Espace> espace = serviceEspace.findById(idEspace);
         if (espace.isPresent()) {
-            Organisateur organisateur = new Organisateur(0, nomOrg, prenomOrg, descriptionOrg, idEspace);
+            int telef = 0;
+            Organisateur organisateur = new Organisateur(0, nomOrg, prenomOrg, descriptionOrg, idEspace,telef);
             serviceOrganisateur.add(organisateur);
             System.out.println("✅ Organisateur ajouté avec succès !");
         } else {

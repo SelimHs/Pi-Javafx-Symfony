@@ -6,8 +6,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import tn.esprit.models.Espace;
@@ -16,6 +16,7 @@ import tn.esprit.services.ServiceOrganisateur;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 public class DetailEspace {
 
@@ -25,11 +26,11 @@ public class DetailEspace {
     @FXML private Button retourButton;
     @FXML private Button ajouterOrganisateurButton;
 
-    private int idEspace; // ID de l’espace sélectionné
+    private int idEspace;
     private final ServiceOrganisateur serviceOrganisateur = new ServiceOrganisateur();
 
     public void initData(Espace espace) {
-        this.idEspace = espace.getIdEspace(); // Stocker l'ID de l'espace sélectionné
+        this.idEspace = espace.getIdEspace();
         titleLabel.setText("Détails de l'Espace : " + espace.getNomEspace());
 
         espaceDetailsLabel.setText(
@@ -40,12 +41,11 @@ public class DetailEspace {
                         "🏢 Type : " + espace.getTypeEspace()
         );
 
-        // 🚀 Afficher les organisateurs liés à cet espace
         afficherOrganisateurs(idEspace);
     }
 
     private void afficherOrganisateurs(int idEspace) {
-        organisateurContainer.getChildren().clear(); // Nettoyer avant de charger
+        organisateurContainer.getChildren().clear();
 
         List<Organisateur> organisateurs = serviceOrganisateur.getOrganisateursByEspace(idEspace);
 
@@ -55,11 +55,59 @@ public class DetailEspace {
             organisateurContainer.getChildren().add(noOrganisateur);
         } else {
             for (Organisateur organisateur : organisateurs) {
+                HBox container = new HBox(10);
+                container.setStyle("-fx-padding: 10px; -fx-background-color: #FFFFFF; -fx-border-radius: 10px;");
+
                 Label label = new Label("👤 " + organisateur.getNomOrg() + " " + organisateur.getPrenomOrg() +
                         " - 📝 " + organisateur.getDescriptionOrg());
-                label.setStyle("-fx-font-size: 14px; -fx-text-fill: black; -fx-padding: 5px;");
-                organisateurContainer.getChildren().add(label);
+                label.setStyle("-fx-font-size: 14px; -fx-text-fill: black;");
+
+                Button btnModifier = new Button("✏ Modifier");
+                btnModifier.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
+                btnModifier.setOnAction(event -> modifierOrganisateur(organisateur));
+
+                Button btnSupprimer = new Button("🗑 Supprimer");
+                btnSupprimer.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
+                btnSupprimer.setOnAction(event -> supprimerOrganisateur(organisateur));
+
+                container.getChildren().addAll(label, btnModifier, btnSupprimer);
+                organisateurContainer.getChildren().add(container);
             }
+        }
+    }
+
+    private void modifierOrganisateur(Organisateur organisateur) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierOrganisateur.fxml"));
+            Parent root = loader.load();
+
+            ModifierOrganisateur controller = loader.getController();
+            controller.initData(organisateur);
+
+            // Récupérer la scène actuelle et remplacer le contenu
+            Stage stage = (Stage) organisateurContainer.getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("❌ Erreur lors de l'ouverture de ModifierOrganisateur.fxml");
+        }
+    }
+
+
+
+    private void supprimerOrganisateur(Organisateur organisateur) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation de Suppression");
+        alert.setHeaderText("Suppression de l'organisateur");
+        alert.setContentText("Êtes-vous sûr de vouloir supprimer " + organisateur.getNomOrg() + " ?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            serviceOrganisateur.delete(organisateur.getIdOrg());
+            afficherOrganisateurs(idEspace); // Rafraîchir l'affichage après suppression
         }
     }
 
@@ -92,4 +140,5 @@ public class DetailEspace {
             e.printStackTrace();
         }
     }
+
 }

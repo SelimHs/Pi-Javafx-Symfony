@@ -47,7 +47,7 @@
                         <TextField fx:id="prenomOrganisateur" promptText="Prénom" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
                         <Label text="📞 Téléphone :" textFill="white" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                        <TextField fx:id="telOrganisateur" promptText="Numéro (8 chiffres)" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                        <TextField fx:id="telef" promptText="Numéro (8 chiffres)" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
                         <Label text="📝 Description :" textFill="white" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
                         <TextArea fx:id="descriptionOrganisateur" promptText="Description" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
