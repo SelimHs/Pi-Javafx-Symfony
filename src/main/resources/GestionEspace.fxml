@@ -31,8 +31,8 @@
                 <Label style="-fx-font-size: 20px; -fx-text-fill: white; -fx-font-weight: bold;                               -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 4, 0, 0, 2);" text="Gestion des Espaces" />
 
                 <Button style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;                                -fx-padding: 10px; -fx-border-radius: 8px;" text="🏠 Accueil" />
-                <Button style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;                                -fx-padding: 10px; -fx-border-radius: 8px;" text="➕ Ajouter Espace" />
-                <Button style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;                                -fx-padding: 10px; -fx-border-radius: 8px;" text="📋 Liste des Espaces" />
+                <Button fx:id="ajtesp" onAction="#ajouterEspaceView" text="➕ Ajouter Espace" />
+                <Button fx:id="affichesp" onAction="#afficherEspaces" text="📋 Liste des Espaces" />
             </children>
         </VBox>
 
@@ -86,12 +86,7 @@
                 </GridPane>
 
                 <!-- ✅ Submit Button with shadow & hover effect -->
-                <Button fx:id="ajoutesp" onAction="#ajouterEspace"
-                        style="-fx-background-color: #9b59b6; -fx-text-fill: white;
-               -fx-font-size: 16px; -fx-font-weight: bold;
-               -fx-border-radius: 12px; -fx-padding: 10px;
-               -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 12, 0, 2, 2);"
-                        text="✔ Ajouter l'Espace" />
+                <Button fx:id="ajoutesp" onAction="#ajouterEspace" style="-fx-background-color: #9b59b6; -fx-text-fill: white;                -fx-font-size: 16px; -fx-font-weight: bold;                -fx-border-radius: 12px; -fx-padding: 10px;                -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 12, 0, 2, 2);" text="✔ Ajouter l'Espace" />
 
             </children>
         </VBox>
