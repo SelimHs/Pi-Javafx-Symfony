@@ -6,8 +6,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import tn.esprit.models.Billet;
 import tn.esprit.models.Event;
@@ -31,6 +35,7 @@ public class BilletsMainController {
     @javafx.fxml.FXML
     private Button deleteBouton;
 
+    //Here lies my navigation
     @FXML
     public void goToAjoutBillet(javafx.event.ActionEvent actionEvent) {
         try {
@@ -58,17 +63,44 @@ public class BilletsMainController {
         }
     }
 
+    //Here lies my extras
+    private void showBilletDetails(Billet billet) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Détails du Billet");
+        alert.setHeaderText("Billet de " + billet.getProprietaire());
+        alert.setContentText("📅 Date d'achat : " + billet.getDateAchat() +
+                "\n💰 Prix : " + billet.getPrix() + " DT" +
+                "\n🎟 Type : " + billet.getType() +
+                "\n📍 Événement : " + billet.getEvent());
 
-
+        alert.showAndWait();
+    }
+    @FXML
+    private FlowPane billetCardContainer;
     @javafx.fxml.FXML
     public void displayBillets(javafx.event.ActionEvent actionEvent) {
-        List<Billet> events = sb.getAll();  // Supposons que sp.getAll() retourne une liste d'objets Event
-        billetListView.getItems().clear();
+    billetCardContainer.getChildren().clear();
 
-        for (Billet b : events) {
-            billetNames.add(b);
-        }
-        billetListView.setItems(billetNames);
+    List<Billet> billets = sb.getAll();
+    for (Billet billet : billets) {
+        VBox card = new VBox();
+        card.setStyle("-fx-background-color: white; -fx-padding: 10px; -fx-border-radius: 10px; "
+                + "-fx-background-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);"
+                + "-fx-min-width: 200px; -fx-max-width: 200px; -fx-alignment: center; -fx-spacing: 10;");
+        Label title = new Label("Ticket de " + billet.getProprietaire() );
+        title.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
+        Label name = new Label(billet.getProprietaire());
+
+        name.setStyle("-fx-font-size: 12px; -fx-font-weight: bold;");
+        Label price = new Label("💰 " + billet.getPrix() + " DT");
+        Label eventName = new Label("🎉 " + billet.getEvent());
+        Button detailsButton = new Button("Voir Détails");
+        detailsButton.setOnAction(b->showBilletDetails(billet));
+
+        card.getChildren().addAll(title, name, price,eventName, detailsButton);
+        billetCardContainer.getChildren().add(card);
+    }
     }
 
 
