@@ -98,4 +98,26 @@ public class ServiceFournisseur implements Iservice<fournisseur> {
         }
         return null;
     }
+    public fournisseur getFournisseurFromDatabase(String fournisseurNom) {
+        fournisseur f = null;
+        try {
+            String query = "SELECT * FROM fournisseur WHERE nomFournisseur = ?";
+            PreparedStatement pst = cnx.prepareStatement(query);
+            pst.setString(1, fournisseurNom);
+            ResultSet rs = pst.executeQuery();
+
+            if (rs.next()) {
+                f = new fournisseur();
+                f.setIdFournisseur(rs.getInt("idFournisseur"));
+                f.setNomFournisseur(rs.getString("nomFournisseur"));
+                f.setDescription(rs.getString("description"));
+                f.setType(rs.getString("type"));
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erreur SQL : " + e.getMessage());
+        }
+        return f;
+    }
+
 }
