@@ -1,31 +1,35 @@
 package tn.esprit.controllers;
 
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
-import java.net.URL;
-import java.util.ResourceBundle;
+import javafx.stage.Stage;
+import tn.esprit.models.Organisateur;
+import tn.esprit.services.ServiceOrganisateur;
 
-public class GestionOrganisateur implements Initializable {
+import java.io.IOException;
+
+public class GestionOrganisateur {
+
+    @FXML private TextField nomOrganisateur, prenomOrganisateur, telOrganisateur;
+    @FXML private TextArea descriptionOrganisateur;
+    @FXML private Button btnAjouterOrganisateur, btnRetour;
+
+    private final ServiceOrganisateur serviceOrganisateur = new ServiceOrganisateur();
+    private int idEspace; // ID de l'espace récupéré
+
+    public void initData(int idEspace) {
+        this.idEspace = idEspace;
+        System.out.println("✅ ID de l'espace reçu pour l'ajout : " + idEspace);
+    }
 
     @FXML
-    private AnchorPane root; // Lien avec l'interface
-
-    @FXML
-    private TextField nomOrganisateur, emailOrganisateur, telOrganisateur, societeOrganisateur;
-
-    @FXML
-    private PasswordField mdpOrganisateur;
-
-    @FXML
-    private Button btnAjouterOrganisateur;
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    private void initialize() {
         if (btnAjouterOrganisateur != null) {
             btnAjouterOrganisateur.setOnAction(event -> ajouterOrganisateur());
         } else {
@@ -33,43 +37,40 @@ public class GestionOrganisateur implements Initializable {
         }
     }
 
-
-    /**
-     * 🚀 Méthode pour ajouter un organisateur
-     */
+    @FXML
     private void ajouterOrganisateur() {
-        // Récupération des valeurs des champs
-        String nom = nomOrganisateur.getText().trim();
-        String email = emailOrganisateur.getText().trim();
-        String tel = telOrganisateur.getText().trim();
-        String societe = societeOrganisateur.getText().trim();
-        String motDePasse = mdpOrganisateur.getText().trim();
+        System.out.println("✅ Bouton Ajouter cliqué !");
 
-        // 🔍 Vérification des champs
-        if (nom.isEmpty() || email.isEmpty() || tel.isEmpty() || societe.isEmpty() || motDePasse.isEmpty()) {
+        String nom = nomOrganisateur.getText().trim();
+        String prenom = prenomOrganisateur.getText().trim();
+        String tel = telOrganisateur.getText().trim();
+        String description = descriptionOrganisateur.getText().trim();
+
+        if (nom.isEmpty() || prenom.isEmpty() || tel.isEmpty() || description.isEmpty()) {
             afficherAlerte("⚠️ Champs vides", "Veuillez remplir tous les champs !");
             return;
         }
 
-        // 🔢 Vérifier si le téléphone contient bien 8 chiffres
         if (!tel.matches("\\d{8}")) {
-            afficherAlerte("📞 Numéro invalide", "Le numéro de téléphone doit contenir 8 chiffres.");
+            afficherAlerte("⚠️ Numéro invalide", "Le numéro de téléphone doit contenir 8 chiffres.");
             return;
         }
 
-        // ✅ Ajout simulé (à remplacer avec une insertion dans la base de données)
-        System.out.println("✅ Organisateur ajouté : " + nom + " | " + email + " | " + tel + " | " + societe);
+        // Vérification de l'ID de l'espace
+        if (idEspace <= 0) {
+            afficherAlerte("❌ Erreur", "Aucun espace sélectionné !");
+            return;
+        }
 
-        // ✅ Afficher un message de succès
+        System.out.println("🆕 Ajout d'un organisateur pour l'espace ID: " + idEspace);
+
+        Organisateur organisateur = new Organisateur(0, nom, prenom, description, idEspace);
+        serviceOrganisateur.add(organisateur);
+
         afficherAlerte("✅ Succès", "L'organisateur a été ajouté avec succès !");
-
-        // 🔄 Nettoyer les champs après l'ajout
         viderChamps();
     }
 
-    /**
-     * ⚠️ Méthode pour afficher une alerte
-     */
     private void afficherAlerte(String titre, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(titre);
@@ -78,14 +79,23 @@ public class GestionOrganisateur implements Initializable {
         alert.showAndWait();
     }
 
-    /**
-     * 🔄 Méthode pour vider les champs après ajout
-     */
     private void viderChamps() {
         nomOrganisateur.clear();
-        emailOrganisateur.clear();
+        prenomOrganisateur.clear();
         telOrganisateur.clear();
-        societeOrganisateur.clear();
-        mdpOrganisateur.clear();
+        descriptionOrganisateur.clear();
+    }
+
+    @FXML
+    private void retourAfficherEspaces() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficherEspaces.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) btnRetour.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

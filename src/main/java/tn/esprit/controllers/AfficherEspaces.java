@@ -65,7 +65,7 @@ public class AfficherEspaces {
         // 🔎 Nouveau bouton pour afficher les détails
         Button btnDetails = new Button("Détails");
         btnDetails.setStyle("-fx-background-color: #3498db; -fx-text-fill: white;");
-        btnDetails.setOnAction(e -> afficherDetailsEspace(espace));
+        btnDetails.setOnAction(e -> afficherDetailsEspace(espace, e));
 
         card.getChildren().addAll(
                 new Label("🏠 " + espace.getNomEspace()),
@@ -103,22 +103,22 @@ public class AfficherEspaces {
         }
     }
 
-    // ✅ Fonction pour afficher les détails de l'espace et ses organisateurs
-    private void afficherDetailsEspace(Espace espace) {
+    private void afficherDetailsEspace(Espace espace, ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/DetailEspace.fxml"));
             Parent root = loader.load();
-            DetailEspace controller = loader.getController();
-            controller.initData(espace);
 
-            Stage stage = (Stage) espaceCardContainer.getScene().getWindow(); // Récupérer la fenêtre actuelle
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
+            DetailEspace controller = loader.getController();
+            controller.initData(espace); // Passe l'espace sélectionné
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
 
 
