@@ -1,5 +1,6 @@
 package tn.esprit.services;
 
+import javafx.scene.control.Alert;
 import tn.esprit.interfaces.Iservice;
 import tn.esprit.models.Event;
 import tn.esprit.utils.myDatabase;
@@ -114,6 +115,19 @@ public class ServiceEvent implements Iservice<Event> {
             System.out.println(e.getMessage());
         }
         return null;
+    }
+
+    private void showEventDetails(Event event) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Détails de l'Événement");
+        alert.setHeaderText(event.getNomEvent());
+        alert.setContentText("📅 Date : " + event.getDate() +
+                "\n💰 Prix : " + event.getPrix() + " DT" +
+                "\n👥 Visiteurs : " + event.getNbrVisiteurs() +
+                "\n📍 Lieu : " + event.getNomEspace() +
+                "\nℹ️ Détails : " + event.getDetails());
+
+        alert.showAndWait();
     }
 
 }

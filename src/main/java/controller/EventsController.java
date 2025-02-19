@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.scene.control.DatePicker;
 import tn.esprit.models.Event;
 
 import tn.esprit.services.ServiceEvent;
@@ -45,7 +46,7 @@ public class EventsController {
 
 
     @FXML
-    public void addEvent(ActionEvent actionEvent) {
+    public void addEvent(javafx.event.ActionEvent actionEvent) {
         Event e = new Event();
         LocalDate selectedDate = eventDate.getValue();
         e.setNomEvent(eventNom.getText());
@@ -80,6 +81,19 @@ public class EventsController {
         }
 
 
+    }
+    @javafx.fxml.FXML
+    public void goToAcceuil(javafx.event.ActionEvent actionEvent) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Acceuil.fxml"));
+            Parent root = fxmlLoader.load();
+            Stage stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
+
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     public void goToAjoutEvent(javafx.event.ActionEvent actionEvent) {

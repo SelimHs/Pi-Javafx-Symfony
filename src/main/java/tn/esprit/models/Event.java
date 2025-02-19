@@ -91,13 +91,10 @@ public class Event {
 
     @Override
     public String toString() {
-        return
-                "Event ID=" + idEvent +
-                ", Date=" + date +
-                ", Prix=" + prix +
-                ", Visiteurs=" + nbrVisiteurs +
-                ", Nom de l'évènement='" + nomEvent + '\'' +
-                ", Espace='" + nomEspace + '\'' +
-                ", Détails='" + details + '\'';
+        return "Event{" +
+                "idEvent=" + idEvent +
+                ", nomEvent='" + nomEvent + '\'' +
+                ", date='" + date + '\'' +
+                '}';
     }
 }
