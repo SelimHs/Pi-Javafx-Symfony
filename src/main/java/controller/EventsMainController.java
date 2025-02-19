@@ -120,7 +120,11 @@ public class EventsMainController {
             deleteButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
             deleteButton.setOnAction(e -> deleteAndRefreshEvent(event)); // Adding delete action
 
-            card.getChildren().addAll(title, date, price, detailsButton, deleteButton);
+            Button editButton = new Button("Modifier");
+            editButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
+            editButton.setOnAction(e -> openEditPopup(event,editButton));
+
+            card.getChildren().addAll(title, date, price, detailsButton,editButton, deleteButton);
             eventCardContainer.getChildren().add(card);
         }
     }
@@ -137,6 +141,26 @@ public class EventsMainController {
         se.delete(event);
         eventCardContainer.getChildren().clear();
         displayEvents();
+    }
+
+    @FXML
+    public void openEditPopup(Event event, Button sourceButton){
+        try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierEvent.fxml"));
+        Parent root = loader.load();
+
+        // Get the controller and pass the selected event
+        ModifierEventController modifierEventController = loader.getController();
+        modifierEventController.initDataEvent(event);
+
+        // Get the current stage and replace its scene
+        Stage stage = (Stage) sourceButton.getScene().getWindow();
+        stage.setScene(new Scene(root));
+        stage.show();
+
+    } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     // Méthode pour afficher une alerte

@@ -123,12 +123,35 @@ public class BilletsMainController {
             deleteButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
             deleteButton.setOnAction(e -> deleteAndRefreshBillet(billet));
 
-            card.getChildren().addAll(title, name, price, eventName, detailsButton, deleteButton);
+            Button editButton = new Button("Modifier");
+            editButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
+            editButton.setOnAction(e -> openEditPopup(billet,editButton));
+
+            card.getChildren().addAll(title, name, price, eventName, detailsButton,editButton, deleteButton);
             billetCardContainer.getChildren().add(card);
 
         }
     }
 
+    @FXML
+    public void openEditPopup(Billet billet, Button sourceButton){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/modifierBillet.fxml"));
+            Parent root = loader.load();
+
+            // Get the controller and pass the selected event
+            ModifierBilletController modifierBilletController = loader.getController();
+            modifierBilletController.initDataBillet(billet);
+
+            // Get the current stage and replace its scene
+            Stage stage = (Stage) sourceButton.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 
 
     @javafx.fxml.FXML

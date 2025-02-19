@@ -38,7 +38,7 @@ public class ModifierEventController {
     private Event newEvent; // This will store the event being edited
 
     // Method to initialize the form with the selected event data
-    public void initData(Event event) {
+    public void initDataEvent(Event event) {
         this.newEvent = event;
         nomEventField.setText(event.getNomEvent());
         prixField.setText(String.valueOf(event.getPrix()));
@@ -87,4 +87,6 @@ public class ModifierEventController {
             System.out.println(e.getMessage());
         }
     }
+
+
 }
