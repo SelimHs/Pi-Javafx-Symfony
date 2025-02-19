@@ -46,13 +46,14 @@ public class ServiceOrganisateur {
         }
     }
 
-    // ✅ Obtenir tous les organisateurs
-    public List<Organisateur> getAll() {
+    // ✅ Récupérer les organisateurs liés à un espace
+    public List<Organisateur> getOrganisateursByEspace(int idEspace) {
         List<Organisateur> organisateurs = new ArrayList<>();
-        String qry = "SELECT * FROM organisateur";
+        String qry = "SELECT * FROM organisateur WHERE idEspace = ?";
         try {
-            Statement stm = cnx.createStatement();
-            ResultSet rs = stm.executeQuery(qry);
+            PreparedStatement pstm = cnx.prepareStatement(qry);
+            pstm.setInt(1, idEspace);
+            ResultSet rs = pstm.executeQuery();
             while (rs.next()) {
                 Organisateur organisateur = new Organisateur(
                         rs.getInt("id_org"),
@@ -69,55 +70,20 @@ public class ServiceOrganisateur {
         return organisateurs;
     }
 
-    // ✅ Trouver un organisateur par ID
+    public Organisateur[] getAll() {
+        return null;
+    }
+
     public Optional<Organisateur> findById(int id) {
-        String qry = "SELECT * FROM organisateur WHERE id_org = ?";
-        try {
-            PreparedStatement pstm = cnx.prepareStatement(qry);
-            pstm.setInt(1, id);
-            ResultSet rs = pstm.executeQuery();
-            if (rs.next()) {
-                return Optional.of(new Organisateur(
-                        rs.getInt("id_org"),
-                        rs.getString("nom_org"),
-                        rs.getString("prenom_org"),
-                        rs.getString("description_org"),
-                        rs.getInt("idEspace")
-                ));
-            }
-        } catch (SQLException e) {
-            System.out.println("Erreur lors de la recherche de l'organisateur : " + e.getMessage());
-        }
-        return Optional.empty();
+        return null;
     }
 
-    // ✅ Mettre à jour un organisateur
     public void update(Organisateur organisateur) {
-        String qry = "UPDATE organisateur SET nom_org = ?, prenom_org = ?, description_org = ?, idEspace = ? WHERE id_org = ?";
-        try {
-            PreparedStatement pstm = cnx.prepareStatement(qry);
-            pstm.setString(1, organisateur.getNomOrg());
-            pstm.setString(2, organisateur.getPrenomOrg());
-            pstm.setString(3, organisateur.getDescriptionOrg());
-            pstm.setInt(4, organisateur.getIdEspace());
-            pstm.setInt(5, organisateur.getIdOrg());
-            pstm.executeUpdate();
-            System.out.println("✅ Organisateur mis à jour avec succès !");
-        } catch (SQLException e) {
-            System.out.println("Erreur lors de la mise à jour de l'organisateur : " + e.getMessage());
-        }
+
+
     }
 
-    // ✅ Supprimer un organisateur
     public void delete(int id) {
-        String qry = "DELETE FROM organisateur WHERE id_org = ?";
-        try {
-            PreparedStatement pstm = cnx.prepareStatement(qry);
-            pstm.setInt(1, id);
-            pstm.executeUpdate();
-            System.out.println("✅ Organisateur supprimé avec succès !");
-        } catch (SQLException e) {
-            System.out.println("Erreur lors de la suppression de l'organisateur : " + e.getMessage());
-        }
+
     }
 }

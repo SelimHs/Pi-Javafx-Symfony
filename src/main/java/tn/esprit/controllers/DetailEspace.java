@@ -11,7 +11,11 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import tn.esprit.models.Espace;
+import tn.esprit.models.Organisateur;
+import tn.esprit.services.ServiceOrganisateur;
+
 import java.io.IOException;
+import java.util.List;
 
 public class DetailEspace {
 
@@ -21,11 +25,13 @@ public class DetailEspace {
     @FXML private Button retourButton;
     @FXML private Button ajouterOrganisateurButton;
 
-    private int idEspace; // Ajout de l'attribut pour stocker l'id de l'espace
+    private int idEspace; // ID de l’espace sélectionné
+    private final ServiceOrganisateur serviceOrganisateur = new ServiceOrganisateur();
 
     public void initData(Espace espace) {
         this.idEspace = espace.getIdEspace(); // Stocker l'ID de l'espace sélectionné
         titleLabel.setText("Détails de l'Espace : " + espace.getNomEspace());
+
         espaceDetailsLabel.setText(
                 "📍 Adresse : " + espace.getAdresse() + "\n" +
                         "👥 Capacité : " + espace.getCapacite() + "\n" +
@@ -33,6 +39,28 @@ public class DetailEspace {
                         "💰 Prix : " + espace.getPrix() + " DT\n" +
                         "🏢 Type : " + espace.getTypeEspace()
         );
+
+        // 🚀 Afficher les organisateurs liés à cet espace
+        afficherOrganisateurs(idEspace);
+    }
+
+    private void afficherOrganisateurs(int idEspace) {
+        organisateurContainer.getChildren().clear(); // Nettoyer avant de charger
+
+        List<Organisateur> organisateurs = serviceOrganisateur.getOrganisateursByEspace(idEspace);
+
+        if (organisateurs.isEmpty()) {
+            Label noOrganisateur = new Label("❌ Aucun organisateur pour cet espace.");
+            noOrganisateur.setStyle("-fx-font-size: 14px; -fx-text-fill: white;");
+            organisateurContainer.getChildren().add(noOrganisateur);
+        } else {
+            for (Organisateur organisateur : organisateurs) {
+                Label label = new Label("👤 " + organisateur.getNomOrg() + " " + organisateur.getPrenomOrg() +
+                        " - 📝 " + organisateur.getDescriptionOrg());
+                label.setStyle("-fx-font-size: 14px; -fx-text-fill: black; -fx-padding: 5px;");
+                organisateurContainer.getChildren().add(label);
+            }
+        }
     }
 
     @FXML
@@ -42,7 +70,7 @@ public class DetailEspace {
             Parent root = loader.load();
 
             GestionOrganisateur controller = loader.getController();
-            controller.initData(idEspace); // Passer l'idEspace
+            controller.initData(idEspace);
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
