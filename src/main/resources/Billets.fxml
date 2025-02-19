@@ -79,20 +79,7 @@
                            -fx-font-weight: bold;
                            -fx-border-radius: 12px;
                            -fx-padding: 10px;"/>
-            <Button fx:id="modifierBouton" text="✏ Modifier"
-                    style="-fx-background-color: #e67e22;
-                           -fx-text-fill: white;
-                           -fx-font-size: 16px;
-                           -fx-font-weight: bold;
-                           -fx-border-radius: 12px;
-                           -fx-padding: 10px;"/>
-            <Button fx:id="deleteBouton" text="🗑 Supprimer"
-                    style="-fx-background-color: #e74c3c;
-                           -fx-text-fill: white;
-                           -fx-font-size: 16px;
-                           -fx-font-weight: bold;
-                           -fx-border-radius: 12px;
-                           -fx-padding: 10px;"/>
+
         </HBox>
     </children>
 </AnchorPane>

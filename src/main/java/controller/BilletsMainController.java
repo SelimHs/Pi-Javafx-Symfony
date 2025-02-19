@@ -6,10 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -30,6 +27,8 @@ public class BilletsMainController {
     private ListView billetListView;
     ObservableList<Billet> billetNames = FXCollections.observableArrayList();
 
+    @FXML
+    private TextField searchField;
     @javafx.fxml.FXML
     private Button modifierBouton;
     @javafx.fxml.FXML
@@ -37,7 +36,11 @@ public class BilletsMainController {
 
     @FXML
     public void initialize() {
+        // Affiche les billets au démarrage
         displayBillets(null);
+
+        // Ajoute un écouteur d'événements pour filtrer les billets à chaque modification de texte
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> filterBillets(newValue));
     }
 
     //Here lies my navigation
@@ -152,14 +155,51 @@ public class BilletsMainController {
             System.out.println(e.getMessage());
         }
     }
+    private void filterBillets(String searchText) {
+        billetCardContainer.getChildren().clear();  // Réinitialiser l'affichage des billets
 
+        List<Billet> filteredBillets = sb.getAll().stream()
+                .filter(billet ->
+                        billet.getProprietaire().toLowerCase().contains(searchText.toLowerCase()) ||
+                                billet.getDateAchat().toString().toLowerCase().contains(searchText.toLowerCase()) ||
+                                String.valueOf(billet.getPrix()).contains(searchText) ||
+                                billet.getType().toString().toLowerCase().contains(searchText.toLowerCase()) ||
+                                billet.getEvent().getNomEvent().toLowerCase().contains(searchText.toLowerCase())
+                )
+                .toList();
 
-    @javafx.fxml.FXML
-    public void deleteBillet(ActionEvent actionEvent) {
+        // Affiche les billets filtrés
+        displayFilteredBillets(filteredBillets);
     }
+    private void displayFilteredBillets(List<Billet> billets) {
+        for (Billet billet : billets) {
+            VBox card = new VBox();
+            card.setStyle("-fx-background-color: white; -fx-padding: 10px; -fx-border-radius: 10px; "
+                    + "-fx-background-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);"
+                    + "-fx-min-width: 200px; -fx-max-width: 200px; -fx-alignment: center; -fx-spacing: 10;");
 
+            Label title = new Label("Ticket de " + billet.getProprietaire());
+            title.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
-    @javafx.fxml.FXML
-    public void updateBillet(ActionEvent actionEvent) {
+            Label name = new Label(billet.getProprietaire());
+            name.setStyle("-fx-font-size: 12px; -fx-font-weight: bold;");
+            Label price = new Label("💰 " + billet.getPrix() + " DT");
+            Label eventName = new Label("🎉 " + billet.getEvent().getNomEvent());
+
+            Button detailsButton = new Button("Voir Détails");
+            detailsButton.setOnAction(b -> showBilletDetails(billet));
+
+            // Bouton supprimer
+            Button deleteButton = new Button("Supprimer");
+            deleteButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
+            deleteButton.setOnAction(e -> deleteAndRefreshBillet(billet));
+
+            Button editButton = new Button("Modifier");
+            editButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
+            editButton.setOnAction(e -> openEditPopup(billet, editButton));
+
+            card.getChildren().addAll(title, name, price, eventName, detailsButton, editButton, deleteButton);
+            billetCardContainer.getChildren().add(card);
+        }
     }
 }

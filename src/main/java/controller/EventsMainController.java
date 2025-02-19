@@ -30,9 +30,13 @@ public class EventsMainController {
     private Button deleteBouton;
 
     @FXML
-    public void initialize(){
-        displayEvents();
+    private void initialize() {
+        displayEvents(); // Affiche les événements au départ
+        // Ajoute un écouteur d'événements pour filtrer les événements à chaque modification de texte dans la barre de recherche
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> filterEvents(newValue));
     }
+
+
 
     //here lies my navigation
     @FXML
@@ -172,37 +176,50 @@ public class EventsMainController {
         alert.showAndWait();
     }
 
+    private void filterEvents(String searchText) {
+        eventCardContainer.getChildren().clear(); // Réinitialiser l'affichage des événements
 
+        // Filtrer les événements en fonction du texte dans la barre de recherche
+        List<Event> filteredEvents = se.getAll().stream()
+                .filter(event ->
+                        event.getNomEvent().toLowerCase().contains(searchText.toLowerCase()) ||
+                                event.getDate().toString().toLowerCase().contains(searchText.toLowerCase()) ||
+                                String.valueOf(event.getPrix()).contains(searchText) ||
+                                event.getNomEspace().toLowerCase().contains(searchText.toLowerCase()) ||
+                                event.getDetails().toLowerCase().contains(searchText.toLowerCase())
+                )
+                .toList();
 
-    /*@FXML
-    public void updateEvent(javafx.event.ActionEvent actionEvent) {
-        Event eventSelectionne = (Event) eventListView.getSelectionModel().getSelectedItem();
-        if (eventSelectionne != null) {
-            // Load the FXML for the event modification form
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierEvent.fxml"));
-            Parent root = null;
-            try {
-                root = loader.load();
-                ModifierEventController modifierEventController = loader.getController();
+        // Afficher les événements filtrés
+        displayFilteredEvents(filteredEvents);
+    }
 
-                // Pass the selected event to the controller to initialize the form fields
-                modifierEventController.initData(eventSelectionne);
+    private void displayFilteredEvents(List<Event> events) {
+        for (Event event : events) {
+            VBox card = new VBox();
+            card.setStyle("-fx-background-color: white; -fx-padding: 10px; -fx-border-radius: 10px; "
+                    + "-fx-background-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);"
+                    + "-fx-min-width: 200px; -fx-max-width: 200px; -fx-alignment: center; -fx-spacing: 10;");
 
-                // Show the modification window
-                Stage stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
-                Scene scene = new Scene(root);
-                stage.setScene(scene);
-                stage.show();
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
-            }
-        } else {
-            // Show an alert if no event is selected
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Aucune sélection");
-            alert.setHeaderText(null);
-            alert.setContentText("Veuillez sélectionner un événement à modifier.");
-            alert.showAndWait();
+            Label title = new Label(event.getNomEvent());
+            title.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
+            Label date = new Label("📅 " + event.getDate().toString());
+            Label price = new Label("💰 " + event.getPrix() + " DT");
+
+            Button detailsButton = new Button("Voir Détails");
+            detailsButton.setOnAction(e -> showEventDetails(event));
+
+            Button deleteButton = new Button("Supprimer");
+            deleteButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
+            deleteButton.setOnAction(e -> deleteAndRefreshEvent(event));
+
+            Button editButton = new Button("Modifier");
+            editButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
+            editButton.setOnAction(e -> openEditPopup(event, editButton));
+
+            card.getChildren().addAll(title, date, price, detailsButton, editButton, deleteButton);
+            eventCardContainer.getChildren().add(card);
         }
-    }*/
+    }
 }
