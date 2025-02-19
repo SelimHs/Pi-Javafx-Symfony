@@ -2,31 +2,33 @@ package tn.esprit.models;
 
 public class Produit {
 
+    public enum CategorieProduit {
+        ELECTRONIQUE,
+        VETEMENTS,
+        ALIMENTAIRE,
+        MEUBLES,
+        SPORT
+    }
     private int idProduit;
     private String nomProduit;
     private int prixProduit;
     private String description;
-    private String categorie;
+    private CategorieProduit categorie; // Utilisation de l'énumération
     private int quantite;
-    private int idFournisseur; // Clé étrangère vers Fournisseur
+    private fournisseur  fournisseur; // Association avec Fournisseur
 
-    // Constructeur par défaut
-    public Produit() {
-    }
+    // Constructeurs, Getters et Setters
+    public Produit() {}
 
-    // Constructeur avec paramètres
-    public Produit(int idProduit, String nomProduit, int prixProduit, String description, String categorie, int quantite, int idFournisseur) {
+    public Produit(int idProduit, String nomProduit, int prixProduit, String description, CategorieProduit categorie, int quantite, fournisseur fournisseur) {
         this.idProduit = idProduit;
         this.nomProduit = nomProduit;
         this.prixProduit = prixProduit;
         this.description = description;
         this.categorie = categorie;
         this.quantite = quantite;
-        this.idFournisseur = idFournisseur;
+        this.fournisseur = fournisseur;
     }
-
-    // Getters et Setters
-
 
     public int getIdProduit() {
         return idProduit;
@@ -60,11 +62,11 @@ public class Produit {
         this.description = description;
     }
 
-    public String getCategorie() {
+    public CategorieProduit getCategorie() {
         return categorie;
     }
 
-    public void setCategorie(String categorie) {
+    public void setCategorie(CategorieProduit categorie) {
         this.categorie = categorie;
     }
 
@@ -76,12 +78,12 @@ public class Produit {
         this.quantite = quantite;
     }
 
-    public int getIdFournisseur() {
-        return idFournisseur;
+    public fournisseur getFournisseur() {
+        return fournisseur;
     }
 
-    public void setIdFournisseur(int idFournisseur) {
-        this.idFournisseur = idFournisseur;
+    public void setFournisseur(fournisseur fournisseur) {
+        this.fournisseur = fournisseur;
     }
 
     @Override
@@ -91,9 +93,9 @@ public class Produit {
                 ", nomProduit='" + nomProduit + '\'' +
                 ", prixProduit=" + prixProduit +
                 ", description='" + description + '\'' +
-                ", categorie='" + categorie + '\'' +
+                ", categorie=" + categorie +
                 ", quantite=" + quantite +
-                ", idFournisseur=" + idFournisseur +
+                ", fournisseur=" + fournisseur +
                 '}';
     }
 }

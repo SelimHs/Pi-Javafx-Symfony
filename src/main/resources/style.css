@@ -1,0 +1,58 @@
+/* Style général */
+.root {
+    -fx-background-color: #f4f4f4;
+}
+
+/* Style des champs de texte */
+.text-field {
+    -fx-font-size: 14px;
+    -fx-padding: 5px;
+    -fx-border-radius: 5px;
+    -fx-border-color: #ccc;
+    -fx-background-radius: 5px;
+}
+
+/* Style des boutons */
+.button {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-border-radius: 5px;
+    -fx-padding: 7px 15px;
+}
+
+.button:hover {
+    -fx-background-color: #45a049;
+}
+
+#btnSupprimer {
+    -fx-background-color: #e74c3c;
+}
+
+#btnSupprimer:hover {
+    -fx-background-color: #c0392b;
+}
+
+#btnModifier {
+    -fx-background-color: #f39c12;
+}
+
+#btnModifier:hover {
+    -fx-background-color: #e67e22;
+}
+
+#btnAfficher {
+    -fx-background-color: #3498db;
+}
+
+#btnAfficher:hover {
+    -fx-background-color: #2980b9;
+}
+
+/* Style du label d'affichage */
+#labelAffichage {
+    -fx-font-size: 16px;
+    -fx-text-fill: #333;
+    -fx-font-weight: bold;
+}

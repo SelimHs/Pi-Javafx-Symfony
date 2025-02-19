@@ -23,8 +23,8 @@ public class Main {
         fournisseur lastFournisseur = sf.getAll().get(sf.getAll().size() - 1); // Dernier fournisseur ajouté
 
         // Ajout d'un produit
-        Produit produit = new Produit(0, "Fromage Brie", 50, "Fromage de haute qualité", "Alimentaire", 100, lastFournisseur.getIdFournisseur());
-        serviceProduit.add(produit);
+        //Produit produit = new Produit(0, "Fromage Brie", 50, "Fromage de haute qualité", Produit.CategorieProduit.ALIMENTAIRE, 100, lastFournisseur.getIdFournisseur());
+        //serviceProduit.add(produit);
 
         // Affichage des données
         System.out.println("Liste des fournisseurs : " + sf.getAll());
