@@ -30,6 +30,12 @@ public class EventsMainController {
     private Button deleteBouton;
 
     @FXML
+    public void initialize(){
+        displayEvents();
+    }
+
+    //here lies my navigation
+    @FXML
     public void goToEventList(javafx.event.ActionEvent actionEvent) {
 
         try {
@@ -73,7 +79,7 @@ public class EventsMainController {
         }
 
     }
-
+    //here lies my extras
     private void showEventDetails(Event event) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Détails de l'Événement");
@@ -86,11 +92,10 @@ public class EventsMainController {
 
         alert.showAndWait();
     }
-
+    //here lies my core
     @FXML
     private FlowPane eventCardContainer;
 
-    @FXML
     public void displayEvents() {
         eventCardContainer.getChildren().clear(); // Nettoyer avant de recharger
 
@@ -111,7 +116,11 @@ public class EventsMainController {
             Button detailsButton = new Button("Voir Détails");
             detailsButton.setOnAction(e -> showEventDetails(event));
 
-            card.getChildren().addAll(title, date, price, detailsButton);
+            Button deleteButton = new Button("Supprimer");
+            deleteButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
+            deleteButton.setOnAction(e -> deleteAndRefreshEvent(event)); // Adding delete action
+
+            card.getChildren().addAll(title, date, price, detailsButton, deleteButton);
             eventCardContainer.getChildren().add(card);
         }
     }
@@ -121,36 +130,13 @@ public class EventsMainController {
 
 
 
+
     @FXML
-    public void delete(javafx.event.ActionEvent actionEvent) {
-        // Obtenir le bouton qui a été cliqué
-        Node source = (Node) actionEvent.getSource();
-
-        // Remonter dans la hiérarchie pour trouver la carte
-        Parent parent = source.getParent();
-        while (parent != null && !(parent instanceof VBox)) { // Change VBox selon ton conteneur réel
-            parent = parent.getParent();
-        }
-
-        if (parent instanceof VBox) {
-            VBox card = (VBox) parent; // Ta carte contenant l'événement
-
-            // Récupérer l'événement stocké dans la carte (si setUserData(event) a été utilisé)
-            Event eventSelectionne = (Event) card.getUserData();
-
-            if (eventSelectionne != null) {
-                // Supprimer de la base de données
-                ServiceEvent se = new ServiceEvent();
-                se.delete(eventSelectionne);
-
-                // Supprimer la carte de l'affichage
-                ((Pane) card.getParent()).getChildren().remove(card);
-            } else {
-                afficherAlerte("Aucune sélection", "Veuillez sélectionner un évènement à supprimer.");
-            }
-        } else {
-            afficherAlerte("Erreur", "Impossible de trouver la carte contenant l'évènement.");
-        }
+    public void deleteAndRefreshEvent(Event event) {
+        ServiceEvent se = new ServiceEvent();
+        se.delete(event);
+        eventCardContainer.getChildren().clear();
+        displayEvents();
     }
 
     // Méthode pour afficher une alerte

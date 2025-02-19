@@ -35,6 +35,11 @@ public class BilletsMainController {
     @javafx.fxml.FXML
     private Button deleteBouton;
 
+    @FXML
+    public void initialize() {
+        displayBillets(null);
+    }
+
     //Here lies my navigation
     @FXML
     public void goToAjoutBillet(javafx.event.ActionEvent actionEvent) {
@@ -75,33 +80,55 @@ public class BilletsMainController {
 
         alert.showAndWait();
     }
+
+
+    @FXML
+    public void deleteAndRefreshBillet(Billet billet) {
+        ServiceBillet se = new ServiceBillet();
+        se.delete(billet);
+        billetCardContainer.getChildren().clear();
+        displayBillets(null);
+    }
+
+
+    //here lies my core
     @FXML
     private FlowPane billetCardContainer;
     @javafx.fxml.FXML
+
+
     public void displayBillets(javafx.event.ActionEvent actionEvent) {
-    billetCardContainer.getChildren().clear();
+        billetCardContainer.getChildren().clear();
 
-    List<Billet> billets = sb.getAll();
-    for (Billet billet : billets) {
-        VBox card = new VBox();
-        card.setStyle("-fx-background-color: white; -fx-padding: 10px; -fx-border-radius: 10px; "
-                + "-fx-background-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);"
-                + "-fx-min-width: 200px; -fx-max-width: 200px; -fx-alignment: center; -fx-spacing: 10;");
-        Label title = new Label("Ticket de " + billet.getProprietaire() );
-        title.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        List<Billet> billets = sb.getAll();
+        for (Billet billet : billets) {
+            VBox card = new VBox();
+            card.setStyle("-fx-background-color: white; -fx-padding: 10px; -fx-border-radius: 10px; "
+                    + "-fx-background-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);"
+                    + "-fx-min-width: 200px; -fx-max-width: 200px; -fx-alignment: center; -fx-spacing: 10;");
 
-        Label name = new Label(billet.getProprietaire());
+            Label title = new Label("Ticket de " + billet.getProprietaire());
+            title.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
-        name.setStyle("-fx-font-size: 12px; -fx-font-weight: bold;");
-        Label price = new Label("💰 " + billet.getPrix() + " DT");
-        Label eventName = new Label("🎉 " + billet.getEvent());
-        Button detailsButton = new Button("Voir Détails");
-        detailsButton.setOnAction(b->showBilletDetails(billet));
+            Label name = new Label(billet.getProprietaire());
+            name.setStyle("-fx-font-size: 12px; -fx-font-weight: bold;");
+            Label price = new Label("💰 " + billet.getPrix() + " DT");
+            Label eventName = new Label("🎉 " + billet.getEvent());
 
-        card.getChildren().addAll(title, name, price,eventName, detailsButton);
-        billetCardContainer.getChildren().add(card);
+            Button detailsButton = new Button("Voir Détails");
+            detailsButton.setOnAction(b -> showBilletDetails(billet));
+
+            // Delete button
+            Button deleteButton = new Button("Supprimer");
+            deleteButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
+            deleteButton.setOnAction(e -> deleteAndRefreshBillet(billet));
+
+            card.getChildren().addAll(title, name, price, eventName, detailsButton, deleteButton);
+            billetCardContainer.getChildren().add(card);
+
+        }
     }
-    }
+
 
 
     @javafx.fxml.FXML
