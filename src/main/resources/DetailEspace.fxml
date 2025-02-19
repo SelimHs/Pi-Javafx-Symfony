@@ -27,10 +27,11 @@
 
         <ScrollPane layoutX="50.0" layoutY="230.0" prefHeight="180.0" prefWidth="550.0">
             <content>
-                <VBox fx:id="organisateurContainer" spacing="10.0"
-                      style="-fx-padding: 10px; -fx-background-color: white; -fx-border-radius: 10px;"/>
+                <VBox fx:id="organisateurContainer" spacing="15.0"
+                      style="-fx-padding: 15px; -fx-background-color: transparent;"/>
             </content>
         </ScrollPane>
+
 
         <!-- 🔙 Bouton Retour -->
         <Button fx:id="retourButton" layoutX="50.0" layoutY="430.0" text="⬅ Retour"

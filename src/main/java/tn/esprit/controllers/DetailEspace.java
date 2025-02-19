@@ -51,30 +51,45 @@ public class DetailEspace {
 
         if (organisateurs.isEmpty()) {
             Label noOrganisateur = new Label("❌ Aucun organisateur pour cet espace.");
-            noOrganisateur.setStyle("-fx-font-size: 14px; -fx-text-fill: white;");
+            noOrganisateur.setStyle("-fx-font-size: 16px; -fx-text-fill: white;");
             organisateurContainer.getChildren().add(noOrganisateur);
         } else {
             for (Organisateur organisateur : organisateurs) {
-                HBox container = new HBox(10);
-                container.setStyle("-fx-padding: 10px; -fx-background-color: #FFFFFF; -fx-border-radius: 10px;");
+                HBox card = new HBox(15);
+                card.setStyle("-fx-padding: 15px; -fx-background-color: #ffffff; -fx-border-radius: 10px; -fx-border-color: #8a2be2;"
+                        + "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 5);");
+                card.setPrefHeight(80);
 
-                Label label = new Label("👤 " + organisateur.getNomOrg() + " " + organisateur.getPrenomOrg() +
-                        " - 📝 " + organisateur.getDescriptionOrg());
-                label.setStyle("-fx-font-size: 14px; -fx-text-fill: black;");
+                VBox detailsBox = new VBox(5);
+                Label nameLabel = new Label("👤 " + organisateur.getNomOrg() + " " + organisateur.getPrenomOrg());
+                nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #4b0082;");
 
+                Label descriptionLabel = new Label("📝 " + organisateur.getDescriptionOrg());
+                descriptionLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #555;");
+
+                Label phoneLabel = new Label("📞 " + organisateur.getTelef());
+                phoneLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #27ae60;");
+
+                detailsBox.getChildren().addAll(nameLabel, descriptionLabel, phoneLabel);
+
+                // Boutons Modifier et Supprimer
+                HBox buttonBox = new HBox(10);
                 Button btnModifier = new Button("✏ Modifier");
-                btnModifier.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
+                btnModifier.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white; -fx-border-radius: 8px; -fx-padding: 5px 10px;");
                 btnModifier.setOnAction(event -> modifierOrganisateur(organisateur));
 
                 Button btnSupprimer = new Button("🗑 Supprimer");
-                btnSupprimer.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
+                btnSupprimer.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-border-radius: 8px; -fx-padding: 5px 10px;");
                 btnSupprimer.setOnAction(event -> supprimerOrganisateur(organisateur));
 
-                container.getChildren().addAll(label, btnModifier, btnSupprimer);
-                organisateurContainer.getChildren().add(container);
+                buttonBox.getChildren().addAll(btnModifier, btnSupprimer);
+
+                card.getChildren().addAll(detailsBox, buttonBox);
+                organisateurContainer.getChildren().add(card);
             }
         }
     }
+
 
     private void modifierOrganisateur(Organisateur organisateur) {
         try {

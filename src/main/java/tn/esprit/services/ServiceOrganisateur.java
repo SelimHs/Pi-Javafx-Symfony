@@ -73,6 +73,7 @@ public class ServiceOrganisateur {
         return organisateurs;
     }
 
+
     // ✅ Trouver un organisateur par ID avec "telef"
     public Optional<Organisateur> findById(int id) {
         String qry = "SELECT * FROM organisateur WHERE id_org = ?";
@@ -142,6 +143,7 @@ public class ServiceOrganisateur {
     public Optional<Object> findEspaceById(int idEspace) {
         return Optional.empty(); // 🚀 Amélioration possible : Ajouter une requête SQL pour récupérer l'espace
     }
+
 
     public Organisateur[] getAll() {
         return null;
