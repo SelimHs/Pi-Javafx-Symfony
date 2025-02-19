@@ -30,9 +30,9 @@ public class AfficherEspaces {
 
     @FXML
     public void initialize() {
-        afficherEspaces();  // Load all spaces initially
+        afficherEspaces();  // Charger les espaces au démarrage
 
-        // 🔍 Add a listener to the search field for real-time filtering
+        // 🔍 Recherche dynamique en temps réel
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
             searchEspace(newValue.trim().toLowerCase());
         });
@@ -62,14 +62,19 @@ public class AfficherEspaces {
         btnSupprimer.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
         btnSupprimer.setOnAction(e -> supprimerEspace(espace));
 
+        // 🔎 Nouveau bouton pour afficher les détails
+        Button btnDetails = new Button("Détails");
+        btnDetails.setStyle("-fx-background-color: #3498db; -fx-text-fill: white;");
+        btnDetails.setOnAction(e -> afficherDetailsEspace(espace));
+
         card.getChildren().addAll(
-                new javafx.scene.control.Label("🏠 " + espace.getNomEspace()),
-                new javafx.scene.control.Label("📍 " + espace.getAdresse()),
-                new javafx.scene.control.Label("👥 Capacité: " + espace.getCapacite()),
-                new javafx.scene.control.Label("📅 Disponibilité: " + espace.getDisponibilite()),
-                new javafx.scene.control.Label("💰 Prix: " + espace.getPrix() + " DT"),
-                new javafx.scene.control.Label("🏢 Type: " + espace.getTypeEspace()),
-                btnModifier, btnSupprimer
+                new Label("🏠 " + espace.getNomEspace()),
+                new Label("📍 " + espace.getAdresse()),
+                new Label("👥 Capacité: " + espace.getCapacite()),
+                new Label("📅 Disponibilité: " + espace.getDisponibilite()),
+                new Label("💰 Prix: " + espace.getPrix() + " DT"),
+                new Label("🏢 Type: " + espace.getTypeEspace()),
+                btnModifier, btnSupprimer, btnDetails // Ajouter le bouton "Détails"
         );
 
         return card;
@@ -98,6 +103,25 @@ public class AfficherEspaces {
         }
     }
 
+    // ✅ Fonction pour afficher les détails de l'espace et ses organisateurs
+    private void afficherDetailsEspace(Espace espace) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/DetailEspace.fxml"));
+            Parent root = loader.load();
+            DetailEspace controller = loader.getController();
+            controller.initData(espace);
+
+            Stage stage = (Stage) espaceCardContainer.getScene().getWindow(); // Récupérer la fenêtre actuelle
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
     @FXML
     public void ajouterEspaceView(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/GestionEspace.fxml"));
@@ -112,9 +136,8 @@ public class AfficherEspaces {
         ajouterEspaceView(event);
     }
 
-
     private void searchEspace(String searchText) {
-        espaceCardContainer.getChildren().clear();  // Clear existing displayed cards
+        espaceCardContainer.getChildren().clear();  // Vider les cartes affichées
 
         List<Espace> espaces = serviceEspace.getAll();
 
@@ -125,13 +148,11 @@ public class AfficherEspaces {
             }
         }
 
-        // 🛑 Show message if no results found
+        // 🛑 Message si aucun espace trouvé
         if (espaceCardContainer.getChildren().isEmpty()) {
             Label noResults = new Label("❌ Aucun espace trouvé.");
             noResults.setStyle("-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;");
             espaceCardContainer.getChildren().add(noResults);
         }
     }
-
-
 }

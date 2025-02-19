@@ -26,9 +26,13 @@ public class GestionOrganisateur implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // Événement du bouton "Ajouter"
-        btnAjouterOrganisateur.setOnAction(event -> ajouterOrganisateur());
+        if (btnAjouterOrganisateur != null) {
+            btnAjouterOrganisateur.setOnAction(event -> ajouterOrganisateur());
+        } else {
+            System.out.println("⚠️ Erreur : btnAjouterOrganisateur est NULL !");
+        }
     }
+
 
     /**
      * 🚀 Méthode pour ajouter un organisateur
