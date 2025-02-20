@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.UserForm"
+            style="-fx-background-color: linear-gradient(to bottom right, #8A2BE2, #4B0082);">
+
+    <children>
+        <VBox spacing="10" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20">
+            <!-- Titre -->
+            <Label text="Ajouter/Modifier un Utilisateur" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: white;" />
+
+            <!-- Nom et Prénom -->
+            <HBox spacing="10" HBox.hgrow="ALWAYS">
+                <VBox HBox.hgrow="ALWAYS">
+                    <Label text="Nom" style="-fx-text-fill: white;" />
+                    <TextField fx:id="nomField" promptText="Entrez votre nom" HBox.hgrow="ALWAYS"/>
+                </VBox>
+                <VBox HBox.hgrow="ALWAYS">
+                    <Label text="Prénom" style="-fx-text-fill: white;" />
+                    <TextField fx:id="prenomField" promptText="Entrez votre prénom" HBox.hgrow="ALWAYS"/>
+                </VBox>
+            </HBox>
+
+            <!-- Email -->
+            <VBox VBox.vgrow="ALWAYS">
+                <Label text="Email" style="-fx-text-fill: white;" />
+                <TextField fx:id="emailField" promptText="Entrez votre email" VBox.vgrow="ALWAYS"/>
+            </VBox>
+
+            <!-- Mot de passe -->
+            <VBox VBox.vgrow="ALWAYS">
+                <Label text="Mot de Passe" style="-fx-text-fill: white;" />
+                <PasswordField fx:id="passwordField" promptText="Entrez votre mot de passe" VBox.vgrow="ALWAYS"/>
+            </VBox>
+
+            <!-- Numéro de téléphone -->
+            <VBox VBox.vgrow="ALWAYS">
+                <Label text="Numéro de Téléphone" style="-fx-text-fill: white;" />
+                <TextField fx:id="numeroField" promptText="Entrez votre numéro" VBox.vgrow="ALWAYS"/>
+            </VBox>
+
+            <!-- Adresse -->
+            <VBox VBox.vgrow="ALWAYS">
+                <Label text="Adresse" style="-fx-text-fill: white;" />
+                <TextArea fx:id="adresseField" promptText="Entrez votre adresse" prefRowCount="3" VBox.vgrow="ALWAYS"/>
+            </VBox>
+
+            <!-- Type d'utilisateur -->
+            <VBox spacing="5" VBox.vgrow="ALWAYS">
+                <Label text="Type d'utilisateur" style="-fx-text-fill: white;" />
+                <HBox spacing="10">
+                    <CheckBox fx:id="typeAdmin" text="Administrateur" style="-fx-text-fill: white;" />
+                    <CheckBox fx:id="typeUser" text="Utilisateur" style="-fx-text-fill: white;" />
+                </HBox>
+            </VBox>
+
+            <!-- Genre -->
+            <VBox spacing="5" VBox.vgrow="ALWAYS">
+                <Label text="Genre" style="-fx-text-fill: white;" />
+                <HBox spacing="10">
+                    <CheckBox fx:id="genreMasculin" text="Masculin" style="-fx-text-fill: white;" />
+                    <CheckBox fx:id="genreFeminin" text="Féminin" style="-fx-text-fill: white;" />
+                </HBox>
+            </VBox>
+
+            <!-- Boutons -->
+            <HBox spacing="10" HBox.hgrow="ALWAYS">
+                <Button fx:id="createButton" text="Enregistrer" onAction="#handleSave"
+                        style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-padding: 10px 20px;" HBox.hgrow="ALWAYS"/>
+                <Button fx:id="cancelButton" text="Annuler" onAction="#handleCancel"
+                        style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-padding: 10px 20px;" HBox.hgrow="ALWAYS"/>
+            </HBox>
+
+            <!-- Message d'erreur -->
+            <Label fx:id="messageLabel" text="" style="-fx-text-fill: red;"/>
+        </VBox>
+    </children>
+</AnchorPane>
