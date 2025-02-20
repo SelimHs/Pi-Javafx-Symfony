@@ -27,7 +27,7 @@ public class ModifierBilletController {
     private TextField billetPrix;
 
     @FXML
-    private ComboBox<Billet.TypeBillet> billetType;
+    private ComboBox billetType;
 
     @FXML
     private ComboBox<Event> billetEvent;
@@ -94,7 +94,7 @@ public class ModifierBilletController {
         // Mise à jour des valeurs du billet
         selectedBillet.setProprietaire(billetProprietaire.getText());
         selectedBillet.setPrix(Integer.parseInt(billetPrix.getText()));
-        selectedBillet.setType(billetType.getValue());
+        selectedBillet.setType(Billet.TypeBillet.valueOf(billetType.getValue().toString()));
         selectedBillet.setEvent(billetEvent.getValue());
 
         // Mise à jour du billet dans la base de données
