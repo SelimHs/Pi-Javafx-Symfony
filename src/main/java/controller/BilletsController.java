@@ -35,6 +35,7 @@ public class BilletsController {
     @javafx.fxml.FXML
     private DatePicker billetDateAchat;
 
+    //here lies my navigation
     @javafx.fxml.FXML
     public void goToBilletList(javafx.event.ActionEvent actionEvent) {
         try {
@@ -64,23 +65,21 @@ public class BilletsController {
 
 
 
-
+    //here lies my initilization
     @FXML
     public void initialize() {
-        // Récupérer la liste des événements depuis la base de données
+
         List<Event> events = serviceEvent.getAll();
 
-        // Mettre à jour la ComboBox avec les événements
         billetEvent.setItems(FXCollections.observableArrayList(events));
 
-        // Optionnel : si tu veux afficher un texte dans la ComboBox (par exemple "Sélectionner un événement")
         billetEvent.setPromptText("Sélectionner un événement");
     }
 
+    //here lies my core
     @FXML
     public void addBillet(javafx.event.ActionEvent actionEvent) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        // Création du nouvel objet Billet
         Billet billet = new Billet();
         ServiceBillet sb = new ServiceBillet();
 
@@ -118,14 +117,14 @@ public class BilletsController {
             return;
         }
 
-        // Récupération des valeurs saisies dans les champs
+
         String proprietaire = billetProprietaire.getText();
         int prix = Integer.parseInt(billetPrix.getText());
         LocalDateTime dateAchat = LocalDateTime.now(); // Date et heure actuelles
         Billet.TypeBillet type = Billet.TypeBillet.valueOf(billetType.getValue().toString()); // Conversion du type sélectionné
         Event selectedEvent = billetEvent.getValue(); // L'événement sélectionné dans le ComboBox
 
-        // Attribution des valeurs à l'objet Billet
+
         billet.setProprietaire(proprietaire);
         billet.setPrix(prix);
         billet.setDateAchat(dateAchat);
@@ -134,7 +133,7 @@ public class BilletsController {
 
         sb.add(billet);
 
-        // Réinitialiser les champs après l'ajout
+
         billetProprietaire.clear();
         billetPrix.clear();
         billetType.getSelectionModel().clearSelection();

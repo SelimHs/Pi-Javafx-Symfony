@@ -11,11 +11,8 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import tn.esprit.models.Billet;
-import tn.esprit.models.Event;
 import tn.esprit.services.ServiceBillet;
-import tn.esprit.services.ServiceEvent;
 
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.List;
 
@@ -23,10 +20,10 @@ public class BilletsMainController {
 
     ServiceBillet sb = new ServiceBillet();
 
-    @javafx.fxml.FXML
-    private ListView billetListView;
     ObservableList<Billet> billetNames = FXCollections.observableArrayList();
 
+    @javafx.fxml.FXML
+    private ListView billetListView;
     @FXML
     private TextField searchField;
     @javafx.fxml.FXML
@@ -34,12 +31,13 @@ public class BilletsMainController {
     @javafx.fxml.FXML
     private Button deleteBouton;
 
+    //here lies my init
     @FXML
     public void initialize() {
-        // Affiche les billets au démarrage
+
         displayBillets(null);
 
-        // Ajoute un écouteur d'événements pour filtrer les billets à chaque modification de texte
+
         searchField.textProperty().addListener((observable, oldValue, newValue) -> filterBillets(newValue));
     }
 
@@ -121,7 +119,7 @@ public class BilletsMainController {
             Button detailsButton = new Button("Voir Détails");
             detailsButton.setOnAction(b -> showBilletDetails(billet));
 
-            // Delete button
+
             Button deleteButton = new Button("Supprimer");
             deleteButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
             deleteButton.setOnAction(e -> deleteAndRefreshBillet(billet));
@@ -142,11 +140,11 @@ public class BilletsMainController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/modifierBillet.fxml"));
             Parent root = loader.load();
 
-            // Get the controller and pass the selected event
+            // pass selected event to controller
             ModifierBilletController modifierBilletController = loader.getController();
             modifierBilletController.initDataBillet(billet);
 
-            // Get the current stage and replace its scene
+            // replace scene for current stage
             Stage stage = (Stage) sourceButton.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
@@ -156,7 +154,7 @@ public class BilletsMainController {
         }
     }
     private void filterBillets(String searchText) {
-        billetCardContainer.getChildren().clear();  // Réinitialiser l'affichage des billets
+        billetCardContainer.getChildren().clear();
 
         List<Billet> filteredBillets = sb.getAll().stream()
                 .filter(billet ->
@@ -168,7 +166,7 @@ public class BilletsMainController {
                 )
                 .toList();
 
-        // Affiche les billets filtrés
+
         displayFilteredBillets(filteredBillets);
     }
     private void displayFilteredBillets(List<Billet> billets) {
@@ -189,7 +187,7 @@ public class BilletsMainController {
             Button detailsButton = new Button("Voir Détails");
             detailsButton.setOnAction(b -> showBilletDetails(billet));
 
-            // Bouton supprimer
+
             Button deleteButton = new Button("Supprimer");
             deleteButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
             deleteButton.setOnAction(e -> deleteAndRefreshBillet(billet));

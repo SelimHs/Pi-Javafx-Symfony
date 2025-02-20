@@ -35,9 +35,9 @@ public class ModifierEventController {
 
     @FXML
     private TextArea detailsField;
-    private Event newEvent; // This will store the event being edited
+    private Event newEvent;
 
-    // Method to initialize the form with the selected event data
+    //put selected event data in new form
     public void initDataEvent(Event event) {
         this.newEvent = event;
         nomEventField.setText(event.getNomEvent());
@@ -48,7 +48,6 @@ public class ModifierEventController {
         dateField.setText(event.getDate());
     }
 
-    // Method to save the updated event
     @FXML
     public void saveEvent(javafx.event.ActionEvent actionEvent) {
         // Validate fields before saving
@@ -62,7 +61,7 @@ public class ModifierEventController {
             return;
         }
 
-        // Update the event data from the form
+
         newEvent.setNomEvent(nomEventField.getText());
         newEvent.setPrix(Integer.parseInt(prixField.getText()));
         newEvent.setNbrVisiteurs(Integer.parseInt(nbrVisiteursField.getText()));
@@ -70,9 +69,9 @@ public class ModifierEventController {
         newEvent.setDetails(detailsField.getText());
         newEvent.setDate(dateField.getText());
 
-        // Update the event in the database
+
         ServiceEvent se = new ServiceEvent();
-        se.update(newEvent); // Call the update method in your ServiceEvent class
+        se.update(newEvent);
 
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Events.fxml"));

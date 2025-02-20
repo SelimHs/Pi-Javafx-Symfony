@@ -15,20 +15,16 @@ import tn.esprit.services.ServiceBillet;
 import tn.esprit.services.ServiceEvent;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class ModifierBilletController {
 
     @FXML
     private TextField billetProprietaire;
-
     @FXML
     private TextField billetPrix;
-
     @FXML
     private ComboBox billetType;
-
     @FXML
     private ComboBox<Event> billetEvent;
 
@@ -36,18 +32,19 @@ public class ModifierBilletController {
     private ServiceBillet serviceBillet = new ServiceBillet();
     private ServiceEvent serviceEvent = new ServiceEvent();
 
+    //here lies my init
     @FXML
     public void initialize() {
         List<Event> events = serviceEvent.getAll();
 
-        // Mettre à jour la ComboBox avec les événements
+        //load events into add combobox
         billetEvent.setItems(FXCollections.observableArrayList(events));
 
-        // Optionnel : si tu veux afficher un texte dans la ComboBox (par exemple "Sélectionner un événement")
+
         billetEvent.setPromptText("Sélectionner un événement");
     }
 
-    // Initialiser le formulaire avec les données du billet sélectionné
+    //put selected data in new form
     public void initDataBillet(Billet billet) {
         this.selectedBillet = billet;
         billetProprietaire.setText(billet.getProprietaire());
@@ -91,13 +88,13 @@ public class ModifierBilletController {
             new Alert(Alert.AlertType.ERROR, "L'événement sélectionné ne peut pas être vide.").showAndWait();
             return;
         }
-        // Mise à jour des valeurs du billet
+
         selectedBillet.setProprietaire(billetProprietaire.getText());
         selectedBillet.setPrix(Integer.parseInt(billetPrix.getText()));
         selectedBillet.setType(Billet.TypeBillet.valueOf(billetType.getValue().toString()));
         selectedBillet.setEvent(billetEvent.getValue());
 
-        // Mise à jour du billet dans la base de données
+
         serviceBillet.update(selectedBillet);
 
         try {

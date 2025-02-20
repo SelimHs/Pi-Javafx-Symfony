@@ -38,13 +38,40 @@ public class EventsController {
     @FXML
     private ListView<String> eventListView;
 
-    /*@FXML
-    public void displayEvents(javafx.event.ActionEvent actionEvent) {
-        labelDisplay.setText(sp.getAll().toString());
-    }*/
+
+    //here lies my navigation
+    @FXML
+    public void goToEventList(ActionEvent actionEvent) {
+
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Events.fxml"));
+            Parent root = fxmlLoader.load();
+            Stage stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
+
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
 
 
+    }
+    @javafx.fxml.FXML
+    public void goToAcceuil(javafx.event.ActionEvent actionEvent) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Acceuil.fxml"));
+            Parent root = fxmlLoader.load();
+            Stage stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
 
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+
+    //here lies my core
     @FXML
     public void addEvent(javafx.event.ActionEvent actionEvent) {
 
@@ -53,7 +80,7 @@ public class EventsController {
             return;
         }
 
-        // Validate Event Date
+
         LocalDate selectedDate = eventDate.getValue();
         if (selectedDate == null) {
             new Alert(Alert.AlertType.ERROR, "Le champ 'Date de l'événement' ne peut pas être vide.").showAndWait();
@@ -80,13 +107,13 @@ public class EventsController {
         }
 
 
-        // Validate Event Details
+
         if (eventDetails.getText() == null || eventDetails.getText().isEmpty()) {
             new Alert(Alert.AlertType.ERROR, "Le champ 'Détails' ne peut pas être vide.").showAndWait();
             return;
         }
 
-        // Validate Event Space
+
         if (eventEspace.getText() == null || eventEspace.getText().isEmpty()) {
             new Alert(Alert.AlertType.ERROR, "Le champ 'Espace' ne peut pas être vide.").showAndWait();
             return;
@@ -118,47 +145,5 @@ public class EventsController {
         eventEspace.clear();
     }
 
-    @FXML
-    public void goToEventList(ActionEvent actionEvent) {
 
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Events.fxml"));
-            Parent root = fxmlLoader.load();
-            Stage stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
-
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-
-
-    }
-    @javafx.fxml.FXML
-    public void goToAcceuil(javafx.event.ActionEvent actionEvent) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Acceuil.fxml"));
-            Parent root = fxmlLoader.load();
-            Stage stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
-
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    public void goToAjoutEvent(javafx.event.ActionEvent actionEvent) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ajoutEvent.fxml"));
-            Parent root = fxmlLoader.load();
-            Stage stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
-
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-
-    }
 }

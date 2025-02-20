@@ -4,18 +4,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import tn.esprit.models.Event;
 import tn.esprit.services.ServiceEvent;
 
-import java.awt.event.ActionEvent;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -29,10 +27,11 @@ public class EventsMainController {
     @FXML
     private Button deleteBouton;
 
+    //here lies my init
     @FXML
     private void initialize() {
-        displayEvents(); // Affiche les événements au départ
-        // Ajoute un écouteur d'événements pour filtrer les événements à chaque modification de texte dans la barre de recherche
+        displayEvents();
+
         searchField.textProperty().addListener((observable, oldValue, newValue) -> filterEvents(newValue));
     }
 
@@ -83,6 +82,8 @@ public class EventsMainController {
         }
 
     }
+
+
     //here lies my extras
     private void showEventDetails(Event event) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -96,14 +97,16 @@ public class EventsMainController {
 
         alert.showAndWait();
     }
+
+
     //here lies my core
     @FXML
     private FlowPane eventCardContainer;
 
     public void displayEvents() {
-        eventCardContainer.getChildren().clear(); // Nettoyer avant de recharger
+        eventCardContainer.getChildren().clear();
 
-        List<Event> events = se.getAll(); // Récupérer les événements
+        List<Event> events = se.getAll();
 
         for (Event event : events) {
             VBox card = new VBox();
@@ -136,9 +139,6 @@ public class EventsMainController {
 
 
 
-
-
-
     @FXML
     public void deleteAndRefreshEvent(Event event) {
         ServiceEvent se = new ServiceEvent();
@@ -153,11 +153,11 @@ public class EventsMainController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierEvent.fxml"));
         Parent root = loader.load();
 
-        // Get the controller and pass the selected event
+        // pass selected event to controller
         ModifierEventController modifierEventController = loader.getController();
         modifierEventController.initDataEvent(event);
 
-        // Get the current stage and replace its scene
+        // replace scene of current stage
         Stage stage = (Stage) sourceButton.getScene().getWindow();
         stage.setScene(new Scene(root));
         stage.show();
@@ -168,9 +168,9 @@ public class EventsMainController {
     }
 
     private void filterEvents(String searchText) {
-        eventCardContainer.getChildren().clear(); // Réinitialiser l'affichage des événements
+        eventCardContainer.getChildren().clear();
 
-        // Filtrer les événements en fonction du texte dans la barre de recherche
+
         List<Event> filteredEvents = se.getAll().stream()
                 .filter(event ->
                         event.getNomEvent().toLowerCase().contains(searchText.toLowerCase()) ||
@@ -181,7 +181,7 @@ public class EventsMainController {
                 )
                 .toList();
 
-        // Afficher les événements filtrés
+
         displayFilteredEvents(filteredEvents);
     }
 
