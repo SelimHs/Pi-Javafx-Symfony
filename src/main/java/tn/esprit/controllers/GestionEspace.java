@@ -123,4 +123,20 @@ public class GestionEspace {
         typeEspace.clear();
         disponibiliteEspace.getSelectionModel().clearSelection();
     }
+
+    @FXML
+    private void retourAccueil(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Acceuil.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("❌ Erreur lors du chargement de Acceuil.fxml");
+        }
+    }
+
 }

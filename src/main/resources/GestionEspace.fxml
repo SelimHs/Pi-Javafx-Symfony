@@ -30,7 +30,9 @@
 
                 <Label style="-fx-font-size: 20px; -fx-text-fill: white; -fx-font-weight: bold;                               -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 4, 0, 0, 2);" text="Gestion des Espaces" />
 
-                <Button style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;                                -fx-padding: 10px; -fx-border-radius: 8px;" text="🏠 Accueil" />
+                <Button fx:id="btnAccueil" onAction="#retourAccueil"
+                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;
+               -fx-padding: 10px; -fx-border-radius: 8px;" text="🏠 Accueil" />
                 <Button fx:id="ajtesp" onAction="#ajouterEspaceView" text="➕ Ajouter Espace" />
                 <Button fx:id="affichesp" onAction="#afficherEspaces" text="📋 Liste des Espaces" />
             </children>
