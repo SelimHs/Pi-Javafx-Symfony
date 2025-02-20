@@ -67,14 +67,11 @@ public class ServiceBillet implements Iservice<Billet> {
     }
 
     @Override
-<<<<<<< HEAD
-=======
     public void delete(int id) {
 
     }
 
     @Override
->>>>>>> c026506 ( integration comp)
     public void update(Billet billet) {
         String qry = "UPDATE `billet` SET `proprietaire` = ?, `prix` = ?, `dateAchat` = ?, `type` = ?, `idEvent` = ? WHERE `idBillet` = ?";
         try {

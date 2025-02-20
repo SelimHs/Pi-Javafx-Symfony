@@ -57,15 +57,10 @@ public class ServiceReservation implements Iservice<Reservation> {
         return reservations;
     }
 
-<<<<<<< HEAD
-=======
     @Override
     public void delete(int id) {
 
     }
->>>>>>> c026506 ( integration comp)
-
-
     @Override
     public void update(Reservation reservation) {
         String qry = "UPDATE `reservation` SET `dateReservation` = ?, `statut` = ?, `idUser` = ?, `idEvent` = ? WHERE `idReservation` = ?";

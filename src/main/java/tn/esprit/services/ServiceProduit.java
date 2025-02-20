@@ -69,15 +69,10 @@ public class ServiceProduit implements Iservice<Produit> {
         return produits;
     }
 
-<<<<<<< HEAD
-=======
     @Override
     public void delete(int id) {
 
     }
->>>>>>> c026506 ( integration comp)
-
-
     @Override
     public void update(Produit produit) {
         String qry = "UPDATE `produit` SET `nomProduit` = ?, `prixProduit` = ?, `description` = ?, `categorie` = ?, `quantite` = ?, `idFournisseur` = ? WHERE `idProduit` = ?";

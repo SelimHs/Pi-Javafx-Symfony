@@ -64,14 +64,11 @@ public class ServiceEvent implements Iservice<Event> {
     }
 
     @Override
-<<<<<<< HEAD
-=======
     public void delete(int id) {
 
     }
 
     @Override
->>>>>>> c026506 ( integration comp)
     public void update(Event event) {
         String qry = "UPDATE `event` SET `nomEvent` = ?, `date` = ?, `prix` = ?, `nbrVisiteurs` = ?, `nomEspace` = ?, `details` = ? WHERE `idEvent` = ?";
         try {

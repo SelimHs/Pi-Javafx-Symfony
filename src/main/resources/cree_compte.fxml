@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.esprit.controllers.CreeCompte"
+            style="-fx-background-color: linear-gradient(to bottom right, #8A2BE2, #4B0082);">
+
+    <children>
+        <VBox layoutX="50" layoutY="50" spacing="10">
+            <!-- Titre -->
+            <Label text="Créer un Compte" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: white;" />
+
+            <!-- Nom et Prénom -->
+            <HBox spacing="10">
+                <VBox>
+                    <Label text="Nom" style="-fx-text-fill: white;" />
+                    <TextField fx:id="nomField" promptText="Entrez votre nom" style="-fx-background-color: white; -fx-border-radius: 5px; -fx-padding: 8px;"/>
+                </VBox>
+                <VBox>
+                    <Label text="Prénom" style="-fx-text-fill: white;" />
+                    <TextField fx:id="prenomField" promptText="Entrez votre prénom" style="-fx-background-color: white; -fx-border-radius: 5px; -fx-padding: 8px;"/>
+                </VBox>
+            </HBox>
+
+            <!-- Email -->
+            <VBox>
+                <Label text="Email" style="-fx-text-fill: white;" />
+                <TextField fx:id="emailField" promptText="Entrez votre email" style="-fx-background-color: white; -fx-border-radius: 5px; -fx-padding: 8px;"/>
+            </VBox>
+
+            <!-- Mot de passe -->
+            <VBox>
+                <Label text="Mot de Passe" style="-fx-text-fill: white;" />
+                <PasswordField fx:id="passwordField" promptText="Entrez votre mot de passe" style="-fx-background-color: white; -fx-border-radius: 5px; -fx-padding: 8px;"/>
+            </VBox>
+
+            <!-- Numéro de téléphone -->
+            <VBox>
+                <Label text="Numéro de Téléphone" style="-fx-text-fill: white;" />
+                <TextField fx:id="numeroField" promptText="Entrez votre numéro" style="-fx-background-color: white; -fx-border-radius: 5px; -fx-padding: 8px;"/>
+            </VBox>
+
+            <!-- Adresse -->
+            <VBox>
+                <Label text="Adresse" style="-fx-text-fill: white;" />
+                <TextArea fx:id="adresseField" promptText="Entrez votre adresse" prefRowCount="3" style="-fx-background-color: white; -fx-border-radius: 5px; -fx-padding: 8px;"/>
+            </VBox>
+
+            <!-- Type d'utilisateur -->
+            <VBox spacing="5">
+                <Label text="Type d'utilisateur" style="-fx-text-fill: white;" />
+                <HBox spacing="10">
+                    <CheckBox fx:id="typeAdmin" text="Administrateur" style="-fx-text-fill: white;" />
+                    <CheckBox fx:id="typeUser" text="Utilisateur" style="-fx-text-fill: white;" />
+                </HBox>
+            </VBox>
+
+            <!-- Genre -->
+            <VBox spacing="5">
+                <Label text="Genre" style="-fx-text-fill: white;" />
+                <HBox spacing="10">
+                    <CheckBox fx:id="genreMasculin" text="Masculin" style="-fx-text-fill: white;" />
+                    <CheckBox fx:id="genreFeminin" text="Féminin" style="-fx-text-fill: white;" />
+                </HBox>
+            </VBox>
+
+            <!-- Bouton de création -->
+            <Button fx:id="createButton" text="Créer un compte" onAction="#handleCreateAccount"
+                    style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 10px; -fx-padding: 10px 20px;"/>
+            <Button fx:id="backButton" text="↩ Retour" onAction="#goToLoginPage"
+                    style="-fx-background-color: #E74C3C; -fx-text-fill: white; -fx-font-size: 14px;
+               -fx-font-weight: bold; -fx-background-radius: 10px; -fx-padding: 10px 20px;"/>
+
+            <!-- Message d'erreur -->
+            <Label fx:id="messageLabel" text="" style="-fx-font-size: 14px; -fx-text-fill: red;"/>
+        </VBox>
+    </children>
+</AnchorPane>
