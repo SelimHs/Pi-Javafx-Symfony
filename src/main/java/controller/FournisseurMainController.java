@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.layout.FlowPane;
@@ -68,6 +69,14 @@ public class FournisseurMainController implements Initializable {
 
     private void showFournisseurDetails(fournisseur fournisseur) {
         // Implémentation pour afficher les détails d'un fournisseur
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Détails du Fournisseur");
+        alert.setHeaderText(fournisseur.getNomFournisseur());
+        alert.setContentText("🆔 ID : " + fournisseur.getIdFournisseur() +
+                "\n📝 Description : " + fournisseur.getDescription() +
+                "\n🏷 Type : " + fournisseur.getType());
+
+        alert.showAndWait();
     }
 
     @FXML

@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
@@ -78,7 +79,17 @@ public class ProduitMainController implements Initializable {
      * Gère l'affichage des détails d'un produit.
      */
     private void showProduitDetails(Produit produit) {
-        System.out.println("Affichage des détails pour : " + produit.getNomProduit());
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Détails du Produit");
+        alert.setHeaderText(produit.getNomProduit());
+        alert.setContentText("🆔 ID : " + produit.getIdProduit() +
+                "\n💰 Prix : " + produit.getPrixProduit() + " DT" +
+                "\n📝 Description : " + produit.getDescription() +
+                "\n📦 Catégorie : " + produit.getCategorie().name() +
+                "\n🔢 Quantité : " + produit.getQuantite() +
+                "\n🏢 Fournisseur : " + (produit.getFournisseur() != null ? produit.getFournisseur().getNomFournisseur() : "Non défini"));
+
+        alert.showAndWait();
     }
 
     /**
