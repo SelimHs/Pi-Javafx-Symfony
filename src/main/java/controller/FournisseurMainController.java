@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import java.io.IOException;
 import java.util.List;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -45,13 +46,36 @@ public class FournisseurMainController {
             deleteButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
             deleteButton.setOnAction(e -> deleteFournisseur(fournisseur));
 
-            card.getChildren().addAll(title, description, type, detailsButton, deleteButton);
+            Button modifyButton = new Button("Modifier");
+            modifyButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
+            modifyButton.setOnAction(e -> goToModifierFournisseur(fournisseur, e));
+
+            card.getChildren().addAll(title, description, type, detailsButton, modifyButton, deleteButton);
             fournisseurCardContainer.getChildren().add(card);
         }
     }
 
     private void showFournisseurDetails(fournisseur fournisseur) {
         // Implémentation pour afficher les détails d'un fournisseur
+    }
+
+    @FXML
+    public void goToModifierFournisseur(fournisseur fournisseur, ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierFournisseur.fxml"));
+            Parent root = loader.load();
+
+            ModifierFournisseur controller = loader.getController();
+            controller.initData(fournisseur);
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Modifier un Fournisseur");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("⚠️ Erreur lors du chargement de ModifierFournisseur.fxml !");
+        }
     }
 
     @FXML
@@ -63,7 +87,7 @@ public class FournisseurMainController {
     @FXML
     public void goToGestionFournisseur(ActionEvent actionEvent) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/GestionFournisseur.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/GestionFournisseur.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
