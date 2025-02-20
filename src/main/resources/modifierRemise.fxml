@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ModifierRemise">
+    <VBox spacing="10" alignment="CENTER" style="-fx-padding: 20px;">
+        <Label text="Modifier la Remise" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+
+        <GridPane hgap="10" vgap="10">
+            <Label text="Code Promo:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+            <TextField fx:id="codePromoField" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+            <Label text="Pourcentage de Remise:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+            <TextField fx:id="pourcentageRemiseField" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+            <Label text="Date d'Expiration:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+            <TextField fx:id="expirationDateField" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+        </GridPane>
+
+        <HBox spacing="10">
+            <Button fx:id="saveButton" text="Sauvegarder" onAction="#saveRemise" style="-fx-background-color: #2ecc71; -fx-text-fill: white;"/>
+            <Button fx:id="cancelButton" text="Annuler" onAction="#cancelEdit" style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
+        </HBox>
+    </VBox>
+</AnchorPane>

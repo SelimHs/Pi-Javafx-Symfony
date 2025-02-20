@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ModifierReservation">
+    <VBox spacing="10" alignment="CENTER" style="-fx-padding: 20px;">
+        <Label text="Modifier la Réservation" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+
+        <GridPane hgap="10" vgap="10">
+            <Label text="ID Réservation:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+            <TextField fx:id="idReservationField" GridPane.rowIndex="0" GridPane.columnIndex="1" editable="false"/>
+
+            <Label text="ID Utilisateur:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+            <TextField fx:id="idUserField" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+            <Label text="ID Événement:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+            <TextField fx:id="idEventField" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+
+            <Label text="Date de réservation:" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+            <TextField fx:id="dateReservationField" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+
+            <Label text="Statut:" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+            <ComboBox fx:id="statutComboBox" GridPane.rowIndex="4" GridPane.columnIndex="1">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="Confirmée" />
+                        <String fx:value="Annulée" />
+                        <String fx:value="En attente" />
+                    </FXCollections>
+                </items>
+            </ComboBox>
+        </GridPane>
+
+        <HBox spacing="10">
+            <Button fx:id="saveButton" text="Sauvegarder" onAction="#updateReservation" style="-fx-background-color: #2ecc71; -fx-text-fill: white;"/>
+            <Button fx:id="cancelButton" text="Annuler" onAction="#cancelEdit" style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
+        </HBox>
+    </VBox>
+</AnchorPane>

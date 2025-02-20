@@ -1,0 +1,137 @@
+
+package tn.esprit.services;
+
+        import tn.esprit.interfaces.Iservice;
+        import tn.esprit.models.Produit;
+        import tn.esprit.models.fournisseur;
+        import tn.esprit.utils.myDatabase;
+
+        import java.sql.*;
+        import java.util.ArrayList;
+        import java.util.List;
+
+public class ServiceProduit implements Iservice<Produit> {
+
+    private Connection cnx;
+
+    public ServiceProduit() {
+        cnx = myDatabase.getInstance().getConnection();
+    }
+
+    @Override
+    public void add(Produit produit) {
+        String qry = "INSERT INTO `produit`(`nomProduit`, `prixProduit`, `description`, `categorie`, `quantite`, `idFournisseur`) VALUES (?, ?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement pstm = cnx.prepareStatement(qry);
+            pstm.setString(1, produit.getNomProduit());
+            pstm.setInt(2, produit.getPrixProduit());
+            pstm.setString(3, produit.getDescription());
+            pstm.setString(4, produit.getCategorie().name()); // Stocke l'énumération en String
+            pstm.setInt(5, produit.getQuantite());
+            pstm.setInt(6, produit.getFournisseur().getIdFournisseur()); // Récupérer l'ID du fournisseur
+            pstm.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+
+
+    @Override
+    public List<Produit> getAll() {
+        List<Produit> produits = new ArrayList<>();
+        String qry = "SELECT p.*, f.nomFournisseur, f.description, f.type FROM produit p INNER JOIN fournisseur f ON p.idFournisseur = f.idFournisseur";
+        try {
+            Statement stm = cnx.createStatement();
+            ResultSet rs = stm.executeQuery(qry);
+            while (rs.next()) {
+                fournisseur fournisseur = new fournisseur(
+                        rs.getInt("idFournisseur"),
+                        rs.getString("nomFournisseur"),
+                        rs.getString("description"),
+                        rs.getString("type")
+                );
+
+                Produit produit = new Produit(
+                        rs.getInt("idProduit"),
+                        rs.getString("nomProduit"),
+                        rs.getInt("prixProduit"),
+                        rs.getString("description"),
+                        Produit.CategorieProduit.valueOf(rs.getString("categorie").toUpperCase()),
+                        rs.getInt("quantite"),
+                        fournisseur
+                );
+                produits.add(produit);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return produits;
+    }
+
+
+
+    @Override
+    public void update(Produit produit) {
+        String qry = "UPDATE `produit` SET `nomProduit` = ?, `prixProduit` = ?, `description` = ?, `categorie` = ?, `quantite` = ?, `idFournisseur` = ? WHERE `idProduit` = ?";
+        try {
+            PreparedStatement pstm = cnx.prepareStatement(qry);
+            pstm.setString(1, produit.getNomProduit());
+            pstm.setInt(2, produit.getPrixProduit());
+            pstm.setString(3, produit.getDescription());
+            pstm.setString(4, produit.getCategorie().name());
+            pstm.setInt(5, produit.getQuantite());
+            pstm.setInt(6, produit.getFournisseur().getIdFournisseur());
+            pstm.setInt(7, produit.getIdProduit());
+            pstm.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+
+    @Override
+    public void delete(Produit produit) {
+        String qry = "DELETE FROM `produit` WHERE `idProduit` = ?";
+        try {
+            PreparedStatement pstm = cnx.prepareStatement(qry);
+            pstm.setInt(1, produit.getIdProduit());
+            pstm.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+
+    @Override
+    public Produit findById(int id) {
+        String qry = "SELECT p.*, f.nomFournisseur, f.description, f.type FROM produit p INNER JOIN fournisseur f ON p.idFournisseur = f.idFournisseur WHERE p.idProduit = ?";
+        try {
+            PreparedStatement pstm = cnx.prepareStatement(qry);
+            pstm.setInt(1, id);
+            ResultSet rs = pstm.executeQuery();
+            if (rs.next()) {
+                fournisseur fournisseur = new fournisseur(
+                        rs.getInt("idFournisseur"),
+                        rs.getString("nomFournisseur"),
+                        rs.getString("description"),
+                        rs.getString("type")
+                );
+
+                return new Produit(
+                        rs.getInt("idProduit"),
+                        rs.getString("nomProduit"),
+                        rs.getInt("prixProduit"),
+                        rs.getString("description"),
+                        Produit.CategorieProduit.valueOf(rs.getString("categorie").toUpperCase()),
+                        rs.getInt("quantite"),
+                        fournisseur
+                );
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
+}

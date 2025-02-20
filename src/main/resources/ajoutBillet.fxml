@@ -31,6 +31,20 @@
                                -fx-padding: 10px; -fx-border-radius: 8px;"/>
                 <Button style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;-fx-padding: 10px; -fx-border-radius: 8px;" text="➕ Ajouter Billet" />
                 <Button style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;-fx-padding: 10px; -fx-border-radius: 8px;" text="📋 Liste des billets" onAction="#goToBilletList" />
+                <Button onAction="#goToReservation" text="Reservation"
+                        style="-fx-background-color: #9b59b6;
+                                   -fx-text-fill: white;
+                                   -fx-font-size: 16px;
+                                   -fx-font-weight: bold;
+                                   -fx-border-radius: 12px;
+                                   -fx-padding: 20px 40px;"/>
+                <Button onAction="#goToRemise" text="Remise"
+                        style="-fx-background-color: #9b59b6;
+                                   -fx-text-fill: white;
+                                   -fx-font-size: 16px;
+                                   -fx-font-weight: bold;
+                                   -fx-border-radius: 12px;
+                                   -fx-padding: 20px 40px;"/>
             </children>
         </VBox>
 

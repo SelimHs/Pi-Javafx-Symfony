@@ -8,6 +8,7 @@
 <?import javafx.scene.image.ImageView?>
 
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.GridPane?>
 <AnchorPane prefHeight="671.0" prefWidth="950.0" style="-fx-background-color: linear-gradient(to bottom, #6a0dad, #b19cd9);"
             xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="controller.AcceuilController">
@@ -36,23 +37,70 @@
                        style="-fx-font-size: 26px; -fx-text-fill: white; -fx-font-weight: bold;
                               -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 5, 0, 2, 2);"/>
 
-                <!-- Boutons principaux -->
-                <VBox spacing="20" style="-fx-alignment: center; -fx-padding: 100px;">
+                <GridPane vgap="20" hgap="20" style="-fx-alignment: center; -fx-padding: 100px;">
                     <Button onAction="#goToEventList" text="Événements"
                             style="-fx-background-color: #9b59b6;
-                                   -fx-text-fill: white;
-                                   -fx-font-size: 16px;
-                                   -fx-font-weight: bold;
-                                   -fx-border-radius: 12px;
-                                   -fx-padding: 20px 40px;"/>
+                   -fx-text-fill: white;
+                   -fx-font-size: 16px;
+                   -fx-font-weight: bold;
+                   -fx-border-radius: 12px;
+                   -fx-padding: 20px 40px;"
+                            GridPane.rowIndex="0" GridPane.columnIndex="0"
+                            maxWidth="200" maxHeight="60"/>
+
                     <Button onAction="#goToBilletList" text="Billets"
                             style="-fx-background-color: #9b59b6;
-                                   -fx-text-fill: white;
-                                   -fx-font-size: 16px;
-                                   -fx-font-weight: bold;
-                                   -fx-border-radius: 12px;
-                                   -fx-padding: 20px 40px;"/>
-                </VBox>
+                   -fx-text-fill: white;
+                   -fx-font-size: 16px;
+                   -fx-font-weight: bold;
+                   -fx-border-radius: 12px;
+                   -fx-padding: 20px 40px;"
+                            GridPane.rowIndex="1" GridPane.columnIndex="0"
+                            maxWidth="200" maxHeight="60"/>
+
+                    <Button onAction="#goToReservation" text="Reservation"
+                            style="-fx-background-color: #9b59b6;
+                   -fx-text-fill: white;
+                   -fx-font-size: 16px;
+                   -fx-font-weight: bold;
+                   -fx-border-radius: 12px;
+                   -fx-padding: 20px 40px;"
+                            GridPane.rowIndex="2" GridPane.columnIndex="0"
+                            maxWidth="200" maxHeight="60"/>
+
+                    <Button onAction="#goToRemise" text="Remise"
+                            style="-fx-background-color: #9b59b6;
+                   -fx-text-fill: white;
+                   -fx-font-size: 16px;
+                   -fx-font-weight: bold;
+                   -fx-border-radius: 12px;
+                   -fx-padding: 20px 40px;"
+                            GridPane.rowIndex="0" GridPane.columnIndex="1"
+                            maxWidth="200" maxHeight="60"/>
+
+                    <Button onAction="#goToFournisseurList" text="Fournisseurs"
+                            style="-fx-background-color: #9b59b6;
+                   -fx-text-fill: white;
+                   -fx-font-size: 16px;
+                   -fx-font-weight: bold;
+                   -fx-border-radius: 12px;
+                   -fx-padding: 20px 40px;"
+                            GridPane.rowIndex="1" GridPane.columnIndex="1"
+                            maxWidth="200" maxHeight="60"/>
+
+                    <Button onAction="#goToProduitList" text="Produits"
+                            style="-fx-background-color: #9b59b6;
+                   -fx-text-fill: white;
+                   -fx-font-size: 16px;
+                   -fx-font-weight: bold;
+                   -fx-border-radius: 12px;
+                   -fx-padding: 20px 40px;"
+                            GridPane.rowIndex="2" GridPane.columnIndex="1"
+                            maxWidth="200" maxHeight="60"/>
+                </GridPane>
+
+
+
             </children>
         </VBox>
     </children>
