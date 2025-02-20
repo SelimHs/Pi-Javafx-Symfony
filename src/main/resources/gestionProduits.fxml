@@ -6,18 +6,17 @@
 <?import javafx.scene.text.*?>
 <?import javafx.collections.FXCollections?>
 
-<?import java.lang.String?>
 <AnchorPane
         fx:id="root"
         xmlns="http://javafx.com/javafx"
         xmlns:fx="http://javafx.com/fxml"
         fx:controller="controller.GestionProduits"
         prefHeight="670.0" prefWidth="950.0"
-        style="-fx-background-color: linear-gradient(to bottom, #283593, #5c6bc0);">
+        style="-fx-background-color: linear-gradient(to bottom, #6a0dad, #b19cd9);">
 
     <children>
         <VBox layoutX="0.0" layoutY="0.0" prefHeight="670.0" prefWidth="200.0"
-              style="-fx-background-color: linear-gradient(to bottom, #1a237e, #3949ab); -fx-padding: 15px;">
+              style="-fx-background-color: linear-gradient(to bottom, #4b0082, #8a2be2); -fx-padding: 15px;">
             <children>
                 <ImageView fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
                     <image>
@@ -26,9 +25,12 @@
                 </ImageView>
                 <Label text="Gestion des Produits"
                        style="-fx-font-size: 20px; -fx-text-fill: white; -fx-font-weight: bold;"/>
-                <Button text="🏠 Accueil" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;"/>
-                <Button text="➕ Ajouter Produit" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;"/>
-                <Button text="📋 Liste des Produits" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;"/>
+                <Button text="🏠 Accueil" onAction="#goToAcceuil"
+                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;"/>
+                <Button text="➕ Ajouter Produit" onAction="#addProduit"
+                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;"/>
+                <Button text="📋 Liste des Produits" onAction="#goToProduitsList"
+                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;"/>
             </children>
         </VBox>
 
@@ -49,27 +51,18 @@
                         <TextField fx:id="descriptionProduit" promptText="Description" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
                         <Label text="📦 Catégorie :" textFill="white" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                        <ComboBox fx:id="categorieProduit" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                            <items>
-                                <FXCollections fx:factory="observableArrayList">
-                                    <String fx:value="ELECTRONIQUE" />
-                                    <String fx:value="VETEMENTS" />
-                                    <String fx:value="ALIMENTAIRE" />
-                                    <String fx:value="MEUBLES" />
-                                    <String fx:value="SPORT" />
-                                </FXCollections>
-                            </items>
-                        </ComboBox>
+                        <ComboBox fx:id="categorieProduit" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
 
                         <Label text="🔢 Quantité :" textFill="white" GridPane.columnIndex="0" GridPane.rowIndex="4" />
                         <TextField fx:id="quantiteProduit" promptText="Quantité" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
                         <Label text="🏢 Fournisseur :" textFill="white" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-                        <TextField fx:id="fournisseurProduit" promptText="Nom du Fournisseur" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <ComboBox fx:id="fournisseurProduit" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                     </children>
                 </GridPane>
 
-                <Button text="✔ Ajouter le Produit" onAction="#addProduit" style="-fx-background-color: #8e44ad; -fx-text-fill: white; -fx-font-size: 16px; -fx-padding: 10px;"/>
+                <Button text="✔ Ajouter le Produit" onAction="#addProduit"
+                        style="-fx-background-color: #8e44ad; -fx-text-fill: white; -fx-font-size: 16px; -fx-padding: 10px;"/>
             </children>
         </VBox>
     </children>

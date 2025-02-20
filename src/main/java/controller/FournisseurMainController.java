@@ -1,8 +1,11 @@
 package controller;
 
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
+import java.util.ResourceBundle;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -16,11 +19,19 @@ import tn.esprit.models.fournisseur;
 import tn.esprit.services.ServiceFournisseur;
 import javafx.event.ActionEvent;
 
-public class FournisseurMainController {
+public class FournisseurMainController implements Initializable {
     @FXML
     private FlowPane fournisseurCardContainer;
 
     private final ServiceFournisseur fournisseurService = new ServiceFournisseur();
+
+    /**
+     * Méthode appelée automatiquement lors du chargement du contrôleur
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        displayFournisseurs();  // Chargement automatique des fournisseurs
+    }
 
     @FXML
     public void displayFournisseurs() {
@@ -96,6 +107,19 @@ public class FournisseurMainController {
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("⚠️ Erreur lors du chargement de la page GestionFournisseur.fxml !");
+        }
+    }
+
+    public void goToAcceuil(ActionEvent actionEvent) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Acceuil.fxml"));
+            Parent root = fxmlLoader.load();
+            Stage stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
+
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
         }
     }
 }
