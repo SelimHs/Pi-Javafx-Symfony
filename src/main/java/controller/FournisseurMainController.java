@@ -1,11 +1,18 @@
 package controller;
 
 import javafx.fxml.FXML;
+
+import java.io.IOException;
 import java.util.List;
+
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import tn.esprit.models.fournisseur;
 import tn.esprit.services.ServiceFournisseur;
 
@@ -64,5 +71,23 @@ public class FournisseurMainController {
 
     @javafx.fxml.FXML
     public void deleteFournisseur(ActionEvent actionEvent) {
+    }
+
+    @FXML
+
+
+    public void goToGestionFournisseur(javafx.event.ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/GestionFournisseur.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Ajouter un Fournisseur");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("⚠️ Erreur lors du chargement de la page GestionFournisseur.fxml !");
+        }
     }
 }

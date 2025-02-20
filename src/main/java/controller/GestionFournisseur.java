@@ -2,12 +2,18 @@ package controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import tn.esprit.models.fournisseur;
 import tn.esprit.services.ServiceFournisseur;
+
+import java.io.IOException;
 
 public class GestionFournisseur {
 
@@ -56,5 +62,25 @@ public class GestionFournisseur {
 
     @Deprecated
     void onAfficher(ActionEvent event) {
+    }
+
+
+    @FXML
+    public void goToPrincipaleFournisseur(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/PrincipaleFournisseur.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Liste des Fournisseurs");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("⚠️ Erreur lors du chargement de la page PrincipaleFournisseur.fxml !");
+        }
+    }
+
+    public void goToGestionFournisseur(ActionEvent actionEvent) {
     }
 }

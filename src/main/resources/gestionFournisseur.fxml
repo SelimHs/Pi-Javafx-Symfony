@@ -26,8 +26,10 @@
             <Label text="Gestion des Fournisseurs"
                    style="-fx-font-size: 20px; -fx-text-fill: white; -fx-font-weight: bold;"/>
             <Button text="🏠 Accueil" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;"/>
-            <Button text="➕ Ajouter Fournisseur" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;"/>
-            <Button text="📋 Liste des Fournisseurs" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;"/>
+            <Button text="➕ Ajouter Fournisseur" onAction="#goToGestionFournisseur" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;"/>
+            <Button text="📋 Liste des Fournisseurs"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;"
+                    onAction="#goToPrincipaleFournisseur"/>
          </children>
       </VBox>
 
