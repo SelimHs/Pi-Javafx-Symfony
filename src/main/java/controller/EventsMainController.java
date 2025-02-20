@@ -167,15 +167,6 @@ public class EventsMainController {
         }
     }
 
-    // Méthode pour afficher une alerte
-    private void afficherAlerte(String titre, String message) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle(titre);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
     private void filterEvents(String searchText) {
         eventCardContainer.getChildren().clear(); // Réinitialiser l'affichage des événements
 

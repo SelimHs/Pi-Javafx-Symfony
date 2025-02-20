@@ -43,17 +43,33 @@ public class ModifierBilletController {
 
     @FXML
     public void updateBillet(javafx.event.ActionEvent actionEvent) {
-        // Validation des champs
-        if (billetProprietaire.getText().isEmpty() || billetPrix.getText().isEmpty() ||
-                billetType.getValue() == null || billetEvent.getValue() == null) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erreur");
-            alert.setHeaderText(null);
-            alert.setContentText("Veuillez remplir tous les champs.");
-            alert.showAndWait();
+
+
+        if (billetProprietaire.getText() == null || billetProprietaire.getText().isEmpty()) {
+            new Alert(Alert.AlertType.ERROR, "Le champ 'Propriétaire' ne peut pas être vide.").showAndWait();
             return;
         }
 
+        if (billetPrix == null || billetPrix.getText().isEmpty()) {
+            new Alert(Alert.AlertType.ERROR, "Le champ 'Prix' ne peut pas être vide.").showAndWait();
+            return;
+        }
+
+        String prixText = billetPrix.getText();
+        if (prixText == null || prixText.isEmpty()) {
+            new Alert(Alert.AlertType.ERROR, "Le champ 'Prix' ne peut pas être vide.").showAndWait();
+            return;
+        }
+
+        if (billetType.getValue() == null) {
+            new Alert(Alert.AlertType.ERROR, "Le champ 'Type' ne peut pas être vide.").showAndWait();
+            return;
+        }
+
+        if (billetEvent.getValue() == null) {
+            new Alert(Alert.AlertType.ERROR, "L'événement sélectionné ne peut pas être vide.").showAndWait();
+            return;
+        }
         // Mise à jour des valeurs du billet
         selectedBillet.setProprietaire(billetProprietaire.getText());
         selectedBillet.setPrix(Integer.parseInt(billetPrix.getText()));

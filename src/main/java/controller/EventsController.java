@@ -47,8 +47,45 @@ public class EventsController {
 
     @FXML
     public void addEvent(javafx.event.ActionEvent actionEvent) {
-        Event e = new Event();
+
+        if (eventNom.getText() == null || eventNom.getText().isEmpty()) {
+            new Alert(Alert.AlertType.ERROR, "Le champ 'Nom de l'événement' ne peut pas être vide.").showAndWait();
+            return;
+        }
+
+        // Validate Event Date
         LocalDate selectedDate = eventDate.getValue();
+        if (selectedDate == null) {
+            new Alert(Alert.AlertType.ERROR, "Le champ 'Date de l'événement' ne peut pas être vide.").showAndWait();
+            return;
+        }
+
+        if (eventPrix == null || eventPrix.getText().isEmpty()) {
+            new Alert(Alert.AlertType.ERROR, "Le champ 'Prix' ne peut pas être vide.").showAndWait();
+            return;
+        }
+
+
+
+        if (eventVisiteurs.getText() == null || eventVisiteurs.getText().isEmpty()) {
+            new Alert(Alert.AlertType.ERROR, "Le champ 'Nombre de visiteurs' ne peut pas être vide.").showAndWait();
+            return;
+        }
+
+
+        // Validate Event Details
+        if (eventDetails.getText() == null || eventDetails.getText().isEmpty()) {
+            new Alert(Alert.AlertType.ERROR, "Le champ 'Détails' ne peut pas être vide.").showAndWait();
+            return;
+        }
+
+        // Validate Event Space
+        if (eventEspace.getText() == null || eventEspace.getText().isEmpty()) {
+            new Alert(Alert.AlertType.ERROR, "Le champ 'Espace' ne peut pas être vide.").showAndWait();
+            return;
+        }
+        Event e = new Event();
+        selectedDate = eventDate.getValue();
         e.setNomEvent(eventNom.getText());
         e.setDate(selectedDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         e.setPrix(Integer.parseInt(eventPrix.getText()));

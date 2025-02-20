@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
@@ -78,9 +79,38 @@ public class BilletsController {
 
     @FXML
     public void addBillet(javafx.event.ActionEvent actionEvent) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
         // Création du nouvel objet Billet
         Billet billet = new Billet();
         ServiceBillet sb = new ServiceBillet();
+
+
+
+        if (billetProprietaire.getText() == null || billetProprietaire.getText().isEmpty()) {
+            new Alert(Alert.AlertType.ERROR, "Le champ 'Propriétaire' ne peut pas être vide.").showAndWait();
+            return;
+        }
+
+        if (billetPrix == null || billetPrix.getText().isEmpty()) {
+            new Alert(Alert.AlertType.ERROR, "Le champ 'Prix' ne peut pas être vide.").showAndWait();
+            return;
+        }
+
+        String prixText = billetPrix.getText();
+        if (prixText == null || prixText.isEmpty()) {
+            new Alert(Alert.AlertType.ERROR, "Le champ 'Prix' ne peut pas être vide.").showAndWait();
+            return;
+        }
+
+        if (billetType.getValue() == null) {
+            new Alert(Alert.AlertType.ERROR, "Le champ 'Type' ne peut pas être vide.").showAndWait();
+            return;
+        }
+
+        if (billetEvent.getValue() == null) {
+            new Alert(Alert.AlertType.ERROR, "L'événement sélectionné ne peut pas être vide.").showAndWait();
+            return;
+        }
 
         // Récupération des valeurs saisies dans les champs
         String proprietaire = billetProprietaire.getText();
