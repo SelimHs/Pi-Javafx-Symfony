@@ -69,6 +69,13 @@ public class ServiceProduit implements Iservice<Produit> {
         return produits;
     }
 
+<<<<<<< HEAD
+=======
+    @Override
+    public void delete(int id) {
+
+    }
+>>>>>>> c026506 ( integration comp)
 
 
     @Override

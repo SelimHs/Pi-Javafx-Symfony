@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="tn.esprit.controllers.DetailEspace"
+            prefHeight="500.0" prefWidth="650.0"
+            style="-fx-background-color: linear-gradient(to bottom, #6a0dad, #b19cd9);">
+
+    <children>
+        <Label fx:id="titleLabel" text="Détails de l'Espace"
+               layoutX="50.0" layoutY="20.0"
+               style="-fx-font-size: 24px; -fx-text-fill: white; -fx-font-weight: bold;"/>
+
+        <VBox layoutX="50.0" layoutY="60.0" prefWidth="550.0" spacing="10"
+              style="-fx-background-color: rgba(255, 255, 255, 0.3);
+                     -fx-padding: 20px;
+                     -fx-border-radius: 10px;">
+            <Label fx:id="espaceDetailsLabel" text="Chargement..."
+                   style="-fx-font-size: 16px; -fx-text-fill: white;"/>
+        </VBox>
+
+        <Label text="Organisateurs :" layoutX="50.0" layoutY="200.0"
+               style="-fx-font-size: 18px; -fx-text-fill: white; -fx-font-weight: bold;"/>
+
+        <ScrollPane layoutX="50.0" layoutY="230.0" prefHeight="180.0" prefWidth="550.0">
+            <content>
+                <VBox fx:id="organisateurContainer" spacing="15.0"
+                      style="-fx-padding: 15px; -fx-background-color: transparent;"/>
+            </content>
+        </ScrollPane>
+
+
+        <!-- 🔙 Bouton Retour -->
+        <Button fx:id="retourButton" layoutX="50.0" layoutY="430.0" text="⬅ Retour"
+                onAction="#retourAfficherEspaces"
+                style="-fx-background-color: #8a2be2; -fx-text-fill: white;"/>
+
+        <!-- ➕ Bouton pour Ajouter un Organisateur -->
+        <Button fx:id="ajouterOrganisateurButton" layoutX="200.0" layoutY="430.0" text="➕ Ajouter Organisateur"
+                onAction="#ajouterOrganisateur"
+                style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 14px;
+               -fx-font-weight: bold; -fx-border-radius: 10px; -fx-padding: 10px;"/>
+    </children>
+</AnchorPane>

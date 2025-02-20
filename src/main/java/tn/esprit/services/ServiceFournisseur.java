@@ -52,6 +52,14 @@ public class ServiceFournisseur implements Iservice<fournisseur> {
     }
 
     @Override
+<<<<<<< HEAD
+=======
+    public void delete(int id) {
+
+    }
+
+    @Override
+>>>>>>> c026506 ( integration comp)
     public void update(fournisseur fournisseur) {
         String qry = "UPDATE `fournisseur` SET `nomFournisseur` = ?, `description` = ?, `type` = ? WHERE `idFournisseur` = ?";
         try {

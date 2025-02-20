@@ -57,6 +57,13 @@ public class ServiceReservation implements Iservice<Reservation> {
         return reservations;
     }
 
+<<<<<<< HEAD
+=======
+    @Override
+    public void delete(int id) {
+
+    }
+>>>>>>> c026506 ( integration comp)
 
 
     @Override

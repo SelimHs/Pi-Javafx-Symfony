@@ -52,6 +52,14 @@ public class ServiceRemise implements Iservice<Remise>{
     }
 
     @Override
+<<<<<<< HEAD
+=======
+    public void delete(int id) {
+
+    }
+
+    @Override
+>>>>>>> c026506 ( integration comp)
     public void update(Remise remise) {
         String qry = "UPDATE `remise` SET `codePromo` = ?, `description` = ?, `pourcentageRemise` = ?, `dateExpiration` = ? WHERE `idRemise` = ?";
         try {

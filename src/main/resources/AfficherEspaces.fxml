@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+
+<AnchorPane fx:id="root" xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="tn.esprit.controllers.AfficherEspaces"
+            prefHeight="670.0" prefWidth="950.0"
+            style="-fx-background-color: linear-gradient(to bottom, #6a0dad, #b19cd9);">
+
+    <children>
+        <!-- Sidebar -->
+        <VBox layoutX="0.0" layoutY="0.0" prefHeight="670.0" prefWidth="200.0"
+              style="-fx-background-color: linear-gradient(to bottom, #4b0082, #8a2be2);
+                     -fx-padding: 15px;
+                     -fx-border-radius: 10px;">
+            <children>
+                <Label style="-fx-font-size: 20px; -fx-text-fill: white; -fx-font-weight: bold;
+                              -fx-padding: 10px;" text="Gestion des Espaces"/>
+                <Button fx:id="ajtesp" onAction="#ajouterEspaceView" text="➕ Ajouter Espace" />
+                <Button fx:id="affichesp" onAction="#afficherEspaces" text="📋 Liste des Espaces" />
+            </children>
+        </VBox>
+
+        <!-- Main Content -->
+        <VBox layoutX="220.0" layoutY="20.0" prefWidth="700.0">
+            <children>
+                <!-- Title -->
+                <Label style="-fx-font-size: 26px; -fx-text-fill: white; -fx-font-weight: bold;"
+                       text="🌟 Nos Espaces Disponibles"/>
+
+                <!-- Search Bar -->
+                <HBox spacing="10" style="-fx-padding: 10px;">
+                    <TextField fx:id="searchField" prefWidth="400.0" promptText="🔍 Rechercher un espace..." />
+                    <Button fx:id="searchButton" text="Rechercher"
+                            style="-fx-background-color: white; -fx-text-fill: #6a0dad; -fx-font-weight: bold;"/>
+                </HBox>
+
+                <!-- FlowPane for Displaying Spaces -->
+                <ScrollPane prefHeight="450.0" prefWidth="700.0">
+                    <content>
+                        <FlowPane fx:id="espaceCardContainer" prefHeight="450.0" prefWidth="700.0" hgap="15" vgap="15"
+                                  style="-fx-padding: 10px;"/>
+                    </content>
+                </ScrollPane>
+
+                <!-- Return Button -->
+                <Button fx:id="btnRetour" layoutX="20.0" layoutY="590.0" text="⬅ Retour"
+                        onAction="#retourAjouterEspace"
+                        style="-fx-background-color: #8a2be2; -fx-text-fill: white; -fx-font-size: 16px;
+                               -fx-font-weight: bold; -fx-border-radius: 12px; -fx-padding: 10px;"/>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

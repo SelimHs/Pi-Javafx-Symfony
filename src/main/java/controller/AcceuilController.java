@@ -1,5 +1,9 @@
 package controller;
 
+<<<<<<< HEAD
+=======
+import javafx.event.ActionEvent;
+>>>>>>> c026506 ( integration comp)
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -92,4 +96,19 @@ public class AcceuilController {
         }
     }
 
+<<<<<<< HEAD
+=======
+    public void goToEspace(ActionEvent actionEvent) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/GestionEspace.fxml"));
+            Parent root = fxmlLoader.load();
+            Stage stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
+
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+>>>>>>> c026506 ( integration comp)
 }
