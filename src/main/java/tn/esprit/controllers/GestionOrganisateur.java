@@ -37,24 +37,27 @@ public class GestionOrganisateur {
         }
     }
 
+
     @FXML
     private void ajouterOrganisateur() {
         System.out.println("✅ Bouton Ajouter cliqué !");
 
         String nom = nomOrganisateur.getText().trim();
         String prenom = prenomOrganisateur.getText().trim();
-        String tel = telef.getText().trim();
+        String telStr = telef.getText().trim(); // ✅ Récupérer la valeur sous forme de String
         String description = descriptionOrganisateur.getText().trim();
 
-        if (nom.isEmpty() || prenom.isEmpty() || tel.isEmpty() || description.isEmpty()) {
+        if (nom.isEmpty() || prenom.isEmpty() || telStr.isEmpty() || description.isEmpty()) {
             afficherAlerte("⚠️ Champs vides", "Veuillez remplir tous les champs !");
             return;
         }
 
-        if (!tel.matches("\\d{8}")) {
+        if (!telStr.matches("\\d{8}")) {
             afficherAlerte("⚠️ Numéro invalide", "Le numéro de téléphone doit contenir 8 chiffres.");
             return;
         }
+
+        int tel = Integer.parseInt(telStr); // ✅ Convertir en `int`
 
         // Vérification de l'ID de l'espace
         if (idEspace <= 0) {
@@ -64,12 +67,13 @@ public class GestionOrganisateur {
 
         System.out.println("🆕 Ajout d'un organisateur pour l'espace ID: " + idEspace);
 
-        Organisateur organisateur = new Organisateur(0, nom, prenom, description, idEspace);
+        Organisateur organisateur = new Organisateur(0, nom, prenom, description, idEspace, tel); // ✅ Utiliser `tel` converti
         serviceOrganisateur.add(organisateur);
 
         afficherAlerte("✅ Succès", "L'organisateur a été ajouté avec succès !");
         viderChamps();
     }
+
 
     private void afficherAlerte(String titre, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);

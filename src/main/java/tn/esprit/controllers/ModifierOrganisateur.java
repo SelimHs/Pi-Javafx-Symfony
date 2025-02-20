@@ -11,10 +11,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import tn.esprit.models.Espace;
 import tn.esprit.models.Organisateur;
 import tn.esprit.services.ServiceOrganisateur;
+import tn.esprit.services.ServiceEspace;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public class ModifierOrganisateur {
 
@@ -26,13 +29,16 @@ public class ModifierOrganisateur {
     private Button btnModifier, btnRetour;
 
     private final ServiceOrganisateur serviceOrganisateur = new ServiceOrganisateur();
+    private final ServiceEspace serviceEspace = new ServiceEspace(); // Ajout pour récupérer l'espace
     private Organisateur organisateurActuel;
+    private int idEspace; // ✅ Ajout de l'ID de l'espace pour revenir aux détails après modification
 
     /**
      * Initialize the form with existing organizer data
      */
     public void initData(Organisateur organisateur) {
         this.organisateurActuel = organisateur;
+        this.idEspace = organisateur.getIdEspace(); // ✅ Stocker l'ID de l'espace
 
         nomOrganisateur.setText(organisateur.getNomOrg());
         prenomOrganisateur.setText(organisateur.getPrenomOrg());
@@ -43,6 +49,7 @@ public class ModifierOrganisateur {
     /**
      * Modify organizer details and return to DetailEspace
      */
+    @FXML
     public void modifierOrganisateur(ActionEvent event) {
         if (organisateurActuel == null) {
             afficherAlerte("❌ Erreur", "Aucun organisateur sélectionné !");
@@ -58,7 +65,7 @@ public class ModifierOrganisateur {
             serviceOrganisateur.update(organisateurActuel);
             afficherAlerte("✅ Succès", "L'organisateur a été modifié avec succès !");
 
-            retourDetailEspace(event);
+            retourDetailEspace(event); // ✅ Retour après modification
 
         } catch (NumberFormatException e) {
             afficherAlerte("❌ Erreur", "Veuillez entrer un numéro de téléphone valide !");
@@ -66,7 +73,6 @@ public class ModifierOrganisateur {
             e.printStackTrace();
         }
     }
-
 
     /**
      * Alert message pop-up
@@ -84,10 +90,17 @@ public class ModifierOrganisateur {
      */
     @FXML
     public void retourDetailEspace(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/DetailEspace.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/DetailEspace.fxml"));
+        Parent root = loader.load();
+
+        DetailEspace controller = loader.getController();
+
+        // ✅ Charger l'espace associé
+        Optional<Espace> espace = serviceEspace.findById(idEspace);
+        espace.ifPresent(controller::initData);
+
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
+        stage.setScene(new Scene(root));
         stage.show();
     }
 }

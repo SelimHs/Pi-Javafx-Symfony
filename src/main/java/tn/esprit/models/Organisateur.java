@@ -8,14 +8,6 @@ public class Organisateur {
     private int idEspace; // L'organisateur appartient à un espace
     private int telef; // Numéro de téléphone
 
-    // 🟢 Constructor without `telef`
-    public Organisateur(int idOrg, String nomOrg, String prenomOrg, String descriptionOrg, int idEspace) {
-        this.idOrg = idOrg;
-        this.nomOrg = nomOrg;
-        this.prenomOrg = prenomOrg;
-        this.descriptionOrg = descriptionOrg;
-        this.idEspace = idEspace;
-    }
 
     // 🟢 Constructor with `telef`
     public Organisateur(int idOrg, String nomOrg, String prenomOrg, String descriptionOrg, int idEspace, int telef) {
