@@ -6,6 +6,8 @@ import javafx.stage.Stage;
 import model.Users;
 import service.UsersService;
 
+import java.util.regex.Pattern;
+
 public class UserForm {
 
     @FXML private TextField nomField;
@@ -49,11 +51,38 @@ public class UserForm {
 
     @FXML
     private void handleSave() {
-        if (nomField.getText().isEmpty() || prenomField.getText().isEmpty() || emailField.getText().isEmpty() || numeroField.getText().isEmpty() || passwordField.getText().isEmpty()) {
+        // Vérification des champs vides
+        if (nomField.getText().isEmpty() || prenomField.getText().isEmpty() || emailField.getText().isEmpty() ||
+                passwordField.getText().isEmpty() || numeroField.getText().isEmpty() || adresseField.getText().isEmpty()) {
             showAlert("Erreur", "Tous les champs obligatoires doivent être remplis !");
             return;
         }
 
+        // Validation du nom et prénom
+        if (!isValidName(nomField.getText()) || !isValidName(prenomField.getText())) {
+            showAlert("Erreur", "Le nom et le prénom ne doivent contenir que des lettres.");
+            return;
+        }
+
+        // Validation du mot de passe
+        if (!isValidPassword(passwordField.getText())) {
+            showAlert("Erreur", "Le mot de passe doit contenir au moins une majuscule et un caractère spécial.");
+            return;
+        }
+
+        // Validation de l'email
+        if (!isValidEmail(emailField.getText())) {
+            showAlert("Erreur", "L'email doit contenir un @ et un domaine valide (ex: .com, .fr).");
+            return;
+        }
+
+        // Validation du numéro de téléphone
+        if (!isValidPhoneNumber(numeroField.getText())) {
+            showAlert("Erreur", "Le numéro de téléphone doit contenir exactement 8 chiffres.");
+            return;
+        }
+
+        // Créer l'objet User
         Users userToSave = new Users();
         userToSave.setNom(nomField.getText());
         userToSave.setPrenom(prenomField.getText());
@@ -95,5 +124,33 @@ public class UserForm {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    // Méthode pour valider le nom et le prénom
+    private boolean isValidName(String name) {
+        // Regex : uniquement des lettres et des espaces
+        String regex = "^[a-zA-Z\\s]+$";
+        return Pattern.matches(regex, name);
+    }
+
+    // Méthode pour valider le mot de passe
+    private boolean isValidPassword(String password) {
+        // Regex : au moins une majuscule et un caractère spécial
+        String regex = "^(?=.*[A-Z])(?=.*[!@#$%^&*]).+$";
+        return Pattern.matches(regex, password);
+    }
+
+    // Méthode pour valider l'email
+    private boolean isValidEmail(String email) {
+        // Regex : doit contenir un @ et un domaine valide
+        String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+        return Pattern.matches(regex, email);
+    }
+
+    // Méthode pour valider le numéro de téléphone
+    private boolean isValidPhoneNumber(String phoneNumber) {
+        // Regex : exactement 8 chiffres
+        String regex = "^\\d{8}$";
+        return Pattern.matches(regex, phoneNumber);
     }
 }
