@@ -101,6 +101,12 @@ public class BilletsController {
             new Alert(Alert.AlertType.ERROR, "Le champ 'Prix' ne peut pas être vide.").showAndWait();
             return;
         }
+        try {
+            int prix = Integer.parseInt(billetPrix.getText());
+        } catch (NumberFormatException e) {
+            new Alert(Alert.AlertType.ERROR, "Le champ 'Prix' doit être un entier valide.").showAndWait();
+            return;
+        }
 
         if (billetType.getValue() == null) {
             new Alert(Alert.AlertType.ERROR, "Le champ 'Type' ne peut pas être vide.").showAndWait();

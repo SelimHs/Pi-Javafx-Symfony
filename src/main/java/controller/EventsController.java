@@ -65,6 +65,13 @@ public class EventsController {
             return;
         }
 
+        try {
+            int prix = Integer.parseInt(eventPrix.getText());
+        } catch (NumberFormatException e) {
+            new Alert(Alert.AlertType.ERROR, "Le champ 'Prix' doit être un entier valide.").showAndWait();
+            return;
+        }
+
 
 
         if (eventVisiteurs.getText() == null || eventVisiteurs.getText().isEmpty()) {
@@ -84,6 +91,14 @@ public class EventsController {
             new Alert(Alert.AlertType.ERROR, "Le champ 'Espace' ne peut pas être vide.").showAndWait();
             return;
         }
+
+        try {
+            int nbrVisiteurs = Integer.parseInt(eventVisiteurs.getText());
+        } catch (NumberFormatException e) {
+            new Alert(Alert.AlertType.ERROR, "Le champ 'Nombre de visiteurs' doit être un entier valide.").showAndWait();
+            return;
+        }
+
         Event e = new Event();
         selectedDate = eventDate.getValue();
         e.setNomEvent(eventNom.getText());

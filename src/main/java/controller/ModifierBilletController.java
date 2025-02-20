@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -11,9 +12,11 @@ import javafx.stage.Stage;
 import tn.esprit.models.Billet;
 import tn.esprit.models.Event;
 import tn.esprit.services.ServiceBillet;
+import tn.esprit.services.ServiceEvent;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class ModifierBilletController {
 
@@ -31,6 +34,18 @@ public class ModifierBilletController {
 
     private Billet selectedBillet;
     private ServiceBillet serviceBillet = new ServiceBillet();
+    private ServiceEvent serviceEvent = new ServiceEvent();
+
+    @FXML
+    public void initialize() {
+        List<Event> events = serviceEvent.getAll();
+
+        // Mettre à jour la ComboBox avec les événements
+        billetEvent.setItems(FXCollections.observableArrayList(events));
+
+        // Optionnel : si tu veux afficher un texte dans la ComboBox (par exemple "Sélectionner un événement")
+        billetEvent.setPromptText("Sélectionner un événement");
+    }
 
     // Initialiser le formulaire avec les données du billet sélectionné
     public void initDataBillet(Billet billet) {
@@ -58,6 +73,12 @@ public class ModifierBilletController {
         String prixText = billetPrix.getText();
         if (prixText == null || prixText.isEmpty()) {
             new Alert(Alert.AlertType.ERROR, "Le champ 'Prix' ne peut pas être vide.").showAndWait();
+            return;
+        }
+        try {
+            int prix = Integer.parseInt(billetPrix.getText());
+        } catch (NumberFormatException e) {
+            new Alert(Alert.AlertType.ERROR, "Le champ 'Prix' doit être un entier valide.").showAndWait();
             return;
         }
 
