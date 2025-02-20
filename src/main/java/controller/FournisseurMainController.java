@@ -1,10 +1,8 @@
 package controller;
 
 import javafx.fxml.FXML;
-
 import java.io.IOException;
 import java.util.List;
-
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -15,29 +13,18 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import tn.esprit.models.fournisseur;
 import tn.esprit.services.ServiceFournisseur;
-
-import java.awt.*;
-import java.awt.event.ActionEvent;
+import javafx.event.ActionEvent;
 
 public class FournisseurMainController {
-    @javafx.fxml.FXML
-    private TextField searchField;
-    @javafx.fxml.FXML
-    private Button modifierBouton;
-    @javafx.fxml.FXML
+    @FXML
     private FlowPane fournisseurCardContainer;
-    @javafx.fxml.FXML
-    private Button deleteBouton;
 
-
-    private ServiceFournisseur fournisseurService = new ServiceFournisseur();
-
+    private final ServiceFournisseur fournisseurService = new ServiceFournisseur();
 
     @FXML
     public void displayFournisseurs() {
-        fournisseurCardContainer.getChildren().clear(); // Nettoyer avant de recharger
-
-        List<fournisseur> fournisseurs = fournisseurService.getAll(); // Récupérer les fournisseurs
+        fournisseurCardContainer.getChildren().clear();
+        List<fournisseur> fournisseurs = fournisseurService.getAll();
 
         for (fournisseur fournisseur : fournisseurs) {
             VBox card = new VBox();
@@ -54,33 +41,30 @@ public class FournisseurMainController {
             Button detailsButton = new Button("Voir Détails");
             detailsButton.setOnAction(e -> showFournisseurDetails(fournisseur));
 
-            card.getChildren().addAll(title, description, type, detailsButton);
+            Button deleteButton = new Button("Supprimer");
+            deleteButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
+            deleteButton.setOnAction(e -> deleteFournisseur(fournisseur));
+
+            card.getChildren().addAll(title, description, type, detailsButton, deleteButton);
             fournisseurCardContainer.getChildren().add(card);
         }
     }
 
     private void showFournisseurDetails(fournisseur fournisseur) {
         // Implémentation pour afficher les détails d'un fournisseur
-    }    @javafx.fxml.FXML
-    public void updateFournisseur(ActionEvent actionEvent) {
-    }
-
-    @javafx.fxml.FXML
-    public void searchFournisseur(ActionEvent actionEvent) {
-    }
-
-    @javafx.fxml.FXML
-    public void deleteFournisseur(ActionEvent actionEvent) {
     }
 
     @FXML
+    public void deleteFournisseur(fournisseur fournisseur) {
+        fournisseurService.delete(fournisseur);
+        displayFournisseurs(); // Rafraîchir l'affichage après suppression
+    }
 
-
-    public void goToGestionFournisseur(javafx.event.ActionEvent actionEvent) {
+    @FXML
+    public void goToGestionFournisseur(ActionEvent actionEvent) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/GestionFournisseur.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/GestionFournisseur.fxml"));
             Parent root = loader.load();
-
             Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("Ajouter un Fournisseur");
