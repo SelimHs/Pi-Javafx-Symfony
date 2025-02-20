@@ -18,7 +18,7 @@ public class MainFX extends Application {
     public void start(Stage primaryStage) {
         try {
             // ✅ Chargement du fichier FXML (Assurez-vous que le chemin est correct)
-            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/GestionEspace.fxml")));
+            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/Acceuil.fxml")));
             Parent root = loader.load();
 
             // ✅ Création et affichage de la scène
