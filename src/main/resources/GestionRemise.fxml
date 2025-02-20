@@ -31,13 +31,13 @@
                               -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 4, 0, 0, 2);"/>
                 <Button text="🏠 Accueil"
                         style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;
-                               -fx-padding: 10px; -fx-border-radius: 8px;"/>
+                               -fx-padding: 10px; -fx-border-radius: 8px;" onAction="#goToAcceuil"/>
                 <Button text="➕ Ajouter Remise"
                         style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;
                                -fx-padding: 10px; -fx-border-radius: 8px;"/>
                 <Button text="📋 Liste des Remises"
                         style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;
-                               -fx-padding: 10px; -fx-border-radius: 8px;"/>
+                               -fx-padding: 10px; -fx-border-radius: 8px;" onAction="#goToListeRemise"/>
             </children>
         </VBox>
 

@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -93,10 +94,19 @@ public class ReservationMainController {
     }
 
 
-    // Afficher les détails d'une réservation
-    private void showReservationDetails(Reservation reservation) {
-        // Implémentation pour afficher les détails d'une réservation
+    @FXML
+    public void showReservationDetails(Reservation reservation) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Détails de la Réservation");
+        alert.setHeaderText("Réservation #" + reservation.getIdReservation());
+        alert.setContentText("👤 ID Utilisateur : " + reservation.getIdUser() +
+                "\n🎟️ ID Événement : " + reservation.getIdEvent() +
+                "\n📅 Date de Réservation : " + reservation.getDateReservation() +
+                "\n🔖 Statut : " + reservation.getStatut());
+
+        alert.showAndWait();
     }
+
 
     // Mettre à jour une réservation
     @FXML
@@ -120,6 +130,19 @@ public class ReservationMainController {
     public void goToAjoutReservation(javafx.event.ActionEvent actionEvent) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/GestionReservation.fxml"));
+            Parent root = fxmlLoader.load();
+            Stage stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
+
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void goToAcceuil(javafx.event.ActionEvent actionEvent) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Acceuil.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
 

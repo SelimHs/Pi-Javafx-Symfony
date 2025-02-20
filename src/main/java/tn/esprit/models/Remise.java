@@ -1,5 +1,4 @@
 package tn.esprit.models;
-import java.util.Date;
 
 public class Remise {
     private int idRemise;

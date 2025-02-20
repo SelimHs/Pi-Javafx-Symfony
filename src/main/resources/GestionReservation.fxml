@@ -32,13 +32,13 @@
 
                 <Button text="🏠 Accueil"
                         style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;
-                               -fx-padding: 10px; -fx-border-radius: 8px;"/>
+                               -fx-padding: 10px; -fx-border-radius: 8px;" onAction="#goToAcceuil"/>
                 <Button text="➕ Ajouter Réservation"
                         style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;
                                -fx-padding: 10px; -fx-border-radius: 8px;"/>
                 <Button text="📋 Liste des Réservations"
                         style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;
-                               -fx-padding: 10px; -fx-border-radius: 8px;" onAction="#navigateToReservations"/>
+                               -fx-padding: 10px; -fx-border-radius: 8px;" onAction="#navigateToReservations" />
             </children>
         </VBox>
 

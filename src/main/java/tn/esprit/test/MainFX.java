@@ -18,7 +18,7 @@ public class MainFX extends Application {
     public void start(Stage primaryStage) {
         try {
             // ✅ Chargement du fichier FXML (vérifiez que le fichier est bien placé dans /resources/tn/esprit/views/)
-            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/AfficheReservation.fxml")));
+            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/Acceuil.fxml")));
             Parent root = loader.load();
 
             // ✅ Création et affichage de la scène
