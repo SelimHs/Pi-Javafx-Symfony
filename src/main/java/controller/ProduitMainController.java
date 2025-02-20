@@ -1,11 +1,11 @@
 package controller;
 
 import javafx.event.ActionEvent;
-
 import java.io.IOException;
 import java.util.List;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -16,22 +16,31 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import tn.esprit.models.Produit;
 import tn.esprit.services.ServiceProduit;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class ProduitMainController {
-    @javafx.fxml.FXML
+public class ProduitMainController implements Initializable {
+    @FXML
     private AnchorPane root;
-    @javafx.fxml.FXML
-    private Button modifierBouton;
-    @javafx.fxml.FXML
-    private Button deleteBouton;
-    @javafx.fxml.FXML
+    @FXML
     private FlowPane produitCardContainer;
 
-    @FXML
-    public void displayProduits(ActionEvent actionEvent) {
-        produitCardContainer.getChildren().clear(); // Nettoyer avant de recharger
+    private final ServiceProduit serviceProduit = new ServiceProduit();
 
-        ServiceProduit serviceProduit = new ServiceProduit();
+    /**
+     * Initialisation automatique lors du chargement de la page.
+     */
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        displayProduits();
+    }
+
+    /**
+     * Affiche tous les produits dynamiquement.
+     */
+    @FXML
+    public void displayProduits() {
+        produitCardContainer.getChildren().clear(); // Nettoyer avant de recharger
         List<Produit> produits = serviceProduit.getAll(); // Récupérer tous les produits
 
         for (Produit produit : produits) {
@@ -50,13 +59,62 @@ public class ProduitMainController {
             Label fournisseur = new Label("🏢 Fournisseur: " + (produit.getFournisseur() != null ? produit.getFournisseur().getNomFournisseur() : "Non défini"));
 
             Button detailsButton = new Button("Voir Détails");
-            //detailsButton.setOnAction(e -> showProduitDetails(produit));
+            detailsButton.setOnAction(e -> showProduitDetails(produit));
 
-            card.getChildren().addAll(title, prix, description, categorie, quantite, fournisseur, detailsButton);
+            Button modifyButton = new Button("Modifier");
+            modifyButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
+            modifyButton.setOnAction(e -> goToModifierProduit(produit, e));
+
+            Button deleteButton = new Button("Supprimer");
+            deleteButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
+            deleteButton.setOnAction(e -> deleteProduit(produit));
+
+            card.getChildren().addAll(title, prix, description, categorie, quantite, fournisseur, detailsButton, modifyButton, deleteButton);
             produitCardContainer.getChildren().add(card);
         }
     }
 
+    /**
+     * Gère l'affichage des détails d'un produit.
+     */
+    private void showProduitDetails(Produit produit) {
+        System.out.println("Affichage des détails pour : " + produit.getNomProduit());
+    }
+
+    /**
+     * Redirige vers la page de modification d'un produit.
+     */
+    @FXML
+    public void goToModifierProduit(Produit produit, ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierProduit.fxml"));
+            Parent root = loader.load();
+
+            ModifierProduit controller = loader.getController();
+            controller.initData(produit);
+
+            Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Modifier un Produit");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("⚠️ Erreur lors du chargement de ModifierProduit.fxml !");
+        }
+    }
+
+    /**
+     * Supprime un produit et rafraîchit l'affichage.
+     */
+    @FXML
+    public void deleteProduit(Produit produit) {
+        serviceProduit.delete(produit);
+        displayProduits(); // Rafraîchir l'affichage après suppression
+    }
+
+    /**
+     * Retourne à l'accueil.
+     */
     public void goToAcceuil(ActionEvent actionEvent) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Acceuil.fxml"));
@@ -70,9 +128,12 @@ public class ProduitMainController {
         }
     }
 
+    /**
+     * Redirige vers la gestion des produits.
+     */
     public void goToGestionProduits(ActionEvent actionEvent) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gestionProduits.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/GestionProduits.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
 
