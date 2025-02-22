@@ -1,176 +1,135 @@
 package controllers;
 
-import javafx.animation.RotateTransition;
-import javafx.animation.ScaleTransition;
-import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;  // Importer correctement Node de JavaFX
-
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import service.UsersService;
-
 import java.io.IOException;
+import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Login {
-    @FXML
-    private Circle ballon;
-    @FXML
-    private Rectangle panier;
-    @FXML
-    private Button signupButton;
-    @FXML
-    private Button loginButton;
-    @FXML
-    private PasswordField password;
-    @FXML
-    private TextField text;
-
-    private UsersService usersService = new UsersService();
+    @FXML private Button loginButton;
+    @FXML private PasswordField password;
+    @FXML private TextField text;
+    @FXML private CheckBox rememberMeCheckBox;
+    @FXML private Button signupButton;
+    private static final Logger LOGGER = Logger.getLogger(Login.class.getName());
+    private final UsersService usersService = new UsersService();
+    private static final String REMEMBER_ME_KEY = "rememberMe";
+    private static final String EMAIL_KEY = "email";
+    private static final String PASSWORD_KEY = "password";
     private Runnable onLoginSuccess;
-    @FXML
-    private ImageView bearImage;
-    @FXML
-    private ImageView bearEyesImage;  // Une autre image pour les yeux de l'ours
-
-    @FXML
-    public void initialize() {
-        // Lorsque l'utilisateur commence à taper dans le champ mot de passe
-        password.textProperty().addListener((observable, oldValue, newValue) -> {
-            // Vérifier si un mot de passe a été saisi
-            if (!newValue.isEmpty()) {
-
-            }
-        });
-    }
-
-
-
-
-    @FXML
-    void handleLoginButtonAction() {
-        String email = text.getText();
-        String enteredPassword = password.getText();
-
-        System.out.println("Email entered: " + email);
-        System.out.println("Password entered: " + enteredPassword);
-
-        if (email.isEmpty() || enteredPassword.isEmpty()) {
-            showAlert("Champs vides", "Veuillez entrer un email et un mot de passe.");
-        } else {
-            boolean isAuthenticated = usersService.authenticate(email, enteredPassword);
-            if (isAuthenticated) {
-                showAlert("Connexion réussie", "Vous êtes connecté avec succès.");
-
-
-                // Redirection vers la page d'accueil après une connexion réussie
-                redirectToHomePage();
-            } else {
-                showAlert("Échec de la connexion", "Email ou mot de passe incorrect.");
-            }
-        }
-    }
-
-
-
-
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-
-    private void redirectToHomePage() {
-        try {
-            // Charger le fichier FXML de la page d'accueil (homePage.fxml)
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/homePage.fxml"));
-            AnchorPane homePage = loader.load();
-
-            // Créer une nouvelle scène avec la page d'accueil et la définir sur la scène actuelle
-            Scene homeScene = new Scene(homePage);
-            Stage stage = (Stage) loginButton.getScene().getWindow();
-            stage.setScene(homeScene);
-            stage.show();  // Afficher la nouvelle scène
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Erreur de redirection", "Une erreur s'est produite lors de la redirection vers la page d'accueil.");
-        }
-    }
 
     public void setOnLoginSuccess(Runnable onLoginSuccess) {
         this.onLoginSuccess = onLoginSuccess;
     }
 
+    @FXML
+    public void initialize() {
+        loadSavedCredentials();
+    }
+
+    @FXML
+    private void handleLoginButtonAction() {
+        if (isValidUser()) {
+            if (onLoginSuccess != null) {
+                onLoginSuccess.run();
+            }
+            redirectToHomePage();
+        }
+    }
+
+    private boolean isValidUser() {
+        String email = text.getText();
+        String enteredPassword = password.getText();
+
+        if (email.isEmpty() || enteredPassword.isEmpty()) {
+            showAlert("Champs vides", "Veuillez entrer un email et un mot de passe.");
+            return false;
+        }
+
+        boolean isAuthenticated = usersService.authenticate(email, enteredPassword);
+        if (isAuthenticated) {
+            if (rememberMeCheckBox.isSelected()) {
+                saveCredentials(email, enteredPassword);
+            } else {
+                clearCredentials();
+            }
+            return true;
+        } else {
+            showAlert("Échec de la connexion", "Email ou mot de passe incorrect.");
+            return false;
+        }
+    }
+
+    private void saveCredentials(String email, String password) {
+        Preferences prefs = Preferences.userNodeForPackage(Login.class);
+        prefs.putBoolean(REMEMBER_ME_KEY, true);
+        prefs.put(EMAIL_KEY, email);
+        prefs.put(PASSWORD_KEY, password);
+        try {
+            prefs.flush();
+        } catch (BackingStoreException e) {
+            LOGGER.log(Level.SEVERE, "Erreur lors de l'enregistrement des préférences", e);
+        }
+
+    }
+
+    private void loadSavedCredentials() {
+        Preferences prefs = Preferences.userNodeForPackage(Login.class);
+        boolean rememberMe = prefs.getBoolean(REMEMBER_ME_KEY, false);
+        if (rememberMe) {
+            text.setText(prefs.get(EMAIL_KEY, ""));
+            password.setText(prefs.get(PASSWORD_KEY, ""));
+            rememberMeCheckBox.setSelected(true);
+        }
+    }
+
+    private void clearCredentials() {
+        Preferences prefs = Preferences.userNodeForPackage(Login.class);
+        prefs.remove(REMEMBER_ME_KEY);
+        prefs.remove(EMAIL_KEY);
+        prefs.remove(PASSWORD_KEY);
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void redirectToHomePage() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/homePage.fxml"));
+            Scene homeScene = new Scene(loader.load());
+            Stage stage = (Stage) loginButton.getScene().getWindow();
+            stage.setScene(homeScene);
+            stage.show();
+        } catch (IOException e) {
+            showAlert("Erreur", "Impossible de charger la page d'accueil.");
+        }
+    }
+
+    @FXML
+    private void handleSignupButtonAction() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cree_compte.fxml"));
+            Scene signupScene = new Scene(loader.load());
+            Stage stage = (Stage) signupButton.getScene().getWindow();
+            stage.setScene(signupScene);
+            stage.show();
+        } catch (IOException e) {
+            showAlert("Erreur", "Impossible de charger la page d'inscription.");
+        }
+    }
+
     public Button getSignupButton() {
         return signupButton;
-    }
-
-
-    @FXML
-    public void animateButton(MouseEvent mouseEvent) {
-        Node button = (Node) mouseEvent.getSource();  // Récupère le bouton
-
-        // Création de la transition de mise à l'échelle
-        ScaleTransition scaleTransition = new ScaleTransition(Duration.millis(300), button);
-        scaleTransition.setByX(0.1);  // Agrandir en X
-        scaleTransition.setByY(0.1);  // Agrandir en Y
-        scaleTransition.setCycleCount(1);
-        scaleTransition.setAutoReverse(true);
-        scaleTransition.setInterpolator(javafx.animation.Interpolator.EASE_BOTH);  // Effet d'accélération/décélération
-
-        // Création de la transition de rotation (ajoute un effet moderne)
-        RotateTransition rotateTransition = new RotateTransition(Duration.millis(300), button);
-        rotateTransition.setByAngle(5);  // Légère rotation
-        rotateTransition.setCycleCount(1);
-
-        // Applique un effet de surbrillance au bouton
-        button.setEffect(new DropShadow(20, Color.rgb(255, 255, 255, 0.3)));
-
-        // Lancer les deux transitions en même temps
-        scaleTransition.play();
-        rotateTransition.play();
-    }
-
-    @FXML
-    public void resetButton(MouseEvent mouseEvent) {
-        Node button = (Node) mouseEvent.getSource();  // Récupère le bouton
-
-        // Réinitialiser l'effet de surbrillance
-        button.setEffect(null);
-
-        // Création de la transition de mise à l'échelle inverse
-        ScaleTransition scaleTransition = new ScaleTransition(Duration.millis(200), button);
-        scaleTransition.setByX(-0.1);  // Réduit en X
-        scaleTransition.setByY(-0.1);  // Réduit en Y
-        scaleTransition.setCycleCount(1);
-        scaleTransition.setAutoReverse(true);
-        scaleTransition.setInterpolator(javafx.animation.Interpolator.EASE_BOTH);  // Accélère/décélère
-
-        // Réinitialisation de la rotation
-        RotateTransition rotateTransition = new RotateTransition(Duration.millis(200), button);
-        rotateTransition.setByAngle(-5);  // Annule la rotation précédente
-        rotateTransition.setCycleCount(1);
-
-        // Lancer les deux transitions
-        scaleTransition.play();
-        rotateTransition.play();
     }
 }

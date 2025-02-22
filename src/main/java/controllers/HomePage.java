@@ -15,6 +15,7 @@ import service.UsersService;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 
 public class HomePage {
@@ -58,7 +59,6 @@ public class HomePage {
             showAlert("Modification", "Veuillez sélectionner un utilisateur à modifier !");
         }
     }
-
     private Users getSelectedUser() {
         return selectedUsers.size() == 1 ? selectedUsers.get(0) : null;
     }
@@ -98,7 +98,6 @@ public class HomePage {
         showAlert("Succès", "Utilisateur(s) supprimé(s) avec succès.");
         loadUsers();
     }
-
     private void searchUsers(String searchText) {
         String searchTerm = searchText.toLowerCase().trim();
         if (allUsers.isEmpty()) return;
@@ -121,9 +120,14 @@ public class HomePage {
         }
     }
 
+
     private VBox createUserCard(Users user) {
         VBox userCard = new VBox();
         userCard.getStyleClass().add("user-card");
+        userCard.setMinWidth(200);  // Largeur minimale pour bien espacer les cartes
+        userCard.setMaxWidth(200);
+        userCard.setMinHeight(250); // Hauteur de la carte
+        userCard.setSpacing(10);    // Espacement entre les éléments
 
         Label nameLabel = new Label("Nom: " + user.getNom());
         nameLabel.getStyleClass().add("user-card-label");
@@ -134,21 +138,8 @@ public class HomePage {
         Label emailLabel = new Label("Email: " + user.getEmail());
         emailLabel.getStyleClass().add("user-card-label");
 
-        Label phoneLabel = new Label("Téléphone: " + user.getNumeroTelephone());
-        phoneLabel.getStyleClass().add("user-card-label");
-
-        Label addressLabel = new Label("Adresse: " + user.getAdresse());
-        addressLabel.getStyleClass().add("user-card-label");
-
-        Label typeLabel = new Label("Type: " + user.getType());
-        typeLabel.getStyleClass().add("user-card-label");
-
-        Label genreLabel = new Label("Genre: " + user.getGenre());
-        genreLabel.getStyleClass().add("user-card-label");
-
         CheckBox selectCheckBox = new CheckBox("Sélectionner");
         selectCheckBox.getStyleClass().add("user-card-checkbox");
-        selectCheckBox.setIndeterminate(false);
         selectCheckBox.setOnAction(event -> {
             if (selectCheckBox.isSelected()) {
                 selectedUsers.add(user);
@@ -158,7 +149,7 @@ public class HomePage {
             deleteSelectedButton.setDisable(selectedUsers.isEmpty());
         });
 
-        VBox infoBox = new VBox(nameLabel, prenomLabel, emailLabel, phoneLabel, addressLabel, typeLabel, genreLabel, selectCheckBox);
+        VBox infoBox = new VBox(nameLabel, prenomLabel, emailLabel, selectCheckBox);
         infoBox.getStyleClass().add("user-card-info");
 
         userCard.getChildren().add(infoBox);
@@ -173,19 +164,26 @@ public class HomePage {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
-    @FXML
+@FXML
     private void handleLogout() {
+        // Supprime les préférences utilisateur
+        Preferences prefs = Preferences.userNodeForPackage(Login.class);
+        prefs.putBoolean("rememberMe", false);
+        prefs.remove("email");
+        prefs.remove("password");
+
+        // Redirige vers la page de connexion
         try {
+            Stage stage = (Stage) logoutButton.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/login.fxml"));
             Parent root = loader.load();
-            Stage stage = (Stage) logoutButton.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Page de connexion");
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("Connexion");
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert("Erreur", "Impossible de déconnecter l'utilisateur.");
+            System.err.println("Erreur lors du chargement de la page de connexion : " + e.getMessage());
         }
     }
 }

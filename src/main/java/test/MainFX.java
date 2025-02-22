@@ -5,8 +5,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.scene.control.Button;
 import java.io.IOException;
 import java.net.URL;
+import java.util.prefs.Preferences;
 
 public class MainFX extends Application {
 
@@ -19,91 +21,87 @@ public class MainFX extends Application {
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
-        showLoginPage();
+
+        if (isUserRemembered()) {
+            showHomePage();
+        } else {
+            showLoginPage();
+        }
+    }
+
+    private boolean isUserRemembered() {
+        Preferences prefs = Preferences.userNodeForPackage(controllers.Login.class);
+        return prefs.getBoolean("rememberMe", false) && !prefs.get("email", "").isEmpty();
     }
 
     private void showLoginPage() {
         try {
-            URL fxmlLocation = getClass().getResource("/login.fxml");
-            if (fxmlLocation == null) {
-                throw new IOException("login.fxml introuvable");
-            }
-            FXMLLoader loader = new FXMLLoader(fxmlLocation);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/login.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
-
-            URL cssLocation = getClass().getResource("/style.css");
-            if (cssLocation != null) {
-                scene.getStylesheets().add(cssLocation.toExternalForm());
-            }
 
             primaryStage.setScene(scene);
             primaryStage.setTitle("Page de Connexion");
 
             controllers.Login loginController = loader.getController();
-            if (loginController != null && loginController.getSignupButton() != null) {
+            if (loginController != null) {
                 loginController.getSignupButton().setOnAction(event -> showCreateAccountPage());
-            } else {
-                System.err.println("Erreur: Impossible de récupérer le contrôleur ou le bouton de création de compte.");
+                loginController.setOnLoginSuccess(() -> showHomePage()); // Redirection après connexion réussie
             }
-
-            // Ajout de la redirection après la connexion réussie
-            loginController.setOnLoginSuccess(() -> showHomePage());
 
             primaryStage.show();
         } catch (IOException e) {
-            e.printStackTrace();
             System.err.println("Erreur de chargement de la page de connexion : " + e.getMessage());
         }
     }
 
     private void showCreateAccountPage() {
         try {
-            URL fxmlLocation = getClass().getResource("/cree_compte.fxml");
-            if (fxmlLocation == null) {
-                throw new IOException("cree_compte.fxml introuvable");
-            }
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/cree_compte.fxml"));
             Parent root = loader.load();
-
             Scene scene = new Scene(root);
-
-            URL cssLocation = getClass().getResource("/cree_compte.css");
-            if (cssLocation != null) {
-                scene.getStylesheets().add(cssLocation.toExternalForm());
-            }
 
             primaryStage.setScene(scene);
             primaryStage.setTitle("Créer un Compte");
             primaryStage.show();
         } catch (IOException e) {
-            e.printStackTrace();
-            System.err.println("Erreur de chargement de la page de création de compte : " + e.getMessage());
+            System.err.println("Erreur de chargement de la page d'inscription : " + e.getMessage());
         }
     }
 
-    // Méthode pour afficher la page d'accueil
     private void showHomePage() {
         try {
-            URL fxmlLocation = getClass().getResource("/homePage.fxml");
-            if (fxmlLocation == null) {
-                throw new IOException("homePage.fxml introuvable");
-            }
-            FXMLLoader loader = new FXMLLoader(fxmlLocation);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/homePage.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
 
-            URL cssLocation = getClass().getResource("/style.css");
-            if (cssLocation != null) {
-                scene.getStylesheets().add(cssLocation.toExternalForm());
-            }
-
             primaryStage.setScene(scene);
             primaryStage.setTitle("Page d'Accueil");
+
+            // Récupérer le bouton de déconnexion dans la page d'accueil
+            Button logoutButton = (Button) scene.lookup("#logoutButton");
+            if (logoutButton != null) {
+                logoutButton.setOnAction(event -> {
+                    logoutUser();  // Efface les préférences et redirige vers la page de connexion
+                    showLoginPage();
+                });
+            }
+
             primaryStage.show();
         } catch (IOException e) {
-            e.printStackTrace();
             System.err.println("Erreur de chargement de la page d'accueil : " + e.getMessage());
+        }
+    }
+
+    private void logoutUser() {
+        Preferences prefs = Preferences.userNodeForPackage(controllers.Login.class);
+        prefs.putBoolean("rememberMe", false); // Désactiver "Rester connecté"
+        prefs.remove("email");
+        prefs.remove("password");
+        try {
+            prefs.flush();
+        } catch (Exception e) {
+            System.err.println("Erreur lors de la suppression des préférences : " + e.getMessage());
         }
     }
 }
