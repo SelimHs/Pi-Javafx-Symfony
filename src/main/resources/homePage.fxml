@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -13,7 +14,6 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.FontWeight?>
 
-<?import javafx.scene.layout.FlowPane?>
 <AnchorPane xmlns="http://javafx.com/javafx/20" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.HomePage"
             stylesheets="@/styles.css"
             style="-fx-background-color: linear-gradient(to bottom, #2c3e50, #3498db);">
@@ -50,6 +50,12 @@
         <!-- Barre supérieure -->
         <HBox spacing="20" style="-fx-alignment: center-left; -fx-padding: 15px; -fx-background-color: rgba(255, 255, 255, 0.1); -fx-background-radius: 10px;">
 
+            <!-- ComboBox pour le filtrage -->
+            <ComboBox fx:id="filterComboBox" promptText="Filtrer par..." styleClass="filter-combo-box" />
+
+            <!-- ComboBox pour le tri -->
+            <ComboBox fx:id="sortOrderComboBox" promptText="Trier par ordre" styleClass="filter-combo-box" />
+
             <!-- Champ de recherche -->
             <TextField fx:id="searchField" promptText="Rechercher un utilisateur..." styleClass="search-field" HBox.hgrow="ALWAYS"
                        style="-fx-font-size: 14px; -fx-background-radius: 20px; -fx-padding: 10px;"/>
@@ -77,10 +83,11 @@
                 </graphic>
             </Button>
         </HBox>
-
+        <!-- Liste des utilisateurs dans un GridPane -->
         <ScrollPane fx:id="userListScrollPane" style="-fx-background: transparent; -fx-border-color: transparent;" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
             <GridPane fx:id="userCards" hgap="20" vgap="20" style="-fx-padding: 20px;" GridPane.hgrow="ALWAYS" />
         </ScrollPane>
+
         <!-- Section des boutons d'actions -->
         <HBox spacing="20" style="-fx-alignment: center-left; -fx-padding: 15px;">
             <Button fx:id="addButton" text="Ajouter" styleClass="action-button" onAction="#handleAddUser"

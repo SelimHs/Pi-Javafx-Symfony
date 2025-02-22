@@ -17,39 +17,55 @@ import service.UsersService;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 
 public class HomePage {
     @FXML
-    private GridPane userCards; // Utiliser GridPane pour organiser les cartes
+    private GridPane userCards;
+    @FXML
+    private ComboBox<String> sortOrderComboBox; // Pour le tri croissant/décroissant
     @FXML
     private Button logoutButton;
     @FXML
     private TextField searchField;
+    @FXML
+    private ComboBox<String> filterComboBox;
 
     private final UsersService usersService = new UsersService();
     private List<Users> allUsers = new ArrayList<>();
-    private int columnCount = 3; // Nombre de colonnes par défaut
+    private int columnCount = 3;
+
     @FXML
     public void initialize() {
         loadUsers();
-        searchField.textProperty().addListener((observable, oldValue, newValue) -> searchUsers(newValue));
+
+        // Initialiser le ComboBox de filtrage avec les options souhaitées
+        filterComboBox.getItems().addAll("Nom", "Prénom", "Adresse"); // Options de filtrage
+        filterComboBox.setValue("Nom"); // Valeur par défaut
+
+        // Initialiser le ComboBox de tri
+        sortOrderComboBox.getItems().addAll("Croissant", "Décroissant");
+        sortOrderComboBox.setValue("Croissant"); // Valeur par défaut
+
+        // Écouter les changements dans les ComboBox et le champ de recherche
+        filterComboBox.valueProperty().addListener((obs, oldVal, newVal) -> applyFilter());
+        sortOrderComboBox.valueProperty().addListener((obs, oldVal, newVal) -> applyFilter());
+        searchField.textProperty().addListener((obs, oldVal, newVal) -> applyFilter());
 
         // Écouter les changements de taille du GridPane
         userCards.widthProperty().addListener((obs, oldVal, newVal) -> {
-            adjustColumnCount(newVal.doubleValue()); // Ajuster le nombre de colonnes
-            displayUsers(allUsers); // Rafraîchir l'affichage
+            adjustColumnCount(newVal.doubleValue());
+            displayUsers(allUsers);
         });
     }
 
     private void adjustColumnCount(double width) {
-        // Calculer le nombre de colonnes en fonction de la largeur disponible
-        int minCardWidth = 250; // Largeur minimale d'une carte
+        int minCardWidth = 250;
         columnCount = (int) (width / minCardWidth);
 
-        // Assurer un nombre minimal de colonnes
         if (columnCount < 1) {
             columnCount = 1;
         }
@@ -61,17 +77,17 @@ public class HomePage {
     }
 
     private void displayUsers(List<Users> users) {
-        userCards.getChildren().clear(); // Vider le GridPane
+        userCards.getChildren().clear();
 
         int row = 0;
         int column = 0;
 
         for (Users user : users) {
-            HBox userCard = createUserCard(user); // Créer la carte d'utilisateur
-            userCards.add(userCard, column, row); // Ajouter la carte au GridPane
+            HBox userCard = createUserCard(user);
+            userCards.add(userCard, column, row);
 
             column++;
-            if (column >= columnCount) { // Passer à la ligne suivante après avoir rempli les colonnes
+            if (column >= columnCount) {
                 column = 0;
                 row++;
             }
@@ -81,46 +97,57 @@ public class HomePage {
     private HBox createUserCard(Users user) {
         HBox userCard = new HBox();
         userCard.getStyleClass().add("user-card");
-        userCard.setMinWidth(200);  // Largeur minimale de la carte
-        userCard.setMaxWidth(Double.MAX_VALUE);  // Permettre à la carte de s'étendre
-        userCard.setMinHeight(200); // Hauteur minimale de la carte
-        userCard.setSpacing(15);    // Espacement entre les éléments
-        userCard.setAlignment(Pos.CENTER); // Centrer le contenu de la carte
+        userCard.setMinWidth(200);
+        userCard.setMaxWidth(Double.MAX_VALUE);
+        userCard.setMinHeight(200);
+        userCard.setSpacing(15);
+        userCard.setAlignment(Pos.CENTER);
 
-        // Labels pour afficher les informations de l'utilisateur
         Label nameLabel = new Label("Nom: " + user.getNom());
         nameLabel.getStyleClass().add("user-card-label");
-        nameLabel.setMaxWidth(Double.MAX_VALUE); // Permettre au label de s'étendre
+        nameLabel.setMaxWidth(Double.MAX_VALUE);
 
         Label prenomLabel = new Label("Prénom: " + user.getPrenom());
         prenomLabel.getStyleClass().add("user-card-label");
-        prenomLabel.setMaxWidth(Double.MAX_VALUE); // Permettre au label de s'étendre
+        prenomLabel.setMaxWidth(Double.MAX_VALUE);
 
         Label emailLabel = new Label("Email: " + user.getEmail());
         emailLabel.getStyleClass().add("user-card-label");
-        emailLabel.setMaxWidth(Double.MAX_VALUE); // Permettre au label de s'étendre
+        emailLabel.setMaxWidth(Double.MAX_VALUE);
 
-        // Bouton Modifier
+        Label phoneLabel = new Label("Téléphone: " + user.getNumeroTelephone());
+        phoneLabel.getStyleClass().add("user-card-label");
+        phoneLabel.setMaxWidth(Double.MAX_VALUE);
+
+        Label addressLabel = new Label("Adresse: " + user.getAdresse());
+        addressLabel.getStyleClass().add("user-card-label");
+        addressLabel.setMaxWidth(Double.MAX_VALUE);
+
+        Label typeLabel = new Label("Type: " + user.getType());
+        typeLabel.getStyleClass().add("user-card-label");
+        typeLabel.setMaxWidth(Double.MAX_VALUE);
+
+        Label genreLabel = new Label("Genre: " + user.getGenre());
+        genreLabel.getStyleClass().add("user-card-label");
+        genreLabel.setMaxWidth(Double.MAX_VALUE);
+
         Button editButton = new Button("Modifier");
         editButton.getStyleClass().add("action-button");
         editButton.setStyle("-fx-font-size: 12px; -fx-background-color: #f1c40f; -fx-text-fill: white; -fx-background-radius: 20px; -fx-padding: 5px 10px;");
-        editButton.setOnAction(event -> handleEditUser(user)); // Gérer l'action de modification
+        editButton.setOnAction(event -> handleEditUser(user));
 
-        // Bouton Supprimer
         Button deleteButton = new Button("Supprimer");
         deleteButton.getStyleClass().add("delete-button");
         deleteButton.setStyle("-fx-font-size: 12px; -fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 20px; -fx-padding: 5px 10px;");
-        deleteButton.setOnAction(event -> handleDeleteUser(user)); // Gérer l'action de suppression
+        deleteButton.setOnAction(event -> handleDeleteUser(user));
 
-        // HBox pour organiser les boutons
         HBox buttonBox = new HBox(editButton, deleteButton);
-        buttonBox.setSpacing(10); // Espacement entre les boutons
+        buttonBox.setSpacing(10);
 
-        // VBox pour organiser les labels et les boutons
-        VBox infoBox = new VBox(nameLabel, prenomLabel, emailLabel, buttonBox);
+        VBox infoBox = new VBox(nameLabel, prenomLabel, emailLabel, phoneLabel, addressLabel, typeLabel, genreLabel, buttonBox);
         infoBox.getStyleClass().add("user-card-info");
-        infoBox.setSpacing(10); // Espacement entre les éléments dans la VBox
-        infoBox.setMaxWidth(Double.MAX_VALUE); // Permettre à la VBox de s'étendre
+        infoBox.setSpacing(10);
+        infoBox.setMaxWidth(Double.MAX_VALUE);
 
         userCard.getChildren().add(infoBox);
         return userCard;
@@ -132,28 +159,20 @@ public class HomePage {
     }
 
     private void handleEditUser(Users user) {
-        openUserForm(user); // Ouvrir le formulaire de modification
+        openUserForm(user);
     }
 
     private void handleDeleteUser(Users user) {
-        // Créer une boîte de dialogue de confirmation
         Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
         confirmationAlert.setTitle("Confirmation de suppression");
         confirmationAlert.setHeaderText("Êtes-vous sûr de vouloir supprimer cet utilisateur ?");
         confirmationAlert.setContentText("Cette action est irréversible.");
 
-        // Afficher la boîte de dialogue et attendre la réponse de l'utilisateur
         confirmationAlert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
-                // Supprimer l'utilisateur si l'utilisateur confirme
                 usersService.delete(user.getIdUser());
-
-                // Supprimer l'utilisateur de la liste locale
                 allUsers.remove(user);
-
-                // Rafraîchir l'affichage
                 displayUsers(allUsers);
-
                 System.out.println("Utilisateur supprimé : " + user.getNom());
             }
         });
@@ -172,28 +191,61 @@ public class HomePage {
             stage.setTitle(user == null ? "Ajouter un utilisateur" : "Modifier un utilisateur");
             stage.showAndWait();
 
-            loadUsers(); // Rafraîchir la liste après la fermeture du formulaire
+            loadUsers();
         } catch (IOException e) {
             showAlert("Erreur", "Impossible d'ouvrir le formulaire.");
             e.printStackTrace();
         }
     }
 
-    private void searchUsers(String searchText) {
-        if (searchText == null || searchText.trim().isEmpty()) {
-            displayUsers(allUsers);
-            return;
-        }
+    private void applyFilter() {
+        String selectedFilter = filterComboBox.getValue(); // Critère de filtrage
+        String searchText = searchField.getText().toLowerCase().trim(); // Terme de recherche
+        String sortOrder = sortOrderComboBox.getValue(); // Ordre de tri (Croissant ou Décroissant)
 
-        String searchTerm = searchText.toLowerCase().trim();
+        // Filtrer les utilisateurs
         List<Users> filteredUsers = allUsers.stream()
-                .filter(user -> user.getNom().toLowerCase().contains(searchTerm) ||
-                        user.getPrenom().toLowerCase().contains(searchTerm))
+                .filter(user -> {
+                    switch (selectedFilter) {
+                        case "Nom":
+                            return user.getNom().toLowerCase().contains(searchText);
+                        case "Prénom":
+                            return user.getPrenom().toLowerCase().contains(searchText);
+                        case "Adresse":
+                            return user.getAdresse().toLowerCase().contains(searchText);
+                        default:
+                            return true; // Aucun filtre appliqué
+                    }
+                })
                 .collect(Collectors.toList());
 
+        // Trier les utilisateurs
+        if (sortOrder != null) {
+            Comparator<Users> comparator = null;
+
+            switch (selectedFilter) {
+                case "Nom":
+                    comparator = Comparator.comparing(Users::getNom, String.CASE_INSENSITIVE_ORDER);
+                    break;
+                case "Prénom":
+                    comparator = Comparator.comparing(Users::getPrenom, String.CASE_INSENSITIVE_ORDER);
+                    break;
+                case "Adresse":
+                    comparator = Comparator.comparing(Users::getAdresse, String.CASE_INSENSITIVE_ORDER);
+                    break;
+            }
+
+            if (comparator != null) {
+                if ("Décroissant".equals(sortOrder)) {
+                    comparator = comparator.reversed(); // Inverser l'ordre pour le tri décroissant
+                }
+                filteredUsers.sort(comparator); // Appliquer le tri
+            }
+        }
+
+        // Afficher les utilisateurs filtrés et triés
         displayUsers(filteredUsers);
     }
-
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);

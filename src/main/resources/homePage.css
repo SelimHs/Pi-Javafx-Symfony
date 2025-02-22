@@ -91,3 +91,9 @@
 .delete-button:hover {
     -fx-background-color: #ffaf7b;
 }
+.filter-combo-box {
+    -fx-font-size: 14px;
+    -fx-background-radius: 20px;
+    -fx-padding: 5px 10px;
+    -fx-pref-width: 150px; /* Largeur par défaut */
+}
