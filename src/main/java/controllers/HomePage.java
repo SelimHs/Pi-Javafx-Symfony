@@ -2,9 +2,13 @@ package controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Users;
@@ -18,7 +22,9 @@ import java.util.stream.Collectors;
 
 public class HomePage {
     @FXML
-    private VBox userCardsContainer;
+    private GridPane userCards; // Déclarer userCards comme GridPane
+   // @FXML
+    //private FlowPane userCards; // Utiliser FlowPane pour disposer les cartes
     @FXML
     private Button deleteSelectedButton;
     @FXML
@@ -44,23 +50,36 @@ public class HomePage {
     }
 
     private void displayUsers(List<Users> users) {
-        userCardsContainer.getChildren().clear();
+        userCards.getChildren().clear(); // Vider le GridPane
         selectedUsers.clear();
         deleteSelectedButton.setDisable(true);
 
+        int columnCount = 3; // Nombre de colonnes dans le GridPane
+        int row = 0;
+        int column = 0;
+
         for (Users user : users) {
-            userCardsContainer.getChildren().add(createUserCard(user));
+            HBox userCard = createUserCard(user); // Créer la carte d'utilisateur
+            userCards.add(userCard, column, row); // Ajouter la carte au GridPane
+
+            column++;
+            if (column >= columnCount) { // Passer à la ligne suivante après avoir rempli les colonnes
+                column = 0;
+                row++;
+            }
         }
     }
 
-    private VBox createUserCard(Users user) {
-        VBox userCard = new VBox();
+    private HBox createUserCard(Users user) {
+        HBox userCard = new HBox();
         userCard.getStyleClass().add("user-card");
-        userCard.setMinWidth(300);
-        userCard.setMaxWidth(300);
-        userCard.setMinHeight(200);
-        userCard.setSpacing(15);
+        userCard.setMinWidth(250);  // Largeur minimale de la carte
+        userCard.setMaxWidth(250);  // Largeur maximale de la carte
+        userCard.setMinHeight(200); // Hauteur de la carte
+        userCard.setSpacing(15);    // Espacement entre les éléments
+        userCard.setAlignment(Pos.CENTER); // Centrer le contenu de la carte
 
+        // Labels pour afficher les informations de l'utilisateur
         Label nameLabel = new Label("Nom: " + user.getNom());
         nameLabel.getStyleClass().add("user-card-label");
 
@@ -70,6 +89,7 @@ public class HomePage {
         Label emailLabel = new Label("Email: " + user.getEmail());
         emailLabel.getStyleClass().add("user-card-label");
 
+        // Checkbox pour sélectionner l'utilisateur
         CheckBox selectCheckBox = new CheckBox("Sélectionner");
         selectCheckBox.getStyleClass().add("user-card-checkbox");
         selectCheckBox.setOnAction(event -> {
@@ -81,14 +101,14 @@ public class HomePage {
             deleteSelectedButton.setDisable(selectedUsers.isEmpty());
         });
 
+        // VBox pour organiser les labels et la checkbox
         VBox infoBox = new VBox(nameLabel, prenomLabel, emailLabel, selectCheckBox);
         infoBox.getStyleClass().add("user-card-info");
+        infoBox.setSpacing(10); // Espacement entre les éléments dans la VBox
 
         userCard.getChildren().add(infoBox);
         return userCard;
-    }
-
-    @FXML
+    } @FXML
     private void handleAddUser() {
         openUserForm(null);
     }
