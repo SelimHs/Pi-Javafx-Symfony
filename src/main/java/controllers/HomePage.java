@@ -26,7 +26,7 @@ public class HomePage {
     @FXML
     private GridPane userCards;
     @FXML
-    private ComboBox<String> sortOrderComboBox; // Pour le tri croissant/décroissant
+    private ComboBox<String> sortOrderComboBox;
     @FXML
     private Button logoutButton;
     @FXML
@@ -43,12 +43,12 @@ public class HomePage {
         loadUsers();
 
         // Initialiser le ComboBox de filtrage avec les options souhaitées
-        filterComboBox.getItems().addAll("Nom", "Prénom", "Adresse"); // Options de filtrage
-        filterComboBox.setValue("Nom"); // Valeur par défaut
+        filterComboBox.getItems().addAll("Nom", "Prénom", "Adresse");
+        filterComboBox.setValue("Nom");
 
         // Initialiser le ComboBox de tri
         sortOrderComboBox.getItems().addAll("Croissant", "Décroissant");
-        sortOrderComboBox.setValue("Croissant"); // Valeur par défaut
+        sortOrderComboBox.setValue("Croissant");
 
         // Écouter les changements dans les ComboBox et le champ de recherche
         filterComboBox.valueProperty().addListener((obs, oldVal, newVal) -> applyFilter());
@@ -99,7 +99,7 @@ public class HomePage {
         userCard.getStyleClass().add("user-card");
         userCard.setMinWidth(200);
         userCard.setMaxWidth(Double.MAX_VALUE);
-        userCard.setMinHeight(200);
+        userCard.setMinHeight(150);
         userCard.setSpacing(15);
         userCard.setAlignment(Pos.CENTER);
 
@@ -115,21 +115,10 @@ public class HomePage {
         emailLabel.getStyleClass().add("user-card-label");
         emailLabel.setMaxWidth(Double.MAX_VALUE);
 
-        Label phoneLabel = new Label("Téléphone: " + user.getNumeroTelephone());
-        phoneLabel.getStyleClass().add("user-card-label");
-        phoneLabel.setMaxWidth(Double.MAX_VALUE);
-
-        Label addressLabel = new Label("Adresse: " + user.getAdresse());
-        addressLabel.getStyleClass().add("user-card-label");
-        addressLabel.setMaxWidth(Double.MAX_VALUE);
-
-        Label typeLabel = new Label("Type: " + user.getType());
-        typeLabel.getStyleClass().add("user-card-label");
-        typeLabel.setMaxWidth(Double.MAX_VALUE);
-
-        Label genreLabel = new Label("Genre: " + user.getGenre());
-        genreLabel.getStyleClass().add("user-card-label");
-        genreLabel.setMaxWidth(Double.MAX_VALUE);
+        Button detailsButton = new Button("Voir détails");
+        detailsButton.getStyleClass().add("action-button");
+        detailsButton.setStyle("-fx-font-size: 12px; -fx-background-color: #3498db; -fx-text-fill: white; -fx-background-radius: 20px; -fx-padding: 5px 10px;");
+        detailsButton.setOnAction(event -> showUserDetails(user));
 
         Button editButton = new Button("Modifier");
         editButton.getStyleClass().add("action-button");
@@ -141,16 +130,38 @@ public class HomePage {
         deleteButton.setStyle("-fx-font-size: 12px; -fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 20px; -fx-padding: 5px 10px;");
         deleteButton.setOnAction(event -> handleDeleteUser(user));
 
-        HBox buttonBox = new HBox(editButton, deleteButton);
+        HBox buttonBox = new HBox(detailsButton, editButton, deleteButton);
         buttonBox.setSpacing(10);
 
-        VBox infoBox = new VBox(nameLabel, prenomLabel, emailLabel, phoneLabel, addressLabel, typeLabel, genreLabel, buttonBox);
+        VBox infoBox = new VBox(nameLabel, prenomLabel, emailLabel, buttonBox);
         infoBox.getStyleClass().add("user-card-info");
         infoBox.setSpacing(10);
         infoBox.setMaxWidth(Double.MAX_VALUE);
 
         userCard.getChildren().add(infoBox);
         return userCard;
+    }
+
+    private void showUserDetails(Users user) {
+        Alert detailsAlert = new Alert(Alert.AlertType.INFORMATION);
+        detailsAlert.setTitle("Détails de l'utilisateur");
+        detailsAlert.setHeaderText("Informations complètes de " + user.getNom() + " " + user.getPrenom());
+
+        VBox content = new VBox(10);
+        content.setAlignment(Pos.CENTER_LEFT);
+
+        Label nameLabel = new Label("Nom: " + user.getNom());
+        Label prenomLabel = new Label("Prénom: " + user.getPrenom());
+        Label emailLabel = new Label("Email: " + user.getEmail());
+        Label phoneLabel = new Label("Téléphone: " + user.getNumeroTelephone());
+        Label addressLabel = new Label("Adresse: " + user.getAdresse());
+        Label typeLabel = new Label("Type: " + user.getType());
+        Label genreLabel = new Label("Genre: " + user.getGenre());
+
+        content.getChildren().addAll(nameLabel, prenomLabel, emailLabel, phoneLabel, addressLabel, typeLabel, genreLabel);
+
+        detailsAlert.getDialogPane().setContent(content);
+        detailsAlert.showAndWait();
     }
 
     @FXML
@@ -199,11 +210,10 @@ public class HomePage {
     }
 
     private void applyFilter() {
-        String selectedFilter = filterComboBox.getValue(); // Critère de filtrage
-        String searchText = searchField.getText().toLowerCase().trim(); // Terme de recherche
-        String sortOrder = sortOrderComboBox.getValue(); // Ordre de tri (Croissant ou Décroissant)
+        String selectedFilter = filterComboBox.getValue();
+        String searchText = searchField.getText().toLowerCase().trim();
+        String sortOrder = sortOrderComboBox.getValue();
 
-        // Filtrer les utilisateurs
         List<Users> filteredUsers = allUsers.stream()
                 .filter(user -> {
                     switch (selectedFilter) {
@@ -214,12 +224,11 @@ public class HomePage {
                         case "Adresse":
                             return user.getAdresse().toLowerCase().contains(searchText);
                         default:
-                            return true; // Aucun filtre appliqué
+                            return true;
                     }
                 })
                 .collect(Collectors.toList());
 
-        // Trier les utilisateurs
         if (sortOrder != null) {
             Comparator<Users> comparator = null;
 
@@ -237,15 +246,15 @@ public class HomePage {
 
             if (comparator != null) {
                 if ("Décroissant".equals(sortOrder)) {
-                    comparator = comparator.reversed(); // Inverser l'ordre pour le tri décroissant
+                    comparator = comparator.reversed();
                 }
-                filteredUsers.sort(comparator); // Appliquer le tri
+                filteredUsers.sort(comparator);
             }
         }
 
-        // Afficher les utilisateurs filtrés et triés
         displayUsers(filteredUsers);
     }
+
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
