@@ -1,5 +1,6 @@
 package controllers;
 
+import controllers.Clock;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -8,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.beans.value.ChangeListener;
@@ -33,6 +35,8 @@ public class HomePage {
     private TextField searchField;
     @FXML
     private ComboBox<String> filterComboBox;
+    @FXML
+    private Pane clockPane; // Référence au Pane de l'horloge
 
     private final UsersService usersService = new UsersService();
     private List<Users> allUsers = new ArrayList<>();
@@ -40,6 +44,10 @@ public class HomePage {
 
     @FXML
     public void initialize() {
+        // Ajouter l'horloge murale au Pane
+        Clock clock = new Clock();
+        clockPane.getChildren().add(clock);
+
         loadUsers();
 
         // Initialiser le ComboBox de filtrage avec les options souhaitées
@@ -61,7 +69,6 @@ public class HomePage {
             displayUsers(allUsers);
         });
     }
-
     private void adjustColumnCount(double width) {
         int minCardWidth = 250;
         columnCount = (int) (width / minCardWidth);

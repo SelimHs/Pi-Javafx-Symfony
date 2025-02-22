@@ -97,3 +97,8 @@
     -fx-padding: 5px 10px;
     -fx-pref-width: 150px; /* Largeur par défaut */
 }
+#clockLabel {
+     -fx-font-size: 24px;
+     -fx-font-weight: bold;
+     -fx-text-fill: #ffffff;
+ }
