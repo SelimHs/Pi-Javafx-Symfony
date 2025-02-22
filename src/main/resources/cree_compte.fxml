@@ -48,15 +48,6 @@
                 <TextArea fx:id="adresseField" promptText="Entrez votre adresse" prefRowCount="3" style="-fx-background-color: white; -fx-border-radius: 5px; -fx-padding: 8px;"/>
             </VBox>
 
-            <!-- Type d'utilisateur -->
-            <VBox spacing="5">
-                <Label text="Type d'utilisateur" style="-fx-text-fill: white;" />
-                <HBox spacing="10">
-                    <CheckBox fx:id="typeAdmin" text="Administrateur" style="-fx-text-fill: white;" />
-                    <CheckBox fx:id="typeUser" text="Utilisateur" style="-fx-text-fill: white;" />
-                </HBox>
-            </VBox>
-
             <!-- Genre -->
             <VBox spacing="5">
                 <Label text="Genre" style="-fx-text-fill: white;" />

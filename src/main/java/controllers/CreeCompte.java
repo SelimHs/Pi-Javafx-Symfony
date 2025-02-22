@@ -19,8 +19,6 @@ public class CreeCompte {
     @FXML private TextField emailField;
     @FXML private TextField numeroField;
     @FXML private TextArea adresseField;
-    @FXML private CheckBox typeAdmin;
-    @FXML private CheckBox typeUser;
     @FXML private CheckBox genreMasculin;
     @FXML private CheckBox genreFeminin;
     @FXML private Button createButton;
@@ -69,16 +67,8 @@ public class CreeCompte {
             return;
         }
 
-        // Traitement du type d'utilisateur (Admin ou Utilisateur)
-        String type = null;
-        if (typeAdmin.isSelected() && !typeUser.isSelected()) {
-            type = "Admin";
-        } else if (!typeAdmin.isSelected() && typeUser.isSelected()) {
-            type = "client";
-        } else {
-            messageLabel.setText("⚠️ Veuillez sélectionner un seul type d'utilisateur.");
-            return;
-        }
+        // Définir le type d'utilisateur par défaut comme "client"
+        String type = "client";
 
         // Traitement du genre
         String genre = null;
