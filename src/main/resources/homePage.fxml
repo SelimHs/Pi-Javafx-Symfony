@@ -13,87 +13,78 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.FontWeight?>
 
+<?import javafx.scene.layout.FlowPane?>
 <AnchorPane xmlns="http://javafx.com/javafx/20" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.HomePage"
             stylesheets="@/styles.css"
             style="-fx-background-color: linear-gradient(to bottom, #2c3e50, #3498db);">
 
-    <!-- GridPane pour organiser la disposition -->
-    <GridPane hgap="10" vgap="10" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+    <!-- Barre latérale (Sidebar) -->
+    <VBox prefWidth="250" style="-fx-background-color: #34495e; -fx-padding: 20px; -fx-spacing: 20px; -fx-alignment: top-center;" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0">
 
-        <!-- Colonne 0 : Sidebar -->
-        <VBox prefWidth="250" style="-fx-background-color: #34495e; -fx-padding: 20px; -fx-spacing: 20px; -fx-alignment: top-center;" GridPane.columnIndex="0" GridPane.rowSpan="3">
+        <!-- Logo -->
+        <ImageView fitWidth="120" fitHeight="120" pickOnBounds="true" preserveRatio="true" styleClass="logo">
+            <image>
+                <Image url="@images/logo.jpeg"/>
+            </image>
+        </ImageView>
 
-            <!-- Logo -->
-            <ImageView fitWidth="120" fitHeight="120" pickOnBounds="true" preserveRatio="true" styleClass="logo">
-                <image>
-                    <Image url="@images/logo.jpeg"/>
-                </image>
-            </ImageView>
+        <!-- Bouton utilisateur -->
+        <Button fx:id="userButton" text="Profil" styleClass="sidebar-button" style="-fx-font-size: 14px; -fx-text-fill: #ecf0f1;">
+            <graphic>
+                <ImageView fitWidth="24" fitHeight="24">
+                    <image>
+                        <Image url="@images/user.png"/>
+                    </image>
+                </ImageView>
+            </graphic>
+        </Button>
 
-            <!-- Bouton utilisateur -->
-            <Button fx:id="userButton" text="Profil" styleClass="sidebar-button" style="-fx-font-size: 14px; -fx-text-fill: #ecf0f1;">
+        <!-- Autres Boutons -->
+        <Button fx:id="dashboardButton" text="Dashboard" styleClass="sidebar-button" style="-fx-font-size: 14px; -fx-text-fill: #ecf0f1;"/>
+        <Button fx:id="settingsButton" text="Paramètres" styleClass="sidebar-button" style="-fx-font-size: 14px; -fx-text-fill: #ecf0f1;"/>
+    </VBox>
+
+    <!-- Contenu principal -->
+    <VBox AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="270" AnchorPane.rightAnchor="0" style="-fx-padding: 20px;">
+
+        <!-- Barre supérieure -->
+        <HBox spacing="20" style="-fx-alignment: center-left; -fx-padding: 15px; -fx-background-color: rgba(255, 255, 255, 0.1); -fx-background-radius: 10px;">
+
+            <!-- Champ de recherche -->
+            <TextField fx:id="searchField" promptText="Rechercher un utilisateur..." styleClass="search-field" HBox.hgrow="ALWAYS"
+                       style="-fx-font-size: 14px; -fx-background-radius: 20px; -fx-padding: 10px;"/>
+
+            <!-- Bouton de recherche -->
+            <Button styleClass="search-button" style="-fx-background-radius: 20px; -fx-padding: 10px;">
                 <graphic>
                     <ImageView fitWidth="24" fitHeight="24">
                         <image>
-                            <Image url="@images/user.png"/>
+                            <Image url="@images/search.png"/>
                         </image>
                     </ImageView>
                 </graphic>
             </Button>
 
-            <!-- Autres Boutons -->
-            <Button fx:id="dashboardButton" text="Dashboard" styleClass="sidebar-button" style="-fx-font-size: 14px; -fx-text-fill: #ecf0f1;"/>
-            <Button fx:id="settingsButton" text="Paramètres" styleClass="sidebar-button" style="-fx-font-size: 14px; -fx-text-fill: #ecf0f1;"/>
-        </VBox>
+            <!-- Bouton de déconnexion -->
+            <Button fx:id="logoutButton" text="Déconnexion" styleClass="logout-button" onAction="#handleLogout"
+                    style="-fx-font-size: 14px; -fx-text-fill: #e74c3c; -fx-background-radius: 20px; -fx-padding: 10px;">
+                <graphic>
+                    <ImageView fitWidth="20" fitHeight="20">
+                        <image>
+                            <Image url="@images/logout.png"/>
+                        </image>
+                    </ImageView>
+                </graphic>
+            </Button>
+        </HBox>
 
-        <!-- Colonne 1 : Contenu principal -->
-        <VBox GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS" style="-fx-padding: 20px;">
-
-            <!-- Barre supérieure -->
-            <HBox spacing="20" style="-fx-alignment: center-left; -fx-padding: 15px; -fx-background-color: rgba(255, 255, 255, 0.1); -fx-background-radius: 10px;">
-
-                <!-- Champ de recherche -->
-                <TextField fx:id="searchField" promptText="Rechercher un utilisateur..." styleClass="search-field" HBox.hgrow="ALWAYS"
-                           style="-fx-font-size: 14px; -fx-background-radius: 20px; -fx-padding: 10px;"/>
-
-                <!-- Bouton de recherche -->
-                <Button styleClass="search-button" style="-fx-background-radius: 20px; -fx-padding: 10px;">
-                    <graphic>
-                        <ImageView fitWidth="24" fitHeight="24">
-                            <image>
-                                <Image url="@images/search.png"/>
-                            </image>
-                        </ImageView>
-                    </graphic>
-                </Button>
-
-                <!-- Bouton de déconnexion -->
-                <Button fx:id="logoutButton" text="Déconnexion" styleClass="logout-button" onAction="#handleLogout"
-                        style="-fx-font-size: 14px; -fx-text-fill: #e74c3c; -fx-background-radius: 20px; -fx-padding: 10px;">
-                    <graphic>
-                        <ImageView fitWidth="20" fitHeight="20">
-                            <image>
-                                <Image url="@images/logout.png"/>
-                            </image>
-                        </ImageView>
-                    </graphic>
-                </Button>
-            </HBox>
-
-            <!-- Liste des utilisateurs dans un GridPane -->
-            <ScrollPane fx:id="userListScrollPane" style="-fx-background: transparent; -fx-border-color: transparent;" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
-                <GridPane fx:id="userCards" hgap="20" vgap="20" style="-fx-padding: 20px;" />
-            </ScrollPane>
-        </VBox>
-
-        <!-- Colonne 1 : Section des boutons d'actions -->
-        <HBox spacing="20" GridPane.columnIndex="1" GridPane.rowIndex="1" style="-fx-alignment: center-left; -fx-padding: 15px;">
+        <ScrollPane fx:id="userListScrollPane" style="-fx-background: transparent; -fx-border-color: transparent;" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
+            <GridPane fx:id="userCards" hgap="20" vgap="20" style="-fx-padding: 20px;" GridPane.hgrow="ALWAYS" />
+        </ScrollPane>
+        <!-- Section des boutons d'actions -->
+        <HBox spacing="20" style="-fx-alignment: center-left; -fx-padding: 15px;">
             <Button fx:id="addButton" text="Ajouter" styleClass="action-button" onAction="#handleAddUser"
                     style="-fx-font-size: 14px; -fx-background-color: #2ecc71; -fx-text-fill: white; -fx-background-radius: 20px; -fx-padding: 10px 20px;"/>
-            <Button fx:id="editButton" text="Modifier" styleClass="action-button" onAction="#handleEditUser"
-                    style="-fx-font-size: 14px; -fx-background-color: #f1c40f; -fx-text-fill: white; -fx-background-radius: 20px; -fx-padding: 10px 20px;"/>
-            <Button fx:id="deleteSelectedButton" text="Supprimer" styleClass="delete-button" onAction="#deleteSelectedUsers"
-                    style="-fx-font-size: 14px; -fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 20px; -fx-padding: 10px 20px;"/>
         </HBox>
-    </GridPane>
+    </VBox>
 </AnchorPane>

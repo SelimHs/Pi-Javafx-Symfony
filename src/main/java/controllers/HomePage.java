@@ -6,11 +6,12 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import model.Users;
 import service.UsersService;
 
@@ -22,26 +23,36 @@ import java.util.stream.Collectors;
 
 public class HomePage {
     @FXML
-    private GridPane userCards; // Déclarer userCards comme GridPane
-   // @FXML
-    //private FlowPane userCards; // Utiliser FlowPane pour disposer les cartes
-    @FXML
-    private Button deleteSelectedButton;
+    private GridPane userCards; // Utiliser GridPane pour organiser les cartes
     @FXML
     private Button logoutButton;
     @FXML
     private TextField searchField;
 
     private final UsersService usersService = new UsersService();
-    private final List<Users> selectedUsers = new ArrayList<>();
     private List<Users> allUsers = new ArrayList<>();
-
+    private int columnCount = 3; // Nombre de colonnes par défaut
     @FXML
     public void initialize() {
         loadUsers();
-        deleteSelectedButton.setDisable(true);
-        deleteSelectedButton.setOnAction(event -> deleteSelectedUsers());
         searchField.textProperty().addListener((observable, oldValue, newValue) -> searchUsers(newValue));
+
+        // Écouter les changements de taille du GridPane
+        userCards.widthProperty().addListener((obs, oldVal, newVal) -> {
+            adjustColumnCount(newVal.doubleValue()); // Ajuster le nombre de colonnes
+            displayUsers(allUsers); // Rafraîchir l'affichage
+        });
+    }
+
+    private void adjustColumnCount(double width) {
+        // Calculer le nombre de colonnes en fonction de la largeur disponible
+        int minCardWidth = 250; // Largeur minimale d'une carte
+        columnCount = (int) (width / minCardWidth);
+
+        // Assurer un nombre minimal de colonnes
+        if (columnCount < 1) {
+            columnCount = 1;
+        }
     }
 
     private void loadUsers() {
@@ -51,10 +62,7 @@ public class HomePage {
 
     private void displayUsers(List<Users> users) {
         userCards.getChildren().clear(); // Vider le GridPane
-        selectedUsers.clear();
-        deleteSelectedButton.setDisable(true);
 
-        int columnCount = 3; // Nombre de colonnes dans le GridPane
         int row = 0;
         int column = 0;
 
@@ -73,58 +81,82 @@ public class HomePage {
     private HBox createUserCard(Users user) {
         HBox userCard = new HBox();
         userCard.getStyleClass().add("user-card");
-        userCard.setMinWidth(250);  // Largeur minimale de la carte
-        userCard.setMaxWidth(250);  // Largeur maximale de la carte
-        userCard.setMinHeight(200); // Hauteur de la carte
+        userCard.setMinWidth(200);  // Largeur minimale de la carte
+        userCard.setMaxWidth(Double.MAX_VALUE);  // Permettre à la carte de s'étendre
+        userCard.setMinHeight(200); // Hauteur minimale de la carte
         userCard.setSpacing(15);    // Espacement entre les éléments
         userCard.setAlignment(Pos.CENTER); // Centrer le contenu de la carte
 
         // Labels pour afficher les informations de l'utilisateur
         Label nameLabel = new Label("Nom: " + user.getNom());
         nameLabel.getStyleClass().add("user-card-label");
+        nameLabel.setMaxWidth(Double.MAX_VALUE); // Permettre au label de s'étendre
 
         Label prenomLabel = new Label("Prénom: " + user.getPrenom());
         prenomLabel.getStyleClass().add("user-card-label");
+        prenomLabel.setMaxWidth(Double.MAX_VALUE); // Permettre au label de s'étendre
 
         Label emailLabel = new Label("Email: " + user.getEmail());
         emailLabel.getStyleClass().add("user-card-label");
+        emailLabel.setMaxWidth(Double.MAX_VALUE); // Permettre au label de s'étendre
 
-        // Checkbox pour sélectionner l'utilisateur
-        CheckBox selectCheckBox = new CheckBox("Sélectionner");
-        selectCheckBox.getStyleClass().add("user-card-checkbox");
-        selectCheckBox.setOnAction(event -> {
-            if (selectCheckBox.isSelected()) {
-                selectedUsers.add(user);
-            } else {
-                selectedUsers.remove(user);
-            }
-            deleteSelectedButton.setDisable(selectedUsers.isEmpty());
-        });
+        // Bouton Modifier
+        Button editButton = new Button("Modifier");
+        editButton.getStyleClass().add("action-button");
+        editButton.setStyle("-fx-font-size: 12px; -fx-background-color: #f1c40f; -fx-text-fill: white; -fx-background-radius: 20px; -fx-padding: 5px 10px;");
+        editButton.setOnAction(event -> handleEditUser(user)); // Gérer l'action de modification
 
-        // VBox pour organiser les labels et la checkbox
-        VBox infoBox = new VBox(nameLabel, prenomLabel, emailLabel, selectCheckBox);
+        // Bouton Supprimer
+        Button deleteButton = new Button("Supprimer");
+        deleteButton.getStyleClass().add("delete-button");
+        deleteButton.setStyle("-fx-font-size: 12px; -fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 20px; -fx-padding: 5px 10px;");
+        deleteButton.setOnAction(event -> handleDeleteUser(user)); // Gérer l'action de suppression
+
+        // HBox pour organiser les boutons
+        HBox buttonBox = new HBox(editButton, deleteButton);
+        buttonBox.setSpacing(10); // Espacement entre les boutons
+
+        // VBox pour organiser les labels et les boutons
+        VBox infoBox = new VBox(nameLabel, prenomLabel, emailLabel, buttonBox);
         infoBox.getStyleClass().add("user-card-info");
         infoBox.setSpacing(10); // Espacement entre les éléments dans la VBox
+        infoBox.setMaxWidth(Double.MAX_VALUE); // Permettre à la VBox de s'étendre
 
         userCard.getChildren().add(infoBox);
         return userCard;
-    } @FXML
+    }
+
+    @FXML
     private void handleAddUser() {
         openUserForm(null);
     }
 
-    @FXML
-    private void handleEditUser() {
-        Users selectedUser = getSelectedUser();
-        if (selectedUser != null) {
-            openUserForm(selectedUser);
-        } else {
-            showAlert("Modification", "Veuillez sélectionner un utilisateur à modifier !");
-        }
+    private void handleEditUser(Users user) {
+        openUserForm(user); // Ouvrir le formulaire de modification
     }
 
-    private Users getSelectedUser() {
-        return selectedUsers.size() == 1 ? selectedUsers.get(0) : null;
+    private void handleDeleteUser(Users user) {
+        // Créer une boîte de dialogue de confirmation
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Confirmation de suppression");
+        confirmationAlert.setHeaderText("Êtes-vous sûr de vouloir supprimer cet utilisateur ?");
+        confirmationAlert.setContentText("Cette action est irréversible.");
+
+        // Afficher la boîte de dialogue et attendre la réponse de l'utilisateur
+        confirmationAlert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                // Supprimer l'utilisateur si l'utilisateur confirme
+                usersService.delete(user.getIdUser());
+
+                // Supprimer l'utilisateur de la liste locale
+                allUsers.remove(user);
+
+                // Rafraîchir l'affichage
+                displayUsers(allUsers);
+
+                System.out.println("Utilisateur supprimé : " + user.getNom());
+            }
+        });
     }
 
     private void openUserForm(Users user) {
@@ -140,24 +172,11 @@ public class HomePage {
             stage.setTitle(user == null ? "Ajouter un utilisateur" : "Modifier un utilisateur");
             stage.showAndWait();
 
-            loadUsers();
+            loadUsers(); // Rafraîchir la liste après la fermeture du formulaire
         } catch (IOException e) {
             showAlert("Erreur", "Impossible d'ouvrir le formulaire.");
             e.printStackTrace();
         }
-    }
-
-    @FXML
-    public void deleteSelectedUsers() {
-        if (selectedUsers.isEmpty()) {
-            showAlert("Suppression", "Aucun utilisateur sélectionné !");
-            return;
-        }
-
-        selectedUsers.forEach(user -> usersService.delete(user.getIdUser()));
-        selectedUsers.clear();
-        showAlert("Succès", "Utilisateur(s) supprimé(s) avec succès.");
-        loadUsers();
     }
 
     private void searchUsers(String searchText) {

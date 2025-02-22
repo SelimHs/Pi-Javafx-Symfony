@@ -26,14 +26,28 @@
     -fx-text-fill: #ffaf7b;
 }
 
-/* Cartes d'utilisateurs */
 .user-card {
-    -fx-background-color: rgba(255, 255, 255, 0.1);
-    -fx-border-radius: 10px;
+    -fx-background-color: #ffffff;
     -fx-background-radius: 10px;
-    -fx-padding: 20px;
-    -fx-spacing: 15px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 5);
+    -fx-border-radius: 10px;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1px;
+    -fx-padding: 15px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 5, 0, 0);
+    -fx-pref-width: -1; /* Permettre à la carte de s'étendre */
+    -fx-max-width: Infinity; /* Permettre à la carte de s'étendre */
+}
+
+.user-card-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+    -fx-wrap-text: true; /* Permettre au texte de passer à la ligne */
+}
+
+.user-card-info {
+    -fx-spacing: 10px;
+    -fx-pref-width: -1; /* Permettre à la VBox de s'étendre */
+    -fx-max-width: Infinity; /* Permettre à la VBox de s'étendre */
 }
 
 .user-card:hover {
