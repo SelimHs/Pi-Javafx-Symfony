@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.Users;
 import service.UsersService;
+import service.EmailService;
 
 import java.util.regex.Pattern;
 
@@ -23,10 +24,12 @@ public class CreeCompte {
     @FXML private CheckBox genreFeminin;
     @FXML private Button createButton;
     @FXML private Label messageLabel;
+    @FXML private TextField confirmationCodeField;
 
     private final UsersService usersService = new UsersService();
+    private final EmailService emailService = new EmailService();
+    private String generatedConfirmationCode; // Code de confirmation généré
 
-    // Méthode appelée lors du clic sur le bouton "Créer un compte"
     @FXML
     public void handleCreateAccount() {
         // Vérification des champs vides
@@ -67,42 +70,51 @@ public class CreeCompte {
             return;
         }
 
-        // Définir le type d'utilisateur par défaut comme "client"
-        String type = "client";
+        // Envoyer le code de confirmation
+        generatedConfirmationCode = emailService.sendConfirmationEmail(email);
+        messageLabel.setText("Un code de confirmation a été envoyé à " + email);
+    }
 
-        // Traitement du genre
-        String genre = null;
-        if (genreMasculin.isSelected() && !genreFeminin.isSelected()) {
-            genre = "homme";
-        } else if (!genreMasculin.isSelected() && genreFeminin.isSelected()) {
-            genre = "femme";
+    @FXML
+    private void handleConfirmCode() {
+        String enteredCode = confirmationCodeField.getText();
+
+        if (enteredCode.equals(generatedConfirmationCode)) {
+            // Créer l'objet User
+            Users user = new Users(nomField.getText(), prenomField.getText(), passwordField.getText(),
+                    emailField.getText(), numeroField.getText(), adresseField.getText(), "client", getSelectedGenre());
+
+            try {
+                // Ajouter l'utilisateur à la base de données
+                usersService.add(user);
+                messageLabel.setText("✅ Compte créé avec succès !");
+
+                // Redirection vers la page d'accueil après la création du compte
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/homePage.fxml"));
+                Parent root = loader.load();
+
+                // Obtenir la scène actuelle et la modifier
+                Scene scene = new Scene(root);
+                Stage stage = (Stage) createButton.getScene().getWindow();
+                stage.setScene(scene);
+                stage.show();  // Afficher la nouvelle scène
+
+            } catch (Exception e) {
+                messageLabel.setText("❌ Une erreur s'est produite lors de la création du compte.");
+                e.printStackTrace(); // Afficher l'erreur pour le débogage
+            }
         } else {
-            messageLabel.setText("⚠️ Veuillez sélectionner un seul genre.");
-            return;
+            messageLabel.setText("⚠️ Code de confirmation incorrect.");
         }
+    }
 
-        // Créer l'objet User
-        Users user = new Users(nomField.getText(), prenomField.getText(), passwordField.getText(),
-                email, numeroField.getText(), adresseField.getText(), type, genre);
-
-        try {
-            // Ajouter l'utilisateur à la base de données
-            usersService.add(user);
-            messageLabel.setText("✅ Compte créé avec succès !");
-
-            // Redirection vers la page d'accueil après la création du compte
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/homePage.fxml"));
-            Parent root = loader.load();
-
-            // Obtenir la scène actuelle et la modifier
-            Scene scene = new Scene(root);
-            Stage stage = (Stage) createButton.getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();  // Afficher la nouvelle scène
-
-        } catch (Exception e) {
-            messageLabel.setText("❌ Une erreur s'est produite lors de la création du compte.");
-            e.printStackTrace(); // Afficher l'erreur pour le débogage
+    private String getSelectedGenre() {
+        if (genreMasculin.isSelected() && !genreFeminin.isSelected()) {
+            return "homme";
+        } else if (!genreMasculin.isSelected() && genreFeminin.isSelected()) {
+            return "femme";
+        } else {
+            return null;
         }
     }
 

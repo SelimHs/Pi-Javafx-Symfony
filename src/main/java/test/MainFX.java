@@ -6,6 +6,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
+import service.EmailService;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.prefs.Preferences;
@@ -15,6 +17,9 @@ public class MainFX extends Application {
     private Stage primaryStage;
 
     public static void main(String[] args) {
+        EmailService emailService = new EmailService();
+        String code = emailService.sendConfirmationEmail("destinataire@gmail.com");
+        System.out.println("Code de confirmation : " + code);
         launch(args);
     }
 
