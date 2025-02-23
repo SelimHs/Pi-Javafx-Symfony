@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import tn.esprit.models.Espace;
 import tn.esprit.services.ServiceEspace;
@@ -140,4 +141,10 @@ public class GestionEspace {
         }
     }
 
+    public void buttonHoverEffect(MouseEvent mouseEvent) {
+
+    }
+
+    public void buttonExitEffect(MouseEvent mouseEvent) {
+    }
 }

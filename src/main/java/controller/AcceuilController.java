@@ -1,8 +1,12 @@
 package controller;
 
-
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.paint.Color;
+import javafx.event.ActionEvent;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -13,14 +17,17 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.EventObject;
+
+import javafx.scene.control.Button;
 
 public class AcceuilController {
-    @javafx.fxml.FXML
-    public void goToBilletList(javafx.event.ActionEvent actionEvent) {
+    @FXML
+    public void goToBilletList(ActionEvent actionEvent) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Billets.fxml"));
             Parent root = fxmlLoader.load();
-            Stage stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
 
             Scene scene = new Scene(root);
             stage.setScene(scene);
@@ -30,12 +37,12 @@ public class AcceuilController {
     }
 
     @FXML
-    public void goToEventList(javafx.event.ActionEvent actionEvent) {
+    public void goToEventList(ActionEvent actionEvent) {
 
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Events.fxml"));
             Parent root = fxmlLoader.load();
-            Stage stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
 
             Scene scene = new Scene(root);
             stage.setScene(scene);
@@ -45,11 +52,11 @@ public class AcceuilController {
 
 
     }
-    public void goToReservation(javafx.event.ActionEvent actionEvent) {
+    public void goToReservation(ActionEvent actionEvent) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/GestionReservation.fxml"));
             Parent root = fxmlLoader.load();
-            Stage stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
 
             Scene scene = new Scene(root);
             stage.setScene(scene);
@@ -59,11 +66,11 @@ public class AcceuilController {
 
     }
 
-    public void goToRemise(javafx.event.ActionEvent actionEvent) {
+    public void goToRemise(ActionEvent actionEvent) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/GestionRemise.fxml"));
             Parent root = fxmlLoader.load();
-            Stage stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
 
             Scene scene = new Scene(root);
             stage.setScene(scene);
@@ -71,11 +78,11 @@ public class AcceuilController {
             System.out.println(e.getMessage());
         }
     }
-    public void goToProduitList(javafx.event.ActionEvent actionEvent) {
+    public void goToProduitList(ActionEvent actionEvent) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/PrincipaleProduits.fxml"));
             Parent root = fxmlLoader.load();
-            Stage stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
 
             Scene scene = new Scene(root);
             stage.setScene(scene);
@@ -84,12 +91,12 @@ public class AcceuilController {
         }
     }
 
-    @javafx.fxml.FXML
-    public void goToFournisseurList(javafx.event.ActionEvent actionEvent) {
+    @FXML
+    public void goToFournisseurList(ActionEvent actionEvent) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Principalefournisseur.fxml"));
             Parent root = fxmlLoader.load();
-            Stage stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
 
             Scene scene = new Scene(root);
             stage.setScene(scene);
@@ -102,7 +109,7 @@ public class AcceuilController {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/GestionEspace.fxml"));
             Parent root = fxmlLoader.load();
-            Stage stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
 
             Scene scene = new Scene(root);
             stage.setScene(scene);
@@ -166,5 +173,29 @@ public class AcceuilController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+
+
+    @FXML
+    public void buttonHoverEffect(javafx.scene.input.MouseEvent mouseEvent) {
+        Button btn = (Button) mouseEvent.getSource();
+        btn.setStyle("-fx-background-color: #8e44ad; -fx-text-fill: white; -fx-padding: 10px 18px; -fx-border-width: 2px; -fx-border-color: white;");
+        DropShadow shadow = new DropShadow();
+        shadow.setRadius(10);
+        shadow.setOffsetX(0);
+        shadow.setOffsetY(5);
+        shadow.setColor(Color.web("#a868a0", 0.7));  // Une ombre douce
+        btn.setEffect(shadow);
+    }
+
+    @FXML
+    public void buttonExitEffect(javafx.scene.input.MouseEvent mouseEvent) {
+        Button btn = (Button) mouseEvent.getSource();
+        btn.setStyle("-fx-background-color: transparent; -fx-text-fill: #a868a0; -fx-padding: 12px 20px; -fx-border-width: 0px;");
+        btn.setEffect(null);
+
+    }
+
+
 
 }
