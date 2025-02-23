@@ -15,6 +15,7 @@ import tn.esprit.models.Espace;
 import tn.esprit.services.ServiceEspace;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public class ModifierEspace {
 
@@ -55,7 +56,7 @@ public class ModifierEspace {
             espaceActuel.setTypeEspace(typeEspace.getText());
             espaceActuel.setDisponibilite(disponibiliteEspace.getValue());
 
-            serviceEspace.update(espaceActuel);
+            serviceEspace.update(Optional.ofNullable(espaceActuel));
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "L'espace a été modifié avec succès !");
             alert.show();

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ServiceEspace implements Iservice<Espace> {
+public class ServiceEspace implements Iservice<Optional<Espace>> {
 
     private Connection cnx;
 
@@ -18,17 +18,17 @@ public class ServiceEspace implements Iservice<Espace> {
     }
 
     @Override
-    public void add(Espace espace) {
+    public void add(Optional<Espace> espace) {
         String qry = "INSERT INTO `espace`(`nomEspace`, `adresse`, `capacite`, `disponibilite`, `prix`, `idUser`, `Type_espace`) VALUES (?,?,?,?,?,?,?)";
         try {
             PreparedStatement pstm = cnx.prepareStatement(qry);
-            pstm.setString(1, espace.getNomEspace());
-            pstm.setString(2, espace.getAdresse());
-            pstm.setInt(3, espace.getCapacite());
-            pstm.setString(4, espace.getDisponibilite());
-            pstm.setFloat(5, espace.getPrix());
-            pstm.setInt(6, espace.getIdUser());
-            pstm.setString(7, espace.getTypeEspace());
+            pstm.setString(1, espace.get().getNomEspace());
+            pstm.setString(2, espace.get().getAdresse());
+            pstm.setInt(3, espace.get().getCapacite());
+            pstm.setString(4, espace.get().getDisponibilite());
+            pstm.setFloat(5, espace.get().getPrix());
+            pstm.setInt(6, espace.get().getIdUser());
+            pstm.setString(7, espace.get().getTypeEspace());
             pstm.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Erreur lors de l'ajout : " + e.getMessage());
@@ -36,14 +36,14 @@ public class ServiceEspace implements Iservice<Espace> {
     }
 
     @Override
-    public List<Espace> getAll() {
-        List<Espace> espaces = new ArrayList<>();
+    public List<Optional<Espace>> getAll() {
+        List<Optional<Espace>> espaces = new ArrayList<>();
         String qry = "SELECT * FROM `espace`";
         try {
             Statement stm = cnx.createStatement();
             ResultSet rs = stm.executeQuery(qry);
             while (rs.next()) {
-                Espace espace = new Espace(
+                Optional<Espace> espace = Optional.of(new Espace(
                         rs.getInt("idEspace"),
                         rs.getString("nomEspace"),
                         rs.getString("adresse"),
@@ -52,7 +52,7 @@ public class ServiceEspace implements Iservice<Espace> {
                         rs.getFloat("prix"),
                         rs.getInt("idUser"),
                         rs.getString("Type_espace") // Récupération du champ Type_espace
-                );
+                ));
                 espaces.add(espace);
             }
         } catch (SQLException e) {
@@ -62,18 +62,18 @@ public class ServiceEspace implements Iservice<Espace> {
     }
 
     @Override
-    public void update(Espace espace) {
+    public void update(Optional<Espace> espace) {
         String qry = "UPDATE `espace` SET `nomEspace` = ?, `adresse` = ?, `capacite` = ?, `disponibilite` = ?, `prix` = ?, `idUser` = ?, `Type_espace` = ? WHERE `idEspace` = ?";
         try {
             PreparedStatement pstm = cnx.prepareStatement(qry);
-            pstm.setString(1, espace.getNomEspace());
-            pstm.setString(2, espace.getAdresse());
-            pstm.setInt(3, espace.getCapacite());
-            pstm.setString(4, espace.getDisponibilite());
-            pstm.setFloat(5, espace.getPrix());
-            pstm.setInt(6, espace.getIdUser());
-            pstm.setString(7, espace.getTypeEspace());
-            pstm.setInt(8, espace.getIdEspace());
+            pstm.setString(1, espace.get().getNomEspace());
+            pstm.setString(2, espace.get().getAdresse());
+            pstm.setInt(3, espace.get().getCapacite());
+            pstm.setString(4, espace.get().getDisponibilite());
+            pstm.setFloat(5, espace.get().getPrix());
+            pstm.setInt(6, espace.get().getIdUser());
+            pstm.setString(7, espace.get().getTypeEspace());
+            pstm.setInt(8, espace.get().getIdEspace());
             pstm.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Erreur lors de la mise à jour : " + e.getMessage());
@@ -115,5 +115,10 @@ public class ServiceEspace implements Iservice<Espace> {
             System.out.println("Erreur lors de la recherche : " + e.getMessage());
         }
         return Optional.empty();
+    }
+
+    @Override
+    public void delete(Optional<Espace> espace) {
+
     }
 }

@@ -6,54 +6,97 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.GridPane?>
 
 <AnchorPane prefHeight="671.0" prefWidth="950.0"
-            style="-fx-background-color: linear-gradient(to bottom right, #4b0082, #8a2be2, #9b59b6);"
-            xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="tn.esprit.controllers.Acceuil">
+            style="-fx-background-color: linear-gradient(to bottom, #6a0dad, #b19cd9);"
+            xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controller.AcceuilController">
 
     <children>
-        <!-- 🌟 Barre latérale -->
-        <VBox layoutX="0.0" layoutY="0.0" prefHeight="671.0" prefWidth="220.0"
-              style="-fx-background-color: linear-gradient(to bottom, #3e1c6c, #5e3c9a);
-                     -fx-padding: 15px;
-                     -fx-border-radius: 10px;
-                     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 15, 0, 3, 3);">
+        <VBox layoutX="0.0" layoutY="0.0" prefHeight="671.0" prefWidth="200.0"
+              style="-fx-background-color: linear-gradient(to bottom, #4b0082, #8a2be2);
+             -fx-padding: 20px;
+             -fx-border-radius: 10px;
+             -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 15, 0, 3, 3);">
             <children>
-                <!-- Logo -->
                 <ImageView fitHeight="90.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@logo.png" />
                     </image>
                 </ImageView>
 
-                <!-- Nom de l'application -->
-                <Label text="Gestion des Espaces"
-                       style="-fx-font-size: 18px; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10px;"/>
+                <Label text="Menu"
+                       style="-fx-font-size: 18px; -fx-text-fill: white; -fx-font-weight: bold;
+                      -fx-padding: 15px; -fx-alignment: center;"/>
+
+                <!-- Bouton Déconnexion -->
+                <Button fx:id="logoutButton" text="🔓 Déconnexion" onAction="#handleLogout"
+                        style="-fx-background-color: #E74C3C; -fx-text-fill: white; -fx-font-size: 16px;
+                       -fx-font-weight: bold; -fx-border-radius: 10px; -fx-padding: 10px 20px;"/>
             </children>
         </VBox>
 
+
         <!-- 🌟 Contenu principal -->
-        <VBox layoutX="250.0" layoutY="50.0" prefWidth="700.0" style="-fx-alignment: center; -fx-padding: 10px;">
+        <VBox layoutX="220.0" layoutY="20.0" prefWidth="700.0" style="-fx-alignment: center; -fx-padding: 10px;">
             <children>
-                <!-- Titre avec Glow Effect -->
                 <Label text="Bienvenue sur la plateforme"
                        style="-fx-font-size: 28px; -fx-text-fill: white; -fx-font-weight: bold;
-                              -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.8), 10, 0, 2, 2);"/>
+                              -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 5, 0, 2, 2);"/>
 
-                <!-- 📌 Effet de hover sur les boutons -->
-                <VBox spacing="30" style="-fx-alignment: center; -fx-padding: 100px;">
-                    <Button text="🌍 Espace"
-                            fx:id="btnEspace"
-                            onAction="#goToespace"
-                            style="-fx-background-color: linear-gradient(to right, #8e44ad, #c0392b);
-                                   -fx-text-fill: white;
-                                   -fx-font-size: 18px;
-                                   -fx-font-weight: bold;
-                                   -fx-border-radius: 15px;
-                                   -fx-padding: 15px 45px;
-                                   -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 2, 2);"/>
-                </VBox>
+                <GridPane vgap="25" hgap="25" style="-fx-alignment: center; -fx-padding: 50px;">
+
+                    <Button onAction="#goToEventList" text="📅 Événements"
+                            style="-fx-background-color: #8e44ad; -fx-text-fill: white; -fx-font-size: 16px;
+                                   -fx-font-weight: bold; -fx-border-radius: 15px; -fx-padding: 15px 50px;
+                                   -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 2, 2);"
+                            GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+
+                    <Button onAction="#goToBilletList" text="🎟 Billets"
+                            style="-fx-background-color: #8e44ad; -fx-text-fill: white; -fx-font-size: 16px;
+                                   -fx-font-weight: bold; -fx-border-radius: 15px; -fx-padding: 15px 50px;
+                                   -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 2, 2);"
+                            GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                    <Button onAction="#goToReservation" text="📌 Réservations"
+                            style="-fx-background-color: #2980b9; -fx-text-fill: white; -fx-font-size: 16px;
+                                   -fx-font-weight: bold; -fx-border-radius: 15px; -fx-padding: 15px 50px;
+                                   -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 2, 2);"
+                            GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+
+                    <Button onAction="#goToRemise" text="💰 Remises"
+                            style="-fx-background-color: #2980b9; -fx-text-fill: white; -fx-font-size: 16px;
+                                   -fx-font-weight: bold; -fx-border-radius: 15px; -fx-padding: 15px 50px;
+                                   -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 2, 2);"
+                            GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                    <Button onAction="#goToFournisseurList" text="🏢 Fournisseurs"
+                            style="-fx-background-color: #16a085; -fx-text-fill: white; -fx-font-size: 16px;
+                                   -fx-font-weight: bold; -fx-border-radius: 15px; -fx-padding: 15px 50px;
+                                   -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 2, 2);"
+                            GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+
+                    <Button onAction="#goToProduitList" text="📦 Produits"
+                            style="-fx-background-color: #16a085; -fx-text-fill: white; -fx-font-size: 16px;
+                                   -fx-font-weight: bold; -fx-border-radius: 15px; -fx-padding: 15px 50px;
+                                   -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 2, 2);"
+                            GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                    <!-- ✅ Correction du bouton "Espace" avec une couleur spécifique -->
+                    <Button onAction="#goToEspace" text="🏠 Espaces"
+                            style="-fx-background-color: #e67e22; -fx-text-fill: white; -fx-font-size: 16px;
+                                   -fx-font-weight: bold; -fx-border-radius: 15px; -fx-padding: 15px 175px;
+                                   -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 2, 2);"
+                            GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="2"/>
+                    <Button onAction="#goToHomePage" text="🧑‍💻 USERS"
+                            style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 16px;
+               -fx-font-weight: bold; -fx-border-radius: 15px; -fx-padding: 15px 175px;
+               -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 2, 2);"
+                            GridPane.rowIndex="4" GridPane.columnIndex="0" GridPane.columnSpan="2"/>
+
+                </GridPane>
             </children>
         </VBox>
     </children>

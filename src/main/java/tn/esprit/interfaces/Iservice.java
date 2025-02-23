@@ -1,12 +1,15 @@
 package tn.esprit.interfaces;
 
 import java.util.List;
-import java.util.Optional;
 
-public interface Iservice<T> {
-    void add(T t);
-    List<T> getAll();
-    Optional<T> findById(int id);
+public interface Iservice<T>  {
+    public void add(T t);
+    public List<T> getAll();
+
     void delete(int id);
-    void update(T t);
+
+    public T findById(int id);
+    public void delete(T t);
+    public void update(T t);
+
 }

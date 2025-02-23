@@ -18,6 +18,7 @@ import tn.esprit.services.ServiceEspace;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 public class AfficherEspaces {
 
@@ -42,9 +43,9 @@ public class AfficherEspaces {
     private void afficherEspaces() {
         espaceCardContainer.getChildren().clear();
 
-        List<Espace> espaces = serviceEspace.getAll();
-        for (Espace espace : espaces) {
-            VBox card = creerCarteEspace(espace);
+        List<Optional<Espace>> espaces = serviceEspace.getAll();
+        for (Optional<Espace> espace : espaces) {
+            VBox card = creerCarteEspace(espace.orElse(null));
             espaceCardContainer.getChildren().add(card);
         }
     }
@@ -139,11 +140,11 @@ public class AfficherEspaces {
     private void searchEspace(String searchText) {
         espaceCardContainer.getChildren().clear();  // Vider les cartes affichées
 
-        List<Espace> espaces = serviceEspace.getAll();
+        List<Optional<Espace>> espaces = serviceEspace.getAll();
 
-        for (Espace espace : espaces) {
-            if (espace.getNomEspace().toLowerCase().contains(searchText)) {
-                VBox card = creerCarteEspace(espace);
+        for (Optional<Espace> espace : espaces) {
+            if (espace.get().getNomEspace().toLowerCase().contains(searchText)) {
+                VBox card = creerCarteEspace(espace.orElse(null));
                 espaceCardContainer.getChildren().add(card);
             }
         }

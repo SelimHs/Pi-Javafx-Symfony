@@ -14,6 +14,7 @@ import tn.esprit.models.Espace;
 import tn.esprit.services.ServiceEspace;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public class GestionEspace {
 
@@ -92,7 +93,7 @@ public class GestionEspace {
             espace.setIdUser(1); // À remplacer par l'ID utilisateur réel
 
             // 🔹 Ajout dans la base de données
-            serviceEspace.add(espace);
+            serviceEspace.add(Optional.of(espace));
 
             // ✅ Confirmation
             afficherAlerte("Succès", "L'espace a été ajouté avec succès !");
