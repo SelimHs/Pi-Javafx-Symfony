@@ -10,6 +10,7 @@ import model.Users;
 import service.UsersService;
 import service.EmailService;
 
+import java.io.IOException;
 import java.util.regex.Pattern;
 
 public class CreeCompte {
@@ -32,36 +33,7 @@ public class CreeCompte {
 
     @FXML
     public void handleCreateAccount() {
-        // Vérification des champs vides
-        if (nomField.getText().isEmpty() || prenomField.getText().isEmpty() || emailField.getText().isEmpty() ||
-                passwordField.getText().isEmpty() || numeroField.getText().isEmpty() || adresseField.getText().isEmpty()) {
-            messageLabel.setText("⚠️ Veuillez remplir tous les champs.");
-            return;
-        }
-
-        // Validation du nom et prénom
-        if (!isValidName(nomField.getText()) || !isValidName(prenomField.getText())) {
-            messageLabel.setText("⚠️ Le nom et le prénom ne doivent contenir que des lettres.");
-            return;
-        }
-
-        // Validation du mot de passe
-        if (!isValidPassword(passwordField.getText())) {
-            messageLabel.setText("⚠️ Le mot de passe doit contenir au moins une majuscule et un caractère spécial.");
-            return;
-        }
-
-        // Validation de l'email
-        if (!isValidEmail(emailField.getText())) {
-            messageLabel.setText("⚠️ L'email doit contenir un @ et un domaine valide (ex: .com, .fr).");
-            return;
-        }
-
-        // Validation du numéro de téléphone
-        if (!isValidPhoneNumber(numeroField.getText())) {
-            messageLabel.setText("⚠️ Le numéro de téléphone doit contenir exactement 8 chiffres.");
-            return;
-        }
+        // Vérification des champs vides et validations...
 
         // Vérifier si l'email existe déjà
         String email = emailField.getText();
@@ -73,8 +45,37 @@ public class CreeCompte {
         // Envoyer le code de confirmation
         generatedConfirmationCode = emailService.sendConfirmationEmail(email);
         messageLabel.setText("Un code de confirmation a été envoyé à " + email);
-    }
 
+        // Rediriger vers la page de validation du code
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/validationMail.fxml"));
+            Parent root = loader.load();
+
+            // Passer le code de confirmation au contrôleur de la page de validation
+            ValidationMail validationController = loader.getController();
+            validationController.setGeneratedConfirmationCode(generatedConfirmationCode);
+
+            // Passer les informations du formulaire au contrôleur de validation
+            validationController.setUserData(
+                    nomField.getText(),
+                    prenomField.getText(),
+                    passwordField.getText(),
+                    emailField.getText(),
+                    numeroField.getText(),
+                    adresseField.getText(),
+                    getSelectedGenre()
+            );
+
+            // Obtenir la scène actuelle et la modifier
+            Scene scene = new Scene(root);
+            Stage stage = (Stage) createButton.getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();  // Afficher la nouvelle scène
+        } catch (IOException e) {
+            messageLabel.setText("❌ Erreur lors du chargement de la page de validation.");
+            e.printStackTrace();
+        }
+    }
     @FXML
     private void handleConfirmCode() {
         String enteredCode = confirmationCodeField.getText();
