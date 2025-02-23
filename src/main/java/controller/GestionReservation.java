@@ -11,6 +11,9 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import tn.esprit.models.Reservation;
 import tn.esprit.services.ServiceReservation;
@@ -91,6 +94,26 @@ public class GestionReservation {
             System.out.println(e.getMessage());
         }
 
+    }
+
+    @FXML
+    public void buttonHoverEffect(MouseEvent event) {
+        Button btn = (Button) event.getSource();
+        btn.setStyle("-fx-background-color: #8e44ad; -fx-text-fill: white; -fx-border-radius: 10px;");
+
+        DropShadow shadow = new DropShadow();
+        shadow.setRadius(8);
+        shadow.setOffsetX(0);
+        shadow.setOffsetY(4);
+        shadow.setColor(Color.web("#a868a0", 0.7));
+        btn.setEffect(shadow);
+    }
+
+    @FXML
+    public void buttonExitEffect(MouseEvent event) {
+        Button btn = (Button) event.getSource();
+        btn.setStyle("-fx-background-color: transparent; -fx-text-fill: #a868a0; -fx-border-radius: 10px;");
+        btn.setEffect(null);
     }
 
 }
