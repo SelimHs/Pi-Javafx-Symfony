@@ -97,23 +97,23 @@ public class GestionReservation {
     }
 
     @FXML
-    public void buttonHoverEffect(MouseEvent event) {
-        Button btn = (Button) event.getSource();
-        btn.setStyle("-fx-background-color: #8e44ad; -fx-text-fill: white; -fx-border-radius: 10px;");
-
+    public void buttonHoverEffect(javafx.scene.input.MouseEvent mouseEvent) {
+        Button btn = (Button) mouseEvent.getSource();
+        btn.setStyle("-fx-background-color: #8e44ad; -fx-text-fill: white; -fx-padding: 18px; -fx-border-width: 2px; -fx-border-color: white;");
         DropShadow shadow = new DropShadow();
-        shadow.setRadius(8);
+        shadow.setRadius(10);
         shadow.setOffsetX(0);
-        shadow.setOffsetY(4);
-        shadow.setColor(Color.web("#a868a0", 0.7));
+        shadow.setOffsetY(5);
+        shadow.setColor(Color.web("#a868a0", 0.7));  // Une ombre douce
         btn.setEffect(shadow);
     }
 
     @FXML
-    public void buttonExitEffect(MouseEvent event) {
-        Button btn = (Button) event.getSource();
-        btn.setStyle("-fx-background-color: transparent; -fx-text-fill: #a868a0; -fx-border-radius: 10px;");
+    public void buttonExitEffect(javafx.scene.input.MouseEvent mouseEvent) {
+        Button btn = (Button) mouseEvent.getSource();
+        btn.setStyle("-fx-background-color: transparent; -fx-text-fill: #a868a0;-fx-font-size: 18px; -fx-border-radius: 10px; -fx-padding: 10px 18px;");
         btn.setEffect(null);
+
     }
 
 }
