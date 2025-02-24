@@ -8,8 +8,11 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import tn.esprit.models.Reservation;
 import tn.esprit.services.ServiceReservation;
@@ -54,14 +57,14 @@ public class ReservationMainController {
             detailsButton.setOnAction(e -> showReservationDetails(reservation));
 
             Button supprimerButton = new Button("Supprimer");
-            supprimerButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
+            supprimerButton.setStyle("-fx-background-color: #a868a0; -fx-text-fill: white;");
             supprimerButton.setOnAction(e -> {
                 supprimerReservation(reservation); // Supprime la réservation
                 displayReservations(); // Rafraîchit la liste
             });
 
             Button modifierButton = new Button("Modifier");
-            modifierButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
+            modifierButton.setStyle("-fx-background-color: #a868a0; -fx-text-fill: white;");
             modifierButton.setOnAction(e -> openEditReservationWindow(reservation));
 
             card.getChildren().addAll(title, dateLabel, statutLabel, detailsButton, modifierButton, supprimerButton);
@@ -151,6 +154,30 @@ public class ReservationMainController {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    @FXML
+    public void buttonHoverEffect(javafx.scene.input.MouseEvent mouseEvent) {
+        Button btn = (Button) mouseEvent.getSource();
+        btn.setStyle("-fx-background-color: #8e44ad; -fx-text-fill: white; -fx-padding: 18px; -fx-border-width: 2px; -fx-border-color: white;");
+        DropShadow shadow = new DropShadow();
+        shadow.setRadius(10);
+        shadow.setOffsetX(0);
+        shadow.setOffsetY(5);
+        shadow.setColor(Color.web("#a868a0", 0.7));  // Une ombre douce
+        btn.setEffect(shadow);
+    }
+
+    @FXML
+    public void buttonExitEffect(javafx.scene.input.MouseEvent mouseEvent) {
+        Button btn = (Button) mouseEvent.getSource();
+        btn.setStyle("-fx-background-color: transparent; -fx-text-fill: #a868a0;-fx-font-size: 18px; -fx-border-radius: 10px; -fx-padding: 10px 18px;");
+        btn.setEffect(null);
+
+    }
+
+    public void searchReservations(javafx.event.ActionEvent actionEvent) {
+
     }
 }
 

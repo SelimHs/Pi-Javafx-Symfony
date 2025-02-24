@@ -26,7 +26,7 @@
                         <Image url="@logo.png" />
                     </image>
                 </ImageView>
-                <Label text="Gestion des Remises"
+                <Label text="Gestion Remises"
                        style="-fx-font-size: 20px; -fx-text-fill: white; -fx-font-weight: bold;
                               -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 4, 0, 0, 2);"/>
                 <Button text="🏠 Accueil"

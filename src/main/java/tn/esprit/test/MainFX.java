@@ -6,29 +6,28 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.util.Objects;
+import java.io.IOException;
 
 public class MainFX extends Application {
 
     public static void main(String[] args) {
-        launch(args); // Démarrer l'application JavaFX
+
+        launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/payment.fxml"));
         try {
-            // ✅ Chargement du fichier FXML (vérifiez que le fichier est bien placé dans /resources/tn/esprit/views/)
-            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/Acceuil.fxml")));
             Parent root = loader.load();
-
-            // ✅ Création et affichage de la scène
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
-            primaryStage.setTitle("Gestion des Réservations"); // Nom de la fenêtre
             primaryStage.show();
-        } catch (Exception e) {
-            System.out.println("❌ Erreur lors du chargement de l'interface : " + e.getMessage());
-            e.printStackTrace();
+
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
         }
+
+
     }
 }

@@ -9,17 +9,24 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <AnchorPane prefHeight="671.0" prefWidth="950.0" style="-fx-background-color: linear-gradient(to bottom, #6a0dad, #b19cd9);" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RemiseMainController">
     <children>
         <!-- 📌 Barre latérale avec effet d'ombre -->
         <VBox layoutX="0.0" layoutY="0.0" prefHeight="671.0" prefWidth="200.0" style="-fx-background-color: linear-gradient(to bottom, #4b0082, #8a2be2);                      -fx-padding: 15px;                      -fx-border-radius: 10px;                      -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 15, 0, 3, 3);">
             <children>
+                <ImageView fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@logo.png" />
+                    </image>
+                </ImageView>
                 <Label style="-fx-font-size: 20px; -fx-text-fill: white; -fx-font-weight: bold;-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 4, 0, 0, 2);" text="Gestion Remises" />
                 <Button text="🏠 Accueil"
                         style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;
                                -fx-padding: 10px; -fx-border-radius: 8px;" onAction="#goToAcceuil"/>
                 <Button  style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;                                -fx-padding: 10px; -fx-border-radius: 8px;" text="➕ Ajouter Remise" onAction="#goToAjout"/>
-                <Button style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;-fx-padding: 10px; -fx-border-radius: 8px;" text="📋 Liste des remises" />
+                <Button style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;-fx-padding: 10px; -fx-border-radius: 8px;" text="📋 Liste des Remises" />
                 </children>
         </VBox>
 

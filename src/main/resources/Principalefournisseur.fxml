@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.collections.FXCollections?>
+
+<AnchorPane
+        fx:id="root"
+        xmlns="http://javafx.com/javafx"
+        xmlns:fx="http://javafx.com/fxml"
+        fx:controller="controller.FournisseurMainController"
+        prefHeight="670.0" prefWidth="950.0"
+        style="-fx-background-color: linear-gradient(to bottom, #6a0dad, #b19cd9);">
+
+    <children>
+        <VBox layoutX="0.0" layoutY="0.0" prefHeight="670.0" prefWidth="200.0"
+              style="-fx-background-color: linear-gradient(to bottom, #4b0082, #8a2be2); -fx-padding: 15px;">
+            <children>
+                <ImageView fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@logo.png" />
+                    </image>
+                </ImageView>
+                <Label text="Gestion des Fournisseurs"
+                       style="-fx-font-size: 20px; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                <Button text="🏠 Accueil" onAction="#goToAcceuil"
+                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;"/>
+                <Button text="➕ Ajouter Fournisseur" onAction="#goToGestionFournisseur"
+                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;"/>
+                <Button text="📋 Liste des Fournisseurs" onAction="#displayFournisseurs"
+                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;"/>
+            </children>
+        </VBox>
+
+        <VBox layoutX="220.0" layoutY="20.0" prefWidth="700.0">
+            <children>
+                <Label text="📋 Liste des Fournisseurs"
+                       style="-fx-font-size: 26px; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                <HBox spacing="10">
+                    <TextField prefWidth="400.0" promptText="Rechercher un fournisseur..."/>
+                    <Button text="Rechercher"/>
+                </HBox>
+
+                <!-- Zone d'affichage des fournisseurs sous forme de cartes -->
+                <FlowPane fx:id="fournisseurCardContainer" prefHeight="500.0" prefWidth="700.0" hgap="15" vgap="15"/>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

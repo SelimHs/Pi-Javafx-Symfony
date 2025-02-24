@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.effect.DropShadow?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/20" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.HomePage"
+            stylesheets="@/styles.css"
+            style="-fx-background-color: linear-gradient(to bottom, #8a2be2, #4b0082);">
+
+    <!-- Sidebar à gauche -->
+    <VBox prefWidth="200" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0"
+          style="-fx-background-color: linear-gradient(to bottom, #8a2be2, #6a1b9a); -fx-padding: 20px;">
+        <!-- Bouton User avec icône -->
+        <!-- Bouton Accueil -->
+        <Button fx:id="homeButton" text="🏠 Accueil" styleClass="sidebar-button" onAction="#goToAcceuil">
+            <graphic>
+                <ImageView fitWidth="20" fitHeight="20">
+                    <image>
+                        <Image url="@images/logo.jpeg" />
+                    </image>
+                </ImageView>
+            </graphic>
+        </Button>
+
+    </VBox>
+
+    <!-- Barre de recherche centrée -->
+    <HBox spacing="10" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="220" AnchorPane.rightAnchor="20">
+        <TextField fx:id="searchField" promptText="Rechercher un utilisateur..."
+                   styleClass="search-field"/>
+        <Button styleClass="search-button">
+            <graphic>
+                <ImageView fitWidth="24" fitHeight="24">
+                    <image>
+                        <Image url="@images/search.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+        </Button>
+    </HBox>
+
+    <!-- Bouton de déconnexion en haut à droite -->
+    <Button fx:id="logoutButton" text="Déconnexion" styleClass="logout-button"
+            AnchorPane.topAnchor="20" AnchorPane.rightAnchor="20"
+            onAction="#handleLogout">
+        <graphic>
+            <ImageView fitWidth="20" fitHeight="20">
+                <image>
+                    <Image url="@images/logout.png" />
+                </image>
+            </ImageView>
+        </graphic>
+    </Button>
+
+    <!-- Affichage dynamique des cartes d'utilisateurs (centré) -->
+    <ScrollPane fx:id="userListScrollPane" AnchorPane.topAnchor="70" AnchorPane.leftAnchor="220" AnchorPane.rightAnchor="20" AnchorPane.bottomAnchor="90"
+                style="-fx-background-color: transparent;">
+        <VBox fx:id="userCardsContainer" spacing="10" style="-fx-padding: 10px;" />
+    </ScrollPane>
+
+    <!-- Boutons Ajouter, Modifier et Supprimer -->
+    <HBox spacing="15" AnchorPane.bottomAnchor="20" AnchorPane.leftAnchor="220">
+        <Button fx:id="addButton" text="Ajouter" styleClass="action-button" onAction="#handleAddUser"/>
+        <Button fx:id="editButton" text="Modifier" styleClass="action-button" onAction="#handleEditUser"/>
+        <Button fx:id="deleteSelectedButton" text="Supprimer la sélection" styleClass="delete-button" onAction="#deleteSelectedUsers"/>
+    </HBox>
+
+</AnchorPane>
