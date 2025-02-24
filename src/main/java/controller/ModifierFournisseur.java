@@ -18,7 +18,7 @@ import java.io.IOException;
 public class ModifierFournisseur {
 
     @FXML
-    private TextField nomFournisseur, descriptionFournisseur, typeFournisseur;
+    private TextField nomFournisseur, descriptionFournisseur, typeFournisseur,telephoneFournisseur;
     @FXML
     private Button btnModifier, btnRetour;
 
@@ -39,9 +39,11 @@ public class ModifierFournisseur {
         nomFournisseur.setText(fournisseur.getNomFournisseur());
         descriptionFournisseur.setText(fournisseur.getDescription());
         typeFournisseur.setText(fournisseur.getType());
+        telephoneFournisseur.setText(fournisseur.getTelephone()); // Ajout du téléphone
 
         System.out.println("✅ Données du fournisseur chargées : " + fournisseur);
     }
+
 
     /**
      * Met à jour les informations du fournisseur dans la base de données.
@@ -58,6 +60,7 @@ public class ModifierFournisseur {
         fournisseurActuel.setNomFournisseur(nomFournisseur.getText());
         fournisseurActuel.setDescription(descriptionFournisseur.getText());
         fournisseurActuel.setType(typeFournisseur.getText());
+        fournisseurActuel.setTelephone(telephoneFournisseur.getText()); // Mise à jour du téléphone
 
         // Mise à jour dans la base de données
         fournisseurService.update(fournisseurActuel);
@@ -68,6 +71,7 @@ public class ModifierFournisseur {
         // Retourner à l'affichage des fournisseurs après modification
         retourAfficherFournisseurs(event);
     }
+
 
     /**
      * Retourne à l'affichage des fournisseurs après modification.
@@ -89,5 +93,6 @@ public class ModifierFournisseur {
             System.out.println("⚠ Erreur: Impossible de charger FournisseurMain.fxml !");
         }
     }
+
 
 }

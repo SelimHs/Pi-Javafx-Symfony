@@ -27,16 +27,19 @@ public class GestionFournisseur {
     private TextField typeFournisseur;
     @FXML
     private TextField descriptionFournisseur;
+    @FXML
+    private TextField telephoneFournisseur; // Champ pour le téléphone
+
 
     @FXML
     public void addFournisseur(ActionEvent actionEvent) {
         fournisseur f = new fournisseur();
         ServiceFournisseur sf = new ServiceFournisseur();
 
-
         f.setNomFournisseur(nomFournisseur.getText());
         f.setDescription(descriptionFournisseur.getText());
         f.setType(typeFournisseur.getText());
+        f.setTelephone(telephoneFournisseur.getText()); // Ajout du téléphone
 
         if (!idFournisseur.getText().isEmpty()) {
             f.setIdFournisseur(Integer.parseInt(idFournisseur.getText()));
@@ -47,8 +50,10 @@ public class GestionFournisseur {
         nomFournisseur.clear();
         descriptionFournisseur.clear();
         typeFournisseur.clear();
+        telephoneFournisseur.clear();
         idFournisseur.clear();
     }
+
 
     @Deprecated
     void onSupprimer(ActionEvent event) {

@@ -18,17 +18,20 @@ public class ServiceFournisseur implements Iservice<fournisseur> {
 
     @Override
     public void add(fournisseur fournisseur) {
-        String qry = "INSERT INTO `fournisseur`(`nomFournisseur`, `description`, `type`) VALUES (?, ?, ?)";
+        String qry = "INSERT INTO `fournisseur`(`nomFournisseur`, `description`, `type`, `telephone`) VALUES (?, ?, ?, ?)";
         try {
             PreparedStatement pstm = cnx.prepareStatement(qry);
             pstm.setString(1, fournisseur.getNomFournisseur());
             pstm.setString(2, fournisseur.getDescription());
             pstm.setString(3, fournisseur.getType());
+            pstm.setString(4, fournisseur.getTelephone()); // Ajout du téléphone
             pstm.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
+
+
 
     @Override
     public List<fournisseur> getAll() {
@@ -43,6 +46,7 @@ public class ServiceFournisseur implements Iservice<fournisseur> {
                 fournisseur.setNomFournisseur(rs.getString("nomFournisseur"));
                 fournisseur.setDescription(rs.getString("description"));
                 fournisseur.setType(rs.getString("type"));
+                fournisseur.setTelephone(rs.getString("telephone")); // Récupérer téléphone
                 fournisseurs.add(fournisseur);
             }
         } catch (SQLException e) {
@@ -51,6 +55,7 @@ public class ServiceFournisseur implements Iservice<fournisseur> {
         return fournisseurs;
     }
 
+
     @Override
     public void delete(int id) {
 
@@ -58,18 +63,21 @@ public class ServiceFournisseur implements Iservice<fournisseur> {
 
     @Override
     public void update(fournisseur fournisseur) {
-        String qry = "UPDATE `fournisseur` SET `nomFournisseur` = ?, `description` = ?, `type` = ? WHERE `idFournisseur` = ?";
+        String qry = "UPDATE `fournisseur` SET `nomFournisseur` = ?, `description` = ?, `type` = ?, `telephone` = ? WHERE `idFournisseur` = ?";
         try {
             PreparedStatement pstm = cnx.prepareStatement(qry);
             pstm.setString(1, fournisseur.getNomFournisseur());
             pstm.setString(2, fournisseur.getDescription());
             pstm.setString(3, fournisseur.getType());
-            pstm.setInt(4, fournisseur.getIdFournisseur());
+            pstm.setString(4, fournisseur.getTelephone()); // Ajout du téléphone
+            pstm.setInt(5, fournisseur.getIdFournisseur());
             pstm.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
+
+
 
     @Override
     public void delete(fournisseur fournisseur) {
@@ -96,6 +104,7 @@ public class ServiceFournisseur implements Iservice<fournisseur> {
                 fournisseur.setNomFournisseur(rs.getString("nomFournisseur"));
                 fournisseur.setDescription(rs.getString("description"));
                 fournisseur.setType(rs.getString("type"));
+                fournisseur.setTelephone(rs.getString("telephone")); // Ajouter téléphone
                 return fournisseur;
             }
         } catch (SQLException e) {
@@ -103,6 +112,7 @@ public class ServiceFournisseur implements Iservice<fournisseur> {
         }
         return null;
     }
+
     public fournisseur getFournisseurFromDatabase(String fournisseurNom) {
         fournisseur f = null;
         try {
@@ -117,12 +127,13 @@ public class ServiceFournisseur implements Iservice<fournisseur> {
                 f.setNomFournisseur(rs.getString("nomFournisseur"));
                 f.setDescription(rs.getString("description"));
                 f.setType(rs.getString("type"));
+                f.setTelephone(rs.getString("telephone")); // Ajouter téléphone
             }
-
         } catch (SQLException e) {
             System.out.println("Erreur SQL : " + e.getMessage());
         }
         return f;
     }
+
 
 }

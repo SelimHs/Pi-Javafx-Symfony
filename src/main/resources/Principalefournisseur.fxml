@@ -15,7 +15,8 @@
         style="-fx-background-color: linear-gradient(to bottom, #6a0dad, #b19cd9);">
 
     <children>
-        <VBox layoutX="0.0" layoutY="0.0" prefHeight="670.0" prefWidth="200.0"
+        <!-- 🌟 Barre latérale modernisée -->
+        <VBox layoutX="0.0" layoutY="0.0" prefHeight="670.0" prefWidth="220.0"
               style="-fx-background-color: linear-gradient(to bottom, #4b0082, #8a2be2); -fx-padding: 15px;">
             <children>
                 <ImageView fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
@@ -25,26 +26,41 @@
                 </ImageView>
                 <Label text="Gestion des Fournisseurs"
                        style="-fx-font-size: 20px; -fx-text-fill: white; -fx-font-weight: bold;"/>
+
                 <Button text="🏠 Accueil" onAction="#goToAcceuil"
                         style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;"/>
                 <Button text="➕ Ajouter Fournisseur" onAction="#goToGestionFournisseur"
                         style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;"/>
-                <Button text="📋 Liste des Fournisseurs" onAction="#displayFournisseurs"
+                <Button text="📋 Liste des Fournisseurs"
                         style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;"/>
             </children>
         </VBox>
 
-        <VBox layoutX="220.0" layoutY="20.0" prefWidth="700.0">
+        <!-- 🌟 Contenu principal -->
+        <VBox layoutX="230.0" layoutY="20.0" prefWidth="700.0">
             <children>
                 <Label text="📋 Liste des Fournisseurs"
                        style="-fx-font-size: 26px; -fx-text-fill: white; -fx-font-weight: bold;"/>
-                <HBox spacing="10">
-                    <TextField prefWidth="400.0" promptText="Rechercher un fournisseur..."/>
-                    <Button text="Rechercher"/>
+
+                <!-- 🔍 Barre de recherche -->
+                <HBox spacing="10" style="-fx-padding: 15px;">
+                    <TextField fx:id="searchField" prefWidth="400.0" promptText="🔍 Rechercher un fournisseur..."
+                               style="-fx-border-radius: 10px; -fx-background-radius: 10px;
+                                      -fx-padding: 10px; -fx-border-color: white;
+                                      -fx-background-color: rgba(255, 255, 255, 0.3);"/>
+                    <Button text="Rechercher"
+                            style="-fx-background-color: #8e44ad; -fx-text-fill: white;
+                                   -fx-font-size: 14px; -fx-border-radius: 10px; -fx-padding: 10px 20px;
+                                   -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 2, 2);"/>
                 </HBox>
 
-                <!-- Zone d'affichage des fournisseurs sous forme de cartes -->
-                <FlowPane fx:id="fournisseurCardContainer" prefHeight="500.0" prefWidth="700.0" hgap="15" vgap="15"/>
+                <!-- 📌 Zone d'affichage des fournisseurs -->
+                <ScrollPane prefHeight="500.0" prefWidth="700.0" style="-fx-background-color: transparent;">
+                    <content>
+                        <FlowPane fx:id="fournisseurCardContainer" hgap="15" vgap="15" prefHeight="500.0" prefWidth="700.0"
+                                  style="-fx-padding: 15px;"/>
+                    </content>
+                </ScrollPane>
             </children>
         </VBox>
     </children>
