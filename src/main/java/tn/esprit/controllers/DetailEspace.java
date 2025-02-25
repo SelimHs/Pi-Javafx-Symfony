@@ -155,12 +155,42 @@ public class DetailEspace {
         }
     }
 
+    /**
+     * Supprime un organisateur après confirmation.
+     *
+     * @param organisateur L'organisateur à supprimer.
+     */
     private void supprimerOrganisateur(Organisateur organisateur) {
-        // Ajoutez ici le code de suppression d'un organisateur
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation de Suppression");
+        alert.setHeaderText("Suppression de l'organisateur");
+        alert.setContentText("Êtes-vous sûr de vouloir supprimer " + organisateur.getNomOrg() + " ?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            serviceOrganisateur.delete(organisateur.getIdOrg());
+            afficherOrganisateurs(idEspace); // Rafraîchir l'affichage après suppression
+        }
     }
 
     private void modifierOrganisateur(Organisateur organisateur) {
-        // Ajoutez ici le code de modification d'un organisateur
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierOrganisateur.fxml"));
+            Parent root = loader.load();
+
+            ModifierOrganisateur controller = loader.getController();
+            controller.initData(organisateur);
+
+            // Récupérer la scène actuelle et remplacer le contenu
+            Stage stage = (Stage) organisateurContainer.getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("❌ Erreur lors de l'ouverture de ModifierOrganisateur.fxml");
+        }
     }
 
     @FXML
@@ -175,8 +205,26 @@ public class DetailEspace {
         }
     }
 
+    /**
+     * Ouvre la vue "GestionOrganisateur" pour ajouter un organisateur.
+     *
+     * @param event L'événement de clic sur le bouton.
+     */
     @FXML
     private void ajouterOrganisateur(ActionEvent event) {
-        // Ajoutez ici le code pour ouvrir la vue de gestion des organisateurs
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/GestionOrganisateur.fxml"));
+            Parent root = loader.load();
+
+            GestionOrganisateur controller = loader.getController();
+            controller.initData(idEspace);
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("❌ Erreur lors du chargement de GestionOrganisateur.fxml");
+        }
     }
 }
