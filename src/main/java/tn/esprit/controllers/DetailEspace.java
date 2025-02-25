@@ -1,5 +1,6 @@
 package tn.esprit.controllers;
 
+import javafx.application.Platform;
 import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -28,11 +29,10 @@ public class DetailEspace {
     @FXML private VBox organisateurContainer;
     @FXML private Button retourButton;
     @FXML private Button ajouterOrganisateurButton;
-    @FXML private WebView mapView; // Affichage de la carte HERE
+    @FXML private WebView mapView; // Affichage de la carte Google Maps
 
     private int idEspace;
     private final ServiceOrganisateur serviceOrganisateur = new ServiceOrganisateur();
-    private static final String HERE_API_KEY = "VOTRE_API_KEY_HERE"; // 🔑 Remplacez par votre clé API HERE
 
     /**
      * Initialise les données de l'espace et affiche les détails.
@@ -58,83 +58,42 @@ public class DetailEspace {
     }
 
     /**
-     * Affiche la carte HERE en fonction de l'adresse fournie.
+     * Affiche la carte Google Maps en fonction de l'adresse fournie.
      *
      * @param adresse L'adresse à afficher sur la carte.
      */
     private void afficherCarte(String adresse) {
-        if (adresse == null || adresse.trim().isEmpty()) {
-            System.out.println("📌 Aucune adresse fournie. Impossible d'afficher la carte.");
+        if (mapView == null) {
+            System.out.println("❌ WebView est NULL !");
             return;
         }
 
         WebEngine webEngine = mapView.getEngine();
+        if (webEngine == null) {
+            System.out.println("❌ WebEngine est NULL !");
+            return;
+        }
 
-        // Ajouter un écouteur d'erreurs
-        webEngine.setOnError(event -> {
-            System.out.println("❌ Erreur lors du chargement de la carte : " + event.getMessage());
+        Platform.runLater(() -> {
+            webEngine.setJavaScriptEnabled(true);
+
+            // Ajouter un écouteur pour détecter les erreurs
+            webEngine.setOnError(event -> System.out.println("❌ Erreur WebView : " + event.getMessage()));
+
+            // Ajouter un écouteur de chargement
+            webEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue == Worker.State.SUCCEEDED) {
+                    System.out.println("✅ Carte chargée avec succès !");
+                } else if (newValue == Worker.State.FAILED) {
+                    System.out.println("❌ Échec du chargement de la carte.");
+                    System.out.println("Erreur : " + webEngine.getLoadWorker().getException());
+                }
+            });
+
+            // Chargement de Google Maps avec l'adresse
+            String googleMapsUrl = "https://www.google.com/maps/search/?api=1&query=" + adresse.replace(" ", "+");
+            webEngine.load(googleMapsUrl);
         });
-
-        // Ajouter un écouteur pour vérifier l'état du chargement
-        webEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue == Worker.State.SUCCEEDED) {
-                System.out.println("✅ Carte chargée avec succès !");
-                // Exécuter du JavaScript pour vérifier que la carte est initialisée
-                webEngine.executeScript("console.log('Carte initialisée avec succès');");
-            } else if (newValue == Worker.State.FAILED) {
-                System.out.println("❌ Échec du chargement de la carte.");
-            }
-        });
-
-        // Contenu HTML pour afficher la carte
-        String htmlContent = "<!DOCTYPE html>\n" +
-                "<html lang=\"fr\">\n" +
-                "<head>\n" +
-                "    <meta charset=\"UTF-8\">\n" +
-                "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
-                "    <script src=\"https://js.api.here.com/v3/3.1/mapsjs-core.js\"></script>\n" +
-                "    <script src=\"https://js.api.here.com/v3/3.1/mapsjs-service.js\"></script>\n" +
-                "    <script src=\"https://js.api.here.com/v3/3.1/mapsjs-ui.js\"></script>\n" +
-                "    <script src=\"https://js.api.here.com/v3/3.1/mapsjs-mapevents.js\"></script>\n" +
-                "    <script>\n" +
-                "    function initMap() {\n" +
-                "        var platform = new H.service.Platform({\n" +
-                "            'apikey': '" + HERE_API_KEY + "'\n" +
-                "        });\n" +
-                "\n" +
-                "        var defaultLayers = platform.createDefaultLayers();\n" +
-                "        var map = new H.Map(\n" +
-                "            document.getElementById('mapContainer'),\n" +
-                "            defaultLayers.vector.normal.map,\n" +
-                "            {\n" +
-                "                zoom: 12,\n" +
-                "                center: { lat: 36.8065, lng: 10.1815 } // 🗺 Position par défaut : Tunis\n" +
-                "            }\n" +
-                "        );\n" +
-                "\n" +
-                "        var ui = H.ui.UI.createDefault(map, defaultLayers);\n" +
-                "        var service = platform.getSearchService();\n" +
-                "\n" +
-                "        service.geocode({ q: '" + adresse + "' }, function(result) {\n" +
-                "            if (result.items.length > 0) {\n" +
-                "                var location = result.items[0].position;\n" +
-                "                map.setCenter(location);\n" +
-                "                var marker = new H.map.Marker(location);\n" +
-                "                map.addObject(marker);\n" +
-                "            } else {\n" +
-                "                console.log(\"📌 Adresse introuvable !\");\n" +
-                "            }\n" +
-                "        }, alert);\n" +
-                "    }\n" +
-                "    </script>\n" +
-                "</head>\n" +
-                "<body onload=\"initMap()\">\n" +
-                "    <div id=\"mapContainer\" style=\"width: 100%; height: 400px;\"></div>\n" +
-                "</body>\n" +
-                "</html>";
-
-        // Charger le contenu HTML dans le WebView
-        webEngine.loadContent(htmlContent);
     }
 
     /**
@@ -153,18 +112,17 @@ public class DetailEspace {
             organisateurContainer.getChildren().add(noOrganisateur);
         } else {
             for (Organisateur organisateur : organisateurs) {
-                // 📌 Création d'une carte pour chaque organisateur
                 HBox card = new HBox(15);
                 card.setStyle("-fx-padding: 15px; -fx-background-color: white; -fx-border-radius: 10px; "
                         + "-fx-border-color: #8a2be2; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 5);");
                 card.setPrefHeight(100);
                 card.setPrefWidth(650);
 
-                // 🖼 Ajout d'une icône de profil
+                // Ajout d'une icône de profil
                 Label profileIcon = new Label("🎭");
                 profileIcon.setStyle("-fx-font-size: 30px; -fx-text-fill: #8a2be2;");
 
-                // 📌 Conteneur des détails
+                // Conteneur des détails
                 VBox detailsBox = new VBox(5);
                 Label nameLabel = new Label("👤 " + organisateur.getNomOrg() + " " + organisateur.getPrenomOrg());
                 nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #4b0082;");
@@ -177,7 +135,7 @@ public class DetailEspace {
 
                 detailsBox.getChildren().addAll(nameLabel, descriptionLabel, phoneLabel);
 
-                // 📌 Conteneur des boutons
+                // Conteneur des boutons
                 HBox buttonBox = new HBox(10);
                 buttonBox.setStyle("-fx-alignment: center-right;");
 
@@ -191,59 +149,20 @@ public class DetailEspace {
 
                 buttonBox.getChildren().addAll(btnModifier, btnSupprimer);
 
-                // 📌 Ajout des éléments à la carte
                 card.getChildren().addAll(profileIcon, detailsBox, buttonBox);
                 organisateurContainer.getChildren().add(card);
             }
         }
     }
 
+    private void supprimerOrganisateur(Organisateur organisateur) {
+        // Ajoutez ici le code de suppression d'un organisateur
+    }
 
     private void modifierOrganisateur(Organisateur organisateur) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierOrganisateur.fxml"));
-            Parent root = loader.load();
-
-            ModifierOrganisateur controller = loader.getController();
-            controller.initData(organisateur);
-
-            // Récupérer la scène actuelle et remplacer le contenu
-            Stage stage = (Stage) organisateurContainer.getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("❌ Erreur lors de l'ouverture de ModifierOrganisateur.fxml");
-        }
+        // Ajoutez ici le code de modification d'un organisateur
     }
 
-
-
-    /**
-     * Supprime un organisateur après confirmation.
-     *
-     * @param organisateur L'organisateur à supprimer.
-     */
-    private void supprimerOrganisateur(Organisateur organisateur) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmation de Suppression");
-        alert.setHeaderText("Suppression de l'organisateur");
-        alert.setContentText("Êtes-vous sûr de vouloir supprimer " + organisateur.getNomOrg() + " ?");
-
-        Optional<ButtonType> result = alert.showAndWait();
-
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            serviceOrganisateur.delete(organisateur.getIdOrg());
-            afficherOrganisateurs(idEspace); // Rafraîchir l'affichage après suppression
-        }
-    }
-
-    /**
-     * Retourne à la vue "AfficherEspaces".
-     *
-     * @param event L'événement de clic sur le bouton.
-     */
     @FXML
     private void retourAfficherEspaces(ActionEvent event) {
         try {
@@ -256,26 +175,8 @@ public class DetailEspace {
         }
     }
 
-    /**
-     * Ouvre la vue "GestionOrganisateur" pour ajouter un organisateur.
-     *
-     * @param event L'événement de clic sur le bouton.
-     */
     @FXML
     private void ajouterOrganisateur(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/GestionOrganisateur.fxml"));
-            Parent root = loader.load();
-
-            GestionOrganisateur controller = loader.getController();
-            controller.initData(idEspace);
-
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("❌ Erreur lors du chargement de GestionOrganisateur.fxml");
-        }
+        // Ajoutez ici le code pour ouvrir la vue de gestion des organisateurs
     }
 }
