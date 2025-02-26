@@ -10,6 +10,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ListView?>
 
 <BorderPane xmlns="http://javafx.com/javafx/8.0.171"
             xmlns:fx="http://javafx.com/fxml/1"
@@ -40,10 +41,14 @@
                    style="-fx-font-size: 26px; -fx-text-fill: #6A0DAD; -fx-font-weight: bold;"/>
 
             <!-- Section Email -->
-            <TextField fx:id="text" promptText="Email"
+            <TextField fx:id="emailField" promptText="Entrez votre email"
                        style="-fx-background-color: #F1F1F1; -fx-font-size: 14px; -fx-padding: 12px; -fx-border-radius: 10px; -fx-pref-width: 100%; -fx-border-color: #6A0DAD; -fx-text-fill: #333;"/>
 
-            <!-- Section Mot de Passe -->
+            <!-- Liste des suggestions d'emails -->
+            <ListView fx:id="emailSuggestions" visible="false"
+                      style="-fx-background-color: #F1F1F1; -fx-font-size: 14px; -fx-pref-width: 100%; -fx-max-height: 100px;"/>
+
+            <!-- Section Mot de passe -->
             <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-pref-width: 100%;">
                 <PasswordField fx:id="password" promptText="Mot de passe"
                                style="-fx-background-color: #F1F1F1; -fx-font-size: 14px; -fx-padding: 12px; -fx-border-radius: 10px; -fx-pref-width: 100%; -fx-border-color: #6A0DAD; -fx-text-fill: #333;"
@@ -61,20 +66,14 @@
             </HBox>
 
             <!-- Section Rester connecté -->
-            <HBox style="-fx-alignment: center-left; -fx-padding: 0 0 0 20;">
-                <CheckBox fx:id="rememberMeCheckBox" text="Rester connecté"
-                          style="-fx-font-size: 14px; -fx-text-fill: #6A0DAD;"/>
-            </HBox>
+            <CheckBox fx:id="rememberMeCheckBox" text="Rester connecté"
+                      style="-fx-font-size: 14px; -fx-text-fill: #6A0DAD;"/>
 
-            <Hyperlink text="Mot de passe oublié ?" onAction="#handleForgotPassword"
-                       style="-fx-font-size: 13px; -fx-text-fill: #B1B1B1; -fx-cursor: hand;"/>
-
-            <HBox spacing="20.0" style="-fx-alignment: center;">
-                <Button text="Se connecter" fx:id="loginButton" onAction="#handleLoginButtonAction"
-                        style="-fx-background-color: #6A0DAD; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-border-radius: 10px; -fx-padding: 12px 30px;"/>
-                <Button text="Créer un compte" fx:id="signupButton" onAction="#handleSignupButtonAction"
-                        style="-fx-background-color: transparent; -fx-border-color: #6A0DAD; -fx-text-fill: #6A0DAD; -fx-font-size: 15px; -fx-font-weight: bold; -fx-border-radius: 10px; -fx-padding: 12px 30px;"/>
-            </HBox>
+            <!-- Boutons de connexion et d'inscription -->
+            <Button text="Se connecter" fx:id="loginButton" onAction="#handleLoginButtonAction"
+                    style="-fx-background-color: #6A0DAD; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-border-radius: 10px; -fx-padding: 12px 30px;"/>
+            <Button text="Créer un compte" fx:id="signupButton" onAction="#handleSignupButtonAction"
+                    style="-fx-background-color: transparent; -fx-border-color: #6A0DAD; -fx-text-fill: #6A0DAD; -fx-font-size: 15px; -fx-font-weight: bold; -fx-border-radius: 10px; -fx-padding: 12px 30px;"/>
 
             <!-- Séparateur -->
             <Label text="OU" style="-fx-text-fill: #6A0DAD; -fx-font-size: 16px; -fx-font-weight: bold;"/>

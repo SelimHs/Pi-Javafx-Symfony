@@ -1,5 +1,6 @@
 package test;
 
+import controllers.Login;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -48,7 +49,7 @@ public class MainFX extends Application {
             primaryStage.setScene(scene);
             primaryStage.setTitle("Page de Connexion");
 
-            controllers.Login loginController = loader.getController();
+            Login loginController = loader.getController();
             if (loginController != null) {
                 loginController.getSignupButton().setOnAction(event -> showCreateAccountPage());
                 loginController.setOnLoginSuccess(() -> showHomePage()); // Redirection après connexion réussie

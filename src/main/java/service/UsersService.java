@@ -16,6 +16,11 @@ public class UsersService implements IService<Users> {
         con = MyDatabse.getInstance().getCon();
     }
 
+    // Retourne la connexion à la base de données
+    public Connection getConnection() {
+        return this.con;
+    }
+
     // Ajouter un utilisateur à la base de données
     @Override
     public void add(Users user) {
@@ -130,6 +135,7 @@ public class UsersService implements IService<Users> {
         return false; // L'email n'existe pas ou le mot de passe est incorrect
     }
 
+    // Vérifier si un email existe dans la base de données
     public boolean isEmailExist(String email) {
         String query = "SELECT COUNT(*) FROM user WHERE email = ?";
         try (PreparedStatement pst = con.prepareStatement(query)) {
@@ -147,9 +153,7 @@ public class UsersService implements IService<Users> {
         return false;
     }
 
-
-
-
+    // Mettre à jour le mot de passe d'un utilisateur
     public boolean updatePassword(String email, String newPassword) {
         if (!isEmailExist(email)) {
             System.out.println("Email non trouvé dans la base de données.");
@@ -176,5 +180,36 @@ public class UsersService implements IService<Users> {
             return false;
         }
     }
-}
 
+    // Récupérer tous les emails avec enregistrer = TRUE
+    public List<String> getAllEmails() {
+        List<String> emails = new ArrayList<>();
+        String query = "SELECT email FROM user WHERE enregistrer = TRUE"; // Requête SQL pour récupérer les emails avec enregistrer = TRUE
+        try (Statement statement = con.createStatement();
+             ResultSet rs = statement.executeQuery(query)) {
+            while (rs.next()) {
+                String email = rs.getString("email");
+                emails.add(email); // Ajouter l'email à la liste
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching emails: " + e.getMessage());
+        }
+        return emails; // Retourner la liste des emails
+    }
+
+    // Récupérer le mot de passe associé à un email spécifique
+    public String getPasswordByEmail(String email) {
+        String passwordHash = null;
+        String query = "SELECT password FROM user WHERE email = ?"; // Requête SQL pour récupérer le mot de passe haché
+        try (PreparedStatement pst = con.prepareStatement(query)) {
+            pst.setString(1, email); // Définir l'email comme paramètre
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                passwordHash = rs.getString("password"); // Récupérer le mot de passe haché
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching password: " + e.getMessage());
+        }
+        return passwordHash; // Retourner le mot de passe haché (ou null si l'email n'existe pas)
+    }
+}
