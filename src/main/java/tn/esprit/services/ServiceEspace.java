@@ -119,21 +119,6 @@ public class ServiceEspace implements Iservice<Optional<Espace>> {
     public void delete(Optional<Espace> espace) {
 
     }
-    public Map<String, Integer> getNombreEspacesParAdresse() {
-        Map<String, Integer> stats = new HashMap<>();
-        String query = "SELECT adresse, COUNT(*) as nombre FROM espace GROUP BY adresse";
 
-        try (Connection conn = myDatabase.getInstance().getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query);
-             ResultSet rs = stmt.executeQuery()) {
-
-            while (rs.next()) {
-                stats.put(rs.getString("adresse"), rs.getInt("nombre"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return stats;
-    }
 
 }
