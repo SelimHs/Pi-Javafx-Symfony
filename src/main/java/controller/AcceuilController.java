@@ -2,6 +2,7 @@ package controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
+import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
@@ -24,6 +25,7 @@ import java.util.Map;
 
 import javafx.scene.control.Button;
 import tn.esprit.services.ServiceBillet;
+import tn.esprit.services.ServiceEspace;
 
 public class AcceuilController {
     @FXML
@@ -42,6 +44,8 @@ public class AcceuilController {
     @FXML
     public void initialize() {
         chargerStatistiques();
+        chargerStatistiquesEspaces();
+
     }
 
 
@@ -226,7 +230,22 @@ public class AcceuilController {
         eventStatsChart.getData().clear();
         eventStatsChart.getData().add(series);
     }
+    @FXML
+    private PieChart pieChartEspaces;
+    ServiceEspace se = new ServiceEspace();
+    private void chargerStatistiquesEspaces() {
+        // 📌 Récupérer les statistiques des espaces groupés par adresse
+        Map<String, Integer> statsEspaces = se.getNombreEspacesParAdresse();
 
+        // Effacer les anciennes données avant d'ajouter les nouvelles
+        pieChartEspaces.getData().clear();
+
+        // Ajouter les données au PieChart
+        for (Map.Entry<String, Integer> entry : statsEspaces.entrySet()) {
+            PieChart.Data slice = new PieChart.Data(entry.getKey(), entry.getValue());
+            pieChartEspaces.getData().add(slice);
+        }
+    }
 
 
 
