@@ -7,13 +7,22 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import tn.esprit.models.Billet;
+import tn.esprit.services.PdfService;
 import tn.esprit.services.ServiceBillet;
 
+import java.awt.*;
 import java.io.IOException;
+import java.net.URI;
 import java.util.List;
 
 public class BilletsMainController {
@@ -128,9 +137,46 @@ public class BilletsMainController {
             editButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
             editButton.setOnAction(e -> openEditPopup(billet,editButton));
 
-            card.getChildren().addAll(title, name, price, eventName, detailsButton,editButton, deleteButton);
+            Button exportPdfButton = new Button("Exporter en PDF");
+            exportPdfButton.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white;");
+            exportPdfButton.setOnAction(e -> exportBilletToPdf(billet));
+
+            card.getChildren().addAll(title, name, price, eventName, detailsButton,editButton, deleteButton,exportPdfButton);
             billetCardContainer.getChildren().add(card);
 
+        }
+    }
+
+
+    private void exportBilletToPdf(Billet billet) {
+        String pdfUrl = PdfService.generatePdfFromBillet(
+                String.valueOf(billet.getIdBillet()),
+                billet.getProprietaire(),
+                billet.getEvent().toString(),
+                billet.getPrix()
+        );
+
+        if (pdfUrl != null) {
+            openPdfInBrowser(pdfUrl);
+            // Afficher le lien de téléchargement
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Exportation Réussie");
+            alert.setHeaderText("Le billet a été exporté avec succès !");
+            alert.setContentText("Téléchargez le PDF ici : " + pdfUrl);
+            alert.showAndWait();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText("Échec de l'exportation");
+            alert.setContentText("Impossible de générer le PDF.");
+            alert.showAndWait();
+        }
+    }
+    public static void openPdfInBrowser(String pdfUrl) {
+        try {
+            Desktop.getDesktop().browse(new URI(pdfUrl));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -199,5 +245,24 @@ public class BilletsMainController {
             card.getChildren().addAll(title, name, price, eventName, detailsButton, editButton, deleteButton);
             billetCardContainer.getChildren().add(card);
         }
+    }
+
+    @FXML
+    public void buttonHoverEffect(javafx.scene.input.MouseEvent mouseEvent) {
+        Button btn = (Button) mouseEvent.getSource();
+        btn.setStyle("-fx-background-color: #8e44ad; -fx-text-fill: white; -fx-padding: 18px; -fx-border-width: 2px; -fx-border-color: white;");
+        DropShadow shadow = new DropShadow();
+        shadow.setRadius(10);
+        shadow.setOffsetX(0);
+        shadow.setOffsetY(5);
+        shadow.setColor(Color.web("#a868a0", 0.7));  // Une ombre douce
+        btn.setEffect(shadow);
+    }
+
+    @FXML
+    public void buttonExitEffect(javafx.scene.input.MouseEvent mouseEvent) {
+        Button btn = (Button) mouseEvent.getSource();
+        btn.setStyle("-fx-background-color: transparent; -fx-text-fill: #a868a0;-fx-font-size: 18px; -fx-border-radius: 10px; -fx-padding: 10px 18px;");
+        btn.setEffect(null);
     }
 }

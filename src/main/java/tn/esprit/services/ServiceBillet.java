@@ -9,7 +9,9 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ServiceBillet implements Iservice<Billet> {
 
@@ -64,6 +66,11 @@ public class ServiceBillet implements Iservice<Billet> {
             System.out.println(e.getMessage());
         }
         return billets;
+    }
+
+    @Override
+    public void delete(int id) {
+
     }
 
     @Override
@@ -123,4 +130,28 @@ public class ServiceBillet implements Iservice<Billet> {
         }
         return null;
     }
+
+    public Map<String, Integer> getBilletStatsParEvenement() {
+        Map<String, Integer> stats = new HashMap<>();
+
+        String query = "SELECT e.nomEvent, COUNT(b.idBillet) AS nombreBillets " +
+                "FROM billet b " +
+                "JOIN event e ON b.idEvent = e.idEvent " +
+                "GROUP BY e.nomEvent";
+
+        try (PreparedStatement preparedStatement = cnx.prepareStatement(query);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            while (resultSet.next()) {
+                String nomEvenement = resultSet.getString("nomEvent");
+                int nombreBillets = resultSet.getInt("nombreBillets");
+                stats.put(nomEvenement, nombreBillets);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Erreur lors du chargement des statistiques 📊 : " + e.getMessage());
+        }
+        return stats;
+    }
+
 }
