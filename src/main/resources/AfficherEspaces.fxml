@@ -3,7 +3,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.image.*?>
-
 <AnchorPane fx:id="root" xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="tn.esprit.controllers.AfficherEspaces"
@@ -35,7 +34,7 @@
                                -fx-font-size: 16px; -fx-border-radius: 10px; -fx-padding: 12px 20px;"
                         onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"/>
 
-                <Button fx:id="affichesp" onAction="#afficherEspaces" text="📋 Liste des Espaces"
+                <Button fx:id="affichesp"  text="📋 Liste des Espaces"
                         style="-fx-background-color: transparent; -fx-text-fill: #a868a0;
                                -fx-font-size: 16px; -fx-border-radius: 10px; -fx-padding: 12px 20px;"
                         onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"/>
@@ -52,8 +51,19 @@
                        style="-fx-font-size: 26px; -fx-text-fill: white; -fx-font-weight: bold;
                               -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.8), 10, 0, 2, 2);"/>
 
-                <!-- 📌 Barre de recherche -->
+                <!-- 📌 Barre de recherche et filtres -->
                 <HBox spacing="15" style="-fx-padding: 20px; -fx-alignment: center;">
+                    <!-- ComboBox pour le critère de filtrage -->
+                    <!-- ComboBox pour le critère de filtrage -->
+                    <ComboBox fx:id="filterCriteriaComboBox" promptText="Filtrer par..."
+                              style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-size: 14px;"/>
+
+                    <!-- ComboBox pour l'ordre de tri -->
+                    <ComboBox fx:id="sortOrderComboBox" promptText="Trier par ordre"
+                              style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-size: 14px;"/>
+
+
+                    <!-- Champ de recherche -->
                     <TextField fx:id="searchField" prefWidth="400.0" promptText="🔍 Rechercher un espace..."
                                style="-fx-border-radius: 10px;
                                       -fx-background-radius: 10px;
@@ -61,14 +71,7 @@
                                       -fx-border-color: white;
                                       -fx-background-color: rgba(255, 255, 255, 0.3);"/>
 
-                    <Button fx:id="searchButton" text="Rechercher"
-                            style="-fx-background-color: #9b59b6;
-                                   -fx-text-fill: white;
-                                   -fx-font-size: 14px;
-                                   -fx-border-radius: 10px;
-                                   -fx-padding: 10px 20px;
-                                   -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 12, 0, 2, 2);"
-                            onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"/>
+
                 </HBox>
 
                 <!-- 🌟 Zone d'affichage des espaces avec ScrollPane -->

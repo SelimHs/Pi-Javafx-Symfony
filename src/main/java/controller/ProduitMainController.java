@@ -1,17 +1,13 @@
 package controller;
 
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
-import java.io.IOException;
-import java.util.List;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -21,45 +17,89 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import tn.esprit.models.Produit;
 import tn.esprit.services.ServiceProduit;
+
+import java.io.IOException;
 import java.net.URL;
+import java.util.Comparator;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class ProduitMainController implements Initializable {
+
     @FXML
     private AnchorPane root;
     @FXML
     private FlowPane produitCardContainer;
     @FXML
     private TextField searchField;
+    @FXML
+    private ComboBox<String> filterCriteriaComboBox;
+    @FXML
+    private ComboBox<String> sortOrderComboBox;
 
     private final ServiceProduit serviceProduit = new ServiceProduit();
+    private boolean isAscending = true; // Tri croissant par défaut
 
-    /**
-     * Initialisation automatique lors du chargement de la page.
-     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        displayProduits(); // Afficher les produits dès que la page est chargée
+        // Initialisation des options de filtrage
+        filterCriteriaComboBox.setItems(FXCollections.observableArrayList("Nom", "Prix", "Catégorie", "Quantité"));
+        filterCriteriaComboBox.setValue("Nom");
+
+        // Initialisation des options de tri
+        sortOrderComboBox.setItems(FXCollections.observableArrayList("Croissant", "Décroissant"));
+        sortOrderComboBox.setValue("Croissant");
+
+        // Ajout des écouteurs
+        filterCriteriaComboBox.setOnAction(event -> updateProduits());
+        sortOrderComboBox.setOnAction(event -> updateProduits());
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> updateProduits());
+
+        // Charger et afficher les produits
+        updateProduits();
     }
 
-    /**
-     * Affiche tous les produits dynamiquement.
-     */
-    @FXML
-    public void displayProduits() {
-        produitCardContainer.getChildren().clear(); // Nettoyer avant de recharger
-        List<Produit> produits = serviceProduit.getAll(); // Récupérer tous les produits
+    private void updateProduits() {
+        produitCardContainer.getChildren().clear();
+        List<Produit> produits = serviceProduit.getAll();
 
-        for (Produit produit : produits) {
-            VBox card = createProduitCard(produit);
-            produitCardContainer.getChildren().add(card);
+        // 🔍 Filtrage
+        String searchText = searchField.getText().toLowerCase();
+        String filterCriteria = filterCriteriaComboBox.getValue();
+        List<Produit> filteredProduits = produits.stream()
+                .filter(produit -> {
+                    if ("Nom".equals(filterCriteria)) {
+                        return produit.getNomProduit().toLowerCase().contains(searchText);
+                    } else if ("Prix".equals(filterCriteria)) {
+                        return String.valueOf(produit.getPrixProduit()).contains(searchText);
+                    } else if ("Catégorie".equals(filterCriteria)) {
+                        return produit.getCategorie().name().toLowerCase().contains(searchText);
+                    } else if ("Quantité".equals(filterCriteria)) {
+                        return String.valueOf(produit.getQuantite()).contains(searchText);
+                    }
+                    return true;
+                })
+                .collect(Collectors.toList());
+
+        // 🔄 Tri
+        isAscending = "Croissant".equals(sortOrderComboBox.getValue());
+        Comparator<Produit> comparator = switch (filterCriteria) {
+            case "Prix" -> Comparator.comparingDouble(Produit::getPrixProduit);
+            case "Quantité" -> Comparator.comparingInt(Produit::getQuantite);
+            case "Catégorie" -> Comparator.comparing(produit -> produit.getCategorie().name(), String.CASE_INSENSITIVE_ORDER);
+            default -> Comparator.comparing(Produit::getNomProduit, String.CASE_INSENSITIVE_ORDER);
+        };
+
+        filteredProduits.sort(isAscending ? comparator : comparator.reversed());
+
+        // Affichage
+        for (Produit produit : filteredProduits) {
+            produitCardContainer.getChildren().add(createProduitCard(produit));
         }
     }
 
-    /**
-     * Crée une carte de produit.
-     */
+    // Créer une carte de produit
     private VBox createProduitCard(Produit produit) {
         VBox card = new VBox();
         card.setStyle("-fx-background-color: white; -fx-padding: 10px; -fx-border-radius: 10px; "
@@ -90,9 +130,7 @@ public class ProduitMainController implements Initializable {
         return card;
     }
 
-    /**
-     * Gère l'affichage des détails d'un produit.
-     */
+    // Afficher les détails d'un produit
     private void showProduitDetails(Produit produit) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Détails du Produit");
@@ -107,9 +145,7 @@ public class ProduitMainController implements Initializable {
         alert.showAndWait();
     }
 
-    /**
-     * Redirige vers la page de modification d'un produit.
-     */
+    // Rediriger vers la page de modification d'un produit
     @FXML
     public void goToModifierProduit(Produit produit, ActionEvent event) {
         try {
@@ -129,18 +165,14 @@ public class ProduitMainController implements Initializable {
         }
     }
 
-    /**
-     * Supprime un produit et rafraîchit l'affichage.
-     */
+    // Supprimer un produit
     @FXML
     public void deleteProduit(Produit produit) {
         serviceProduit.delete(produit);
-        displayProduits(); // Rafraîchir l'affichage après suppression
+        updateProduits(); // Rafraîchir l'affichage après suppression
     }
 
-    /**
-     * Retourne à l'accueil.
-     */
+    // Retourner à l'accueil
     public void goToAcceuil(ActionEvent actionEvent) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Acceuil.fxml"));
@@ -154,9 +186,7 @@ public class ProduitMainController implements Initializable {
         }
     }
 
-    /**
-     * Redirige vers la gestion des produits.
-     */
+    // Rediriger vers la gestion des produits
     public void goToGestionProduits(ActionEvent actionEvent) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/GestionProduits.fxml"));
@@ -169,7 +199,6 @@ public class ProduitMainController implements Initializable {
             System.out.println(e.getMessage());
         }
     }
-
     /**
      * Recherche dynamique des produits.
      */
@@ -195,6 +224,7 @@ public class ProduitMainController implements Initializable {
         }
     }
 
+    // Effet de survol pour les boutons
     @FXML
     public void buttonHoverEffect(javafx.scene.input.MouseEvent mouseEvent) {
         Button btn = (Button) mouseEvent.getSource();
@@ -207,6 +237,7 @@ public class ProduitMainController implements Initializable {
         btn.setEffect(shadow);
     }
 
+    // Effet de sortie pour les boutons
     @FXML
     public void buttonExitEffect(javafx.scene.input.MouseEvent mouseEvent) {
         Button btn = (Button) mouseEvent.getSource();

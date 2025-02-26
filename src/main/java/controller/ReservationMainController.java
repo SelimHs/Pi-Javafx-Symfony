@@ -1,14 +1,12 @@
 package controller;
 
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
@@ -20,6 +18,7 @@ import tn.esprit.services.ServiceReservation;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -32,10 +31,63 @@ public class ReservationMainController implements Initializable {
     private FlowPane reservationCardContainer;
 
     private ServiceReservation reservationService = new ServiceReservation();
+    @FXML
+    private ComboBox<String> filterCriteriaComboBox;
+    @FXML
+    private ComboBox<String> sortOrderComboBox;
+    private boolean isAscending = true;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        loadReservations();
+
+        // Initialisation des filtres
+        filterCriteriaComboBox.setItems(FXCollections.observableArrayList("Date", "Statut"));
+        filterCriteriaComboBox.setValue("Date");
+
+        sortOrderComboBox.setItems(FXCollections.observableArrayList("Croissant", "Décroissant"));
+        sortOrderComboBox.setValue("Croissant");
+
+        // Ajout des écouteurs
+        filterCriteriaComboBox.setOnAction(event -> updateReservations());
+        sortOrderComboBox.setOnAction(event -> updateReservations());
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> updateReservations());
+
         displayReservations(); // Afficher les réservations dès que la page est chargée
+    }
+    private void loadReservations() {
+        updateReservations();
+    }
+    private void updateReservations() {
+        reservationCardContainer.getChildren().clear();
+        List<Reservation> reservations = reservationService.getAll();
+
+        // 🔍 Filtrage
+        String searchText = searchField.getText().toLowerCase();
+        String filterCriteria = filterCriteriaComboBox.getValue();
+        List<Reservation> filteredReservations = reservations.stream()
+                .filter(reservation -> {
+                    if ("Date".equals(filterCriteria)) {
+                        return reservation.getDateReservation().toLowerCase().contains(searchText);
+                    } else if ("Statut".equals(filterCriteria)) {
+                        return reservation.getStatut().toLowerCase().contains(searchText);
+                    }
+                    return true;
+                })
+                .collect(Collectors.toList());
+
+        // 🔄 Tri des réservations
+        isAscending = "Croissant".equals(sortOrderComboBox.getValue());
+        Comparator<Reservation> comparator = "Date".equals(filterCriteria)
+                ? Comparator.comparing(Reservation::getDateReservation)
+                : Comparator.comparing(Reservation::getStatut);
+
+        filteredReservations.sort(isAscending ? comparator : comparator.reversed());
+
+        // Affichage
+        for (Reservation reservation : filteredReservations) {
+            reservationCardContainer.getChildren().add(createReservationCard(reservation));
+        }
     }
 
     // Afficher la liste des réservations

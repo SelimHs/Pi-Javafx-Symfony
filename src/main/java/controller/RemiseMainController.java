@@ -1,14 +1,12 @@
 package controller;
 
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
@@ -18,9 +16,9 @@ import javafx.stage.Stage;
 import tn.esprit.models.Remise;
 import tn.esprit.services.ServiceRemise;
 
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -31,24 +29,66 @@ public class RemiseMainController implements Initializable {
     private TextField searchField;
     @FXML
     private FlowPane remiseCardContainer;
+    @FXML
+    private ComboBox<String> filterCriteriaComboBox;
+    @FXML
+    private ComboBox<String> sortOrderComboBox;
 
     private ServiceRemise serviceRemise = new ServiceRemise();
+    private boolean isAscending = true; // Tri croissant par défaut
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        displayRemises(); // Afficher les remises dès que la page est chargée
+        // Initialisation des options de filtrage
+        filterCriteriaComboBox.setItems(FXCollections.observableArrayList("Code Promo", "Pourcentage", "Date d'Expiration"));
+        filterCriteriaComboBox.setValue("Code Promo");
+
+        // Initialisation des options de tri
+        sortOrderComboBox.setItems(FXCollections.observableArrayList("Croissant", "Décroissant"));
+        sortOrderComboBox.setValue("Croissant");
+
+        // Ajout des écouteurs
+        filterCriteriaComboBox.setOnAction(event -> updateRemises());
+        sortOrderComboBox.setOnAction(event -> updateRemises());
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> updateRemises());
+
+        // Charger et afficher les remises
+        updateRemises();
     }
 
-    // Afficher la liste des remises
-    @FXML
-    public void displayRemises() {
-        remiseCardContainer.getChildren().clear(); // Nettoyer avant de recharger
+    private void updateRemises() {
+        remiseCardContainer.getChildren().clear();
+        List<Remise> remises = serviceRemise.getAll();
 
-        List<Remise> remises = serviceRemise.getAll(); // Récupérer toutes les remises
+        // 🔍 Filtrage
+        String searchText = searchField.getText().toLowerCase();
+        String filterCriteria = filterCriteriaComboBox.getValue();
+        List<Remise> filteredRemises = remises.stream()
+                .filter(remise -> {
+                    if ("Code Promo".equals(filterCriteria)) {
+                        return remise.getCodePromo().toLowerCase().contains(searchText);
+                    } else if ("Pourcentage".equals(filterCriteria)) {
+                        return String.valueOf(remise.getPourcentageRemise()).contains(searchText);
+                    } else if ("Date d'Expiration".equals(filterCriteria)) {
+                        return remise.getDateExpiration().toString().contains(searchText);
+                    }
+                    return true;
+                })
+                .collect(Collectors.toList());
 
-        for (Remise remise : remises) {
-            VBox card = createRemiseCard(remise);
-            remiseCardContainer.getChildren().add(card);
+        // 🔄 Tri
+        isAscending = "Croissant".equals(sortOrderComboBox.getValue());
+        Comparator<Remise> comparator = switch (filterCriteria) {
+            case "Pourcentage" -> Comparator.comparingDouble(Remise::getPourcentageRemise);
+            case "Date d'Expiration" -> Comparator.comparing(Remise::getDateExpiration);
+            default -> Comparator.comparing(Remise::getCodePromo, String.CASE_INSENSITIVE_ORDER);
+        };
+
+        filteredRemises.sort(isAscending ? comparator : comparator.reversed());
+
+        // Affichage
+        for (Remise remise : filteredRemises) {
+            remiseCardContainer.getChildren().add(createRemiseCard(remise));
         }
     }
 
@@ -72,15 +112,12 @@ public class RemiseMainController implements Initializable {
         supprimerButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
         supprimerButton.setOnAction(e -> {
             supprimerRemise(remise); // Supprime la remise
-            displayRemises(); // Rafraîchit la liste
+            updateRemises(); // Rafraîchit la liste
         });
 
         Button modifierButton = new Button("Modifier");
         modifierButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
-        modifierButton.setOnAction(e -> {
-            modifierRemise(remise, modifierButton); // Modifie la remise
-            displayRemises(); // Rafraîchit la liste
-        });
+        modifierButton.setOnAction(e -> modifierRemise(remise, modifierButton));
 
         card.getChildren().addAll(title, pourcentageLabel, expirationLabel, detailsButton, modifierButton, supprimerButton);
         return card;
@@ -109,66 +146,15 @@ public class RemiseMainController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/modifierRemise.fxml"));
             Parent root = loader.load();
 
-            // Get the controller and pass the selected remise
+            // Passer la remise sélectionnée au contrôleur de modification
             ModifierRemise modifierRemise = loader.getController();
             modifierRemise.initData(remise);
 
-            // Get the current stage and replace its scene
+            // Remplacer la scène actuelle
             Stage stage = (Stage) sourceButton.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
 
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    // Rechercher des remises dynamiquement
-    @FXML
-    public void searchRemises() {
-        String searchText = searchField.getText().toLowerCase();
-        remiseCardContainer.getChildren().clear(); // Nettoyer avant de recharger
-
-        List<Remise> remises = serviceRemise.getAll(); // Récupérer toutes les remises
-
-        // Filtrer les remises en fonction du texte de recherche (code promo ou pourcentage)
-        List<Remise> filteredRemises = remises.stream()
-                .filter(remise ->
-                        remise.getCodePromo().toLowerCase().contains(searchText) || // Recherche par code promo
-                                String.valueOf(remise.getPourcentageRemise()).contains(searchText) // Recherche par pourcentage
-                )
-                .collect(Collectors.toList());
-
-        // Afficher les remises filtrées
-        for (Remise remise : filteredRemises) {
-            VBox card = createRemiseCard(remise);
-            remiseCardContainer.getChildren().add(card);
-        }
-    }
-
-    // Navigation vers l'ajout de remise
-    public void goToAjout(ActionEvent actionEvent) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/GestionRemise.fxml"));
-            Parent root = fxmlLoader.load();
-            Stage stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
-
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    // Navigation vers l'accueil
-    public void goToAcceuil(ActionEvent actionEvent) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Acceuil.fxml"));
-            Parent root = fxmlLoader.load();
-            Stage stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
-
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -195,6 +181,7 @@ public class RemiseMainController implements Initializable {
         btn.setEffect(null);
     }
 
+    // Navigation vers l'accueil
     public void goToAcceuil(javafx.event.ActionEvent actionEvent) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Acceuil.fxml"));
@@ -208,6 +195,7 @@ public class RemiseMainController implements Initializable {
         }
     }
 
+    // Navigation vers l'ajout de remise
     public void goToAjout(javafx.event.ActionEvent actionEvent) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/GestionRemise.fxml"));
@@ -218,6 +206,27 @@ public class RemiseMainController implements Initializable {
             stage.setScene(scene);
         } catch (IOException e) {
             System.out.println(e.getMessage());
+        }
+    }
+    @FXML
+    public void searchRemises() {
+        String searchText = searchField.getText().toLowerCase();
+        remiseCardContainer.getChildren().clear(); // Nettoyer avant de recharger
+
+        List<Remise> remises = serviceRemise.getAll(); // Récupérer toutes les remises
+
+        // Filtrer les remises en fonction du texte de recherche (code promo ou pourcentage)
+        List<Remise> filteredRemises = remises.stream()
+                .filter(remise ->
+                        remise.getCodePromo().toLowerCase().contains(searchText) || // Recherche par code promo
+                                String.valueOf(remise.getPourcentageRemise()).contains(searchText) // Recherche par pourcentage
+                )
+                .collect(Collectors.toList());
+
+        // Afficher les remises filtrées
+        for (Remise remise : filteredRemises) {
+            VBox card = createRemiseCard(remise);
+            remiseCardContainer.getChildren().add(card);
         }
     }
 }

@@ -11,6 +11,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 
+<?import javafx.scene.control.ComboBox?>
 <AnchorPane prefHeight="671.0" prefWidth="950.0" style="-fx-background-color: linear-gradient(to bottom, #030307, #131022);" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RemiseMainController">
     <children>
         <!-- 🌟 Barre latérale modernisée -->
@@ -61,6 +62,15 @@
 
                 <!-- 📌 Barre de recherche -->
                 <HBox spacing="10">
+                    <!-- ComboBox pour le critère de filtrage -->
+                    <ComboBox fx:id="filterCriteriaComboBox" promptText="Filtrer par..."
+                              style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-size: 14px;"/>
+
+                    <!-- ComboBox pour l'ordre de tri -->
+                    <ComboBox fx:id="sortOrderComboBox" promptText="Trier par ordre"
+                              style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-size: 14px;"/>
+
+                    <!-- Champ de recherche -->
                     <TextField fx:id="searchField" prefWidth="400.0" promptText="Rechercher une remise..."
                                style="-fx-border-radius: 10px;
                   -fx-background-radius: 10px;
@@ -68,13 +78,9 @@
                   -fx-border-color: white;
                   -fx-background-color: rgba(255, 255, 255, 0.3);"
                                onKeyReleased="#searchRemises"/>
-                    <Button text="🔍 Rechercher"
-                            style="-fx-background-color: #9b59b6;
-                                   -fx-text-fill: white;
-                                   -fx-font-size: 14px;
-                                   -fx-border-radius: 10px;
-                                   -fx-padding: 8px;"
-                            onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"/>
+
+                    <!-- Bouton de recherche -->
+
                 </HBox>
 
                 <!-- 🌟 Zone d'affichage des remises avec ScrollPane -->
