@@ -1,6 +1,8 @@
 package controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.effect.DropShadow;
@@ -18,8 +20,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.EventObject;
+import java.util.Map;
 
 import javafx.scene.control.Button;
+import tn.esprit.services.ServiceBillet;
 
 public class AcceuilController {
     @FXML
@@ -35,6 +39,11 @@ public class AcceuilController {
             System.out.println(e.getMessage());
         }
     }
+    @FXML
+    public void initialize() {
+        chargerStatistiques();
+    }
+
 
     @FXML
     public void goToEventList(ActionEvent actionEvent) {
@@ -195,6 +204,30 @@ public class AcceuilController {
         btn.setEffect(null);
 
     }
+
+    @FXML
+    private BarChart<String, Number> eventStatsChart;
+    @FXML
+    ServiceBillet sb = new ServiceBillet();
+
+    private void chargerStatistiques() {
+        // 📌 Récupérer les données des statistiques
+        Map<String, Integer> stats = sb.getBilletStatsParEvenement();
+
+        // Créer une série de données pour le graphique
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Billets par événement");
+
+        for (Map.Entry<String, Integer> entry : stats.entrySet()) {
+            series.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
+        }
+
+        // Ajouter la série au BarChart
+        eventStatsChart.getData().clear();
+        eventStatsChart.getData().add(series);
+    }
+
+
 
 
 
