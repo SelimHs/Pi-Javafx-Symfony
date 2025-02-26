@@ -2,6 +2,7 @@ package controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -17,22 +18,25 @@ import javafx.stage.Stage;
 import tn.esprit.models.Reservation;
 import tn.esprit.services.ServiceReservation;
 
-import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
-public class ReservationMainController {
+public class ReservationMainController implements Initializable {
 
     @FXML
     private TextField searchField;
     @FXML
-    private Button modifierBouton;
-    @FXML
     private FlowPane reservationCardContainer;
-    @FXML
-    private Button deleteBouton;
 
     private ServiceReservation reservationService = new ServiceReservation();
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        displayReservations(); // Afficher les réservations dès que la page est chargée
+    }
 
     // Afficher la liste des réservations
     @FXML
@@ -42,35 +46,42 @@ public class ReservationMainController {
         List<Reservation> reservations = reservationService.getAll(); // Récupérer les réservations
 
         for (Reservation reservation : reservations) {
-            VBox card = new VBox();
-            card.setStyle("-fx-background-color: white; -fx-padding: 10px; -fx-border-radius: 10px; "
-                    + "-fx-background-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);"
-                    + "-fx-min-width: 200px; -fx-max-width: 200px; -fx-alignment: center; -fx-spacing: 10;");
-
-            Label title = new Label("Réservation ID: " + reservation.getIdReservation());
-            title.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-
-            Label dateLabel = new Label("📅 " + reservation.getDateReservation());
-            Label statutLabel = new Label("📝 Statut: " + reservation.getStatut());
-
-            Button detailsButton = new Button("Voir Détails");
-            detailsButton.setOnAction(e -> showReservationDetails(reservation));
-
-            Button supprimerButton = new Button("Supprimer");
-            supprimerButton.setStyle("-fx-background-color: #a868a0; -fx-text-fill: white;");
-            supprimerButton.setOnAction(e -> {
-                supprimerReservation(reservation); // Supprime la réservation
-                displayReservations(); // Rafraîchit la liste
-            });
-
-            Button modifierButton = new Button("Modifier");
-            modifierButton.setStyle("-fx-background-color: #a868a0; -fx-text-fill: white;");
-            modifierButton.setOnAction(e -> openEditReservationWindow(reservation));
-
-            card.getChildren().addAll(title, dateLabel, statutLabel, detailsButton, modifierButton, supprimerButton);
+            VBox card = createReservationCard(reservation);
             reservationCardContainer.getChildren().add(card);
         }
     }
+
+    // Créer une carte de réservation
+    private VBox createReservationCard(Reservation reservation) {
+        VBox card = new VBox();
+        card.setStyle("-fx-background-color: white; -fx-padding: 10px; -fx-border-radius: 10px; "
+                + "-fx-background-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);"
+                + "-fx-min-width: 200px; -fx-max-width: 200px; -fx-alignment: center; -fx-spacing: 10;");
+
+        Label title = new Label("Date de Réservation");
+        title.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
+        Label dateLabel = new Label("📅 " + reservation.getDateReservation());
+        Label statutLabel = new Label("📝 Statut: " + reservation.getStatut());
+
+        Button detailsButton = new Button("Voir Détails");
+        detailsButton.setOnAction(e -> showReservationDetails(reservation));
+
+        Button supprimerButton = new Button("Supprimer");
+        supprimerButton.setStyle("-fx-background-color: #a868a0; -fx-text-fill: white;");
+        supprimerButton.setOnAction(e -> {
+            supprimerReservation(reservation); // Supprime la réservation
+            displayReservations(); // Rafraîchit la liste
+        });
+
+        Button modifierButton = new Button("Modifier");
+        modifierButton.setStyle("-fx-background-color: #a868a0; -fx-text-fill: white;");
+        modifierButton.setOnAction(e -> openEditReservationWindow(reservation));
+
+        card.getChildren().addAll(title, dateLabel, statutLabel, detailsButton, modifierButton, supprimerButton);
+        return card;
+    }
+
     // Ouvrir une fenêtre pour modifier une réservation
     private void openEditReservationWindow(Reservation reservation) {
         try {
@@ -91,12 +102,12 @@ public class ReservationMainController {
         }
     }
 
-
+    // Supprimer une réservation
     private void supprimerReservation(Reservation reservation) {
         reservationService.delete(reservation); // Suppression de la réservation dans le service
     }
 
-
+    // Afficher les détails d'une réservation
     @FXML
     public void showReservationDetails(Reservation reservation) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -110,26 +121,30 @@ public class ReservationMainController {
         alert.showAndWait();
     }
 
-
-    // Mettre à jour une réservation
+    // Rechercher des réservations dynamiquement
     @FXML
-    public void updateReservation(ActionEvent actionEvent) {
-        // Implémentation pour mettre à jour une réservation
+    public void searchReservations() {
+        String searchText = searchField.getText().toLowerCase();
+        reservationCardContainer.getChildren().clear(); // Nettoyer avant de recharger
+
+        List<Reservation> reservations = reservationService.getAll(); // Récupérer toutes les réservations
+
+        // Filtrer les réservations en fonction du texte de recherche (date ou statut)
+        List<Reservation> filteredReservations = reservations.stream()
+                .filter(reservation ->
+                        reservation.getDateReservation().toLowerCase().contains(searchText) || // Recherche par date
+                                reservation.getStatut().toLowerCase().contains(searchText) // Recherche par statut
+                )
+                .collect(Collectors.toList());
+
+        // Afficher les réservations filtrées
+        for (Reservation reservation : filteredReservations) {
+            VBox card = createReservationCard(reservation);
+            reservationCardContainer.getChildren().add(card);
+        }
     }
 
-    // Rechercher une réservation
-    @javafx.fxml.FXML
-    public void searchReservation(ActionEvent actionEvent) {
-
-        // Implémentation pour rechercher une réservation par le texte
-    }
-
-    // Supprimer une réservation
-    @FXML
-    public void deleteReservation(ActionEvent actionEvent) {
-        // Implémentation pour supprimer une réservation
-    }
-
+    // Navigation vers l'ajout de réservation
     public void goToAjoutReservation(javafx.event.ActionEvent actionEvent) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/GestionReservation.fxml"));
@@ -143,6 +158,7 @@ public class ReservationMainController {
         }
     }
 
+    // Navigation vers l'accueil
     public void goToAcceuil(javafx.event.ActionEvent actionEvent) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Acceuil.fxml"));
@@ -156,6 +172,7 @@ public class ReservationMainController {
         }
     }
 
+    // Effet de survol pour les boutons
     @FXML
     public void buttonHoverEffect(javafx.scene.input.MouseEvent mouseEvent) {
         Button btn = (Button) mouseEvent.getSource();
@@ -168,16 +185,11 @@ public class ReservationMainController {
         btn.setEffect(shadow);
     }
 
+    // Effet de sortie pour les boutons
     @FXML
     public void buttonExitEffect(javafx.scene.input.MouseEvent mouseEvent) {
         Button btn = (Button) mouseEvent.getSource();
         btn.setStyle("-fx-background-color: transparent; -fx-text-fill: #a868a0;-fx-font-size: 18px; -fx-border-radius: 10px; -fx-padding: 10px 18px;");
         btn.setEffect(null);
-
-    }
-
-    public void searchReservations(javafx.event.ActionEvent actionEvent) {
-
     }
 }
-

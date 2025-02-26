@@ -13,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -67,39 +68,61 @@ public class FournisseurMainController implements Initializable {
     /**
      * 🏷️ Créer une carte pour un fournisseur
      */
+    /**
+     * 🏷️ Créer une carte pour un fournisseur avec un design amélioré
+     */
     private VBox createFournisseurCard(fournisseur f) {
         VBox card = new VBox();
-        card.setStyle("-fx-background-color: rgba(255, 255, 255, 0.15); -fx-padding: 15px; -fx-border-radius: 12px; -fx-border-color: white;");
-        card.setSpacing(10);
+        card.setStyle("-fx-background-color: rgba(255, 255, 255, 0.85); " +  // Fond plus clair pour meilleure lisibilité
+                "-fx-padding: 15px; " +
+                "-fx-border-radius: 12px; " +
+                "-fx-background-radius: 12px; " +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 3, 3); " +
+                "-fx-min-width: 230px; -fx-max-width: 230px; -fx-alignment: center; -fx-spacing: 12;");
 
+        // 🏢 Nom du fournisseur en gras
         Label nom = new Label("🏢 " + f.getNomFournisseur());
-        nom.setStyle("-fx-font-size: 16px; -fx-text-fill: white; -fx-font-weight: bold;");
+        nom.setStyle("-fx-font-size: 18px; -fx-text-fill: #2C3E50; -fx-font-weight: bold;");
 
+        // 📝 Description
         Label desc = new Label("📝 " + f.getDescription());
-        desc.setStyle("-fx-font-size: 14px; -fx-text-fill: white;");
+        desc.setStyle("-fx-font-size: 14px; -fx-text-fill: #34495E;");
 
+        // 🏷 Type
         Label type = new Label("🏷 " + f.getType());
-        type.setStyle("-fx-font-size: 14px; -fx-text-fill: white;");
+        type.setStyle("-fx-font-size: 14px; -fx-text-fill: #34495E;");
 
+        // 📞 Téléphone avec une couleur distincte
         Label tel = new Label("📞 " + f.getTelephone());
-        tel.setStyle("-fx-font-size: 14px; -fx-text-fill: white;");
+        tel.setStyle("-fx-font-size: 14px; -fx-text-fill: #2980B9;");
 
+        // 📌 Conteneur horizontal pour les boutons
+        HBox buttonContainer = new HBox(8);
+        buttonContainer.setStyle("-fx-alignment: center;");
+
+        // 👁️ Bouton Voir Détails
         Button detailsButton = new Button("👁️ Voir Détails");
+        detailsButton.setStyle("-fx-background-color: #BDC3C7; -fx-text-fill: black; -fx-border-radius: 8px;");
         detailsButton.setOnAction(e -> showFournisseurDetails(f));
 
+        // ✏️ Bouton Modifier
         Button modifyButton = new Button("✏ Modifier");
-        modifyButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
+        modifyButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white; -fx-border-radius: 8px;");
         modifyButton.setOnAction(e -> goToModifierFournisseur(f, e));
 
+        // 🗑️ Bouton Supprimer
         Button deleteButton = new Button("🗑 Supprimer");
-        deleteButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
+        deleteButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-border-radius: 8px;");
         deleteButton.setOnAction(e -> deleteFournisseur(f));
 
+        // Ajout des boutons au conteneur
+        buttonContainer.getChildren().addAll(detailsButton, modifyButton, deleteButton);
 
-
-        card.getChildren().addAll(nom, desc, type, tel, detailsButton, modifyButton, deleteButton);
+        // Ajout des éléments à la carte
+        card.getChildren().addAll(nom, desc, type, tel, buttonContainer);
         return card;
     }
+
 
     /**
      * ℹ️ Afficher les détails d'un fournisseur

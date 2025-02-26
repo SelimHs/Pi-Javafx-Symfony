@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -22,12 +23,15 @@ import tn.esprit.models.Produit;
 import tn.esprit.services.ServiceProduit;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class ProduitMainController implements Initializable {
     @FXML
     private AnchorPane root;
     @FXML
     private FlowPane produitCardContainer;
+    @FXML
+    private TextField searchField;
 
     private final ServiceProduit serviceProduit = new ServiceProduit();
 
@@ -36,7 +40,7 @@ public class ProduitMainController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        displayProduits();
+        displayProduits(); // Afficher les produits dès que la page est chargée
     }
 
     /**
@@ -48,34 +52,42 @@ public class ProduitMainController implements Initializable {
         List<Produit> produits = serviceProduit.getAll(); // Récupérer tous les produits
 
         for (Produit produit : produits) {
-            VBox card = new VBox();
-            card.setStyle("-fx-background-color: white; -fx-padding: 10px; -fx-border-radius: 10px; "
-                    + "-fx-background-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);"
-                    + "-fx-min-width: 200px; -fx-max-width: 200px; -fx-alignment: center; -fx-spacing: 10;");
-
-            Label title = new Label(produit.getNomProduit());
-            title.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-
-            Label prix = new Label("💰 Prix: " + produit.getPrixProduit() + " DT");
-            Label description = new Label("📝 " + produit.getDescription());
-            Label categorie = new Label("📦 Catégorie: " + produit.getCategorie().name());
-            Label quantite = new Label("🔢 Quantité: " + produit.getQuantite());
-            Label fournisseur = new Label("🏢 Fournisseur: " + (produit.getFournisseur() != null ? produit.getFournisseur().getNomFournisseur() : "Non défini"));
-
-            Button detailsButton = new Button("Voir Détails");
-            detailsButton.setOnAction(e -> showProduitDetails(produit));
-
-            Button modifyButton = new Button("Modifier");
-            modifyButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
-            modifyButton.setOnAction(e -> goToModifierProduit(produit, e));
-
-            Button deleteButton = new Button("Supprimer");
-            deleteButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
-            deleteButton.setOnAction(e -> deleteProduit(produit));
-
-            card.getChildren().addAll(title, prix, description, categorie, quantite, fournisseur, detailsButton, modifyButton, deleteButton);
+            VBox card = createProduitCard(produit);
             produitCardContainer.getChildren().add(card);
         }
+    }
+
+    /**
+     * Crée une carte de produit.
+     */
+    private VBox createProduitCard(Produit produit) {
+        VBox card = new VBox();
+        card.setStyle("-fx-background-color: white; -fx-padding: 10px; -fx-border-radius: 10px; "
+                + "-fx-background-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);"
+                + "-fx-min-width: 200px; -fx-max-width: 200px; -fx-alignment: center; -fx-spacing: 10;");
+
+        Label title = new Label(produit.getNomProduit());
+        title.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
+        Label prix = new Label("💰 Prix: " + produit.getPrixProduit() + " DT");
+        Label description = new Label("📝 " + produit.getDescription());
+        Label categorie = new Label("📦 Catégorie: " + produit.getCategorie().name());
+        Label quantite = new Label("🔢 Quantité: " + produit.getQuantite());
+        Label fournisseur = new Label("🏢 Fournisseur: " + (produit.getFournisseur() != null ? produit.getFournisseur().getNomFournisseur() : "Non défini"));
+
+        Button detailsButton = new Button("Voir Détails");
+        detailsButton.setOnAction(e -> showProduitDetails(produit));
+
+        Button modifyButton = new Button("Modifier");
+        modifyButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
+        modifyButton.setOnAction(e -> goToModifierProduit(produit, e));
+
+        Button deleteButton = new Button("Supprimer");
+        deleteButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
+        deleteButton.setOnAction(e -> deleteProduit(produit));
+
+        card.getChildren().addAll(title, prix, description, categorie, quantite, fournisseur, detailsButton, modifyButton, deleteButton);
+        return card;
     }
 
     /**
@@ -155,6 +167,31 @@ public class ProduitMainController implements Initializable {
             stage.setScene(scene);
         } catch (IOException e) {
             System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * Recherche dynamique des produits.
+     */
+    @FXML
+    public void searchProduits() {
+        String searchText = searchField.getText().toLowerCase();
+        produitCardContainer.getChildren().clear(); // Nettoyer avant de recharger
+
+        List<Produit> produits = serviceProduit.getAll(); // Récupérer tous les produits
+
+        // Filtrer les produits en fonction du texte de recherche (nom ou catégorie)
+        List<Produit> filteredProduits = produits.stream()
+                .filter(produit ->
+                        produit.getNomProduit().toLowerCase().contains(searchText) || // Recherche par nom
+                                produit.getCategorie().name().toLowerCase().contains(searchText) // Recherche par catégorie
+                )
+                .collect(Collectors.toList());
+
+        // Afficher les produits filtrés
+        for (Produit produit : filteredProduits) {
+            VBox card = createProduitCard(produit);
+            produitCardContainer.getChildren().add(card);
         }
     }
 

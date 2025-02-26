@@ -79,12 +79,15 @@
                 </HBox>
 
                 <!-- 📌 Zone d'affichage des fournisseurs -->
-                <ScrollPane prefHeight="500.0" prefWidth="700.0" style="-fx-background-color: transparent;">
+                <!-- 📌 Zone d'affichage des fournisseurs avec des cartes plus claires -->
+                <ScrollPane prefHeight="500.0" prefWidth="700.0"
+                            style="-fx-background-color: transparent;">
                     <content>
                         <FlowPane fx:id="fournisseurCardContainer" hgap="15" vgap="15" prefHeight="500.0" prefWidth="700.0"
                                   style="-fx-padding: 15px;"/>
                     </content>
                 </ScrollPane>
+
             </children>
         </VBox>
     </children>
