@@ -5,6 +5,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import service.UsersService;
 import service.EmailService;
@@ -21,6 +23,15 @@ public class Login {
     @FXML private TextField text;
     @FXML private CheckBox rememberMeCheckBox;
     @FXML private Button signupButton;
+
+    @FXML
+    private ImageView eyeIcon;
+
+    private boolean isPasswordVisible = false;
+    @FXML
+    private TextField visiblePassword; // Champ de mot de passe en clair
+    @FXML
+    private Button showPasswordButton; // Bouton pour afficher/masquer le mot de passe
     private static final Logger LOGGER = Logger.getLogger(Login.class.getName());
     private final UsersService usersService = new UsersService();
     private final EmailService emailService = new EmailService();
@@ -33,11 +44,50 @@ public class Login {
         this.onLoginSuccess = onLoginSuccess;
     }
 
+
+
     @FXML
     public void initialize() {
         loadSavedCredentials();
+
+        // Gestion du bouton "Afficher le mot de passe"
+        showPasswordButton.setOnAction(event -> togglePasswordVisibility());
+
+        // Synchronisation des champs de mot de passe
+        password.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (password.isVisible()) {
+                visiblePassword.setText(newValue);
+            }
+        });
+        visiblePassword.textProperty().bindBidirectional(password.textProperty());
+
     }
 
+    @FXML
+    public void togglePasswordVisibility() {
+        if (isPasswordVisible) {
+            // Masquer le mot de passe
+            password.setVisible(true);
+            visiblePassword.setVisible(false);
+            eyeIcon.setImage(new Image(getClass().getResourceAsStream("/images/eye.png")));
+            isPasswordVisible = false;
+            password.requestFocus(); // Donner le focus au champ PasswordField
+        } else {
+            // Afficher le mot de passe
+            password.setVisible(false);
+            visiblePassword.setVisible(true);
+            eyeIcon.setImage(new Image(getClass().getResourceAsStream("/images/eye-slash.png")));
+            isPasswordVisible = true;
+            visiblePassword.requestFocus(); // Donner le focus au champ TextField
+        }
+
+        // Forcer la synchronisation des champs
+        if (password.isVisible()) {
+            password.setText(visiblePassword.getText());
+        } else {
+            visiblePassword.setText(password.getText());
+        }
+    }
     @FXML
     private void handleLoginButtonAction() {
         if (isValidUser()) {

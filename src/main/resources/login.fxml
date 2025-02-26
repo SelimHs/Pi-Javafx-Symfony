@@ -14,7 +14,8 @@
 <BorderPane xmlns="http://javafx.com/javafx/8.0.171"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="controllers.Login"
-            prefHeight="800.0" prefWidth="1200.0">
+            prefHeight="800.0" prefWidth="1200.0"
+            stylesheets="@styles.css"> <!-- Lien vers le fichier CSS -->
 
     <!-- Barre Latérale -->
     <left>
@@ -43,8 +44,21 @@
                        style="-fx-background-color: #F1F1F1; -fx-font-size: 14px; -fx-padding: 12px; -fx-border-radius: 10px; -fx-pref-width: 100%; -fx-border-color: #6A0DAD; -fx-text-fill: #333;"/>
 
             <!-- Section Mot de Passe -->
-            <PasswordField fx:id="password" promptText="Mot de passe"
-                           style="-fx-background-color: #F1F1F1; -fx-font-size: 14px; -fx-padding: 12px; -fx-border-radius: 10px; -fx-pref-width: 100%; -fx-border-color: #6A0DAD; -fx-text-fill: #333;"/>
+            <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-pref-width: 100%;">
+                <PasswordField fx:id="password" promptText="Mot de passe"
+                               style="-fx-background-color: #F1F1F1; -fx-font-size: 14px; -fx-padding: 12px; -fx-border-radius: 10px; -fx-pref-width: 100%; -fx-border-color: #6A0DAD; -fx-text-fill: #333;"
+                               HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="visiblePassword" promptText="Mot de passe" visible="false"
+                           style="-fx-background-color: #F1F1F1; -fx-font-size: 14px; -fx-padding: 12px; -fx-border-radius: 10px; -fx-pref-width: 100%; -fx-border-color: #6A0DAD; -fx-text-fill: #333;"
+                           HBox.hgrow="ALWAYS"/>
+                <Button fx:id="showPasswordButton" styleClass="show-password-button" onAction="#togglePasswordVisibility">
+                    <graphic>
+                        <ImageView fx:id="eyeIcon" fitWidth="16" fitHeight="16" preserveRatio="true">
+                            <Image url="@images/eye.png"/> <!-- Icône d'œil par défaut -->
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </HBox>
 
             <!-- Section Rester connecté -->
             <HBox style="-fx-alignment: center-left; -fx-padding: 0 0 0 20;">
@@ -70,9 +84,7 @@
                     style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 10px; -fx-padding: 12px 30px;">
                 <graphic>
                     <ImageView fitWidth="24" fitHeight="24">
-                        <image>
-                            <Image url="@images/mail.png"/>
-                        </image>
+                        <Image url="@images/mail.png"/>
                     </ImageView>
                 </graphic>
             </Button>
@@ -82,9 +94,7 @@
                     style="-fx-background-color: #3b5998; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 10px; -fx-padding: 12px 30px;">
                 <graphic>
                     <ImageView fitWidth="24" fitHeight="24">
-                        <image>
-                            <Image url="@images/facebook.png"/>
-                        </image>
+                        <Image url="@images/facebook.png"/>
                     </ImageView>
                 </graphic>
             </Button>
