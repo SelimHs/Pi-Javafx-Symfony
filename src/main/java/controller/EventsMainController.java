@@ -8,9 +8,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import tn.esprit.models.Event;
@@ -108,14 +109,13 @@ public class EventsMainController {
 
     public void displayEvents() {
         eventCardContainer.getChildren().clear();
-
         List<Event> events = se.getAll();
 
         for (Event event : events) {
             VBox card = new VBox();
             card.setStyle("-fx-background-color: white; -fx-padding: 10px; -fx-border-radius: 10px; "
                     + "-fx-background-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);"
-                    + "-fx-min-width: 200px; -fx-max-width: 200px; -fx-alignment: center; -fx-spacing: 10;");
+                    + "-fx-min-width: 200px; -fx-max-width: 200px; -fx-alignment: center; -fx-spacing: 8;");
 
             Label title = new Label(event.getNomEvent());
             title.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
@@ -126,18 +126,40 @@ public class EventsMainController {
             Button detailsButton = new Button("Voir Détails");
             detailsButton.setOnAction(e -> showEventDetails(event));
 
-            Button deleteButton = new Button("Supprimer");
-            deleteButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
-            deleteButton.setOnAction(e -> deleteAndRefreshEvent(event)); // Adding delete action
+            // 📌 Conteneur horizontal pour les boutons (réduction maximale de l’espace)
+            HBox buttonContainer = new HBox(2); // 🔥 Espacement encore plus petit
+            buttonContainer.setStyle("-fx-alignment: left; -fx-min-width: 100%;");
 
-            Button editButton = new Button("Modifier");
-            editButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
-            editButton.setOnAction(e -> openEditPopup(event,editButton));
+            // 📝 Bouton Modifier avec icône crayon
+            Button editButton = new Button();
+            editButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-padding: 2px;");
+            editButton.setOnAction(e -> openEditPopup(event, editButton));
 
-            card.getChildren().addAll(title, date, price, detailsButton,editButton, deleteButton);
+            ImageView editIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/edit-icon.png")));
+            editIcon.setFitWidth(18); // 🔥 Icône légèrement réduite pour plus d'harmonie
+            editIcon.setFitHeight(18);
+            editButton.setGraphic(editIcon);
+
+            // 🗑️ Bouton Supprimer avec icône poubelle
+            Button deleteButton = new Button();
+            deleteButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-padding: 2px;");
+            deleteButton.setOnAction(e -> deleteAndRefreshEvent(event));
+
+            ImageView trashIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/trash-icon.png")));
+            trashIcon.setFitWidth(18); // 🔥 Icône légèrement réduite pour plus d'harmonie
+            trashIcon.setFitHeight(18);
+            deleteButton.setGraphic(trashIcon);
+
+            // Ajouter les boutons dans la HBox (avec moins d’espace)
+            buttonContainer.getChildren().addAll(editButton, deleteButton);
+
+            // Ajouter les éléments à la carte
+            card.getChildren().addAll(title, date, price, detailsButton, buttonContainer);
             eventCardContainer.getChildren().add(card);
         }
     }
+
+
 
 
 
@@ -204,13 +226,28 @@ public class EventsMainController {
             Button detailsButton = new Button("Voir Détails");
             detailsButton.setOnAction(e -> showEventDetails(event));
 
-            Button deleteButton = new Button("Supprimer");
-            deleteButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
+            // 📝 Bouton Modifier avec une icône crayon
+            Button editButton = new Button();
+            editButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-padding: 5px;");
+            editButton.setOnAction(e -> openEditPopup(event, editButton));
+
+// Ajout de l'icône crayon
+            ImageView editIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/edit-icon.png")));
+            editIcon.setFitWidth(24);
+            editIcon.setFitHeight(24);
+            editButton.setGraphic(editIcon);
+
+// 🗑️ Bouton Supprimer avec une icône poubelle
+            Button deleteButton = new Button();
+            deleteButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-padding: 5px;");
             deleteButton.setOnAction(e -> deleteAndRefreshEvent(event));
 
-            Button editButton = new Button("Modifier");
-            editButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
-            editButton.setOnAction(e -> openEditPopup(event, editButton));
+// Ajout de l'icône poubelle
+            ImageView trashIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/trash-icon.png")));
+            trashIcon.setFitWidth(24);
+            trashIcon.setFitHeight(24);
+            deleteButton.setGraphic(trashIcon);
+
 
             card.getChildren().addAll(title, date, price, detailsButton, editButton, deleteButton);
             eventCardContainer.getChildren().add(card);
