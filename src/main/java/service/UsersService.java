@@ -130,16 +130,51 @@ public class UsersService implements IService<Users> {
         return false; // L'email n'existe pas ou le mot de passe est incorrect
     }
 
-    // Vérifier si un email existe déjà dans la base de données
     public boolean isEmailExist(String email) {
-        String sql = "SELECT * FROM user WHERE email = ?";
-        try (PreparedStatement preparedStatement = con.prepareStatement(sql)) {
-            preparedStatement.setString(1, email);
-            ResultSet rs = preparedStatement.executeQuery();
-            return rs.next(); // Si un utilisateur avec cet email existe, retourne true
-        } catch (SQLException e) {
-            System.err.println("Error checking email: " + e.getMessage());
+        String query = "SELECT COUNT(*) FROM user WHERE email = ?";
+        try (PreparedStatement pst = con.prepareStatement(query)) {
+            pst.setString(1, email);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt(1);
+                System.out.println("Nombre d'utilisateurs trouvés avec cet email : " + count);
+                return count > 0;
+            }
+        } catch (SQLException ex) {
+            System.err.println("Erreur SQL lors de la vérification de l'email : " + ex.getMessage());
+            ex.printStackTrace();
         }
         return false;
     }
+
+
+
+
+    public boolean updatePassword(String email, String newPassword) {
+        if (!isEmailExist(email)) {
+            System.out.println("Email non trouvé dans la base de données.");
+            return false;
+        }
+
+        String query = "UPDATE user SET password = ? WHERE email = ?";
+        try (PreparedStatement pst = con.prepareStatement(query)) {
+            String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt()); // Hash du mot de passe
+            pst.setString(1, hashedPassword);
+            pst.setString(2, email);
+
+            int result = pst.executeUpdate();
+            if (result > 0) {
+                System.out.println("Mot de passe mis à jour avec succès pour l'email : " + email);
+                return true;
+            } else {
+                System.out.println("Aucune ligne mise à jour dans la base de données.");
+                return false;
+            }
+        } catch (SQLException ex) {
+            System.err.println("Erreur SQL lors de la mise à jour du mot de passe : " + ex.getMessage());
+            ex.printStackTrace();
+            return false;
+        }
+    }
 }
+

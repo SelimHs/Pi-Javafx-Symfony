@@ -52,7 +52,8 @@
                           style="-fx-font-size: 14px; -fx-text-fill: #6A0DAD;"/>
             </HBox>
 
-            <Label text="Mot de passe oublié ?" style="-fx-font-size: 13px; -fx-text-fill: #B1B1B1; cursor: pointer;"/>
+            <Hyperlink text="Mot de passe oublié ?" onAction="#handleForgotPassword"
+                       style="-fx-font-size: 13px; -fx-text-fill: #B1B1B1; -fx-cursor: hand;"/>
 
             <HBox spacing="20.0" style="-fx-alignment: center;">
                 <Button text="Se connecter" fx:id="loginButton" onAction="#handleLoginButtonAction"

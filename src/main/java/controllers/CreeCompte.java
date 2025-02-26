@@ -37,7 +37,7 @@ public class CreeCompte {
 
         // Vérifier si l'email existe déjà
         String email = emailField.getText();
-        if (usersService.isEmailExist(email)) {
+        if (usersService.isEmailExist(email)) { // Appel de la méthode publique
             messageLabel.setText("L'email existe déjà.");
             return;
         }

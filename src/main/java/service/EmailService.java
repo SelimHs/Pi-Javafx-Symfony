@@ -10,49 +10,73 @@ public class EmailService {
     private static final String FROM_EMAIL = "lamma.eventgroups@gmail.com"; // Remplacez par votre e-mail
     private static final String EMAIL_PASSWORD = "brfa qcnj knlk ryio"; // Remplacez par le mot de passe d'application
 
-    public String sendConfirmationEmail(String toEmail) {
-        // Générer un code de confirmation aléatoire
-        Random random = new Random();
-        int confirmationCode = 100000 + random.nextInt(900000); // Code à 6 chiffres
-
-        // Configurer les propriétés pour l'envoi d'e-mails
+    private Session createSession() {
         Properties properties = new Properties();
-        properties.put("mail.smtp.host", "smtp.gmail.com"); // Serveur SMTP de Gmail
-        properties.put("mail.smtp.port", "587"); // Port SMTP pour TLS
-        properties.put("mail.smtp.auth", "true"); // Authentification requise
-        properties.put("mail.smtp.starttls.enable", "true"); // Activation de TLS
-        properties.put("mail.debug", "true"); // Activer le débogage
+        properties.put("mail.smtp.host", "smtp.gmail.com");
+        properties.put("mail.smtp.port", "587");
+        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.smtp.starttls.enable", "true");
+        properties.put("mail.debug", "true");
 
-        // Créer une session pour l'envoi d'e-mails
-        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+        return Session.getInstance(properties, new javax.mail.Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(FROM_EMAIL, EMAIL_PASSWORD);
             }
         });
+    }
+
+    public String sendConfirmationEmail(String toEmail) {
+        Random random = new Random();
+        int confirmationCode = 100000 + random.nextInt(900000);
 
         try {
-            // Créer un message e-mail
-            MimeMessage message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(FROM_EMAIL)); // Expéditeur
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail)); // Destinataire
-            message.setSubject("Confirmation de votre compte"); // Sujet
-            message.setText("Votre code de confirmation est : " + confirmationCode); // Corps du message
+            MimeMessage message = new MimeMessage(createSession());
+            message.setFrom(new InternetAddress(FROM_EMAIL));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
+            message.setSubject("Confirmation de votre compte");
+            message.setText("Votre code de confirmation est : " + confirmationCode);
 
-            // Envoyer l'e-mail
             Transport.send(message);
             System.out.println("Code de confirmation envoyé à " + toEmail + ": " + confirmationCode);
 
-            return String.valueOf(confirmationCode); // Retourner le code de confirmation
+            return String.valueOf(confirmationCode);
         } catch (MessagingException e) {
             System.err.println("Erreur lors de l'envoi de l'e-mail : " + e.getMessage());
             throw new RuntimeException("Erreur lors de l'envoi de l'e-mail", e);
         }
     }
 
+    public boolean sendPasswordResetEmail(String toEmail, String resetToken) {
+        // Correction du lien de réinitialisation
+        String resetLink = "http://localhost:8080/resetPassword?token=" + resetToken + "&email=" + toEmail;
+
+        try {
+            MimeMessage message = new MimeMessage(createSession());
+            message.setFrom(new InternetAddress(FROM_EMAIL));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
+            message.setSubject("Réinitialisation de votre mot de passe");
+            message.setText("Pour réinitialiser votre mot de passe, cliquez sur le lien suivant : " + resetLink);
+
+            Transport.send(message);
+            System.out.println("E-mail de réinitialisation envoyé à " + toEmail);
+
+            return true;
+        } catch (MessagingException e) {
+            System.err.println("Erreur lors de l'envoi de l'e-mail : " + e.getMessage());
+            throw new RuntimeException("Erreur lors de l'envoi de l'e-mail", e);
+        }
+    }
+
+    public String generateResetToken() {
+        Random random = new Random();
+        int token = 100000 + random.nextInt(900000);
+        return String.valueOf(token);
+    }
+
     public static void main(String[] args) {
         EmailService emailService = new EmailService();
-        String code = emailService.sendConfirmationEmail("sandidraslen@gmail.com");
+        String code = emailService.sendConfirmationEmail("sandidraslen1@gmail.com");
         System.out.println("Code de confirmation : " + code);
     }
 }
