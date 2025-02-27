@@ -8,8 +8,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -92,36 +95,63 @@ public class RemiseMainController implements Initializable {
         }
     }
 
-    // Créer une carte de remise
+    // Créer une carte de remise avec des icônes
     private VBox createRemiseCard(Remise remise) {
         VBox card = new VBox();
         card.setStyle("-fx-background-color: white; -fx-padding: 10px; -fx-border-radius: 10px; "
                 + "-fx-background-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);"
                 + "-fx-min-width: 200px; -fx-max-width: 200px; -fx-alignment: center; -fx-spacing: 10;");
 
-        Label title = new Label("Code Promo: " + remise.getCodePromo());
+        Label title = new Label("🎟 Code Promo: " + remise.getCodePromo());
         title.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
         Label pourcentageLabel = new Label("💲 Remise: " + remise.getPourcentageRemise() + "%");
         Label expirationLabel = new Label("📅 Expiration: " + remise.getDateExpiration());
 
-        Button detailsButton = new Button("Voir Détails");
+        // ✅ Icônes Modifier, Supprimer et Détails
+        HBox buttonContainer = new HBox(10);
+        buttonContainer.setStyle("-fx-alignment: center;");
+
+        // 🔍 Bouton Voir Détails avec icône
+        Button detailsButton = new Button();
+        detailsButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
         detailsButton.setOnAction(e -> showRemiseDetails(remise));
 
-        Button supprimerButton = new Button("Supprimer");
-        supprimerButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
+        ImageView detailsIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/details-icon.png")));
+        detailsIcon.setFitWidth(18);
+        detailsIcon.setFitHeight(18);
+        detailsButton.setGraphic(detailsIcon);
+
+        // ✏️ Bouton Modifier avec icône
+        Button modifierButton = new Button();
+        modifierButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
+        modifierButton.setOnAction(e -> modifierRemise(remise, modifierButton));
+
+        ImageView editIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/edit-icon.png")));
+        editIcon.setFitWidth(18);
+        editIcon.setFitHeight(18);
+        modifierButton.setGraphic(editIcon);
+
+        // 🗑️ Bouton Supprimer avec icône
+        Button supprimerButton = new Button();
+        supprimerButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
         supprimerButton.setOnAction(e -> {
             supprimerRemise(remise); // Supprime la remise
             updateRemises(); // Rafraîchit la liste
         });
 
-        Button modifierButton = new Button("Modifier");
-        modifierButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
-        modifierButton.setOnAction(e -> modifierRemise(remise, modifierButton));
+        ImageView trashIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/trash-icon.png")));
+        trashIcon.setFitWidth(18);
+        trashIcon.setFitHeight(18);
+        supprimerButton.setGraphic(trashIcon);
 
-        card.getChildren().addAll(title, pourcentageLabel, expirationLabel, detailsButton, modifierButton, supprimerButton);
+        // Ajout des icônes dans le conteneur des boutons
+        buttonContainer.getChildren().addAll(detailsButton, modifierButton, supprimerButton);
+
+        card.getChildren().addAll(title, pourcentageLabel, expirationLabel, buttonContainer);
         return card;
     }
+
 
     // Supprimer une remise
     private void supprimerRemise(Remise remise) {

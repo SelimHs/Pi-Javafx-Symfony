@@ -192,9 +192,16 @@ public class EventsMainController {
 
             Label date = new Label("📅 " + event.getDate().toString());
             Label price = new Label("💰 " + event.getPrix() + " DT");
-
-            Button detailsButton = new Button("Voir Détails");
+            // 🔍 Bouton Voir Détails avec icône
+            Button detailsButton = new Button();
+            detailsButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
             detailsButton.setOnAction(e -> showEventDetails(event));
+
+            ImageView detailsIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/details-icon.png")));
+            detailsIcon.setFitWidth(18);
+            detailsIcon.setFitHeight(18);
+            detailsButton.setGraphic(detailsIcon);
+
 
             // Boutons Modifier et Supprimer
             HBox buttonContainer = new HBox(2);

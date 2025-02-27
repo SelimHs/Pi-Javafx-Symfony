@@ -267,11 +267,15 @@ public class BilletsMainController {
             Label eventName = new Label("🎉 " + billet.getEvent().getNomEvent());
             Label price = new Label("💰 " + billet.getPrix() + " DT");
             price.setStyle("-fx-text-fill: #27AE60; -fx-font-weight: bold;");
+            // 🔍 Bouton Voir Détails avec icône
+            Button detailsButton = new Button();
+            detailsButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
+            detailsButton.setOnAction(e ->showBilletDetails(billet));
 
-            // Bouton Détails
-            Button detailsButton = new Button("Voir Détails");
-            detailsButton.setStyle("-fx-background-color: #F39C12; -fx-text-fill: white; -fx-border-radius: 5px;");
-            detailsButton.setOnAction(b -> showBilletDetails(billet));
+            ImageView detailsIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/details-icon.png")));
+            detailsIcon.setFitWidth(18);
+            detailsIcon.setFitHeight(18);
+            detailsButton.setGraphic(detailsIcon);
 
             // ✅ Icônes Modifier, Supprimer et Export PDF
             HBox buttonContainer = new HBox(8);
