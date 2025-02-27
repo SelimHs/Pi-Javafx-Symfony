@@ -43,7 +43,7 @@ public class FrontBillet {
     }
     public void setPrixBillet(double prix) {
         prixBillet.setText(String.valueOf(prix) + " DT");
-        prixBillet.setEditable(false);
+        prixBillet.setDisable(true);
     }
     public void loadEvents(){
         ServiceEvent serviceEvent = new ServiceEvent();
