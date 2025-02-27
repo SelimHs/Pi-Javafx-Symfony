@@ -19,6 +19,10 @@ import tn.esprit.services.ServiceEvent;
 import java.io.IOException;
 import java.util.List;
 
+
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import java.util.Optional;
 public class FrontEventsController {
 
     @FXML
@@ -75,10 +79,37 @@ public class FrontEventsController {
     }
 
     // 🎯 Méthode pour gérer la réservation d'un événement
+
     private void reserverEvent(Event event) {
-        System.out.println("Réservation pour l'événement : " + event.getNomEvent());
-        // Ajoute ici la logique de réservation, ex: ouvrir une popup, stocker dans la BD, etc.
+        Alert confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationDialog.setTitle("Confirmation de réservation");
+        confirmationDialog.setHeaderText("Réserver l'événement : " + event.getNomEvent());
+        confirmationDialog.setContentText("Voulez-vous vraiment réserver cet événement ?");
+
+        Optional<ButtonType> result = confirmationDialog.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frontend/FrontBillet.fxml"));
+                Parent root = loader.load();
+
+                // ✅ Obtenir le contrôleur de FrontBillet et lui envoyer le prix + l'événement
+                FrontBillet billetController = loader.getController();
+                billetController.setPrixBillet(event.getPrix()); // 🎯 Remplir le prix
+                billetController.setEventSelection(event); // 🎯 Sélectionner l'événement automatiquement
+
+                // ✅ Afficher la nouvelle interface
+                Stage stage = (Stage) eventCardContainer.getScene().getWindow();
+                stage.setScene(new Scene(root));
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Réservation annulée.");
+        }
     }
+
+
 
 
     private void showEventDetails(Event event) {
