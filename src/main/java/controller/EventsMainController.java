@@ -159,19 +159,25 @@ public class EventsMainController {
         }
     }
 
-    // Affichage des détails de l'événement
     private void showEventDetails(Event event) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Détails de l'Événement");
-        alert.setHeaderText(event.getNomEvent());
-        alert.setContentText("📅 Date : " + event.getDate() +
-                "\n💰 Prix : " + event.getPrix() + " DT" +
-                "\n👥 Visiteurs : " + event.getNbrVisiteurs() +
-                "\n📍 Lieu : " + event.getNomEspace() +
-                "\nℹ️ Détails : " + event.getDetails());
+        try {
+            // Charger l'interface DetailEvent.fxml
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/DetailEvents.fxml"));
+            Parent root = loader.load();
 
-        alert.showAndWait();
+            // Récupérer le contrôleur et envoyer les données de l'événement
+            DetailEvents controller = loader.getController();
+            controller.initData(event);
+
+            // Changer la scène pour afficher les détails de l'événement
+            Stage stage = (Stage) eventCardContainer.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 
     // Affichage des événements
     @FXML
@@ -192,16 +198,16 @@ public class EventsMainController {
 
             Label date = new Label("📅 " + event.getDate().toString());
             Label price = new Label("💰 " + event.getPrix() + " DT");
+
             // 🔍 Bouton Voir Détails avec icône
             Button detailsButton = new Button();
             detailsButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
-            detailsButton.setOnAction(e -> showEventDetails(event));
+            detailsButton.setOnAction(e -> showEventDetails(event)); // Appel de la méthode pour afficher les détails
 
             ImageView detailsIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/details-icon.png")));
             detailsIcon.setFitWidth(18);
             detailsIcon.setFitHeight(18);
             detailsButton.setGraphic(detailsIcon);
-
 
             // Boutons Modifier et Supprimer
             HBox buttonContainer = new HBox(2);
@@ -230,6 +236,7 @@ public class EventsMainController {
             eventCardContainer.getChildren().add(card);
         }
     }
+
 
     // Supprimer un événement
     @FXML

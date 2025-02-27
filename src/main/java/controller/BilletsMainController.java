@@ -104,18 +104,24 @@ public class BilletsMainController {
         }
     }
 
-    //Here lies my extras
     private void showBilletDetails(Billet billet) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Détails du Billet");
-        alert.setHeaderText("Billet de " + billet.getProprietaire());
-        alert.setContentText("📅 Date d'achat : " + billet.getDateAchat() +
-                "\n💰 Prix : " + billet.getPrix() + " DT" +
-                "\n🎟 Type : " + billet.getType() +
-                "\n📍 Événement : " + billet.getEvent());
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/DetailBillet.fxml"));
+            Parent root = loader.load();
 
-        alert.showAndWait();
+            // ✅ Récupérer le contrôleur et envoyer les données du billet
+            DetailBillet controller = loader.getController();
+            controller.initData(billet);
+
+            // ✅ Changer la scène pour afficher les détails du billet
+            Stage stage = (Stage) billetCardContainer.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 
 
     @FXML
@@ -267,10 +273,11 @@ public class BilletsMainController {
             Label eventName = new Label("🎉 " + billet.getEvent().getNomEvent());
             Label price = new Label("💰 " + billet.getPrix() + " DT");
             price.setStyle("-fx-text-fill: #27AE60; -fx-font-weight: bold;");
+
             // 🔍 Bouton Voir Détails avec icône
             Button detailsButton = new Button();
             detailsButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
-            detailsButton.setOnAction(e ->showBilletDetails(billet));
+            detailsButton.setOnAction(e -> showBilletDetails(billet));
 
             ImageView detailsIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/details-icon.png")));
             detailsIcon.setFitWidth(18);
@@ -281,7 +288,6 @@ public class BilletsMainController {
             HBox buttonContainer = new HBox(8);
             buttonContainer.setStyle("-fx-alignment: center;");
 
-            // 🔧 Bouton Modifier avec icône
             Button editButton = new Button();
             editButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
             editButton.setOnAction(e -> openEditPopup(billet, editButton));
@@ -291,7 +297,6 @@ public class BilletsMainController {
             editIcon.setFitHeight(18);
             editButton.setGraphic(editIcon);
 
-            // 🗑️ Bouton Supprimer avec icône
             Button deleteButton = new Button();
             deleteButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
             deleteButton.setOnAction(e -> deleteAndRefreshBillet(billet));
@@ -301,7 +306,6 @@ public class BilletsMainController {
             trashIcon.setFitHeight(18);
             deleteButton.setGraphic(trashIcon);
 
-            // 📄 Bouton Export PDF avec icône
             Button exportPdfButton = new Button();
             exportPdfButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
             exportPdfButton.setOnAction(e -> exportBilletToPdf(billet));
@@ -311,13 +315,14 @@ public class BilletsMainController {
             pdfIcon.setFitHeight(18);
             exportPdfButton.setGraphic(pdfIcon);
 
-            // Ajout des icônes Modifier, Supprimer et Exporter PDF
             buttonContainer.getChildren().addAll(editButton, deleteButton, exportPdfButton);
-
             card.getChildren().addAll(title, eventName, price, detailsButton, buttonContainer);
             billetCardContainer.getChildren().add(card);
         }
     }
+
+
+
 
 
 
