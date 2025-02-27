@@ -115,12 +115,13 @@ public class RemiseMainController implements Initializable {
         // 🔍 Bouton Voir Détails avec icône
         Button detailsButton = new Button();
         detailsButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
-        detailsButton.setOnAction(e -> showRemiseDetails(remise));
+        detailsButton.setOnAction(e -> showRemiseDetails(remise)); // ✅ Naviguer vers DetailRemise.fxml
 
         ImageView detailsIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/details-icon.png")));
         detailsIcon.setFitWidth(18);
         detailsIcon.setFitHeight(18);
         detailsButton.setGraphic(detailsIcon);
+
 
         // ✏️ Bouton Modifier avec icône
         Button modifierButton = new Button();
@@ -158,17 +159,27 @@ public class RemiseMainController implements Initializable {
         serviceRemise.delete(remise); // Suppression de la remise dans le service
     }
 
-    // Afficher les détails d'une remise
     @FXML
-    public void showRemiseDetails(Remise remise) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Détails de la Remise");
-        alert.setHeaderText("Remise de " + remise.getPourcentageRemise() + "%");
-        alert.setContentText("📅 Date d'expiration : " + remise.getDateExpiration() +
-                "\n💰 Description : " + remise.getDescription());
+    private void showRemiseDetails(Remise remise) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/DetailRemise.fxml"));
+            Parent root = loader.load();
 
-        alert.showAndWait();
+            // Récupérer le contrôleur et passer la remise sélectionnée
+            DetailRemise controller = loader.getController();
+            controller.initData(remise);
+
+            // Ouvrir une nouvelle fenêtre (Stage)
+            Stage stage = new Stage();
+            stage.setTitle("Détails de la Remise");
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 
     // Modifier une remise
     private void modifierRemise(Remise remise, Button sourceButton) {

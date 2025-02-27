@@ -133,6 +133,7 @@ public class ReservationMainController implements Initializable {
         detailsIcon.setFitHeight(18);
         detailsButton.setGraphic(detailsIcon);
 
+
         // ✏️ Bouton Modifier avec icône
         Button modifierButton = new Button();
         modifierButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
@@ -192,16 +193,24 @@ public class ReservationMainController implements Initializable {
     // Afficher les détails d'une réservation
     @FXML
     public void showReservationDetails(Reservation reservation) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Détails de la Réservation");
-        alert.setHeaderText("Réservation #" + reservation.getIdReservation());
-        alert.setContentText("👤 ID Utilisateur : " + reservation.getIdUser() +
-                "\n🎟️ ID Événement : " + reservation.getIdEvent() +
-                "\n📅 Date de Réservation : " + reservation.getDateReservation() +
-                "\n🔖 Statut : " + reservation.getStatut());
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/DetailReservation.fxml"));
+            Parent root = loader.load();
 
-        alert.showAndWait();
+            // Passer la réservation au contrôleur de détail
+            DetailReservation controller = loader.getController();
+            controller.initData(reservation);
+
+            // Afficher la nouvelle fenêtre
+            Stage stage = new Stage();
+            stage.setTitle("Détails de la Réservation");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 
     // Rechercher des réservations dynamiquement
     @FXML
