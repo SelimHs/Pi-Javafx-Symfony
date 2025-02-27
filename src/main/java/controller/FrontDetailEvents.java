@@ -22,7 +22,7 @@ public class FrontDetailEvents {
     @FXML private Label eventTitleLabel;
     @FXML private Label eventDateLabel;
     @FXML private Label eventLocationLabel;
-    @FXML private Label eventDescriptionLabel;
+    @FXML private Label eventDescriptionLabel = new Label();
     @FXML private Label eventPriceLabel;
     @FXML private ImageView eventImage;
     @FXML private VBox eventDetailsContainer;
@@ -37,17 +37,21 @@ public class FrontDetailEvents {
      * @param event L'événement à afficher.
      */
     public void initData(Event event) {
-        applyHoverEffect(btnAccueil);
-        applyHoverEffect(btnEvenements);
-        applyHoverEffect(btnEspace);
-        this.selectedEvent = event;
+        System.out.println("🔍 Vérification : eventDescriptionLabel = " + eventDescriptionLabel);
+        if (eventDescriptionLabel == null) {
+            System.out.println("⚠️ eventDescriptionLabel est NULL ! Vérifiez le FXML.");
+            return;  // Stopper l'exécution pour éviter un NullPointerException
+        }
+
         eventTitleLabel.setText("🎉 " + event.getNomEvent());
         eventDateLabel.setText("📅 Date : " + event.getDate().toString());
         eventPriceLabel.setText("💰 Prix : " + event.getPrix() + " DT");
+        eventDescriptionLabel.setText(event.getDetails());
 
-        // Charger l'image si disponible
 
-            eventImage.setImage(new Image(getClass().getResourceAsStream("/images/event-placeholder.jpg")));
+    // Charger l'image si disponible
+
+        eventImage.setImage(new Image(getClass().getResourceAsStream("/images/event-placeholder.jpg")));
 
     }
     private void applyHoverEffect(Button button) {
@@ -103,7 +107,7 @@ public class FrontDetailEvents {
     public void goToAcceuil(ActionEvent actionEvent) {
         try {
             // Charger le fichier FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FrontAcceuil.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frontend/FrontAcceuil.fxml"));
             Parent root = loader.load();
 
             // Récupérer la scène actuelle et changer de vue

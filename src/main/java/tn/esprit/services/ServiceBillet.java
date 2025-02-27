@@ -175,4 +175,33 @@ public class ServiceBillet implements Iservice<Billet> {
         return billetId;
     }
 
+    public Billet findBilletByDateAchat(LocalDateTime dateAchat) {
+        Billet billet = new Billet();
+        String query = "SELECT * FROM billet WHERE dateAchat = ?";
+
+        try {
+            PreparedStatement stmt = cnx.prepareStatement(query);
+            stmt.setTimestamp(1, Timestamp.valueOf(dateAchat));
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                billet = new Billet();
+                billet.setIdBillet(rs.getInt("idBillet"));
+                billet.setProprietaire(rs.getString("proprietaire"));
+                billet.setPrix(rs.getInt("prix"));
+                billet.setDateAchat(rs.getTimestamp("dateAchat").toLocalDateTime());
+                billet.setType(Billet.TypeBillet.valueOf(rs.getString("type")));
+
+                // Fetch associated event
+                int eventId = rs.getInt("idEvent");
+                billet.setEvent(new ServiceEvent().findById(eventId));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return billet;
+    }
+
+
 }

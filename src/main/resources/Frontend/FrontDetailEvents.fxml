@@ -72,6 +72,18 @@
                 <Label fx:id="eventPriceLabel" text="💰 Prix : "
                        style="-fx-font-size: 18px; -fx-text-fill: #27AE60; -fx-font-weight: bold;"/>
             </VBox>
+            <VBox prefWidth="500.0" maxWidth="Infinity"
+                  style="-fx-background-color: transparent;
+             -fx-padding: 20px;">
+                <Label text="📖 Description :"
+                       style="-fx-font-size: 24px; -fx-text-fill: white; -fx-font-weight: bold; -fx-alignment: center;"/>
+                <Label fx:id="eventDescriptionLabel" text="Event Description"
+                       style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: white; -fx-alignment: center;
+                  -fx-padding: 10px; -fx-background-color: rgba(0, 0, 0, 0.5); -fx-background-radius: 10px;"
+                       wrapText="true" maxWidth="480"/>
+            </VBox>
+
+
 
         </HBox>
 

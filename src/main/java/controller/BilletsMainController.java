@@ -192,12 +192,14 @@ public class BilletsMainController {
 
 
     public void exportBilletToPdf(Billet billet) {
+        String eventName = (billet.getEvent() != null) ? billet.getEvent().getNomEvent() : "Événement non défini";
         String pdfUrl = PdfService.generatePdfFromBillet(
                 String.valueOf(billet.getIdBillet()),
                 billet.getProprietaire(),
-                billet.getEvent().toString(),
+                eventName,
                 billet.getPrix()
         );
+
 
         if (pdfUrl != null) {
             openPdfInBrowser(pdfUrl);
