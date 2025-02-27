@@ -76,6 +76,11 @@
                     </graphic>
                 </Button>
             </HBox>
+            <Label text="Mot de passe oublié ?"
+                   onMouseClicked="#handleForgotPassword"
+                   style="-fx-font-size: 13px; -fx-text-fill: #B1B1B1; -fx-cursor: hand;"/>
+
+
 
             <!-- Section Rester connecté -->
             <CheckBox fx:id="rememberMeCheckBox" text="Rester connecté"

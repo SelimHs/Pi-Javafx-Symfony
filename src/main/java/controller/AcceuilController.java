@@ -44,6 +44,7 @@ public class AcceuilController {
     @FXML
     public void initialize() {
         chargerStatistiques();
+        chargerStatistiquesEspaces();
 
     }
 
@@ -230,6 +231,22 @@ public class AcceuilController {
         eventStatsChart.getData().add(series);
     }
 
+    @FXML
+    private PieChart pieChartEspaces;
+    ServiceEspace se = new ServiceEspace();
+    private void chargerStatistiquesEspaces() {
+        // 📌 Récupérer les statistiques des espaces groupés par adresse
+        Map<String, Integer> statsEspaces = se.getNombreEspacesParAdresse();
+
+        // Effacer les anciennes données avant d'ajouter les nouvelles
+        pieChartEspaces.getData().clear();
+
+        // Ajouter les données au PieChart
+        for (Map.Entry<String, Integer> entry : statsEspaces.entrySet()) {
+            PieChart.Data slice = new PieChart.Data(entry.getKey(), entry.getValue());
+            pieChartEspaces.getData().add(slice);
+        }
+    }
 
 
 
