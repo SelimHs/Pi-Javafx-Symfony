@@ -36,7 +36,6 @@ public class Login {
 
     @FXML
     private ListView<String> emailSuggestions; // Liste des suggestions d'emails
-
     private boolean isPasswordVisible = false;
     @FXML
     private TextField visiblePassword; // Champ de mot de passe en clair
@@ -163,7 +162,7 @@ public class Login {
             }
 
             // Demander à l'utilisateur s'il souhaite enregistrer le mot de passe
-            if (askToSavePassword()) {
+            if (rememberMeCheckBox.isSelected()) {
                 saveCredentials(emailField.getText(), password.getText());
             } else {
                 clearCredentials();
@@ -238,6 +237,7 @@ public class Login {
         prefs.put(PASSWORD_KEY, password);
         try {
             prefs.flush();
+            LOGGER.info("Informations enregistrées dans les préférences : " + email);
         } catch (BackingStoreException e) {
             LOGGER.log(Level.SEVERE, "Erreur lors de l'enregistrement des préférences", e);
         }
@@ -248,12 +248,12 @@ public class Login {
             pst.setString(1, email);
             int rowsUpdated = pst.executeUpdate();
             if (rowsUpdated > 0) {
-                System.out.println("Champ 'enregistrer' mis à jour avec succès pour l'email : " + email);
+                LOGGER.info("Champ 'enregistrer' mis à jour avec succès pour l'email : " + email);
             } else {
-                System.out.println("Aucun utilisateur trouvé avec l'email : " + email);
+                LOGGER.warning("Aucun utilisateur trouvé avec l'email : " + email);
             }
         } catch (SQLException e) {
-            System.err.println("Erreur lors de la mise à jour du champ 'enregistrer' : " + e.getMessage());
+            LOGGER.severe("Erreur lors de la mise à jour du champ 'enregistrer' : " + e.getMessage());
         }
 
         // Ajouter l'email à la liste des emails enregistrés
@@ -277,9 +277,10 @@ public class Login {
                         emailField.setText(savedEmail);
                         password.setText(savedPassword);
                         rememberMeCheckBox.setSelected(true);
+                        LOGGER.info("Informations chargées depuis les préférences : " + savedEmail);
                     }
                 } catch (SQLException e) {
-                    System.err.println("Erreur lors de la vérification de la colonne 'enregistrer' : " + e.getMessage());
+                    LOGGER.severe("Erreur lors de la vérification de la colonne 'enregistrer' : " + e.getMessage());
                 }
             }
         }
@@ -297,12 +298,12 @@ public class Login {
             pst.setString(1, emailField.getText());
             int rowsUpdated = pst.executeUpdate();
             if (rowsUpdated > 0) {
-                System.out.println("Champ 'enregistrer' mis à jour avec succès pour l'email : " + emailField.getText());
+                LOGGER.info("Champ 'enregistrer' mis à jour avec succès pour l'email : " + emailField.getText());
             } else {
-                System.out.println("Aucun utilisateur trouvé avec l'email : " + emailField.getText());
+                LOGGER.warning("Aucun utilisateur trouvé avec l'email : " + emailField.getText());
             }
         } catch (SQLException e) {
-            System.err.println("Erreur lors de la mise à jour du champ 'enregistrer' : " + e.getMessage());
+            LOGGER.severe("Erreur lors de la mise à jour du champ 'enregistrer' : " + e.getMessage());
         }
     }
 
