@@ -107,13 +107,10 @@ public class FrontBillet {
 
         // ✅ Ajouter le billet en base de données
         sb.add(billet);
-        int billetId = sb.getBilletId(billet.getProprietaire(), billet.getPrix(), billet.getDateAchat(), billet.getType(), billet.getEvent().getIdEvent());
-
-// Set the ID in the billet object
-        billet.setIdBillet(billetId);
+        Billet exportedBillet = sb.findBilletByDateAchat(billet.getDateAchat());
 
 // Now export to PDF with the correct ID
-        billetController.exportBilletToPdf(billet);
+        billetController.exportBilletToPdf(exportedBillet);
 
         // ✅ Afficher un message de confirmation
         Alert confirmationAlert = new Alert(Alert.AlertType.INFORMATION);
