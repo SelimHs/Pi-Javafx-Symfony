@@ -10,11 +10,11 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.FlowPane?>
 
-<AnchorPane minHeight="700.0" minWidth="1000.0" maxWidth="-Infinity" maxHeight="-Infinity"
+<AnchorPane minHeight="700.0" minWidth="1000.0" maxWidth="Infinity" maxHeight="Infinity"
             style="-fx-background-image: url('/images/front-bg.jpg'); -fx-background-size: cover;"
             xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controller.FrontEventsController">
+            fx:controller="controller.FrontEspace">
     <children>
         <!-- 🚀 Navigation bar moderne -->
         <HBox layoutX="0.0" layoutY="0.0" prefHeight="60.0" prefWidth="1000.0" maxWidth="Infinity"
@@ -33,10 +33,9 @@
                 <!-- Menu interactif -->
                 <HBox fx:id="navBar" spacing="20.0" style="-fx-alignment: center; -fx-padding: 0 20px; -fx-margin-left: auto;">
                     <Button fx:id="btnAccueil" text="🏠 Accueil" onAction="#goToAcceuil" style="-fx-background-color: transparent; -fx-text-fill: #F39C12; -fx-border-radius: 10px; -fx-padding: 10px 18px;"/>
-                    <Button fx:id="btnEvenements" text="📅 Événements"
+                    <Button fx:id="btnEvenements" text="📅 Événements" onAction="#goToEvenements"
                             style="-fx-background-color: transparent; -fx-text-fill: #F39C12; -fx-border-radius: 10px; -fx-padding: 10px 18px;"/>
-                    <Button fx:id="btnEspace" text="📌 Espaces" onAction="#goToEspace" style="-fx-background-color: transparent; -fx-text-fill: #F39C12; -fx-border-radius: 10px; -fx-padding: 10px 18px;"/>
-
+                    <Button fx:id="btnEspace" text="📌 Espaces" style="-fx-background-color: transparent; -fx-text-fill: #F39C12; -fx-border-radius: 10px; -fx-padding: 10px 18px;"/>
                 </HBox>
 
                 <!-- Icônes à l'extrême droite -->
@@ -55,19 +54,24 @@
             </children>
         </HBox>
 
-        <!-- 📌 Contenu principal avec ScrollPane pour les cartes des événements -->
+        <!-- 📌 Contenu principal avec ScrollPane pour les cartes des espaces -->
         <VBox layoutX="50.0" layoutY="80.0" prefWidth="900.0" maxWidth="Infinity" style="-fx-padding: 20px; -fx-alignment: center;">
             <children>
-                <Label text="📅 Événements Disponibles" style="-fx-font-size: 26px; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                <Label text="📌 Espaces Disponibles" style="-fx-font-size: 26px; -fx-text-fill: white; -fx-font-weight: bold;"/>
 
-                <ScrollPane fx:id="eventScrollPane" prefWidth="1000.0" prefHeight="500.0" maxWidth="Infinity"
+                <ScrollPane fx:id="espaceScrollPane" prefWidth="1000.0" prefHeight="500.0" maxWidth="Infinity"
                             style="-fx-background: transparent; -fx-border-color: transparent;">
                     <content>
-                        <FlowPane fx:id="eventCardContainer" hgap="20.0" vgap="20.0" prefWrapLength="1000.0" maxWidth="Infinity"
-                                  style="-fx-padding: 10px; -fx-alignment: center-left;">
+                        <FlowPane fx:id="espaceCardContainer"
+                                  hgap="20.0" vgap="20.0"
+                                  prefWrapLength="750.0"
+                                  style="-fx-padding: 10px; -fx-alignment: center;">
                         </FlowPane>
+
                     </content>
                 </ScrollPane>
+
+
             </children>
         </VBox>
     </children>

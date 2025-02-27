@@ -13,14 +13,12 @@ import java.io.IOException;
 
 public class FacceuilController {
     @FXML
-    private Button btnAccueil, btnEvenements, btnBillets, btnReservations,btnEspace;
+    private Button btnAccueil, btnEvenements,btnEspace;
 
     @FXML
     public void initialize() {
         applyHoverEffect(btnAccueil);
         applyHoverEffect(btnEvenements);
-        applyHoverEffect(btnBillets);
-        applyHoverEffect(btnReservations);
         applyHoverEffect(btnEspace);
     }
 
@@ -48,12 +46,21 @@ public class FacceuilController {
         }
     }
 
-    public void goToBillets(ActionEvent actionEvent) {
-    }
 
-    public void goToReservations(ActionEvent actionEvent) {
-    }
 
     public void goToEspaces(ActionEvent actionEvent) {
+        try {
+            // Charger le fichier FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frontend/FrontEspace.fxml"));
+            Parent root = loader.load();
+
+            // Récupérer la scène actuelle et changer de vue
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 }
