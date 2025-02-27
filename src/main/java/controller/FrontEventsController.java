@@ -133,6 +133,7 @@ public class FrontEventsController {
     }
 
     public void goToAcceuil(ActionEvent actionEvent) {
+
         changeScene(actionEvent, "/Frontend/FrontAcceuil.fxml");
     }
 
