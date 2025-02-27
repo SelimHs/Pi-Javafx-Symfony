@@ -1,0 +1,137 @@
+package controller;
+
+import javafx.application.Platform;
+import javafx.concurrent.Worker;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
+import javafx.stage.Stage;
+import tn.esprit.models.Espace;
+import tn.esprit.models.Organisateur;
+import tn.esprit.services.ServiceOrganisateur;
+
+import java.io.IOException;
+import java.util.List;
+
+public class FrontDetailEspace {
+
+    @FXML private Label titleLabel;
+    @FXML private Label espaceDetailsLabel;
+    @FXML private VBox organisateurContainer;
+    @FXML private WebView mapView;
+    @FXML private Button retourButton;
+
+    private int idEspace;
+    private final ServiceOrganisateur serviceOrganisateur = new ServiceOrganisateur();
+
+    /**
+     * Initialise les détails de l'espace et charge les organisateurs + la carte.
+     * @param espace L'objet Espace à afficher
+     */
+    public void initData(Espace espace) {
+        this.idEspace = espace.getIdEspace();
+        titleLabel.setText("Détails de l'Espace : " + espace.getNomEspace());
+
+        espaceDetailsLabel.setText(
+                "📍 Adresse : " + espace.getAdresse() + "\n" +
+                        "👥 Capacité : " + espace.getCapacite() + " personnes\n" +
+                        "📅 Disponibilité : " + espace.getDisponibilite() + "\n" +
+                        "💰 Prix : " + espace.getPrix() + " DT\n" +
+                        "🏢 Type : " + espace.getTypeEspace()
+        );
+
+        afficherOrganisateurs(idEspace);
+        afficherCarte(espace.getAdresse());
+    }
+
+    /**
+     * Affiche la carte Google Maps avec l'adresse fournie.
+     * @param adresse Adresse à afficher sur la carte.
+     */
+    private void afficherCarte(String adresse) {
+        if (mapView == null) {
+            System.out.println("❌ Erreur : WebView est NULL !");
+            return;
+        }
+
+        WebEngine webEngine = mapView.getEngine();
+        Platform.runLater(() -> {
+            webEngine.setJavaScriptEnabled(true);
+            webEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue == Worker.State.SUCCEEDED) {
+                    System.out.println("✅ Carte chargée avec succès !");
+                } else if (newValue == Worker.State.FAILED) {
+                    System.out.println("❌ Erreur de chargement de la carte.");
+                }
+            });
+
+            String googleMapsUrl = "https://www.google.com/maps/search/?api=1&query=" + adresse.replace(" ", "+");
+            webEngine.load(googleMapsUrl);
+        });
+    }
+
+    /**
+     * Affiche les organisateurs associés à l'espace.
+     * @param idEspace L'ID de l'espace.
+     */
+    private void afficherOrganisateurs(int idEspace) {
+        organisateurContainer.getChildren().clear();
+        List<Organisateur> organisateurs = serviceOrganisateur.getOrganisateursByEspace(idEspace);
+
+        if (organisateurs.isEmpty()) {
+            Label noOrganisateur = new Label("❌ Aucun organisateur trouvé.");
+            noOrganisateur.setStyle("-fx-font-size: 16px; -fx-text-fill: white;");
+            organisateurContainer.getChildren().add(noOrganisateur);
+        } else {
+            for (Organisateur organisateur : organisateurs) {
+                HBox card = new HBox(15);
+                card.setStyle("-fx-padding: 15px; -fx-background-color: white; -fx-border-radius: 10px; "
+                        + "-fx-border-color: #8a2be2; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 5);");
+                card.setPrefHeight(100);
+                card.setPrefWidth(650);
+
+                Label profileIcon = new Label("🎭");
+                profileIcon.setStyle("-fx-font-size: 30px; -fx-text-fill: #8a2be2;");
+
+                VBox detailsBox = new VBox(5);
+                Label nameLabel = new Label("👤 " + organisateur.getNomOrg() + " " + organisateur.getPrenomOrg());
+                nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #4b0082;");
+
+                Label descriptionLabel = new Label("📝 " + organisateur.getDescriptionOrg());
+                descriptionLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #555;");
+
+                Label phoneLabel = new Label("📞 " + organisateur.getTelef());
+                phoneLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #27ae60;");
+
+                detailsBox.getChildren().addAll(nameLabel, descriptionLabel, phoneLabel);
+                card.getChildren().addAll(profileIcon, detailsBox);
+                organisateurContainer.getChildren().add(card);
+            }
+        }
+    }
+
+    /**
+     * Retour à la page `FrontEspace.fxml`
+     * @param event Événement déclenché par un bouton
+     */
+    @FXML
+    private void retourAfficherEspaces(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frontend/FrontEspace.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}

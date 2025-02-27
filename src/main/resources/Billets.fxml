@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.FlowPane?>
@@ -9,77 +10,85 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.effect.DropShadow?>
 
-<AnchorPane prefHeight="671.0" prefWidth="950.0" style="-fx-background-color: linear-gradient(to bottom, #6a0dad, #b19cd9);"
+<?import javafx.scene.control.ComboBox?>
+<AnchorPane prefHeight="671.0" prefWidth="950.0" style="-fx-background-color: linear-gradient(to bottom, #030307, #131022);"
             xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="controller.BilletsMainController">
     <children>
-        <!-- Barre latérale -->
-        <VBox layoutX="0.0" layoutY="0.0" prefHeight="671.0" prefWidth="200.0"
-              style="-fx-background-color: linear-gradient(to bottom, #4b0082, #8a2be2);
+        <!-- 🌟 Barre latérale modernisée -->
+        <VBox layoutX="0.0" layoutY="0.0" prefHeight="671.0" prefWidth="220.0"
+              style="-fx-background-color: linear-gradient(to bottom, #131022, #1A172A);
                      -fx-padding: 15px;
-                     -fx-border-radius: 10px;
-                     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 15, 0, 3, 3);">
+                     -fx-border-radius: 15 0 0 15;
+                     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 15, 0, 3, 3);">
             <children>
+                <!-- Logo -->
                 <ImageView fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@logo.png" />
                     </image>
                 </ImageView>
+
                 <Label text="Gestion Billets"
                        style="-fx-font-size: 20px; -fx-text-fill: white; -fx-font-weight: bold;
-                              -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 4, 0, 0, 2);"/>
-                <Button text="🏠 Accueil" onAction="#goToAcceuil"
-                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;
-                               -fx-padding: 10px; -fx-border-radius: 8px;"/>
-                <Button onAction="#goToAjoutBillet" text="➕ Ajouter Billet"
-                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;
-                               -fx-padding: 10px; -fx-border-radius: 8px;"/>
-                <Button text="📋 Liste des billets"
-                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;
-                               -fx-padding: 10px; -fx-border-radius: 8px;"/>
+                              -fx-padding: 10px; -fx-alignment: center;"/>
 
+                <!-- Boutons de navigation -->
+                <Button text="🏠 Accueil" onAction="#goToAcceuil"
+                        style="-fx-background-color: transparent; -fx-text-fill: #a868a0;
+                               -fx-font-size: 16px; -fx-border-radius: 10px; -fx-padding: 12px 20px;"
+                        onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"/>
+
+                <Button text="➕ Ajouter Billet" onAction="#goToAjoutBillet"
+                        style="-fx-background-color: transparent; -fx-text-fill: #a868a0;
+                               -fx-font-size: 16px; -fx-border-radius: 10px; -fx-padding: 12px 20px;"
+                        onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"/>
+
+                <Button text="📋 Liste des billets"
+                        style="-fx-background-color: transparent; -fx-text-fill: #a868a0;
+                               -fx-font-size: 16px; -fx-border-radius: 10px; -fx-padding: 12px 20px;"
+                        onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"/>
             </children>
         </VBox>
 
-        <!-- Contenu principal -->
-        <VBox layoutX="220.0" layoutY="20.0" prefWidth="700.0">
+        <!-- 🌟 Contenu principal -->
+        <VBox layoutX="250.0" layoutY="20.0" prefWidth="700.0"
+              style="-fx-alignment: center; -fx-padding: 20px;">
             <children>
                 <Label text="📋 Liste des Billets"
                        style="-fx-font-size: 26px; -fx-text-fill: white; -fx-font-weight: bold;
-                              -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 5, 0, 2, 2);"/>
+                              -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.8), 10, 0, 2, 2);"/>
+
+                <!-- Barre de recherche -->
                 <HBox spacing="10" style="-fx-padding: 10px;">
+                    <!-- ComboBox pour le critère de filtrage -->
+                    <ComboBox fx:id="filterCriteriaComboBox" promptText="Filtrer par..."
+                              style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-size: 14px;"/>
+
+                    <!-- ComboBox pour l'ordre de tri -->
+                    <ComboBox fx:id="sortOrderComboBox" promptText="Trier par ordre"
+                              style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-size: 14px;"/>
+
                     <TextField fx:id="searchField" prefWidth="400.0" promptText="Rechercher un billet..."
                                style="-fx-border-radius: 10px;
                                       -fx-background-radius: 10px;
                                       -fx-padding: 10px;
                                       -fx-border-color: white;
                                       -fx-background-color: rgba(255, 255, 255, 0.3);"/>
-                    <Button text="🔍 Rechercher"
-                            style="-fx-background-color: #9b59b6;
-                                   -fx-text-fill: white;
-                                   -fx-font-size: 14px;
-                                   -fx-font-weight: bold;
-                                   -fx-border-radius: 12px;
-                                   -fx-padding: 10px;"/>
+
                 </HBox>
 
-                <!-- Zone d'affichage des billets sous forme de cartes -->
-                <FlowPane fx:id="billetCardContainer" prefHeight="500.0" prefWidth="700.0" hgap="15" vgap="15"
-                          style="-fx-padding: 10px;"/>
+                <!-- 🌟 Zone d'affichage des billets sous forme de cartes avec ScrollPane -->
+                <ScrollPane fitToWidth="true" fitToHeight="true" hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED"
+                            style="-fx-padding: 10px;">
+                    <FlowPane fx:id="billetCardContainer" prefHeight="500.0" prefWidth="700.0" hgap="15" vgap="15"
+                              style="-fx-padding: 10px;"/>
+                </ScrollPane>
             </children>
         </VBox>
 
-        <!-- Boutons d'action -->
-        <HBox layoutX="220.0" layoutY="595.0" spacing="10">
-            <Button onAction="#displayBillets" text="✔ Afficher Billets"
-                    style="-fx-background-color: #9b59b6;
-                           -fx-text-fill: white;
-                           -fx-font-size: 16px;
-                           -fx-font-weight: bold;
-                           -fx-border-radius: 12px;
-                           -fx-padding: 10px;"/>
 
-        </HBox>
     </children>
 </AnchorPane>

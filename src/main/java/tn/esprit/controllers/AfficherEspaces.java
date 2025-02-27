@@ -1,15 +1,13 @@
 package tn.esprit.controllers;
 
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
@@ -20,8 +18,10 @@ import tn.esprit.models.Espace;
 import tn.esprit.services.ServiceEspace;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class AfficherEspaces {
 
@@ -29,27 +29,73 @@ public class AfficherEspaces {
     private FlowPane espaceCardContainer;
     @FXML
     private TextField searchField;
+    @FXML
+    private ComboBox<String> filterCriteriaComboBox;
+    @FXML
+    private ComboBox<String> sortOrderComboBox;
 
     private final ServiceEspace serviceEspace = new ServiceEspace();
 
     @FXML
     public void initialize() {
-        afficherEspaces();  // Charger les espaces au démarrage
+        // Initialisation des options de filtrage
+        filterCriteriaComboBox.setItems(FXCollections.observableArrayList("Nom", "Adresse", "Type"));
+        filterCriteriaComboBox.setValue("Nom"); // Valeur par défaut
 
-        // 🔍 Recherche dynamique en temps réel
-        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-            searchEspace(newValue.trim().toLowerCase());
-        });
+        // Initialisation des options de tri
+        sortOrderComboBox.setItems(FXCollections.observableArrayList("Croissant", "Décroissant"));
+        sortOrderComboBox.setValue("Croissant"); // Valeur par défaut
+
+        // Ajout des écouteurs
+        filterCriteriaComboBox.setOnAction(event -> applyFilter());
+        sortOrderComboBox.setOnAction(event -> applyFilter());
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> applyFilter());
+
+        // Charger et afficher les espaces
+        applyFilter();
     }
 
-    @FXML
-    private void afficherEspaces() {
+    private void applyFilter() {
         espaceCardContainer.getChildren().clear();
 
-        List<Optional<Espace>> espaces = serviceEspace.getAll();
-        for (Optional<Espace> espace : espaces) {
-            VBox card = creerCarteEspace(espace.orElse(null));
-            espaceCardContainer.getChildren().add(card);
+        // Récupérer les espaces et extraire les objets Espace des Optional
+        List<Espace> espaces = serviceEspace.getAll().stream()
+                .filter(Optional::isPresent) // Filtrer les Optional non vides
+                .map(Optional::get) // Extraire les objets Espace
+                .collect(Collectors.toList());
+
+        // 🔍 Filtrage
+        String searchText = searchField.getText().toLowerCase();
+        List<Espace> filteredEspaces = espaces.stream()
+                .filter(espace -> {
+                    // Vérifier si le texte de recherche correspond à n'importe quel attribut
+                    return espace.getNomEspace().toLowerCase().contains(searchText) || // Nom
+                            espace.getAdresse().toLowerCase().contains(searchText) || // Adresse
+                            espace.getTypeEspace().toLowerCase().contains(searchText) || // Type
+                            String.valueOf(espace.getCapacite()).contains(searchText) || // Capacité
+                            espace.getDisponibilite().toLowerCase().contains(searchText) || // Disponibilité
+                            String.valueOf(espace.getPrix()).contains(searchText); // Prix
+                })
+                .collect(Collectors.toList());
+
+        // 🔄 Tri
+        boolean isAscending = "Croissant".equals(sortOrderComboBox.getValue());
+        String filterCriteria = filterCriteriaComboBox.getValue();
+        Comparator<Espace> comparator = switch (filterCriteria) {
+            case "Nom" -> Comparator.comparing(Espace::getNomEspace, String.CASE_INSENSITIVE_ORDER);
+            case "Adresse" -> Comparator.comparing(Espace::getAdresse, String.CASE_INSENSITIVE_ORDER);
+            case "Type" -> Comparator.comparing(Espace::getTypeEspace, String.CASE_INSENSITIVE_ORDER);
+            case "Capacité" -> Comparator.comparingInt(Espace::getCapacite);
+            case "Prix" -> Comparator.comparingDouble(Espace::getPrix);
+            default -> Comparator.comparing(Espace::getNomEspace, String.CASE_INSENSITIVE_ORDER); // Par défaut, tri par nom
+        };
+
+        // Appliquer le tri
+        filteredEspaces.sort(isAscending ? comparator : comparator.reversed());
+
+        // Affichage
+        for (Espace espace : filteredEspaces) {
+            espaceCardContainer.getChildren().add(creerCarteEspace(espace));
         }
     }
 
@@ -66,7 +112,6 @@ public class AfficherEspaces {
         btnSupprimer.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
         btnSupprimer.setOnAction(e -> supprimerEspace(espace));
 
-        // 🔎 Nouveau bouton pour afficher les détails
         Button btnDetails = new Button("Détails");
         btnDetails.setStyle("-fx-background-color: #3498db; -fx-text-fill: white;");
         btnDetails.setOnAction(e -> afficherDetailsEspace(espace, e));
@@ -78,7 +123,7 @@ public class AfficherEspaces {
                 new Label("📅 Disponibilité: " + espace.getDisponibilite()),
                 new Label("💰 Prix: " + espace.getPrix() + " DT"),
                 new Label("🏢 Type: " + espace.getTypeEspace()),
-                btnModifier, btnSupprimer, btnDetails // Ajouter le bouton "Détails"
+                btnModifier, btnSupprimer, btnDetails
         );
 
         return card;
@@ -88,7 +133,7 @@ public class AfficherEspaces {
         serviceEspace.delete(espace.getIdEspace());
         Alert alert = new Alert(Alert.AlertType.INFORMATION, "L'espace a été supprimé avec succès !");
         alert.show();
-        afficherEspaces();
+        applyFilter(); // Rafraîchir l'affichage après suppression
     }
 
     private void modifierEspace(Espace espace) {
@@ -113,7 +158,7 @@ public class AfficherEspaces {
             Parent root = loader.load();
 
             DetailEspace controller = loader.getController();
-            controller.initData(espace); // Passe l'espace sélectionné
+            controller.initData(espace);
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
@@ -122,9 +167,6 @@ public class AfficherEspaces {
             e.printStackTrace();
         }
     }
-
-
-
 
     @FXML
     public void ajouterEspaceView(ActionEvent event) throws IOException {
@@ -140,43 +182,22 @@ public class AfficherEspaces {
         ajouterEspaceView(event);
     }
 
-    private void searchEspace(String searchText) {
-        espaceCardContainer.getChildren().clear();  // Vider les cartes affichées
-
-        List<Optional<Espace>> espaces = serviceEspace.getAll();
-
-        for (Optional<Espace> espace : espaces) {
-            if (espace.get().getNomEspace().toLowerCase().contains(searchText)) {
-                VBox card = creerCarteEspace(espace.orElse(null));
-                espaceCardContainer.getChildren().add(card);
-            }
-        }
-
-        // 🛑 Message si aucun espace trouvé
-        if (espaceCardContainer.getChildren().isEmpty()) {
-            Label noResults = new Label("❌ Aucun espace trouvé.");
-            noResults.setStyle("-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;");
-            espaceCardContainer.getChildren().add(noResults);
-        }
-    }
-
     @FXML
-    public void buttonHoverEffect(javafx.scene.input.MouseEvent mouseEvent) {
+    public void buttonHoverEffect(MouseEvent mouseEvent) {
         Button btn = (Button) mouseEvent.getSource();
-        btn.setStyle("-fx-background-color: #8e44ad; -fx-text-fill: white; -fx-padding: 10px 18px; -fx-border-width: 2px; -fx-border-color: white;");
+        btn.setStyle("-fx-background-color: #8e44ad; -fx-text-fill: white; -fx-padding: 18px; -fx-border-width: 2px; -fx-border-color: white;");
         DropShadow shadow = new DropShadow();
         shadow.setRadius(10);
         shadow.setOffsetX(0);
         shadow.setOffsetY(5);
-        shadow.setColor(Color.web("#a868a0", 0.7));  // Une ombre douce
+        shadow.setColor(Color.web("#a868a0", 0.7));
         btn.setEffect(shadow);
     }
 
     @FXML
-    public void buttonExitEffect(javafx.scene.input.MouseEvent mouseEvent) {
+    public void buttonExitEffect(MouseEvent mouseEvent) {
         Button btn = (Button) mouseEvent.getSource();
-        btn.setStyle("-fx-background-color: transparent; -fx-text-fill: #a868a0; -fx-padding: 12px 20px; -fx-border-width: 0px;");
+        btn.setStyle("-fx-background-color: transparent; -fx-text-fill: #a868a0;-fx-font-size: 18px; -fx-border-radius: 10px; -fx-padding: 10px 18px;");
         btn.setEffect(null);
-
     }
 }

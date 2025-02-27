@@ -1,5 +1,7 @@
 package tn.esprit.controllers;
 
+import javafx.application.Platform;
+import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -7,8 +9,13 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import tn.esprit.models.Espace;
 import tn.esprit.models.Organisateur;
@@ -25,14 +32,21 @@ public class DetailEspace {
     @FXML private VBox organisateurContainer;
     @FXML private Button retourButton;
     @FXML private Button ajouterOrganisateurButton;
+    @FXML private WebView mapView; // Affichage de la carte Google Maps
 
     private int idEspace;
     private final ServiceOrganisateur serviceOrganisateur = new ServiceOrganisateur();
 
+    /**
+     * Initialise les données de l'espace et affiche les détails.
+     *
+     * @param espace L'espace à afficher.
+     */
     public void initData(Espace espace) {
         this.idEspace = espace.getIdEspace();
         titleLabel.setText("Détails de l'Espace : " + espace.getNomEspace());
 
+        // Afficher les détails de l'espace
         espaceDetailsLabel.setText(
                 "📍 Adresse : " + espace.getAdresse() + "\n" +
                         "👥 Capacité : " + espace.getCapacite() + "\n" +
@@ -41,25 +55,77 @@ public class DetailEspace {
                         "🏢 Type : " + espace.getTypeEspace()
         );
 
+        // Afficher les organisateurs et la carte
         afficherOrganisateurs(idEspace);
+        afficherCarte(espace.getAdresse());
     }
 
+    /**
+     * Affiche la carte Google Maps en fonction de l'adresse fournie.
+     *
+     * @param adresse L'adresse à afficher sur la carte.
+     */
+    private void afficherCarte(String adresse) {
+        if (mapView == null) {
+            System.out.println("❌ WebView est NULL !");
+            return;
+        }
+
+        WebEngine webEngine = mapView.getEngine();
+        if (webEngine == null) {
+            System.out.println("❌ WebEngine est NULL !");
+            return;
+        }
+
+        Platform.runLater(() -> {
+            webEngine.setJavaScriptEnabled(true);
+
+            // Ajouter un écouteur pour détecter les erreurs
+            webEngine.setOnError(event -> System.out.println("❌ Erreur WebView : " + event.getMessage()));
+
+            // Ajouter un écouteur de chargement
+            webEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue == Worker.State.SUCCEEDED) {
+                    System.out.println("✅ Carte chargée avec succès !");
+                } else if (newValue == Worker.State.FAILED) {
+                    System.out.println("❌ Échec du chargement de la carte.");
+                    System.out.println("Erreur : " + webEngine.getLoadWorker().getException());
+                }
+            });
+
+            // Chargement de Google Maps avec l'adresse
+            String googleMapsUrl = "https://www.google.com/maps/search/?api=1&query=" + adresse.replace(" ", "+");
+            webEngine.load(googleMapsUrl);
+        });
+    }
+
+    /**
+     * Affiche les organisateurs associés à l'espace.
+     *
+     * @param idEspace L'ID de l'espace.
+     */
     private void afficherOrganisateurs(int idEspace) {
         organisateurContainer.getChildren().clear();
 
         List<Organisateur> organisateurs = serviceOrganisateur.getOrganisateursByEspace(idEspace);
 
         if (organisateurs.isEmpty()) {
-            Label noOrganisateur = new Label("❌ Aucun organisateur pour cet espace.");
+            Label noOrganisateur = new Label("❌ Aucun organisateur trouvé.");
             noOrganisateur.setStyle("-fx-font-size: 16px; -fx-text-fill: white;");
             organisateurContainer.getChildren().add(noOrganisateur);
         } else {
             for (Organisateur organisateur : organisateurs) {
                 HBox card = new HBox(15);
-                card.setStyle("-fx-padding: 15px; -fx-background-color: #ffffff; -fx-border-radius: 10px; -fx-border-color: #8a2be2;"
-                        + "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 5);");
-                card.setPrefHeight(80);
+                card.setStyle("-fx-padding: 15px; -fx-background-color: white; -fx-border-radius: 10px; "
+                        + "-fx-border-color: #8a2be2; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 5);");
+                card.setPrefHeight(100);
+                card.setPrefWidth(650);
 
+                // Ajout d'une icône de profil
+                Label profileIcon = new Label("🎭");
+                profileIcon.setStyle("-fx-font-size: 30px; -fx-text-fill: #8a2be2;");
+
+                // Conteneur des détails
                 VBox detailsBox = new VBox(5);
                 Label nameLabel = new Label("👤 " + organisateur.getNomOrg() + " " + organisateur.getPrenomOrg());
                 nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #4b0082;");
@@ -72,24 +138,44 @@ public class DetailEspace {
 
                 detailsBox.getChildren().addAll(nameLabel, descriptionLabel, phoneLabel);
 
-                // Boutons Modifier et Supprimer
+                // Conteneur des boutons
                 HBox buttonBox = new HBox(10);
+                buttonBox.setStyle("-fx-alignment: center-right;");
+
                 Button btnModifier = new Button("✏ Modifier");
-                btnModifier.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white; -fx-border-radius: 8px; -fx-padding: 5px 10px;");
+                btnModifier.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white; -fx-border-radius: 8px; -fx-padding: 7px 12px;");
                 btnModifier.setOnAction(event -> modifierOrganisateur(organisateur));
 
                 Button btnSupprimer = new Button("🗑 Supprimer");
-                btnSupprimer.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-border-radius: 8px; -fx-padding: 5px 10px;");
+                btnSupprimer.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-border-radius: 8px; -fx-padding: 7px 12px;");
                 btnSupprimer.setOnAction(event -> supprimerOrganisateur(organisateur));
 
                 buttonBox.getChildren().addAll(btnModifier, btnSupprimer);
 
-                card.getChildren().addAll(detailsBox, buttonBox);
+                card.getChildren().addAll(profileIcon, detailsBox, buttonBox);
                 organisateurContainer.getChildren().add(card);
             }
         }
     }
 
+    /**
+     * Supprime un organisateur après confirmation.
+     *
+     * @param organisateur L'organisateur à supprimer.
+     */
+    private void supprimerOrganisateur(Organisateur organisateur) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation de Suppression");
+        alert.setHeaderText("Suppression de l'organisateur");
+        alert.setContentText("Êtes-vous sûr de vouloir supprimer " + organisateur.getNomOrg() + " ?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            serviceOrganisateur.delete(organisateur.getIdOrg());
+            afficherOrganisateurs(idEspace); // Rafraîchir l'affichage après suppression
+        }
+    }
 
     private void modifierOrganisateur(Organisateur organisateur) {
         try {
@@ -110,22 +196,23 @@ public class DetailEspace {
         }
     }
 
-
-
-    private void supprimerOrganisateur(Organisateur organisateur) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmation de Suppression");
-        alert.setHeaderText("Suppression de l'organisateur");
-        alert.setContentText("Êtes-vous sûr de vouloir supprimer " + organisateur.getNomOrg() + " ?");
-
-        Optional<ButtonType> result = alert.showAndWait();
-
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            serviceOrganisateur.delete(organisateur.getIdOrg());
-            afficherOrganisateurs(idEspace); // Rafraîchir l'affichage après suppression
+    @FXML
+    private void retourAfficherEspaces(ActionEvent event) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/AfficherEspaces.fxml"));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
+    /**
+     * Ouvre la vue "GestionOrganisateur" pour ajouter un organisateur.
+     *
+     * @param event L'événement de clic sur le bouton.
+     */
     @FXML
     private void ajouterOrganisateur(ActionEvent event) {
         try {
@@ -145,15 +232,21 @@ public class DetailEspace {
     }
 
     @FXML
-    private void retourAfficherEspaces(ActionEvent event) {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/AfficherEspaces.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void buttonHoverEffect(javafx.scene.input.MouseEvent mouseEvent) {
+        Button btn = (Button) mouseEvent.getSource();
+        btn.setStyle("-fx-background-color: #8e44ad; -fx-text-fill: white; -fx-padding: 18px; -fx-border-width: 2px; -fx-border-color: white;");
+        DropShadow shadow = new DropShadow();
+        shadow.setRadius(10);
+        shadow.setOffsetX(0);
+        shadow.setOffsetY(5);
+        shadow.setColor(Color.web("#a868a0", 0.7));  // Une ombre douce
+        btn.setEffect(shadow);
     }
 
+    @FXML
+    public void buttonExitEffect(javafx.scene.input.MouseEvent mouseEvent) {
+        Button btn = (Button) mouseEvent.getSource();
+        btn.setStyle("-fx-background-color: transparent; -fx-text-fill: #a868a0;-fx-font-size: 18px; -fx-border-radius: 10px; -fx-padding: 10px 18px;");
+        btn.setEffect(null);
+    }
 }

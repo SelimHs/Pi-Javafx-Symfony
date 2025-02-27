@@ -9,7 +9,9 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ServiceBillet implements Iservice<Billet> {
 
@@ -128,4 +130,49 @@ public class ServiceBillet implements Iservice<Billet> {
         }
         return null;
     }
+
+    public Map<String, Integer> getBilletStatsParEvenement() {
+        Map<String, Integer> stats = new HashMap<>();
+
+        String query = "SELECT e.nomEvent, COUNT(b.idBillet) AS nombreBillets " +
+                "FROM billet b " +
+                "JOIN event e ON b.idEvent = e.idEvent " +
+                "GROUP BY e.nomEvent";
+
+        try (PreparedStatement preparedStatement = cnx.prepareStatement(query);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            while (resultSet.next()) {
+                String nomEvenement = resultSet.getString("nomEvent");
+                int nombreBillets = resultSet.getInt("nombreBillets");
+                stats.put(nomEvenement, nombreBillets);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Erreur lors du chargement des statistiques 📊 : " + e.getMessage());
+        }
+        return stats;
+    }
+
+    public int getBilletId(String proprietaire, int prix, LocalDateTime dateAchat, Billet.TypeBillet type, int eventId) {
+        int billetId = 0; // Default value (0 means not found)
+        try {
+            String query = "SELECT idBillet FROM billet WHERE proprietaire = ? AND prix = ? AND dateAchat = ? AND type = ? AND event_id = ?";
+            PreparedStatement ps = cnx.prepareStatement(query);
+            ps.setString(1, proprietaire);
+            ps.setInt(2, prix);
+            ps.setTimestamp(3, Timestamp.valueOf(dateAchat));
+            ps.setString(4, type.toString());
+            ps.setInt(5, eventId);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                billetId = rs.getInt("idBillet"); // Get the billet ID
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return billetId;
+    }
+
 }
