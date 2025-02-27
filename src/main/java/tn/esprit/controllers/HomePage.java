@@ -2,6 +2,8 @@ package tn.esprit.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import tn.esprit.controllers.Clock;
@@ -126,23 +128,42 @@ public class HomePage {
         emailLabel.getStyleClass().add("user-card-label");
         emailLabel.setMaxWidth(Double.MAX_VALUE);
 
-        Button detailsButton = new Button("Voir détails");
-        detailsButton.getStyleClass().add("action-button");
-        detailsButton.setStyle("-fx-font-size: 12px; -fx-background-color: #3498db; -fx-text-fill: white; -fx-background-radius: 20px; -fx-padding: 5px 10px;");
+        // 📌 Conteneur des icônes
+        HBox buttonBox = new HBox(10);
+        buttonBox.setStyle("-fx-alignment: center-right;");
+
+        // 👁️ Icône Voir Détails
+        Button detailsButton = new Button();
+        detailsButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
         detailsButton.setOnAction(event -> showUserDetails(user));
 
-        Button editButton = new Button("Modifier");
-        editButton.getStyleClass().add("action-button");
-        editButton.setStyle("-fx-font-size: 12px; -fx-background-color: #f1c40f; -fx-text-fill: white; -fx-background-radius: 20px; -fx-padding: 5px 10px;");
+        ImageView detailsIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/details-icon.png")));
+        detailsIcon.setFitWidth(18);
+        detailsIcon.setFitHeight(18);
+        detailsButton.setGraphic(detailsIcon);
+
+        // ✏️ Icône Modifier
+        Button editButton = new Button();
+        editButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
         editButton.setOnAction(event -> handleEditUser(user));
 
-        Button deleteButton = new Button("Supprimer");
-        deleteButton.getStyleClass().add("delete-button");
-        deleteButton.setStyle("-fx-font-size: 12px; -fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 20px; -fx-padding: 5px 10px;");
+        ImageView editIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/edit-icon.png")));
+        editIcon.setFitWidth(18);
+        editIcon.setFitHeight(18);
+        editButton.setGraphic(editIcon);
+
+        // 🗑️ Icône Supprimer
+        Button deleteButton = new Button();
+        deleteButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
         deleteButton.setOnAction(event -> handleDeleteUser(user));
 
-        HBox buttonBox = new HBox(detailsButton, editButton, deleteButton);
-        buttonBox.setSpacing(10);
+        ImageView trashIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/trash-icon.png")));
+        trashIcon.setFitWidth(18);
+        trashIcon.setFitHeight(18);
+        deleteButton.setGraphic(trashIcon);
+
+        // Ajout des icônes au conteneur
+        buttonBox.getChildren().addAll(detailsButton, editButton, deleteButton);
 
         VBox infoBox = new VBox(nameLabel, prenomLabel, emailLabel, buttonBox);
         infoBox.getStyleClass().add("user-card-info");
