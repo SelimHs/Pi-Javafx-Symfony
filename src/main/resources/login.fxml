@@ -98,31 +98,12 @@
                            -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 12, 0, 2, 2);"/>
 
             <!-- Séparateur -->
-            <Label text="OU" style="-fx-text-fill: #a868a0; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+            <Label  style="-fx-text-fill: #a868a0; -fx-font-size: 16px; -fx-font-weight: bold;"/>
 
             <!-- Bouton Continuer avec Mail -->
-            <Button text="Continuer avec Mail" onAction="#handleContinueWithMail"
-                    style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14px;
-                           -fx-font-weight: bold; -fx-background-radius: 10px; -fx-padding: 12px 30px;
-                           -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 12, 0, 2, 2);">
-                <graphic>
-                    <ImageView fitWidth="24" fitHeight="24">
-                        <Image url="@images/mail.png"/>
-                    </ImageView>
-                </graphic>
-            </Button>
+
 
             <!-- Bouton Continuer avec Facebook -->
-            <Button text="Continuer avec Facebook" onAction="#handleContinueWithFacebook"
-                    style="-fx-background-color: #3b5998; -fx-text-fill: white; -fx-font-size: 14px;
-                           -fx-font-weight: bold; -fx-background-radius: 10px; -fx-padding: 12px 30px;
-                           -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 12, 0, 2, 2);">
-                <graphic>
-                    <ImageView fitWidth="24" fitHeight="24">
-                        <Image url="@images/facebook.png"/>
-                    </ImageView>
-                </graphic>
-            </Button>
         </VBox>
     </center>
 
