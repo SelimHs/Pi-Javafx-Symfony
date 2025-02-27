@@ -1,5 +1,9 @@
 package tn.esprit.controllers;
 
+import javafx.event.ActionEvent;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import tn.esprit.controllers.Clock;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -287,6 +291,36 @@ public class HomePage {
         } catch (IOException e) {
             showAlert("Erreur", "Impossible de charger la page de connexion.");
             e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void buttonHoverEffect(MouseEvent mouseEvent) {
+        Button btn = (Button) mouseEvent.getSource();
+        btn.setStyle("-fx-background-color: #8e44ad; -fx-text-fill: white; -fx-padding: 18px; -fx-border-width: 2px; -fx-border-color: white;");
+        DropShadow shadow = new DropShadow();
+        shadow.setRadius(10);
+        shadow.setOffsetX(0);
+        shadow.setOffsetY(5);
+        shadow.setColor(Color.web("#a868a0", 0.7));
+        btn.setEffect(shadow);
+    }
+
+    @FXML
+    public void buttonExitEffect(MouseEvent mouseEvent) {
+        Button btn = (Button) mouseEvent.getSource();
+        btn.setStyle("-fx-background-color: transparent; -fx-text-fill: #a868a0;-fx-font-size: 18px; -fx-border-radius: 10px; -fx-padding: 10px 18px;");
+        btn.setEffect(null);
+    }
+
+    public void goToAcceuil(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Acceuil.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (IOException e) {
+            System.out.println("❌ Erreur : " + e.getMessage());
         }
     }
 }

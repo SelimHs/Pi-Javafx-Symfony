@@ -14,17 +14,21 @@
 <?import javafx.scene.layout.Priority?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.FontWeight?>
-
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.paint.Color?>
+
 <AnchorPane xmlns="http://javafx.com/javafx/20" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.HomePage"
             stylesheets="@/styles.css"
-            style="-fx-background-color: linear-gradient(to bottom, #2c3e50, #3498db);">
+            style="-fx-background-color: linear-gradient(to bottom, #030307, #131022);">
 
-    <!-- Barre latérale (Sidebar) -->
-    <VBox prefWidth="250" style="-fx-background-color: #34495e; -fx-padding: 20px; -fx-spacing: 20px; -fx-alignment: top-center;" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0">
+    <!-- 🌟 Barre latérale modernisée -->
+    <VBox prefWidth="220" style="-fx-background-color: linear-gradient(to bottom, #131022, #1A172A);
+                                -fx-padding: 15px; -fx-spacing: 20px; -fx-alignment: top-center;"
+          AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0">
 
         <!-- Logo -->
-        <ImageView fitWidth="120" fitHeight="120" pickOnBounds="true" preserveRatio="true" styleClass="logo">
+        <ImageView fitWidth="90" fitHeight="90" pickOnBounds="true" preserveRatio="true">
             <image>
                 <Image url="@images/logo.jpeg"/>
             </image>
@@ -39,7 +43,9 @@
         </VBox>
 
         <!-- Bouton utilisateur -->
-        <Button fx:id="userButton" text="Profil" styleClass="sidebar-button" style="-fx-font-size: 14px; -fx-text-fill: #ecf0f1;">
+        <Button fx:id="userButton" text="Profil" styleClass="sidebar-button"
+                style="-fx-font-size: 16px; -fx-text-fill: #a868a0; -fx-background-color: transparent; -fx-border-radius: 10px; -fx-padding: 12px 20px;"
+                onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect">
             <graphic>
                 <ImageView fitWidth="24" fitHeight="24">
                     <image>
@@ -50,25 +56,31 @@
         </Button>
 
         <!-- Autres Boutons -->
-        <Button fx:id="dashboardButton" text="Dashboard" styleClass="sidebar-button" style="-fx-font-size: 14px; -fx-text-fill: #ecf0f1;"/>
-        <Button fx:id="settingsButton" text="Paramètres" styleClass="sidebar-button" style="-fx-font-size: 14px; -fx-text-fill: #ecf0f1;"/>
+        <Button fx:id="dashboardButton" text="🏠 Accueil" styleClass="sidebar-button" onAction="#goToAcceuil"
+                style="-fx-font-size: 16px; -fx-text-fill: #a868a0; -fx-background-color: transparent; -fx-border-radius: 10px; -fx-padding: 12px 20px;"
+                onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"/>
+        <Button fx:id="settingsButton" text="Paramètres" styleClass="sidebar-button"
+                style="-fx-font-size: 16px; -fx-text-fill: #a868a0; -fx-background-color: transparent; -fx-border-radius: 10px; -fx-padding: 12px 20px;"
+                onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"/>
     </VBox>
 
-    <!-- Contenu principal -->
-    <VBox AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="270" AnchorPane.rightAnchor="0" style="-fx-padding: 20px;">
+    <!-- 🌟 Contenu principal -->
+    <VBox AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="250" AnchorPane.rightAnchor="0" style="-fx-padding: 20px;">
 
         <!-- Barre supérieure -->
         <HBox spacing="20" style="-fx-alignment: center-left; -fx-padding: 15px; -fx-background-color: rgba(255, 255, 255, 0.1); -fx-background-radius: 10px;">
 
             <!-- ComboBox pour le filtrage -->
-            <ComboBox fx:id="filterComboBox" promptText="Filtrer par..." styleClass="filter-combo-box" />
+            <ComboBox fx:id="filterComboBox" promptText="Filtrer par..."
+                      style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-size: 14px; -fx-border-radius: 10px;"/>
 
             <!-- ComboBox pour le tri -->
-            <ComboBox fx:id="sortOrderComboBox" promptText="Trier par ordre" styleClass="filter-combo-box" />
+            <ComboBox fx:id="sortOrderComboBox" promptText="Trier par ordre"
+                      style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-size: 14px; -fx-border-radius: 10px;"/>
 
             <!-- Champ de recherche -->
-            <TextField fx:id="searchField" promptText="Rechercher un utilisateur..." styleClass="search-field" HBox.hgrow="ALWAYS"
-                       style="-fx-font-size: 14px; -fx-background-radius: 20px; -fx-padding: 10px;"/>
+            <TextField fx:id="searchField" promptText="Rechercher un utilisateur..." HBox.hgrow="ALWAYS"
+                       style="-fx-font-size: 14px; -fx-background-radius: 20px; -fx-padding: 10px; -fx-background-color: rgba(255, 255, 255, 0.3); -fx-border-color: white;"/>
 
             <!-- Bouton de recherche -->
             <Button styleClass="search-button" style="-fx-background-radius: 20px; -fx-padding: 10px;">
