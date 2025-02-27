@@ -29,9 +29,14 @@ public class FrontEspace {
     private FlowPane espaceCardContainer; // UI Container for displaying spaces
 
     private final ServiceEspace serviceEspace = new ServiceEspace(); // Service for fetching spaces
+    @FXML
+    private Button btnAccueil, btnEvenements,btnEspace;
 
     @FXML
     public void initialize() {
+        applyHoverEffect(btnAccueil);
+        applyHoverEffect(btnEvenements);
+        applyHoverEffect(btnEspace);
         displaySpaces(); // Call the display method when the interface is initialized
     }
 
@@ -138,5 +143,9 @@ public class FrontEspace {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    private void applyHoverEffect(Button button) {
+        button.setOnMouseEntered(event -> button.setStyle("-fx-background-color: #F39C12; -fx-text-fill: white; -fx-border-radius: 10px; -fx-padding: 10px 18px;"));
+        button.setOnMouseExited(event -> button.setStyle("-fx-background-color: transparent; -fx-text-fill: #F39C12; -fx-border-radius: 10px; -fx-padding: 10px 18px;"));
     }
 }
