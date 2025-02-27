@@ -154,4 +154,25 @@ public class ServiceBillet implements Iservice<Billet> {
         return stats;
     }
 
+    public int getBilletId(String proprietaire, int prix, LocalDateTime dateAchat, Billet.TypeBillet type, int eventId) {
+        int billetId = 0; // Default value (0 means not found)
+        try {
+            String query = "SELECT idBillet FROM billet WHERE proprietaire = ? AND prix = ? AND dateAchat = ? AND type = ? AND event_id = ?";
+            PreparedStatement ps = cnx.prepareStatement(query);
+            ps.setString(1, proprietaire);
+            ps.setInt(2, prix);
+            ps.setTimestamp(3, Timestamp.valueOf(dateAchat));
+            ps.setString(4, type.toString());
+            ps.setInt(5, eventId);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                billetId = rs.getInt("idBillet"); // Get the billet ID
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return billetId;
+    }
+
 }

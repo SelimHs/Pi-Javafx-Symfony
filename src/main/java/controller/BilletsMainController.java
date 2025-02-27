@@ -180,7 +180,7 @@ public class BilletsMainController {
 
 
 
-    private void exportBilletToPdf(Billet billet) {
+    public void exportBilletToPdf(Billet billet) {
         String pdfUrl = PdfService.generatePdfFromBillet(
                 String.valueOf(billet.getIdBillet()),
                 billet.getProprietaire(),

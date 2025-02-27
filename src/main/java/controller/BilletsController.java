@@ -84,7 +84,6 @@ public class BilletsController {
         ServiceBillet sb = new ServiceBillet();
 
 
-
         if (billetProprietaire.getText() == null || billetProprietaire.getText().isEmpty()) {
             new Alert(Alert.AlertType.ERROR, "Le champ 'Propriétaire' ne peut pas être vide.").showAndWait();
             return;
@@ -160,4 +159,5 @@ public class BilletsController {
         btn.setEffect(null);
 
     }
+
 }
