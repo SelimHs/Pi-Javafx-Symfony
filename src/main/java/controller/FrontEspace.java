@@ -48,10 +48,10 @@ public class FrontEspace {
                 .map(Optional::get) // Extract Espace from Optional
                 .collect(Collectors.toList()); // Collect to List<Espace>
 
-        int columnCount = 3; // Display 3 spaces per row
+        int columnCount = 3; // 3 espaces par ligne
         int index = 0;
 
-        HBox rowContainer = new HBox(20); // Row container for horizontal spacing
+        HBox rowContainer = new HBox(20); // Conteneur de ligne pour l'affichage horizontal
         rowContainer.setStyle("-fx-alignment: center;");
 
         for (Espace espace : espaces) {
@@ -60,18 +60,14 @@ public class FrontEspace {
                     + "-fx-background-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);"
                     + "-fx-min-width: 250px; -fx-max-width: 250px; -fx-alignment: center; -fx-spacing: 12;");
 
-            // Image Handling
+            // 📌 Image de l’espace
             ImageView espaceImage = new ImageView();
             espaceImage.setFitHeight(150);
             espaceImage.setFitWidth(230);
             espaceImage.setPreserveRatio(true);
+            espaceImage.setImage(new Image(getClass().getResourceAsStream("/images/espace-placeholder.jpg"))); // Placeholder
 
-            // Use real image if available
-
-                espaceImage.setImage(new Image(getClass().getResourceAsStream("/images/espace-placeholder.jpg")));
-
-
-            // Labels
+            // 📌 Labels d'information
             Label title = new Label(espace.getNomEspace());
             title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
 
@@ -84,33 +80,49 @@ public class FrontEspace {
             Label price = new Label("💰 Prix: " + espace.getPrix() + " DT");
             price.setStyle("-fx-font-size: 15px; -fx-text-fill: #27AE60; -fx-font-weight: bold;");
 
-            // Details Button
+            // 📌 Bouton "Voir Détails"
             Button detailsButton = new Button("Voir Détails");
             detailsButton.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-border-radius: 5px;");
-            detailsButton.setOnAction(e -> showEspaceDetails(espace));
+            detailsButton.setOnAction(e -> showEspaceDetails(espace)); // Appel de la méthode pour ouvrir le détail
 
-            // Add elements to the card
+            // 📌 Ajouter les éléments à la carte
             card.getChildren().addAll(espaceImage, title, location, capacity, price, detailsButton);
 
-            // Add card to row
+            // 📌 Ajouter la carte à la ligne
             rowContainer.getChildren().add(card);
             index++;
 
-            // After adding 3 cards, add the row to the container and start a new row
+            // 📌 Ajouter la ligne complète au conteneur et en créer une nouvelle
             if (index % columnCount == 0 || index == espaces.size()) {
                 espaceCardContainer.getChildren().add(rowContainer);
-                rowContainer = new HBox(20); // Create new row
+                rowContainer = new HBox(20);
                 rowContainer.setStyle("-fx-alignment: center;");
             }
         }
     }
 
-
-
-    // Function to show details (Modify to open a new window if needed)
+    /**
+     * 🔍 Ouvre la page FrontDetailEspace.fxml pour afficher les détails de l'espace sélectionné.
+     */
     private void showEspaceDetails(Espace espace) {
-        System.out.println("Afficher les détails de l'espace : " + espace.getNomEspace());
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frontend/FrontDetailEspace.fxml"));
+            Parent root = loader.load();
+
+            // 📌 Récupérer le contrôleur de la nouvelle page et lui envoyer les données de l'espace
+            FrontDetailEspace controller = loader.getController();
+            controller.initData(espace);  // Transmettre les informations de l'espace
+
+            // 📌 Afficher la nouvelle scène
+            Stage stage = (Stage) espaceCardContainer.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("❌ Erreur lors du chargement de FrontDetailEspace.fxml");
+        }
     }
+
 
     // Navigation Methods
     public void goToAcceuil(ActionEvent actionEvent) {
