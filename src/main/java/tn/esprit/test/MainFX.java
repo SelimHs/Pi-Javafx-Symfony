@@ -17,12 +17,10 @@ public class MainFX extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Acceuil.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FrontAcceuil.fxml"));
         try {
             Parent root = loader.load();
             Scene scene = new Scene(root);
-            scene.getStylesheets().add(String.valueOf(getClass().getResource("/style.css")));
-
             primaryStage.setScene(scene);
             primaryStage.show();
 

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+
+<AnchorPane prefHeight="671.0" prefWidth="950.0"
+            style="-fx-background-color: linear-gradient(to bottom, #030307, #131022);"
+            xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controller.ReservationMainController">
+
+    <!-- 🌟 Barre latérale -->
+    <VBox layoutX="0.0" layoutY="0.0" prefHeight="671.0" prefWidth="220.0"
+          style="-fx-background-color: linear-gradient(to bottom, #131022, #1A172A);
+                 -fx-padding: 15px;
+                 -fx-border-radius: 15 0 0 15;
+                 -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 15, 0, 3, 3);">
+        <children>
+            <ImageView fitHeight="90.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@logo.png"/>
+                </image>
+            </ImageView>
+
+            <Label text="Gestion Réservations"
+
+                   style="-fx-font-size: 20px; -fx-text-fill: white; -fx-font-weight: bold;
+                          -fx-padding: 15px; -fx-alignment: center;"/>
+
+            <Button text="🏠 Accueil" onAction="#goToAcceuil" onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"
+
+                    style="-fx-background-color: transparent; -fx-text-fill: #a868a0;
+                           -fx-font-size: 16px; -fx-border-radius: 10px; -fx-padding: 12px 20px;"/>
+
+            <Button text="➕ Ajouter Réservation" onAction="#goToAjoutReservation" onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"
+
+                    style="-fx-background-color: transparent; -fx-text-fill: #a868a0;
+                           -fx-font-size: 16px; -fx-border-radius: 10px; -fx-padding: 12px 20px;"/>
+
+            <Button text="📋 Liste des Réservations" onAction="#displayReservations" onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"
+
+                    style="-fx-background-color: transparent; -fx-text-fill: #a868a0;
+                           -fx-font-size: 16px; -fx-border-radius: 10px; -fx-padding: 12px 20px;"/>
+        </children>
+    </VBox>
+
+    <!-- 🌟 Contenu principal -->
+    <VBox layoutX="250.0" layoutY="20.0" prefWidth="700.0"
+          style="-fx-alignment: center; -fx-padding: 20px;">
+        <children>
+            <Label text="📋 Liste des Réservations"
+                   style="-fx-font-size: 26px; -fx-text-fill: white; -fx-font-weight: bold;
+                          -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.8), 10, 0, 2, 2);"/>
+
+            <!-- 🔍 Barre de recherche et filtrage -->
+            <HBox spacing="15" style="-fx-padding: 15px; -fx-alignment: center;">
+                <ComboBox fx:id="filterCriteriaComboBox" promptText="Filtrer par..."
+                          style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-size: 14px;"/>
+
+                <ComboBox fx:id="sortOrderComboBox" promptText="Trier par ordre"
+                          style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-size: 14px;"/>
+
+                <TextField fx:id="searchField" prefWidth="300.0" promptText="🔍 Rechercher une réservation..."
+                           style="-fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;
+                                  -fx-border-color: white; -fx-background-color: rgba(255, 255, 255, 0.3);"/>
+
+                <Button text="Rechercher" onAction="#searchReservations"
+                        style="-fx-background-color: #8e44ad; -fx-text-fill: white; -fx-border-radius: 10px; -fx-padding: 10px;"/>
+            </HBox>
+
+            <!-- 📌 Zone d'affichage des réservations -->
+            <ScrollPane fitToWidth="true" fitToHeight="true" hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED"
+                        style="-fx-padding: 10px;">
+                <FlowPane fx:id="reservationCardContainer" hgap="15" vgap="15" prefHeight="500.0" prefWidth="700.0"
+                          style="-fx-background-color: rgba(255, 255, 255, 0.1); -fx-padding: 15px;"/>
+            </ScrollPane>
+        </children>
+    </VBox>
+</AnchorPane>

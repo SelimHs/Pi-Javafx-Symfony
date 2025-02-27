@@ -1,0 +1,48 @@
+
+    /* Applique un style de base pour l'ensemble du formulaire */
+.root {
+    -fx-padding: 20px;
+    -fx-background-color: #f4f4f9;
+    -fx-font-family: "Arial", sans-serif;
+}
+
+/* Style des champs de texte */
+.text-field, .password-field, .text-area {
+    -fx-pref-width: 300px;
+    -fx-pref-height: 30px;
+    -fx-background-color: white;
+    -fx-border-radius: 5px;
+    -fx-border-color: #cccccc;
+    -fx-padding: 5px;
+}
+
+/* Style des boutons */
+.button {
+    -fx-pref-width: 200px;
+    -fx-pref-height: 40px;
+    -fx-background-color: #007bff;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-border-radius: 5px;
+}
+
+.button:hover {
+    -fx-background-color: #0056b3;
+}
+
+/* Style des CheckBoxes */
+.check-box {
+    -fx-font-size: 14px;
+}
+
+/* Style des Labels */
+.label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+}
+
+/* Message d'erreur */
+#error-message {
+    -fx-text-fill: red;
+    -fx-font-weight: bold;
+}

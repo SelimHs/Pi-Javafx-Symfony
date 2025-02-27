@@ -24,11 +24,12 @@ private myDatabase(){
 public static myDatabase getInstance(){
     if (instance==null)
         instance=new myDatabase();
-        return instance;
+    return instance;
 }
 public Connection getConnection(){
     return conn;
 }
+
 
 
 }

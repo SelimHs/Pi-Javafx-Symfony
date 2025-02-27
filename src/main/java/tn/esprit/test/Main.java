@@ -1,33 +1,31 @@
 package tn.esprit.test;
 
-import tn.esprit.models.fournisseur;
-import tn.esprit.models.Produit;
-import tn.esprit.services.ServiceFournisseur;
-import tn.esprit.services.ServiceProduit;
-import tn.esprit.utils.myDatabase;
+import tn.esprit.models.Billet;
+import tn.esprit.models.Event;
+import tn.esprit.services.ServiceBillet;
+import tn.esprit.services.ServiceEvent;
+
+
+import java.time.LocalDateTime;
+import java.util.Date;
 
 public class Main {
 
     public static void main(String[] args) {
-        // Création des services
-        ServiceFournisseur sf = new ServiceFournisseur();
-        ServiceProduit serviceProduit = new ServiceProduit();
 
-        // Ajout d'une personne
+        Event event = new Event();
+        ServiceEvent ev = new ServiceEvent();
+        ServiceBillet billet = new ServiceBillet();
 
-        // Ajout d'un fournisseur
-        fournisseur fournisseur = new fournisseur("Mohamed", "Fournisseur de fromage", "Fournisseur Permanent");
-        sf.add(fournisseur);
+        ev.add(new Event(100,100,"t'hour","Boumestir","wechCousin","24/12/2020"));
+        billet.add(new Billet(100, event, "user2", Billet.TypeBillet.SIMPLE));
+        billet.add(new Billet(500, event, "MOHSEN", Billet.TypeBillet.VIP));
 
-        // Récupération du fournisseur inséré (si besoin d'un ID auto-généré)
-        fournisseur lastFournisseur = sf.getAll().get(sf.getAll().size() - 1); // Dernier fournisseur ajouté
+        System.out.println(ev.getAll());
+        System.out.println(billet.getAll());
 
-        // Ajout d'un produit
-        //Produit produit = new Produit(0, "Fromage Brie", 50, "Fromage de haute qualité", Produit.CategorieProduit.ALIMENTAIRE, 100, lastFournisseur.getIdFournisseur());
-        //serviceProduit.add(produit);
+        //System.out.println(ev.findById(1));
+        //System.out.println(billet.findById(1));
 
-        // Affichage des données
-        System.out.println("Liste des fournisseurs : " + sf.getAll());
-        System.out.println("Liste des produits : " + serviceProduit.getAll());
     }
 }

@@ -1,58 +1,49 @@
-/* Style général */
-.root {
-    -fx-background-color: #f4f4f4;
+/* Formulaire de connexion */
+.form-container {
+    -fx-background-color: #ffffff;
+    -fx-padding: 20px;
+    -fx-border-radius: 10px;
+    -fx-effect: dropshadow(gaussian, #cccccc, 10, 0, 0, 0);
 }
 
 /* Style des champs de texte */
-.text-field {
-    -fx-font-size: 14px;
+.text-field, .password-field {
+    -fx-pref-width: 250px;
+    -fx-pref-height: 35px;
+    -fx-background-color: white;
+    -fx-border-radius: 5px;
+    -fx-border-color: #cccccc;
     -fx-padding: 5px;
-    -fx-border-radius: 5px;
-    -fx-border-color: #ccc;
-    -fx-background-radius: 5px;
 }
 
-/* Style des boutons */
-.button {
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-background-color: #4CAF50;
+/* Boutons de connexion et inscription */
+.login-button, .signup-button {
+    -fx-pref-width: 200px;
+    -fx-pref-height: 40px;
+    -fx-background-color: #007bff;
     -fx-text-fill: white;
-    -fx-border-radius: 5px;
-    -fx-padding: 7px 15px;
-}
-
-.button:hover {
-    -fx-background-color: #45a049;
-}
-
-#btnSupprimer {
-    -fx-background-color: #e74c3c;
-}
-
-#btnSupprimer:hover {
-    -fx-background-color: #c0392b;
-}
-
-#btnModifier {
-    -fx-background-color: #f39c12;
-}
-
-#btnModifier:hover {
-    -fx-background-color: #e67e22;
-}
-
-#btnAfficher {
-    -fx-background-color: #3498db;
-}
-
-#btnAfficher:hover {
-    -fx-background-color: #2980b9;
-}
-
-/* Style du label d'affichage */
-#labelAffichage {
     -fx-font-size: 16px;
-    -fx-text-fill: #333;
+    -fx-border-radius: 5px;
+}
+
+.login-button:hover, .signup-button:hover {
+    -fx-background-color: #0056b3;
+}
+
+/* Lien mot de passe oublié */
+.forgot-password {
+    -fx-font-size: 14px;
+    -fx-text-fill: #007bff;
+    -fx-cursor: hand;
     -fx-font-weight: bold;
+}
+
+/* Support FAQ */
+.support-faq {
+    -fx-font-size: 12px;
+    -fx-text-fill: #333333;
+    -fx-cursor: hand;
+}
+
+.show-password-button {
 }

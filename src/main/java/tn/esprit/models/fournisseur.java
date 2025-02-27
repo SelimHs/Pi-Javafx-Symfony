@@ -6,10 +6,10 @@ public class fournisseur {
     private String nomFournisseur;
     private String description;
     private String type;
+    private String telephone;  // Ajout de l'attribut téléphone
 
     // Constructeur par défaut
-    public fournisseur() {
-    }
+    public fournisseur() {}
 
     // Constructeur avec paramètres
     public fournisseur(int idFournisseur, String nomFournisseur, String description, String type) {
@@ -17,45 +17,31 @@ public class fournisseur {
         this.nomFournisseur = nomFournisseur;
         this.description = description;
         this.type = type;
+        this.telephone = telephone;
     }
 
-    public fournisseur(String nomFournisseur, String description, String type) {
+    public fournisseur(String nomFournisseur, String description, String type, String telephone) {
         this.nomFournisseur = nomFournisseur;
         this.description = description;
         this.type = type;
+        this.telephone = telephone;
     }
 
-    public int getIdFournisseur() {
-        return idFournisseur;
-    }
+    // Getters et Setters
+    public int getIdFournisseur() { return idFournisseur; }
+    public void setIdFournisseur(int idFournisseur) { this.idFournisseur = idFournisseur; }
 
-    public void setIdFournisseur(int idFournisseur) {
-        this.idFournisseur = idFournisseur;
-    }
+    public String getNomFournisseur() { return nomFournisseur; }
+    public void setNomFournisseur(String nomFournisseur) { this.nomFournisseur = nomFournisseur; }
 
-    public String getNomFournisseur() {
-        return nomFournisseur;
-    }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
-    public void setNomFournisseur(String nomFournisseur) {
-        this.nomFournisseur = nomFournisseur;
-    }
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
+    public String getTelephone() { return telephone; }
+    public void setTelephone(String telephone) { this.telephone = telephone; }
 
     @Override
     public String toString() {
@@ -64,6 +50,7 @@ public class fournisseur {
                 ", nomFournisseur='" + nomFournisseur + '\'' +
                 ", description='" + description + '\'' +
                 ", type='" + type + '\'' +
+                ", telephone='" + telephone + '\'' +
                 '}';
     }
 }

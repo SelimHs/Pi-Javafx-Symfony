@@ -1,0 +1,104 @@
+/* Style général */
+.root {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 16px;
+}
+
+/* Barre latérale */
+.sidebar {
+    -fx-background-color: #2c2c54;
+    -fx-padding: 30px;
+    -fx-spacing: 25px;
+    -fx-alignment: center;
+}
+
+.sidebar-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-padding: 15px 25px;
+    -fx-alignment: center-left;
+    -fx-cursor: hand;
+}
+
+.sidebar-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-text-fill: #ffaf7b;
+}
+
+.user-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1px;
+    -fx-padding: 15px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 5, 0, 0);
+    -fx-pref-width: -1; /* Permettre à la carte de s'étendre */
+    -fx-max-width: Infinity; /* Permettre à la carte de s'étendre */
+}
+
+.user-card-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+    -fx-wrap-text: true; /* Permettre au texte de passer à la ligne */
+}
+
+.user-card-info {
+    -fx-spacing: 10px;
+    -fx-pref-width: -1; /* Permettre à la VBox de s'étendre */
+    -fx-max-width: Infinity; /* Permettre à la VBox de s'étendre */
+}
+
+.user-card:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+}
+
+.user-card-label {
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.user-card-checkbox {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+}
+
+/* Boutons d'actions */
+.action-button {
+    -fx-background-color: #3a1c71;
+    -fx-text-fill: white;
+    -fx-padding: 10px 20px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+}
+
+.action-button:hover {
+    -fx-background-color: #5a2c91;
+}
+
+.delete-button {
+    -fx-background-color: #d76d77;
+    -fx-text-fill: white;
+    -fx-padding: 10px 20px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+}
+
+.delete-button:hover {
+    -fx-background-color: #ffaf7b;
+}
+.filter-combo-box {
+    -fx-font-size: 14px;
+    -fx-background-radius: 20px;
+    -fx-padding: 5px 10px;
+    -fx-pref-width: 150px; /* Largeur par défaut */
+}
+#clockLabel {
+     -fx-font-size: 24px;
+     -fx-font-weight: bold;
+     -fx-text-fill: #ffffff;
+ }
