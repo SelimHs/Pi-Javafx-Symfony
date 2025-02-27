@@ -9,6 +9,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
@@ -28,15 +30,20 @@ public class FrontDetailEspace {
     @FXML private VBox organisateurContainer;
     @FXML private WebView mapView;
     @FXML private Button retourButton;
+    @FXML private ImageView espaceImage; // ✅ Ajout de l'ImageView
 
     private int idEspace;
     private final ServiceOrganisateur serviceOrganisateur = new ServiceOrganisateur();
-
+    @FXML
+    private Button btnAccueil, btnEvenements,btnEspace;
     /**
      * Initialise les détails de l'espace et charge les organisateurs + la carte.
      * @param espace L'objet Espace à afficher
      */
     public void initData(Espace espace) {
+        applyHoverEffect(btnAccueil);
+        applyHoverEffect(btnEvenements);
+        applyHoverEffect(btnEspace);
         this.idEspace = espace.getIdEspace();
         titleLabel.setText("Détails de l'Espace : " + espace.getNomEspace());
 
@@ -46,10 +53,17 @@ public class FrontDetailEspace {
                         "📅 Disponibilité : " + espace.getDisponibilite() + "\n" +
                         "💰 Prix : " + espace.getPrix() + " DT\n" +
                         "🏢 Type : " + espace.getTypeEspace()
+
         );
+        espaceImage.setImage(new Image(getClass().getResourceAsStream("/images/espace-placeholder.jpg")));
+
 
         afficherOrganisateurs(idEspace);
         afficherCarte(espace.getAdresse());
+    }
+    private void applyHoverEffect(Button button) {
+        button.setOnMouseEntered(event -> button.setStyle("-fx-background-color: #F39C12; -fx-text-fill: white; -fx-border-radius: 10px; -fx-padding: 10px 18px;"));
+        button.setOnMouseExited(event -> button.setStyle("-fx-background-color: transparent; -fx-text-fill: #F39C12; -fx-border-radius: 10px; -fx-padding: 10px 18px;"));
     }
 
     /**
@@ -124,6 +138,30 @@ public class FrontDetailEspace {
      */
     @FXML
     private void retourAfficherEspaces(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frontend/FrontEspace.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void goToEvenements(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frontend/FrontEvents.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void goToEspace(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frontend/FrontEspace.fxml"));
             Parent root = loader.load();

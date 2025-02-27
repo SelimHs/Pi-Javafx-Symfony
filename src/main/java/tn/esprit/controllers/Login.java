@@ -156,12 +156,7 @@ public class Login {
 
     @FXML
     private void handleLoginButtonAction() {
-        String emailb = "b";
-        String passb = "b";
-        if (emailField.equals(emailb) && password.equals(passb)) {
-            redirectToFrontEnd();
-        }
-         else if (isValidUser()) {
+        if (isValidUser()) {
             if (onLoginSuccess != null) {
                 onLoginSuccess.run();
             }
@@ -324,16 +319,6 @@ public class Login {
     private void redirectToHomePage() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Acceuil.fxml"));
-            Scene homeScene = new Scene(loader.load());
-            Stage stage = (Stage) loginButton.getScene().getWindow();
-            stage.setScene(homeScene);
-            stage.show();
-        } catch (IOException e) {
-            showAlert("Erreur", "Impossible de charger la page d'accueil.");
-        }
-    }private void redirectToFrontEnd() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FrontAcceuil.fxml"));
             Scene homeScene = new Scene(loader.load());
             Stage stage = (Stage) loginButton.getScene().getWindow();
             stage.setScene(homeScene);
