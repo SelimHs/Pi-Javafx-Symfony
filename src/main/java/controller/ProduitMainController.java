@@ -133,6 +133,7 @@ public class ProduitMainController implements Initializable {
         detailsIcon.setFitHeight(18);
         detailsButton.setGraphic(detailsIcon);
 
+
         // ✏️ Icône Modifier
         Button modifyButton = new Button();
         modifyButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
@@ -161,20 +162,25 @@ public class ProduitMainController implements Initializable {
     }
 
 
-    // Afficher les détails d'un produit
     private void showProduitDetails(Produit produit) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Détails du Produit");
-        alert.setHeaderText(produit.getNomProduit());
-        alert.setContentText("🆔 ID : " + produit.getIdProduit() +
-                "\n💰 Prix : " + produit.getPrixProduit() + " DT" +
-                "\n📝 Description : " + produit.getDescription() +
-                "\n📦 Catégorie : " + produit.getCategorie().name() +
-                "\n🔢 Quantité : " + produit.getQuantite() +
-                "\n🏢 Fournisseur : " + (produit.getFournisseur() != null ? produit.getFournisseur().getNomFournisseur() : "Non défini"));
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/DetailProduit.fxml"));
+            Parent root = loader.load();
 
-        alert.showAndWait();
+            // ✅ Récupérer le contrôleur et passer les données du produit
+            DetailProduit controller = loader.getController();
+            controller.initData(produit);
+
+            // ✅ Afficher dans une nouvelle fenêtre
+            Stage stage = new Stage();
+            stage.setTitle("Détails du Produit");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 
     // Rediriger vers la page de modification d'un produit
     @FXML

@@ -127,7 +127,7 @@ public class FournisseurMainController implements Initializable {
         HBox buttonContainer = new HBox(8);
         buttonContainer.setStyle("-fx-alignment: center;");
 
-        // 👁️ Icône Voir Détails
+        // 🔍 Icône Voir Détails
         Button detailsButton = new Button();
         detailsButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
         detailsButton.setOnAction(e -> showFournisseurDetails(f));
@@ -136,6 +136,7 @@ public class FournisseurMainController implements Initializable {
         detailsIcon.setFitWidth(18);
         detailsIcon.setFitHeight(18);
         detailsButton.setGraphic(detailsIcon);
+
 
         // ✏️ Icône Modifier
         Button modifyButton = new Button();
@@ -166,18 +167,25 @@ public class FournisseurMainController implements Initializable {
     }
 
 
-    // Afficher les détails d'un fournisseur
     private void showFournisseurDetails(fournisseur f) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Détails du Fournisseur");
-        alert.setHeaderText(f.getNomFournisseur());
-        alert.setContentText("🆔 ID : " + f.getIdFournisseur() +
-                "\n📝 Description : " + f.getDescription() +
-                "\n🏷 Type : " + f.getType() +
-                "\n📞 Téléphone : " + f.getTelephone());
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/DetailFournisseur.fxml"));
+            Parent root = loader.load();
 
-        alert.showAndWait();
+            // ✅ Récupérer le contrôleur et passer les données du fournisseur
+            DetailFournisseur controller = loader.getController();
+            controller.initData(f);
+
+            // ✅ Afficher dans une nouvelle fenêtre
+            Stage stage = new Stage();
+            stage.setTitle("Détails du Fournisseur");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 
     // Rediriger vers la page de modification d'un fournisseur
     @FXML

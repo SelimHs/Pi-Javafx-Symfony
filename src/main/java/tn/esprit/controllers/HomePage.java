@@ -1,5 +1,6 @@
 package tn.esprit.controllers;
 
+import controller.DetailUser;
 import javafx.event.ActionEvent;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
@@ -132,10 +133,10 @@ public class HomePage {
         HBox buttonBox = new HBox(10);
         buttonBox.setStyle("-fx-alignment: center-right;");
 
-        // 👁️ Icône Voir Détails
+        // 🔍 Icône Voir Détails
         Button detailsButton = new Button();
         detailsButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
-        detailsButton.setOnAction(event -> showUserDetails(user));
+        detailsButton.setOnAction(e -> showUserDetails(user));
 
         ImageView detailsIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/details-icon.png")));
         detailsIcon.setFitWidth(18);
@@ -173,28 +174,25 @@ public class HomePage {
         userCard.getChildren().add(infoBox);
         return userCard;
     }
-
     private void showUserDetails(Users user) {
-        Alert detailsAlert = new Alert(Alert.AlertType.INFORMATION);
-        detailsAlert.setTitle("Détails de l'utilisateur");
-        detailsAlert.setHeaderText("Informations complètes de " + user.getNom() + " " + user.getPrenom());
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/DetailUser.fxml"));
+            Parent root = loader.load();
 
-        VBox content = new VBox(10);
-        content.setAlignment(Pos.CENTER_LEFT);
+            // ✅ Récupérer le contrôleur et passer les données de l'utilisateur
+            DetailUser controller = loader.getController();
+            controller.initData(user);
 
-        Label nameLabel = new Label("Nom: " + user.getNom());
-        Label prenomLabel = new Label("Prénom: " + user.getPrenom());
-        Label emailLabel = new Label("Email: " + user.getEmail());
-        Label phoneLabel = new Label("Téléphone: " + user.getNumeroTelephone());
-        Label addressLabel = new Label("Adresse: " + user.getAdresse());
-        Label typeLabel = new Label("Type: " + user.getType());
-        Label genreLabel = new Label("Genre: " + user.getGenre());
-
-        content.getChildren().addAll(nameLabel, prenomLabel, emailLabel, phoneLabel, addressLabel, typeLabel, genreLabel);
-
-        detailsAlert.getDialogPane().setContent(content);
-        detailsAlert.showAndWait();
+            // ✅ Afficher dans une nouvelle fenêtre
+            Stage stage = new Stage();
+            stage.setTitle("Détails de l'Utilisateur");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 
     @FXML
     private void handleAddUser() {
