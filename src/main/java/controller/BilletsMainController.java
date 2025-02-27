@@ -23,7 +23,9 @@ import tn.esprit.services.ServiceBillet;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BilletsMainController {
 
@@ -40,15 +42,34 @@ public class BilletsMainController {
     @javafx.fxml.FXML
     private Button deleteBouton;
 
-    //here lies my init
+    @FXML
+    private ComboBox<String> filterCriteriaComboBox; // Pour le filtrage
+    @FXML
+    private ComboBox<String> sortOrderComboBox; // Pour le tri
+
     @FXML
     public void initialize() {
+        // Initialisation des ComboBox et autres éléments
+        filterCriteriaComboBox.setItems(FXCollections.observableArrayList(
+                "Propriétaire", "Date d'achat", "Prix", "Type", "Événement"
+        ));
+        filterCriteriaComboBox.setValue("Propriétaire");
 
-        displayBillets(null);
+        sortOrderComboBox.setItems(FXCollections.observableArrayList(
+                "Croissant", "Décroissant"
+        ));
+        sortOrderComboBox.setValue("Croissant");
 
+        // Ajouter des écouteurs
+        filterCriteriaComboBox.setOnAction(event -> applyFilterAndSort());
+        sortOrderComboBox.setOnAction(event -> applyFilterAndSort());
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> applyFilterAndSort());
 
-        searchField.textProperty().addListener((observable, oldValue, newValue) -> filterBillets(newValue));
+        // Charger et afficher les billets
+        applyFilterAndSort();
     }
+
+
 
     //Here lies my navigation
     @FXML
@@ -94,10 +115,8 @@ public class BilletsMainController {
 
     @FXML
     public void deleteAndRefreshBillet(Billet billet) {
-        ServiceBillet se = new ServiceBillet();
-        se.delete(billet);
-        billetCardContainer.getChildren().clear();
-        displayBillets(null);
+        sb.delete(billet);
+        applyFilterAndSort(); // Rafraîchir l'affichage après la suppression
     }
 
 
@@ -107,48 +126,61 @@ public class BilletsMainController {
     @javafx.fxml.FXML
 
 
-    public void displayBillets(javafx.event.ActionEvent actionEvent) {
+    private void applyFilterAndSort() {
         billetCardContainer.getChildren().clear();
 
+        // Récupérer tous les billets
         List<Billet> billets = sb.getAll();
-        for (Billet billet : billets) {
-            VBox card = new VBox();
-            card.setStyle("-fx-background-color: white; -fx-padding: 10px; -fx-border-radius: 10px; "
-                    + "-fx-background-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);"
-                    + "-fx-min-width: 200px; -fx-max-width: 200px; -fx-alignment: center; -fx-spacing: 10;");
 
-            Label title = new Label("Ticket de " + billet.getProprietaire());
-            title.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        // 🔍 Filtrage
+        String searchText = searchField.getText().toLowerCase();
+        String filterCriteria = filterCriteriaComboBox.getValue();
 
-            Label name = new Label(billet.getProprietaire());
-            name.setStyle("-fx-font-size: 12px; -fx-font-weight: bold;");
-            Label price = new Label("💰 " + billet.getPrix() + " DT");
-            Label eventName = new Label("🎉 " + billet.getEvent());
+        List<Billet> filteredBillets = billets.stream()
+                .filter(billet -> {
+                    switch (filterCriteria) {
+                        case "Propriétaire":
+                            return billet.getProprietaire().toLowerCase().contains(searchText);
+                        case "Date d'achat":
+                            return billet.getDateAchat().toString().toLowerCase().contains(searchText);
+                        case "Prix":
+                            return String.valueOf(billet.getPrix()).contains(searchText);
+                        case "Type":
+                            return billet.getType().toString().toLowerCase().contains(searchText);
+                        case "Événement":
+                            return billet.getEvent().getNomEvent().toLowerCase().contains(searchText);
+                        default:
+                            return true; // Aucun filtre appliqué
+                    }
+                })
+                .collect(Collectors.toList());
 
-            Button detailsButton = new Button("Voir Détails");
-            detailsButton.setOnAction(b -> showBilletDetails(billet));
+        // 🔄 Tri
+        String sortOrder = sortOrderComboBox.getValue();
+        Comparator<Billet> comparator = switch (filterCriteria) {
+            case "Propriétaire" -> Comparator.comparing(Billet::getProprietaire, String.CASE_INSENSITIVE_ORDER);
+            case "Date d'achat" -> Comparator.comparing(Billet::getDateAchat);
+            case "Prix" -> Comparator.comparingDouble(Billet::getPrix);
+            case "Type" -> Comparator.comparing(Billet::getType);
+            case "Événement" -> Comparator.comparing(billet -> billet.getEvent().getNomEvent(), String.CASE_INSENSITIVE_ORDER);
+            default -> Comparator.comparing(Billet::getProprietaire, String.CASE_INSENSITIVE_ORDER); // Par défaut, tri par propriétaire
+        };
 
-
-            Button deleteButton = new Button("Supprimer");
-            deleteButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
-            deleteButton.setOnAction(e -> deleteAndRefreshBillet(billet));
-
-            Button editButton = new Button("Modifier");
-            editButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
-            editButton.setOnAction(e -> openEditPopup(billet,editButton));
-
-            Button exportPdfButton = new Button("Exporter en PDF");
-            exportPdfButton.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white;");
-            exportPdfButton.setOnAction(e -> exportBilletToPdf(billet));
-
-            card.getChildren().addAll(title, name, price, eventName, detailsButton,editButton, deleteButton,exportPdfButton);
-            billetCardContainer.getChildren().add(card);
-
+        // Inverser l'ordre si "Décroissant" est sélectionné
+        if ("Décroissant".equals(sortOrder)) {
+            comparator = comparator.reversed();
         }
+
+        // Appliquer le tri
+        filteredBillets.sort(comparator);
+
+        // Afficher les billets filtrés et triés
+        displayFilteredBillets(filteredBillets);
     }
 
 
-    private void exportBilletToPdf(Billet billet) {
+
+    public void exportBilletToPdf(Billet billet) {
         String pdfUrl = PdfService.generatePdfFromBillet(
                 String.valueOf(billet.getIdBillet()),
                 billet.getProprietaire(),
@@ -233,7 +265,6 @@ public class BilletsMainController {
             Button detailsButton = new Button("Voir Détails");
             detailsButton.setOnAction(b -> showBilletDetails(billet));
 
-
             Button deleteButton = new Button("Supprimer");
             deleteButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
             deleteButton.setOnAction(e -> deleteAndRefreshBillet(billet));
@@ -242,11 +273,14 @@ public class BilletsMainController {
             editButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
             editButton.setOnAction(e -> openEditPopup(billet, editButton));
 
-            card.getChildren().addAll(title, name, price, eventName, detailsButton, editButton, deleteButton);
+            Button exportPdfButton = new Button("Exporter en PDF");
+            exportPdfButton.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white;");
+            exportPdfButton.setOnAction(e -> exportBilletToPdf(billet));
+
+            card.getChildren().addAll(title, name, price, eventName, detailsButton, editButton, deleteButton, exportPdfButton);
             billetCardContainer.getChildren().add(card);
         }
     }
-
     @FXML
     public void buttonHoverEffect(javafx.scene.input.MouseEvent mouseEvent) {
         Button btn = (Button) mouseEvent.getSource();

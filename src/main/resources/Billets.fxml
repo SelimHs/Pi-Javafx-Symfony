@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.FlowPane?>
@@ -11,6 +12,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.effect.DropShadow?>
 
+<?import javafx.scene.control.ComboBox?>
 <AnchorPane prefHeight="671.0" prefWidth="950.0" style="-fx-background-color: linear-gradient(to bottom, #030307, #131022);"
             xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="controller.BilletsMainController">
@@ -61,36 +63,32 @@
 
                 <!-- Barre de recherche -->
                 <HBox spacing="10" style="-fx-padding: 10px;">
+                    <!-- ComboBox pour le critère de filtrage -->
+                    <ComboBox fx:id="filterCriteriaComboBox" promptText="Filtrer par..."
+                              style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-size: 14px;"/>
+
+                    <!-- ComboBox pour l'ordre de tri -->
+                    <ComboBox fx:id="sortOrderComboBox" promptText="Trier par ordre"
+                              style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-size: 14px;"/>
+
                     <TextField fx:id="searchField" prefWidth="400.0" promptText="Rechercher un billet..."
                                style="-fx-border-radius: 10px;
                                       -fx-background-radius: 10px;
                                       -fx-padding: 10px;
                                       -fx-border-color: white;
                                       -fx-background-color: rgba(255, 255, 255, 0.3);"/>
-                    <Button text="🔍 Rechercher"
-                            style="-fx-background-color: #9b59b6;
-                                   -fx-text-fill: white;
-                                   -fx-font-size: 14px;
-                                   -fx-font-weight: bold;
-                                   -fx-border-radius: 12px;
-                                   -fx-padding: 10px;"/>
+
                 </HBox>
 
-                <!-- Zone d'affichage des billets sous forme de cartes -->
-                <FlowPane fx:id="billetCardContainer" prefHeight="500.0" prefWidth="700.0" hgap="15" vgap="15"
-                          style="-fx-padding: 10px;"/>
+                <!-- 🌟 Zone d'affichage des billets sous forme de cartes avec ScrollPane -->
+                <ScrollPane fitToWidth="true" fitToHeight="true" hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED"
+                            style="-fx-padding: 10px;">
+                    <FlowPane fx:id="billetCardContainer" prefHeight="500.0" prefWidth="700.0" hgap="15" vgap="15"
+                              style="-fx-padding: 10px;"/>
+                </ScrollPane>
             </children>
         </VBox>
 
-        <!-- 🌟 Boutons d'action -->
-        <HBox layoutX="250.0" layoutY="595.0" spacing="10">
-            <Button onAction="#displayBillets" text="✔ Afficher Billets"
-                    style="-fx-background-color: #9b59b6;
-                           -fx-text-fill: white;
-                           -fx-font-size: 16px;
-                           -fx-font-weight: bold;
-                           -fx-border-radius: 12px;
-                           -fx-padding: 10px;"/>
-        </HBox>
+
     </children>
 </AnchorPane>

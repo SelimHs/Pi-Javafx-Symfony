@@ -1,9 +1,9 @@
 package tn.esprit.services;
 
-
 import model.Users;
 import org.mindrot.jbcrypt.BCrypt;
 import tn.esprit.utils.myDatabase;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +14,10 @@ public class UsersService implements service.IService<Users> {
 
     public UsersService() {
         con = myDatabase.getInstance().getConnection();
+    }
+    // Retourne la connexion à la base de données
+    public Connection getConnection() {
+        return this.con;
     }
 
     // Ajouter un utilisateur à la base de données
@@ -130,16 +134,81 @@ public class UsersService implements service.IService<Users> {
         return false; // L'email n'existe pas ou le mot de passe est incorrect
     }
 
-    // Vérifier si un email existe déjà dans la base de données
+    // Vérifier si un email existe dans la base de données
     public boolean isEmailExist(String email) {
-        String sql = "SELECT * FROM user WHERE email = ?";
-        try (PreparedStatement preparedStatement = con.prepareStatement(sql)) {
-            preparedStatement.setString(1, email);
-            ResultSet rs = preparedStatement.executeQuery();
-            return rs.next(); // Si un utilisateur avec cet email existe, retourne true
-        } catch (SQLException e) {
-            System.err.println("Error checking email: " + e.getMessage());
+        String query = "SELECT COUNT(*) FROM user WHERE email = ?";
+        try (PreparedStatement pst = con.prepareStatement(query)) {
+            pst.setString(1, email);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt(1);
+                System.out.println("Nombre d'utilisateurs trouvés avec cet email : " + count);
+                return count > 0;
+            }
+        } catch (SQLException ex) {
+            System.err.println("Erreur SQL lors de la vérification de l'email : " + ex.getMessage());
+            ex.printStackTrace();
         }
         return false;
+    }
+
+    // Mettre à jour le mot de passe d'un utilisateur
+    public boolean updatePassword(String email, String newPassword) {
+        if (!isEmailExist(email)) {
+            System.out.println("Email non trouvé dans la base de données.");
+            return false;
+        }
+
+        String query = "UPDATE user SET password = ? WHERE email = ?";
+        try (PreparedStatement pst = con.prepareStatement(query)) {
+            String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt()); // Hash du mot de passe
+            pst.setString(1, hashedPassword);
+            pst.setString(2, email);
+
+            int result = pst.executeUpdate();
+            if (result > 0) {
+                System.out.println("Mot de passe mis à jour avec succès pour l'email : " + email);
+                return true;
+            } else {
+                System.out.println("Aucune ligne mise à jour dans la base de données.");
+                return false;
+            }
+        } catch (SQLException ex) {
+            System.err.println("Erreur SQL lors de la mise à jour du mot de passe : " + ex.getMessage());
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    // Récupérer tous les emails avec enregistrer = TRUE
+    public List<String> getAllEmails() {
+        List<String> emails = new ArrayList<>();
+        String query = "SELECT email FROM user WHERE enregistrer = TRUE"; // Requête SQL pour récupérer les emails avec enregistrer = TRUE
+        try (Statement statement = con.createStatement();
+             ResultSet rs = statement.executeQuery(query)) {
+            while (rs.next()) {
+                String email = rs.getString("email");
+                emails.add(email); // Ajouter l'email à la liste
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching emails: " + e.getMessage());
+        }
+        return emails; // Retourner la liste des emails
+    }
+
+    // Récupérer le mot de passe associé à un email spécifique
+    public String getPasswordByEmail(String email) {
+        String passwordHash = null;
+        String query = "SELECT password FROM user WHERE email = ?"; // Requête SQL pour récupérer le mot de passe haché
+        try (PreparedStatement pst = con.prepareStatement(query)) {
+            pst.setString(1, email); // Définir l'email comme paramètre
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                passwordHash = rs.getString("password"); // Récupérer le mot de passe haché
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching password: " + e.getMessage());
+        }
+        return passwordHash; // Retourner le mot de passe haché (ou null si l'email n'existe pas)
     }
 }

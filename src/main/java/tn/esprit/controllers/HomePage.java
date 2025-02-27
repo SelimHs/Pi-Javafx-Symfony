@@ -1,45 +1,85 @@
 package tn.esprit.controllers;
 
 import javafx.event.ActionEvent;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import tn.esprit.controllers.Clock;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import model.Users;
 import tn.esprit.services.UsersService;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 
 public class HomePage {
     @FXML
-    private VBox userCardsContainer;
+    private GridPane userCards;
     @FXML
-    private Button deleteSelectedButton;
+    private ComboBox<String> sortOrderComboBox;
     @FXML
     private Button logoutButton;
     @FXML
     private TextField searchField;
+    @FXML
+    private ComboBox<String> filterComboBox;
+    @FXML
+    private Pane clockPane; // Référence au Pane de l'horloge
 
     private final UsersService usersService = new UsersService();
-    private final List<Users> selectedUsers = new ArrayList<>();
     private List<Users> allUsers = new ArrayList<>();
+    private int columnCount = 3;
 
     @FXML
     public void initialize() {
-        loadUsers(); // Charger tous les utilisateurs
-        deleteSelectedButton.setDisable(true); // Désactiver le bouton au départ
-        deleteSelectedButton.setOnAction(event -> deleteSelectedUsers()); // Lier le bouton
-        searchField.textProperty().addListener((observable, oldValue, newValue) -> searchUsers(newValue));
+        // Ajouter l'horloge murale au Pane
+        Clock clock = new Clock();
+        clockPane.getChildren().add(clock);
+
+        loadUsers();
+
+        // Initialiser le ComboBox de filtrage avec les options souhaitées
+        filterComboBox.getItems().addAll("Nom", "Prénom", "Adresse");
+        filterComboBox.setValue("Nom");
+
+        // Initialiser le ComboBox de tri
+        sortOrderComboBox.getItems().addAll("Croissant", "Décroissant");
+        sortOrderComboBox.setValue("Croissant");
+
+        // Écouter les changements dans les ComboBox et le champ de recherche
+        filterComboBox.valueProperty().addListener((obs, oldVal, newVal) -> applyFilter());
+        sortOrderComboBox.valueProperty().addListener((obs, oldVal, newVal) -> applyFilter());
+        searchField.textProperty().addListener((obs, oldVal, newVal) -> applyFilter());
+
+        // Écouter les changements de taille du GridPane
+        userCards.widthProperty().addListener((obs, oldVal, newVal) -> {
+            adjustColumnCount(newVal.doubleValue());
+            displayUsers(allUsers);
+        });
+    }
+    private void adjustColumnCount(double width) {
+        int minCardWidth = 250;
+        columnCount = (int) (width / minCardWidth);
+
+        if (columnCount < 1) {
+            columnCount = 1;
+        }
     }
 
     private void loadUsers() {
@@ -47,23 +87,117 @@ public class HomePage {
         displayUsers(allUsers);
     }
 
+    private void displayUsers(List<Users> users) {
+        userCards.getChildren().clear();
+
+        int row = 0;
+        int column = 0;
+
+        for (Users user : users) {
+            HBox userCard = createUserCard(user);
+            userCards.add(userCard, column, row);
+
+            column++;
+            if (column >= columnCount) {
+                column = 0;
+                row++;
+            }
+        }
+    }
+
+    private HBox createUserCard(Users user) {
+        HBox userCard = new HBox();
+        userCard.getStyleClass().add("user-card");
+        userCard.setMinWidth(200);
+        userCard.setMaxWidth(Double.MAX_VALUE);
+        userCard.setMinHeight(150);
+        userCard.setSpacing(15);
+        userCard.setAlignment(Pos.CENTER);
+
+        Label nameLabel = new Label("Nom: " + user.getNom());
+        nameLabel.getStyleClass().add("user-card-label");
+        nameLabel.setMaxWidth(Double.MAX_VALUE);
+
+        Label prenomLabel = new Label("Prénom: " + user.getPrenom());
+        prenomLabel.getStyleClass().add("user-card-label");
+        prenomLabel.setMaxWidth(Double.MAX_VALUE);
+
+        Label emailLabel = new Label("Email: " + user.getEmail());
+        emailLabel.getStyleClass().add("user-card-label");
+        emailLabel.setMaxWidth(Double.MAX_VALUE);
+
+        Button detailsButton = new Button("Voir détails");
+        detailsButton.getStyleClass().add("action-button");
+        detailsButton.setStyle("-fx-font-size: 12px; -fx-background-color: #3498db; -fx-text-fill: white; -fx-background-radius: 20px; -fx-padding: 5px 10px;");
+        detailsButton.setOnAction(event -> showUserDetails(user));
+
+        Button editButton = new Button("Modifier");
+        editButton.getStyleClass().add("action-button");
+        editButton.setStyle("-fx-font-size: 12px; -fx-background-color: #f1c40f; -fx-text-fill: white; -fx-background-radius: 20px; -fx-padding: 5px 10px;");
+        editButton.setOnAction(event -> handleEditUser(user));
+
+        Button deleteButton = new Button("Supprimer");
+        deleteButton.getStyleClass().add("delete-button");
+        deleteButton.setStyle("-fx-font-size: 12px; -fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 20px; -fx-padding: 5px 10px;");
+        deleteButton.setOnAction(event -> handleDeleteUser(user));
+
+        HBox buttonBox = new HBox(detailsButton, editButton, deleteButton);
+        buttonBox.setSpacing(10);
+
+        VBox infoBox = new VBox(nameLabel, prenomLabel, emailLabel, buttonBox);
+        infoBox.getStyleClass().add("user-card-info");
+        infoBox.setSpacing(10);
+        infoBox.setMaxWidth(Double.MAX_VALUE);
+
+        userCard.getChildren().add(infoBox);
+        return userCard;
+    }
+
+    private void showUserDetails(Users user) {
+        Alert detailsAlert = new Alert(Alert.AlertType.INFORMATION);
+        detailsAlert.setTitle("Détails de l'utilisateur");
+        detailsAlert.setHeaderText("Informations complètes de " + user.getNom() + " " + user.getPrenom());
+
+        VBox content = new VBox(10);
+        content.setAlignment(Pos.CENTER_LEFT);
+
+        Label nameLabel = new Label("Nom: " + user.getNom());
+        Label prenomLabel = new Label("Prénom: " + user.getPrenom());
+        Label emailLabel = new Label("Email: " + user.getEmail());
+        Label phoneLabel = new Label("Téléphone: " + user.getNumeroTelephone());
+        Label addressLabel = new Label("Adresse: " + user.getAdresse());
+        Label typeLabel = new Label("Type: " + user.getType());
+        Label genreLabel = new Label("Genre: " + user.getGenre());
+
+        content.getChildren().addAll(nameLabel, prenomLabel, emailLabel, phoneLabel, addressLabel, typeLabel, genreLabel);
+
+        detailsAlert.getDialogPane().setContent(content);
+        detailsAlert.showAndWait();
+    }
+
     @FXML
     private void handleAddUser() {
         openUserForm(null);
     }
 
-    @FXML
-    private void handleEditUser() {
-        Users selectedUser = getSelectedUser();
-        if (selectedUser != null) {
-            openUserForm(selectedUser);
-        } else {
-            showAlert("Modification", "Veuillez sélectionner un utilisateur à modifier !");
-        }
+    private void handleEditUser(Users user) {
+        openUserForm(user);
     }
 
-    private Users getSelectedUser() {
-        return selectedUsers.size() == 1 ? selectedUsers.get(0) : null;
+    private void handleDeleteUser(Users user) {
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Confirmation de suppression");
+        confirmationAlert.setHeaderText("Êtes-vous sûr de vouloir supprimer cet utilisateur ?");
+        confirmationAlert.setContentText("Cette action est irréversible.");
+
+        confirmationAlert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                usersService.delete(user.getIdUser());
+                allUsers.remove(user);
+                displayUsers(allUsers);
+                System.out.println("Utilisateur supprimé : " + user.getNom());
+            }
+        });
     }
 
     private void openUserForm(Users user) {
@@ -71,7 +205,7 @@ public class HomePage {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/UserForm.fxml"));
             Parent root = loader.load();
 
-            UserForm controller = loader.getController();
+            tn.esprit.controllers.UserForm controller = loader.getController();
             controller.setUser(user);
 
             Stage stage = new Stage();
@@ -81,92 +215,55 @@ public class HomePage {
 
             loadUsers();
         } catch (IOException e) {
-            e.printStackTrace();
             showAlert("Erreur", "Impossible d'ouvrir le formulaire.");
+            e.printStackTrace();
         }
     }
 
-    @FXML
-    public void deleteSelectedUsers() {
-        if (selectedUsers.isEmpty()) {
-            showAlert("Suppression", "Aucun utilisateur sélectionné !");
-            return;
-        }
-
-        for (Users user : selectedUsers) {
-            usersService.delete(user.getIdUser());
-        }
-
-        selectedUsers.clear();
-        showAlert("Succès", "Utilisateur(s) supprimé(s) avec succès.");
-        loadUsers();
-    }
-
-    private void searchUsers(String searchText) {
-        String searchTerm = searchText.toLowerCase().trim();
-        if (allUsers.isEmpty()) return;
+    private void applyFilter() {
+        String selectedFilter = filterComboBox.getValue();
+        String searchText = searchField.getText().toLowerCase().trim();
+        String sortOrder = sortOrderComboBox.getValue();
 
         List<Users> filteredUsers = allUsers.stream()
-                .filter(user -> user.getNom().toLowerCase().contains(searchTerm) ||
-                        user.getPrenom().toLowerCase().contains(searchTerm))
+                .filter(user -> {
+                    switch (selectedFilter) {
+                        case "Nom":
+                            return user.getNom().toLowerCase().contains(searchText);
+                        case "Prénom":
+                            return user.getPrenom().toLowerCase().contains(searchText);
+                        case "Adresse":
+                            return user.getAdresse().toLowerCase().contains(searchText);
+                        default:
+                            return true;
+                    }
+                })
                 .collect(Collectors.toList());
 
-        displayUsers(filteredUsers);
-    }
+        if (sortOrder != null) {
+            Comparator<Users> comparator = null;
 
-    private void displayUsers(List<Users> users) {
-        userCardsContainer.getChildren().clear();
-        selectedUsers.clear();
-        deleteSelectedButton.setDisable(true);
-
-        for (Users user : users) {
-            userCardsContainer.getChildren().add(createUserCard(user));
-        }
-    }
-
-    private VBox createUserCard(Users user) {
-        VBox userCard = new VBox();
-        userCard.getStyleClass().add("user-card");
-
-        Label nameLabel = new Label("Nom: " + user.getNom());
-        nameLabel.getStyleClass().add("user-card-label");
-
-        Label prenomLabel = new Label("Prénom: " + user.getPrenom());
-        prenomLabel.getStyleClass().add("user-card-label");
-
-        Label emailLabel = new Label("Email: " + user.getEmail());
-        emailLabel.getStyleClass().add("user-card-label");
-
-        Label phoneLabel = new Label("Téléphone: " + user.getNumeroTelephone());
-        phoneLabel.getStyleClass().add("user-card-label");
-
-        Label addressLabel = new Label("Adresse: " + user.getAdresse());
-        addressLabel.getStyleClass().add("user-card-label");
-
-        Label typeLabel = new Label("Type: " + user.getType());
-        typeLabel.getStyleClass().add("user-card-label");
-
-        Label genreLabel = new Label("Genre: " + user.getGenre());
-        genreLabel.getStyleClass().add("user-card-label");
-
-        CheckBox selectCheckBox = new CheckBox("Sélectionner");
-        selectCheckBox.getStyleClass().add("user-card-checkbox");
-        selectCheckBox.setIndeterminate(false);
-        selectCheckBox.setOnAction(event -> {
-            if (selectCheckBox.isSelected()) {
-                selectedUsers.add(user);
-            } else {
-                selectedUsers.remove(user);
+            switch (selectedFilter) {
+                case "Nom":
+                    comparator = Comparator.comparing(Users::getNom, String.CASE_INSENSITIVE_ORDER);
+                    break;
+                case "Prénom":
+                    comparator = Comparator.comparing(Users::getPrenom, String.CASE_INSENSITIVE_ORDER);
+                    break;
+                case "Adresse":
+                    comparator = Comparator.comparing(Users::getAdresse, String.CASE_INSENSITIVE_ORDER);
+                    break;
             }
-            deleteSelectedButton.setDisable(selectedUsers.isEmpty());
-        });
 
-        VBox infoBox = new VBox(nameLabel, prenomLabel, emailLabel, phoneLabel, addressLabel, typeLabel, genreLabel, selectCheckBox);
-        infoBox.getStyleClass().add("user-card-info");
+            if (comparator != null) {
+                if ("Décroissant".equals(sortOrder)) {
+                    comparator = comparator.reversed();
+                }
+                filteredUsers.sort(comparator);
+            }
+        }
 
-        userCard.getChildren().add(infoBox);
-
-        return userCard;
+        displayUsers(filteredUsers);
     }
 
     private void showAlert(String title, String message) {
@@ -179,52 +276,51 @@ public class HomePage {
 
     @FXML
     private void handleLogout() {
+        Preferences prefs = Preferences.userNodeForPackage(Login.class);
+        prefs.putBoolean("rememberMe", false);
+        prefs.remove("email");
+        prefs.remove("password");
+
         try {
+            Stage stage = (Stage) logoutButton.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/login.fxml"));
             Parent root = loader.load();
-            Stage stage = (Stage) logoutButton.getScene().getWindow();
             stage.setScene(new Scene(root));
-            stage.setTitle("Page de connexion");
+            stage.setTitle("Connexion");
             stage.show();
         } catch (IOException e) {
+            showAlert("Erreur", "Impossible de charger la page de connexion.");
             e.printStackTrace();
-            showAlert("Erreur", "Impossible de déconnecter l'utilisateur.");
         }
     }
 
     @FXML
-    void goToAcceuil(ActionEvent event) {
-        try {
-            // Charger la page d'accueil (Acceuil.fxml)
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Acceuil.fxml"));
-            AnchorPane acceuilPage = loader.load();
-
-            // Obtenir la scène actuelle et changer la page
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(acceuilPage));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Erreur de navigation", "Impossible d'ouvrir la page d'accueil.");
-        }
-    }
-
-    @FXML
-    public void buttonHoverEffect(javafx.scene.input.MouseEvent mouseEvent) {
+    public void buttonHoverEffect(MouseEvent mouseEvent) {
         Button btn = (Button) mouseEvent.getSource();
         btn.setStyle("-fx-background-color: #8e44ad; -fx-text-fill: white; -fx-padding: 18px; -fx-border-width: 2px; -fx-border-color: white;");
         DropShadow shadow = new DropShadow();
         shadow.setRadius(10);
         shadow.setOffsetX(0);
         shadow.setOffsetY(5);
-        shadow.setColor(Color.web("#a868a0", 0.7));  // Une ombre douce
+        shadow.setColor(Color.web("#a868a0", 0.7));
         btn.setEffect(shadow);
     }
 
     @FXML
-    public void buttonExitEffect(javafx.scene.input.MouseEvent mouseEvent) {
+    public void buttonExitEffect(MouseEvent mouseEvent) {
         Button btn = (Button) mouseEvent.getSource();
         btn.setStyle("-fx-background-color: transparent; -fx-text-fill: #a868a0;-fx-font-size: 18px; -fx-border-radius: 10px; -fx-padding: 10px 18px;");
         btn.setEffect(null);
+    }
+
+    public void goToAcceuil(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Acceuil.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (IOException e) {
+            System.out.println("❌ Erreur : " + e.getMessage());
+        }
     }
 }

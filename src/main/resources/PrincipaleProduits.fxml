@@ -45,7 +45,7 @@
                                -fx-font-size: 16px; -fx-border-radius: 10px; -fx-padding: 12px 20px;"
                         onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"/>
 
-                <Button text="📋 Liste des Produits" onAction="#displayProduits"
+                <Button text="📋 Liste des Produits"
                         style="-fx-background-color: transparent; -fx-text-fill: #a868a0;
                                -fx-font-size: 16px; -fx-border-radius: 10px; -fx-padding: 12px 20px;"
                         onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"/>
@@ -62,25 +62,34 @@
 
                 <!-- 🔍 Barre de recherche -->
                 <HBox spacing="10" style="-fx-padding: 15px;">
+                    <!-- ComboBox pour le critère de filtrage -->
+                    <ComboBox fx:id="filterCriteriaComboBox" promptText="Filtrer par..."
+                              style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-size: 14px;"/>
+
+                    <!-- ComboBox pour l'ordre de tri -->
+                    <ComboBox fx:id="sortOrderComboBox" promptText="Trier par ordre"
+                              style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-size: 14px;"/>
+
+                    <!-- Champ de recherche -->
                     <TextField fx:id="searchField" prefWidth="400.0" promptText="Rechercher un produit..."
                                style="-fx-border-radius: 10px;
-                                      -fx-background-radius: 10px;
-                                      -fx-padding: 10px;
-                                      -fx-border-color: white;
-                                      -fx-background-color: rgba(255, 255, 255, 0.3);"/>
-                    <Button text="Rechercher"
-                            style="-fx-background-color: #9b59b6;
-                                   -fx-text-fill: white;
-                                   -fx-font-size: 14px;
-                                   -fx-font-weight: bold;
-                                   -fx-border-radius: 12px;
-                                   -fx-padding: 10px 20px;
-                                   -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 2, 2);"/>
+                  -fx-background-radius: 10px;
+                  -fx-padding: 10px;
+                  -fx-border-color: white;
+                  -fx-background-color: rgba(255, 255, 255, 0.3);"
+                               onKeyReleased="#searchProduits"/>
+
+
                 </HBox>
 
                 <!-- 📌 Zone d'affichage des produits sous forme de cartes -->
-                <FlowPane fx:id="produitCardContainer" prefHeight="500.0" prefWidth="700.0" hgap="15" vgap="15"
-                          style="-fx-padding: 15px;"/>
+                <ScrollPane fitToWidth="true" fitToHeight="true"
+                            style="-fx-background-color: transparent;">
+                    <content>
+                        <FlowPane fx:id="produitCardContainer" prefHeight="500.0" prefWidth="700.0" hgap="15" vgap="15"
+                                  style="-fx-padding: 15px;"/>
+                    </content>
+                </ScrollPane>
             </children>
         </VBox>
     </children>

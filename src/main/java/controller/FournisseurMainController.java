@@ -1,8 +1,7 @@
 package controller;
 
-import com.twilio.Twilio;
-import com.twilio.rest.api.v2010.account.Message;
-import com.twilio.type.PhoneNumber;
+import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -13,17 +12,19 @@ import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import tn.esprit.models.fournisseur;
 import tn.esprit.services.ServiceFournisseur;
-import javafx.event.ActionEvent;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class FournisseurMainController implements Initializable {
 
@@ -31,79 +32,123 @@ public class FournisseurMainController implements Initializable {
     private FlowPane fournisseurCardContainer;
     @FXML
     private TextField searchField;
+    @FXML
+    private ComboBox<String> filterCriteriaComboBox;
+    @FXML
+    private ComboBox<String> sortOrderComboBox;
 
     private final ServiceFournisseur fournisseurService = new ServiceFournisseur();
+    private boolean isAscending = true; // Tri croissant par défaut
 
-    // Clés Twilio pour l'envoi de SMS
-    public static final String ACCOUNT_SID = "ACXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
-    public static final String AUTH_TOKEN = "your_auth_token";
-
-    /**
-     * Méthode appelée automatiquement lors du chargement du contrôleur
-     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        loadFournisseurs("");  // Chargement initial des fournisseurs
+        // Initialisation des options de filtrage
+        filterCriteriaComboBox.setItems(FXCollections.observableArrayList("Nom", "Type", "Téléphone"));
+        filterCriteriaComboBox.setValue("Nom");
 
-        // Ajout d'un écouteur sur le champ de recherche
-        searchField.textProperty().addListener((observable, oldValue, newValue) -> loadFournisseurs(newValue));
+        // Initialisation des options de tri
+        sortOrderComboBox.setItems(FXCollections.observableArrayList("Croissant", "Décroissant"));
+        sortOrderComboBox.setValue("Croissant");
+
+        // Ajout des écouteurs
+        filterCriteriaComboBox.setOnAction(event -> updateFournisseurs());
+        sortOrderComboBox.setOnAction(event -> updateFournisseurs());
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> updateFournisseurs());
+
+        // Charger et afficher les fournisseurs
+        updateFournisseurs();
     }
 
-    /**
-     * 🔍 Charger et afficher les fournisseurs
-     */
-    @FXML
-    public void loadFournisseurs(String search) {
+    private void updateFournisseurs() {
         fournisseurCardContainer.getChildren().clear();
         List<fournisseur> fournisseurs = fournisseurService.getAll();
 
-        for (fournisseur f : fournisseurs) {
-            if (f.getNomFournisseur().toLowerCase().contains(search.toLowerCase())) {
-                fournisseurCardContainer.getChildren().add(createFournisseurCard(f));
-            }
+        // 🔍 Filtrage
+        String searchText = searchField.getText().toLowerCase();
+        String filterCriteria = filterCriteriaComboBox.getValue();
+        List<fournisseur> filteredFournisseurs = fournisseurs.stream()
+                .filter(f -> {
+                    if ("Nom".equals(filterCriteria)) {
+                        return f.getNomFournisseur().toLowerCase().contains(searchText);
+                    } else if ("Type".equals(filterCriteria)) {
+                        return f.getType().toLowerCase().contains(searchText);
+                    } else if ("Téléphone".equals(filterCriteria)) {
+                        return f.getTelephone().toLowerCase().contains(searchText);
+                    }
+                    return true;
+                })
+                .collect(Collectors.toList());
+
+        // 🔄 Tri
+        isAscending = "Croissant".equals(sortOrderComboBox.getValue());
+        Comparator<fournisseur> comparator = switch (filterCriteria) {
+            case "Type" -> Comparator.comparing(fournisseur::getType, String.CASE_INSENSITIVE_ORDER);
+            case "Téléphone" -> Comparator.comparing(fournisseur::getTelephone, String.CASE_INSENSITIVE_ORDER);
+            default -> Comparator.comparing(fournisseur::getNomFournisseur, String.CASE_INSENSITIVE_ORDER);
+        };
+
+        filteredFournisseurs.sort(isAscending ? comparator : comparator.reversed());
+
+        // Affichage
+        for (fournisseur f : filteredFournisseurs) {
+            fournisseurCardContainer.getChildren().add(createFournisseurCard(f));
         }
     }
 
-    /**
-     * 🏷️ Créer une carte pour un fournisseur
-     */
+    // Créer une carte de fournisseur
     private VBox createFournisseurCard(fournisseur f) {
         VBox card = new VBox();
-        card.setStyle("-fx-background-color: rgba(255, 255, 255, 0.15); -fx-padding: 15px; -fx-border-radius: 12px; -fx-border-color: white;");
-        card.setSpacing(10);
+        card.setStyle("-fx-background-color: rgba(255, 255, 255, 0.85); " +
+                "-fx-padding: 15px; " +
+                "-fx-border-radius: 12px; " +
+                "-fx-background-radius: 12px; " +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 3, 3); " +
+                "-fx-min-width: 230px; -fx-max-width: 230px; -fx-alignment: center; -fx-spacing: 12;");
 
+        // 🏢 Nom du fournisseur en gras
         Label nom = new Label("🏢 " + f.getNomFournisseur());
-        nom.setStyle("-fx-font-size: 16px; -fx-text-fill: white; -fx-font-weight: bold;");
+        nom.setStyle("-fx-font-size: 18px; -fx-text-fill: #2C3E50; -fx-font-weight: bold;");
 
+        // 📝 Description
         Label desc = new Label("📝 " + f.getDescription());
-        desc.setStyle("-fx-font-size: 14px; -fx-text-fill: white;");
+        desc.setStyle("-fx-font-size: 14px; -fx-text-fill: #34495E;");
 
+        // 🏷 Type
         Label type = new Label("🏷 " + f.getType());
-        type.setStyle("-fx-font-size: 14px; -fx-text-fill: white;");
+        type.setStyle("-fx-font-size: 14px; -fx-text-fill: #34495E;");
 
+        // 📞 Téléphone avec une couleur distincte
         Label tel = new Label("📞 " + f.getTelephone());
-        tel.setStyle("-fx-font-size: 14px; -fx-text-fill: white;");
+        tel.setStyle("-fx-font-size: 14px; -fx-text-fill: #2980B9;");
 
+        // 📌 Conteneur horizontal pour les boutons
+        HBox buttonContainer = new HBox(8);
+        buttonContainer.setStyle("-fx-alignment: center;");
+
+        // 👁️ Bouton Voir Détails
         Button detailsButton = new Button("👁️ Voir Détails");
+        detailsButton.setStyle("-fx-background-color: #BDC3C7; -fx-text-fill: black; -fx-border-radius: 8px;");
         detailsButton.setOnAction(e -> showFournisseurDetails(f));
 
+        // ✏️ Bouton Modifier
         Button modifyButton = new Button("✏ Modifier");
-        modifyButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
+        modifyButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white; -fx-border-radius: 8px;");
         modifyButton.setOnAction(e -> goToModifierFournisseur(f, e));
 
+        // 🗑️ Bouton Supprimer
         Button deleteButton = new Button("🗑 Supprimer");
-        deleteButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
+        deleteButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-border-radius: 8px;");
         deleteButton.setOnAction(e -> deleteFournisseur(f));
 
+        // Ajout des boutons au conteneur
+        buttonContainer.getChildren().addAll(detailsButton, modifyButton, deleteButton);
 
-
-        card.getChildren().addAll(nom, desc, type, tel, detailsButton, modifyButton, deleteButton);
+        // Ajout des éléments à la carte
+        card.getChildren().addAll(nom, desc, type, tel, buttonContainer);
         return card;
     }
 
-    /**
-     * ℹ️ Afficher les détails d'un fournisseur
-     */
+    // Afficher les détails d'un fournisseur
     private void showFournisseurDetails(fournisseur f) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Détails du Fournisseur");
@@ -116,9 +161,7 @@ public class FournisseurMainController implements Initializable {
         alert.showAndWait();
     }
 
-    /**
-     * 📝 Aller à la page de modification
-     */
+    // Rediriger vers la page de modification d'un fournisseur
     @FXML
     public void goToModifierFournisseur(fournisseur fournisseur, ActionEvent event) {
         try {
@@ -138,9 +181,7 @@ public class FournisseurMainController implements Initializable {
         }
     }
 
-    /**
-     * ❌ Supprimer un fournisseur
-     */
+    // Supprimer un fournisseur
     @FXML
     public void deleteFournisseur(fournisseur f) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -151,19 +192,12 @@ public class FournisseurMainController implements Initializable {
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
                 fournisseurService.delete(f);
-                loadFournisseurs(""); // Rafraîchir la liste
+                updateFournisseurs(); // Rafraîchir l'affichage après suppression
             }
         });
     }
 
-    /**
-     * 📩 Envoyer un SMS au fournisseur
-     */
-
-
-    /**
-     * 🏠 Aller à l'accueil
-     */
+    // Retourner à l'accueil
     public void goToAcceuil(ActionEvent actionEvent) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Acceuil.fxml"));
@@ -175,6 +209,7 @@ public class FournisseurMainController implements Initializable {
         }
     }
 
+    // Rediriger vers la gestion des fournisseurs
     public void goToGestionFournisseur(ActionEvent actionEvent) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gestionFournisseur.fxml"));
@@ -186,6 +221,7 @@ public class FournisseurMainController implements Initializable {
         }
     }
 
+    // Effet de survol pour les boutons
     @FXML
     public void buttonHoverEffect(javafx.scene.input.MouseEvent mouseEvent) {
         Button btn = (Button) mouseEvent.getSource();
@@ -198,6 +234,7 @@ public class FournisseurMainController implements Initializable {
         btn.setEffect(shadow);
     }
 
+    // Effet de sortie pour les boutons
     @FXML
     public void buttonExitEffect(javafx.scene.input.MouseEvent mouseEvent) {
         Button btn = (Button) mouseEvent.getSource();
