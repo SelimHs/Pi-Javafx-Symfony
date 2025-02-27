@@ -47,7 +47,6 @@
             <!-- Liste des suggestions d'emails -->
             <ListView fx:id="emailSuggestions" visible="false"
                       style="-fx-background-color: #F1F1F1; -fx-font-size: 14px; -fx-pref-width: 100%; -fx-max-height: 100px;"/>
-
             <!-- Section Mot de passe -->
             <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-pref-width: 100%;">
                 <PasswordField fx:id="password" promptText="Mot de passe"
@@ -64,6 +63,10 @@
                     </graphic>
                 </Button>
             </HBox>
+
+            <!-- Lien "Mot de passe oublié" -->
+            <Hyperlink text="Mot de passe oublié ?" onAction="#handleForgotPassword"
+                       style="-fx-font-size: 14px; -fx-text-fill: #6A0DAD; -fx-padding: 10px 0;"/>
 
             <!-- Section Rester connecté -->
             <CheckBox fx:id="rememberMeCheckBox" text="Rester connecté"

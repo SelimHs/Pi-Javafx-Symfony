@@ -62,8 +62,8 @@ public class Login {
     public void initialize() {
         loadSavedCredentials();
 
-        // Charger les emails depuis la base de données
-        savedEmails.addAll(usersService.getAllEmails()); // Méthode à implémenter dans UsersService
+        // Charger uniquement les emails avec `enregistrer = true` depuis la base de données
+        savedEmails.addAll(usersService.getSavedEmails()); // Utiliser la nouvelle méthode
 
         // Configurer la ListView pour les suggestions d'emails
         emailSuggestions.setItems(filteredEmails);
@@ -128,7 +128,6 @@ public class Login {
             }
         });
     }
-
     @FXML
     public void togglePasswordVisibility() {
         if (isPasswordVisible) {
@@ -162,14 +161,40 @@ public class Login {
                 onLoginSuccess.run();
             }
 
-            // Demander à l'utilisateur s'il souhaite enregistrer le mot de passe
-            if (askToSavePassword()) {
-                saveCredentials(emailField.getText(), password.getText());
-            } else {
-                clearCredentials();
+            // Vérifier si le mot de passe est déjà enregistré
+            String email = emailField.getText();
+            boolean isAlreadySaved = isPasswordAlreadySaved(email);
+
+            // Si le mot de passe n'est pas déjà enregistré, demander à l'utilisateur s'il souhaite l'enregistrer
+            if (!isAlreadySaved) {
+                if (askToSavePassword()) {
+                    saveCredentials(email, password.getText());
+                } else {
+                    clearCredentials();
+                }
             }
 
             redirectToHomePage();
+        }
+    }
+
+    private boolean isPasswordAlreadySaved(String email) {
+        String query = "SELECT enregistrer, password FROM user WHERE email = ?";
+        try (PreparedStatement pst = usersService.getConnection().prepareStatement(query)) {
+            pst.setString(1, email);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                boolean isSaved = rs.getBoolean("enregistrer");
+                String savedPassword = rs.getString("password");
+                // Faire quelque chose avec le mot de passe si nécessaire
+                return isSaved;
+            } else {
+                System.err.println("Aucun utilisateur trouvé avec l'email : " + email);
+                return false;
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la vérification de la colonne 'enregistrer' : " + e.getMessage());
+            return false;
         }
     }
 
@@ -261,6 +286,9 @@ public class Login {
             savedEmails.add(email);
         }
     }
+
+
+    // Méthode pour charger les emails avec `enregistrer = true`
     private void loadSavedCredentials() {
         Preferences prefs = Preferences.userNodeForPackage(Login.class);
         boolean rememberMe = prefs.getBoolean(REMEMBER_ME_KEY, false);

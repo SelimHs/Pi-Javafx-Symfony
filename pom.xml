@@ -57,6 +57,7 @@
             <artifactId>javafx-controls</artifactId>
             <version>21</version> <!-- Mets ta version de JavaFX -->
         </dependency>
+
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
