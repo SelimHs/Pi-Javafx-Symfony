@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Pos?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.ScrollPane?>
 
 <AnchorPane prefHeight="700.0" prefWidth="1000.0"
             style="-fx-background-image: url('images/front-bg.jpg'); -fx-background-size: cover;"
@@ -16,14 +17,14 @@
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="controller.FacceuilController">
     <children>
-        <!-- 🚀 Navigation bar moderne -->
+        <!-- 🚀 Navigation bar -->
         <HBox layoutX="0.0" layoutY="0.0" prefHeight="60.0" prefWidth="1000.0"
               style="-fx-background-color: rgba(30,30,46,0.8); -fx-padding: 10px; -fx-alignment: center-left;">
             <children>
                 <HBox style="-fx-border-color: #F39C12; -fx-border-width: 2px; -fx-padding: 5px; -fx-border-radius: 10px; -fx-alignment: center;">
                     <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                         <image>
-                            <Image url="@logo.png" />
+                            <Image url="@logo.png"/>
                         </image>
                     </ImageView>
                     <Label text="Lamma" style="-fx-font-size: 20px; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10px;"/>
@@ -45,26 +46,22 @@
             </children>
         </HBox>
 
-        <!-- 🚀 Contenu principal -->
-        <VBox layoutX="50.0" layoutY="100.0" prefWidth="900.0" style="-fx-padding: 20px; -fx-alignment: center;">
+        <!-- 🚀 Chatbot repositionné et amélioré -->
+        <VBox layoutX="250.0" layoutY="420.0" prefWidth="500.0" prefHeight="320.0" spacing="10"
+              style="-fx-padding: 15px; -fx-background-color: rgba(255,255,255,0.9); -fx-border-radius: 20px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 4);">
             <children>
-                <Label text="Bienvenue sur votre espace utilisateur" style="-fx-font-size: 26px; -fx-text-fill: white; -fx-font-weight: bold;"/>
-            </children>
-        </VBox>
-
-        <!-- 🚀 Chatbot -->
-        <VBox layoutX="50.0" layoutY="500.0" prefWidth="900.0" prefHeight="180.0" spacing="10"
-              style="-fx-padding: 10px; -fx-background-color: rgba(255,255,255,0.8); -fx-border-radius: 10px;">
-            <children>
-                <ScrollPane fx:id="chatScrollPane" prefHeight="120.0" fitToWidth="true">
+                <Label text="🤖 Assistant Virtuel" style="-fx-font-size: 18px; -fx-text-fill: #2C3E50; -fx-font-weight: bold; -fx-padding: 5px;"/>
+                <ScrollPane fx:id="chatScrollPane" prefHeight="220.0" fitToWidth="true" vbarPolicy="ALWAYS">
                     <content>
-                        <VBox fx:id="chatBox" spacing="5" style="-fx-padding: 5px;"/>
+                        <VBox fx:id="chatBox" spacing="5" style="-fx-padding: 5px;" VBox.vgrow="ALWAYS"/>
+
                     </content>
                 </ScrollPane>
-                <HBox spacing="10">
-                    <TextField fx:id="chatInput" promptText="Écrivez un message..." prefWidth="800.0"/>
+                <HBox spacing="10" alignment="CENTER">
+                    <TextField fx:id="chatInput" promptText="Écrivez un message..." prefWidth="400.0"
+                               style="-fx-background-radius: 15px; -fx-padding: 8px;"/>
                     <Button fx:id="sendButton" text="Envoyer" onAction="#sendMessage"
-                            style="-fx-background-color: #F39C12; -fx-text-fill: white;"/>
+                            style="-fx-background-color: #F39C12; -fx-text-fill: white; -fx-background-radius: 15px; -fx-padding: 10px 15px;"/>
                 </HBox>
             </children>
         </VBox>

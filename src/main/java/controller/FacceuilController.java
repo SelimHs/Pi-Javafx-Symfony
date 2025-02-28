@@ -1,15 +1,20 @@
 package controller;
 
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import tn.esprit.services.GeminiService;
 
 import java.io.IOException;
@@ -24,6 +29,11 @@ public class FacceuilController {
         applyHoverEffect(btnEvenements);
         applyHoverEffect(btnEspace);
         sendButton.setOnAction(event -> sendMessage());
+        chatInput.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                sendMessage();
+            }
+        });
     }
 
     private void applyHoverEffect(Button button) {
@@ -119,18 +129,42 @@ public class FacceuilController {
         String userInput = chatInput.getText().trim();
         if (userInput.isEmpty()) return;
 
-        // Affiche le message de l'utilisateur
-        Label userMessage = new Label("Toi: " + userInput);
-        chatBox.getChildren().add(userMessage);
+        // Message utilisateur
+        Label userMessage = new Label(userInput);
+        userMessage.setStyle("-fx-background-color: #dcdcdc; -fx-padding: 10px; -fx-background-radius: 10px; -fx-text-fill: black;");
+        userMessage.setWrapText(true);
+        userMessage.setMaxWidth(350);
 
-        chatInput.clear(); // Efface immédiatement le champ après envoi
+        HBox userMessageContainer = new HBox(userMessage);
+        userMessageContainer.setAlignment(Pos.CENTER_RIGHT);
+        chatBox.getChildren().add(userMessageContainer);
 
-        new Thread(() -> { // Exécuter l'appel API dans un thread séparé pour éviter le blocage
+        chatInput.clear();
+
+        // Ajout d’un message temporaire "Chatbot est en train d'écrire..."
+        Label typingLabel = new Label("Chatbot est en train d'écrire...");
+        typingLabel.setStyle("-fx-text-fill: #888888; -fx-font-style: italic;");
+        chatBox.getChildren().add(typingLabel);
+
+        new Thread(() -> {
             try {
+                Thread.sleep(1000); // Simule une pause pour un effet plus naturel
                 String response = geminiService.getResponse(userInput);
+                scrollToBottom();
+
                 Platform.runLater(() -> {
-                    Label botMessage = new Label("ChatBot: " + response);
-                    chatBox.getChildren().add(botMessage);
+                    chatBox.getChildren().remove(typingLabel);
+
+                    Label botMessage = new Label(response);
+                    botMessage.setStyle("-fx-background-color: rgba(30,30,46,0.9); -fx-padding: 10px; -fx-background-radius: 10px; -fx-text-fill: white;");
+                    botMessage.setWrapText(true);
+                    botMessage.setMaxWidth(350);
+
+                    HBox botMessageContainer = new HBox(botMessage);
+                    botMessageContainer.setAlignment(Pos.CENTER_LEFT);
+                    chatBox.getChildren().add(botMessageContainer);
+
+                    scrollToBottom();
                 });
             } catch (Exception e) {
                 Platform.runLater(() -> chatBox.getChildren().add(new Label("Erreur : Impossible de contacter l'API.")));
@@ -138,6 +172,21 @@ public class FacceuilController {
             }
         }).start();
     }
+    @FXML
+    ScrollPane chatScrollPane;
+    @FXML
+    private void scrollToBottom() {
+        Platform.runLater(() -> {
+            chatScrollPane.layout(); // Force la mise à jour du layout
+
+            // Attendre un court instant pour garantir la mise à jour du layout avant de scroller
+            PauseTransition delay = new PauseTransition(Duration.millis(50));
+            delay.setOnFinished(event -> chatScrollPane.setVvalue(chatScrollPane.getVmax()));
+            delay.play();
+        });
+    }
+
+
 
 
 
