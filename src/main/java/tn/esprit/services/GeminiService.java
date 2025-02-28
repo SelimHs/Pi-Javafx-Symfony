@@ -18,12 +18,19 @@ public class GeminiService {
 
     public String getResponse(String userInput) {
         try {
-            // Création du JSON avec le bon format
+            // Ajout d'un contexte pour guider le chatbot
+            String promptContext = "Tu es un chatbot d'assistance pour une plateforme de gestion d'événements en ligne. " +
+                    "Tu aides les utilisateurs à trouver des événements, consulter les espaces disponibles, réserver des billets " +
+                    "et obtenir des informations sur les tarifs et les disponibilités. Réponds de manière claire et interactive.";
+
+            String fullPrompt = promptContext + "\n\nUtilisateur : " + userInput;
+
+            // Création du JSON avec la bonne structure
             JSONObject requestBody = new JSONObject();
             JSONArray contentsArray = new JSONArray();
             JSONObject contentObject = new JSONObject();
             contentObject.put("role", "user");
-            contentObject.put("parts", new JSONArray().put(new JSONObject().put("text", userInput)));
+            contentObject.put("parts", new JSONArray().put(new JSONObject().put("text", fullPrompt)));
             contentsArray.put(contentObject);
             requestBody.put("contents", contentsArray);
 
@@ -44,10 +51,6 @@ public class GeminiService {
             String responseBody = response.body().string();
             JSONObject jsonResponse = new JSONObject(responseBody);
 
-            // Debug : Affiche la réponse complète de l'API dans la console
-            System.out.println("Réponse API : " + jsonResponse.toString(2));
-
-            // Vérification des erreurs dans la réponse JSON
             if (jsonResponse.has("error")) {
                 return "Erreur API : " + jsonResponse.getJSONObject("error").toString();
             }
@@ -70,5 +73,6 @@ public class GeminiService {
             return "Erreur de connexion : " + e.getMessage();
         }
     }
+
 
 }
