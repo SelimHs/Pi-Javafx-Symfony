@@ -30,6 +30,11 @@ public class GestionEspace {
 
     private final ServiceEspace serviceEspace = new ServiceEspace();
 
+    @FXML
+    public void initialize() {
+        disponibiliteEspace.setValue("Disponible"); // Définit "Disponible" par défaut
+    }
+
     // 🔹 Navigation vers l'affichage des espaces
     @FXML
     public void afficherEspaces(ActionEvent event) throws IOException {

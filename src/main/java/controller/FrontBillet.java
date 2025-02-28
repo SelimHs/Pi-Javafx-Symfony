@@ -37,7 +37,7 @@ public class FrontBillet {
         applyHoverEffect(btnAccueil);
         applyHoverEffect(btnEvenements);
         applyHoverEffect(btnEspace);
-    loadEvents();
+        loadEvents();
     }
     @FXML
     private TextField prixBillet;
@@ -77,26 +77,24 @@ public class FrontBillet {
 
     @FXML
     public void createBilletFront(ActionEvent actionEvent) {
-        BilletsMainController billetController = new BilletsMainController(); // ✅ Create an instance
+        BilletsMainController billetController = new BilletsMainController();
         Alert alert = new Alert(Alert.AlertType.ERROR);
         Billet billet = new Billet();
         ServiceBillet sb = new ServiceBillet();
 
-        // ✅ Vérification du champ "Nom complet"
-        if (nomClient.getText() == null || nomClient.getText().isEmpty()) {
-            new Alert(Alert.AlertType.ERROR, "Le champ 'Nom complet' ne peut pas être vide.").showAndWait();
+        // ✅ Vérification des champs obligatoires
+        if (nomClient.getText().isEmpty() || typeBillet.getValue() == null) {
+            alert.setContentText("Veuillez remplir tous les champs.");
+            alert.showAndWait();
             return;
         }
 
-
-        // ✅ Vérification du champ "Type de billet"
-        if (typeBillet.getValue() == null) {
-            new Alert(Alert.AlertType.ERROR, "Le champ 'Type de billet' ne peut pas être vide.").showAndWait();
-            return;
-        }
-
-        // ✅ Vérification du champ "Événement sélectionné"
         Event selectedEvent = (Event) eventSelection.getSelectionModel().getSelectedItem();
+        if (selectedEvent == null) {
+            alert.setContentText("Veuillez sélectionner un événement.");
+            alert.showAndWait();
+            return;
+        }
 
         // ✅ Remplir les détails du billet
         billet.setProprietaire(nomClient.getText());
@@ -105,24 +103,35 @@ public class FrontBillet {
         billet.setType(Billet.TypeBillet.valueOf(typeBillet.getValue().toString()));
         billet.setEvent(selectedEvent);
 
-        // ✅ Ajouter le billet en base de données
-        sb.add(billet);
-        Billet exportedBillet = sb.findBilletByDateAchat(billet.getDateAchat());
+        // ✅ Ajouter le billet et récupérer son ID
+        int billetId = sb.addd(billet);
+        if (billetId == -1) {
+            alert.setContentText("Erreur lors de l'ajout du billet.");
+            alert.showAndWait();
+            return;
+        }
+        billet.setIdBillet(billetId); // ✅ Mise à jour de l'ID du billet
 
-// Now export to PDF with the correct ID
-        billetController.exportBilletToPdf(exportedBillet);
+        // ✅ Vérifier que l'ID du billet n'est pas null avant d'exporter
+        if (billet.getIdBillet() > 0) {
+            billetController.exportBilletToPdf(billet);
+        } else {
+            alert.setContentText("Impossible de générer le PDF : ID du billet invalide.");
+            alert.showAndWait();
+        }
 
-        // ✅ Afficher un message de confirmation
+        // ✅ Message de confirmation
         Alert confirmationAlert = new Alert(Alert.AlertType.INFORMATION);
         confirmationAlert.setTitle("Billet réservé !");
         confirmationAlert.setHeaderText(null);
         confirmationAlert.setContentText("Votre billet pour l'événement '" + selectedEvent.getNomEvent() + "' a été réservé avec succès !");
         confirmationAlert.showAndWait();
 
-        // ✅ Réinitialiser les champs après ajout
+        // ✅ Réinitialisation des champs
         nomClient.clear();
         typeBillet.getSelectionModel().clearSelection();
     }
+
 
     public void goToEvents(ActionEvent actionEvent) {
         try {

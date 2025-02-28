@@ -34,8 +34,9 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>22.0.2</version>
+            <version>23.0.1</version> <!-- Version compatible -->
         </dependency>
+
         <dependency>
 
             <groupId>org.mindrot</groupId>

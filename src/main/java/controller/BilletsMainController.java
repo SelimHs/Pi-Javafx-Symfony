@@ -11,8 +11,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -20,12 +22,15 @@ import tn.esprit.models.Billet;
 import tn.esprit.services.PdfService;
 import tn.esprit.services.ServiceBillet;
 
-import java.awt.*;
+import javafx.scene.image.Image;
+
 import java.io.IOException;
-import java.net.URI;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import java.awt.*;
+import java.net.URI;
 
 public class BilletsMainController {
 
@@ -99,18 +104,24 @@ public class BilletsMainController {
         }
     }
 
-    //Here lies my extras
     private void showBilletDetails(Billet billet) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Détails du Billet");
-        alert.setHeaderText("Billet de " + billet.getProprietaire());
-        alert.setContentText("📅 Date d'achat : " + billet.getDateAchat() +
-                "\n💰 Prix : " + billet.getPrix() + " DT" +
-                "\n🎟 Type : " + billet.getType() +
-                "\n📍 Événement : " + billet.getEvent());
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/DetailBillet.fxml"));
+            Parent root = loader.load();
 
-        alert.showAndWait();
+            // ✅ Récupérer le contrôleur et envoyer les données du billet
+            DetailBillet controller = loader.getController();
+            controller.initData(billet);
+
+            // ✅ Changer la scène pour afficher les détails du billet
+            Stage stage = (Stage) billetCardContainer.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 
 
     @FXML
@@ -181,12 +192,14 @@ public class BilletsMainController {
 
 
     public void exportBilletToPdf(Billet billet) {
+        String eventName = (billet.getEvent() != null) ? billet.getEvent().getNomEvent() : "Événement non défini";
         String pdfUrl = PdfService.generatePdfFromBillet(
                 String.valueOf(billet.getIdBillet()),
                 billet.getProprietaire(),
-                billet.getEvent().toString(),
+                eventName,
                 billet.getPrix()
         );
+
 
         if (pdfUrl != null) {
             openPdfInBrowser(pdfUrl);
@@ -248,39 +261,73 @@ public class BilletsMainController {
         displayFilteredBillets(filteredBillets);
     }
     private void displayFilteredBillets(List<Billet> billets) {
+        billetCardContainer.getChildren().clear(); // Nettoyer l'affichage avant d'ajouter des billets
+
         for (Billet billet : billets) {
             VBox card = new VBox();
             card.setStyle("-fx-background-color: white; -fx-padding: 10px; -fx-border-radius: 10px; "
                     + "-fx-background-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);"
-                    + "-fx-min-width: 200px; -fx-max-width: 200px; -fx-alignment: center; -fx-spacing: 10;");
+                    + "-fx-min-width: 220px; -fx-max-width: 220px; -fx-alignment: center; -fx-spacing: 10;");
 
-            Label title = new Label("Ticket de " + billet.getProprietaire());
+            Label title = new Label("🎟 Billet de " + billet.getProprietaire());
             title.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
-            Label name = new Label(billet.getProprietaire());
-            name.setStyle("-fx-font-size: 12px; -fx-font-weight: bold;");
-            Label price = new Label("💰 " + billet.getPrix() + " DT");
             Label eventName = new Label("🎉 " + billet.getEvent().getNomEvent());
+            Label price = new Label("💰 " + billet.getPrix() + " DT");
+            price.setStyle("-fx-text-fill: #27AE60; -fx-font-weight: bold;");
 
-            Button detailsButton = new Button("Voir Détails");
-            detailsButton.setOnAction(b -> showBilletDetails(billet));
+            // 🔍 Bouton Voir Détails avec icône
+            Button detailsButton = new Button();
+            detailsButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
+            detailsButton.setOnAction(e -> showBilletDetails(billet));
 
-            Button deleteButton = new Button("Supprimer");
-            deleteButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
-            deleteButton.setOnAction(e -> deleteAndRefreshBillet(billet));
+            ImageView detailsIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/details-icon.png")));
+            detailsIcon.setFitWidth(18);
+            detailsIcon.setFitHeight(18);
+            detailsButton.setGraphic(detailsIcon);
 
-            Button editButton = new Button("Modifier");
-            editButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
+            // ✅ Icônes Modifier, Supprimer et Export PDF
+            HBox buttonContainer = new HBox(8);
+            buttonContainer.setStyle("-fx-alignment: center;");
+
+            Button editButton = new Button();
+            editButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
             editButton.setOnAction(e -> openEditPopup(billet, editButton));
 
-            Button exportPdfButton = new Button("Exporter en PDF");
-            exportPdfButton.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white;");
+            ImageView editIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/edit-icon.png")));
+            editIcon.setFitWidth(18);
+            editIcon.setFitHeight(18);
+            editButton.setGraphic(editIcon);
+
+            Button deleteButton = new Button();
+            deleteButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
+            deleteButton.setOnAction(e -> deleteAndRefreshBillet(billet));
+
+            ImageView trashIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/trash-icon.png")));
+            trashIcon.setFitWidth(18);
+            trashIcon.setFitHeight(18);
+            deleteButton.setGraphic(trashIcon);
+
+            Button exportPdfButton = new Button();
+            exportPdfButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
             exportPdfButton.setOnAction(e -> exportBilletToPdf(billet));
 
-            card.getChildren().addAll(title, name, price, eventName, detailsButton, editButton, deleteButton, exportPdfButton);
+            ImageView pdfIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/pdf-icon.png")));
+            pdfIcon.setFitWidth(18);
+            pdfIcon.setFitHeight(18);
+            exportPdfButton.setGraphic(pdfIcon);
+
+            buttonContainer.getChildren().addAll(editButton, deleteButton, exportPdfButton);
+            card.getChildren().addAll(title, eventName, price, detailsButton, buttonContainer);
             billetCardContainer.getChildren().add(card);
         }
     }
+
+
+
+
+
+
     @FXML
     public void buttonHoverEffect(javafx.scene.input.MouseEvent mouseEvent) {
         Button btn = (Button) mouseEvent.getSource();
