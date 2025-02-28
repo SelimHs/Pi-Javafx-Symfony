@@ -83,10 +83,25 @@ public class FrontEspace {
             // 📌 Bouton "Voir Détails"
             Button detailsButton = new Button("Voir Détails");
             detailsButton.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-border-radius: 5px;");
-            detailsButton.setOnAction(e -> showEspaceDetails(espace)); // Appel de la méthode pour ouvrir le détail
+            detailsButton.setOnAction(e -> showEspaceDetails(espace)); // Ouvre les détails de l’espace
+
+            // 📡 Icône "Live" (pour ouvrir le Live de l’espace)
+            ImageView liveIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/live-icon.png")));
+            liveIcon.setFitWidth(24);
+            liveIcon.setFitHeight(24);
+
+            Button liveButton = new Button();
+            liveButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
+            liveButton.setGraphic(liveIcon);
+            liveButton.setOnAction(e -> goToLiveEspace(espace)); // Ouvre LiveEspace.fxml
+
+            // 📌 Conteneur pour les boutons (Détails + Live)
+            HBox buttonContainer = new HBox(10);
+            buttonContainer.setStyle("-fx-alignment: center;");
+            buttonContainer.getChildren().addAll(detailsButton, liveButton);
 
             // 📌 Ajouter les éléments à la carte
-            card.getChildren().addAll(espaceImage, title, location, capacity, price, detailsButton);
+            card.getChildren().addAll(espaceImage, title, location, capacity, price, buttonContainer);
 
             // 📌 Ajouter la carte à la ligne
             rowContainer.getChildren().add(card);
@@ -100,6 +115,28 @@ public class FrontEspace {
             }
         }
     }
+
+    @FXML
+    public void goToLiveEspace(Espace espace) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frontend/LiveEspace.fxml"));
+            Parent root = loader.load();
+
+            // Récupérer le contrôleur et initialiser avec les données de l'espace
+            LiveEspace liveEspaceController = loader.getController();
+            liveEspaceController.initData(espace);
+
+            // Afficher la scène
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            System.err.println("Erreur lors du chargement de LiveEspace.fxml");
+            e.printStackTrace();
+        }
+    }
+
+
 
     /**
      * 🔍 Ouvre la page FrontDetailEspace.fxml pour afficher les détails de l'espace sélectionné.
