@@ -26,6 +26,9 @@ public class GeminiService {
         if (userInput.toLowerCase().contains("événements disponibles") || userInput.toLowerCase().contains("quel événement") || userInput.toLowerCase().contains("événement") || userInput.toLowerCase().contains("événements")) {
             return getUpcomingEvents(); // 🔹 Récupération des événements depuis la BDD
         }
+        if (userInput.toLowerCase().contains("produits disponibles") || userInput.toLowerCase().contains("quel produit") || userInput.toLowerCase().contains("produit")) {
+            return getAvailableProducts(userInput); // 🔹 Vérification des produits
+        }
 
         if (userInput.toLowerCase().contains("espaces disponibles") || userInput.toLowerCase().contains("quel espace") || userInput.toLowerCase().contains("espace") || userInput.toLowerCase().contains("espaces")) {
             return getAvailableSpaces(); // 🔹 Vérification des espaces disponibles
@@ -130,6 +133,73 @@ public class GeminiService {
             return "Erreur de connexion : " + e.getMessage();
         }
     }
+    // 🔹 Récupération des produits disponibles
+    private String getAvailableProducts(String userInput) {
+        StringBuilder response = new StringBuilder("🛒 Voici les produits disponibles :\n");
+
+        try {
+            String query = "SELECT nomProduit, prixProduit, quantite, description, categorie FROM produit WHERE quantite > 0";
+            PreparedStatement stmt = cnx.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                response.append("📦 **").append(rs.getString("nomProduit")).append("**\n")
+                        .append("💰 Prix : ").append(rs.getInt("prixProduit")).append(" TND\n")
+                        .append("📋 Description : ").append(rs.getString("description")).append("\n")
+                        .append("📌 Catégorie : ").append(rs.getString("categorie")).append("\n")
+                        .append("📦 Quantité en stock : ").append(rs.getInt("quantite")).append("\n\n");
+            }
+
+            if (response.toString().equals("🛒 Voici les produits disponibles :\n")) {
+                return "Aucun produit n'est actuellement disponible.";
+            }
+
+            return response.toString();
+        } catch (Exception e) {
+            return "Erreur lors de la récupération des produits : " + e.getMessage();
+        }
+    }
+
+    // 🔹 Vérification du stock d'un produit spécifique
+    private String checkProductStock(String userInput) {
+        try {
+            String productName = extractProductName(userInput);
+            if (productName.isEmpty()) {
+                return "Pouvez-vous préciser le produit que vous cherchez ?";
+            }
+
+            String query = "SELECT quantite FROM produit WHERE nomProduit LIKE ?";
+            PreparedStatement stmt = cnx.prepareStatement(query);
+            stmt.setString(1, "%" + productName + "%");
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                int stock = rs.getInt("quantite");
+                if (stock > 0) {
+                    return "✅ **" + productName + "** est disponible avec **" + stock + "** unités en stock.";
+                } else {
+                    return "❌ Désolé, le produit **" + productName + "** est en rupture de stock.";
+                }
+            } else {
+                return "Je n'ai pas trouvé ce produit. Pouvez-vous vérifier son nom ?";
+            }
+        } catch (Exception e) {
+            return "Erreur lors de la vérification du stock : " + e.getMessage();
+        }
+    }
+
+    // 🔹 Extraction du nom du produit depuis la question de l'utilisateur
+    private String extractProductName(String userInput) {
+        String[] keywords = {"produit", "stock", "quantité", "combien"};
+        for (String keyword : keywords) {
+            if (userInput.toLowerCase().contains(keyword)) {
+                return userInput.substring(userInput.toLowerCase().indexOf(keyword) + keyword.length()).trim();
+            }
+        }
+        return "";
+    }
+
+
 
 
 }
