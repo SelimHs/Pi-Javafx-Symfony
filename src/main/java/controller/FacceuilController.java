@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -231,8 +232,33 @@ public class FacceuilController {
         }
     }
 
+    @FXML
+    private VBox chatbotContainer;
+    @FXML
+    private Button chatbotButton;
 
+    private boolean chatbotVisible = false;
 
+    public void toggleChatbot(ActionEvent actionEvent) {
+        if (chatbotVisible) {
+            // 📌 Masquer le chatbot avec une animation
+            FadeTransition fadeOut = new FadeTransition(Duration.millis(300), chatbotContainer);
+            fadeOut.setFromValue(1.0);
+            fadeOut.setToValue(0.0);
+            fadeOut.setOnFinished(event -> chatbotContainer.setVisible(false)); // Masquer après animation
+            fadeOut.play();
 
+            chatbotButton.setText("💬 Chatbot"); // Remettre le texte du bouton
+        } else {
+            // 📌 Afficher le chatbot avec une animation
+            chatbotContainer.setVisible(true);
+            FadeTransition fadeIn = new FadeTransition(Duration.millis(300), chatbotContainer);
+            fadeIn.setFromValue(0.0);
+            fadeIn.setToValue(1.0);
+            fadeIn.play();
 
+            chatbotButton.setText("❌ Fermer");
+        }
+        chatbotVisible = !chatbotVisible;
+    }
 }
