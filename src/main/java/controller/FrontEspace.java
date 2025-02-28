@@ -134,6 +134,7 @@ public class FrontEspace {
             System.err.println("Erreur lors du chargement de LiveEspace.fxml");
             e.printStackTrace();
         }
+
     }
 
 
