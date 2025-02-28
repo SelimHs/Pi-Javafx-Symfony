@@ -234,6 +234,7 @@ public class AcceuilController {
     @FXML
     private PieChart pieChartEspaces;
     ServiceEspace se = new ServiceEspace();
+
     private void chargerStatistiquesEspaces() {
         // 📌 Récupérer les statistiques des espaces groupés par adresse
         Map<String, Integer> statsEspaces = se.getNombreEspacesParAdresse();
@@ -241,12 +242,21 @@ public class AcceuilController {
         // Effacer les anciennes données avant d'ajouter les nouvelles
         pieChartEspaces.getData().clear();
 
-        // Ajouter les données au PieChart
+        // Calculer le total des espaces
+        int total = statsEspaces.values().stream().mapToInt(Integer::intValue).sum();
+
+        // Ajouter les données avec pourcentage
         for (Map.Entry<String, Integer> entry : statsEspaces.entrySet()) {
-            PieChart.Data slice = new PieChart.Data(entry.getKey(), entry.getValue());
+            String adresse = entry.getKey();
+            int count = entry.getValue();
+            double percentage = ((double) count / total) * 100;
+
+            // 🎯 Modifier l'affichage pour inclure le pourcentage
+            PieChart.Data slice = new PieChart.Data(adresse + " (" + String.format("%.1f", percentage) + "%)", count);
             pieChartEspaces.getData().add(slice);
         }
     }
+
 
 
 
