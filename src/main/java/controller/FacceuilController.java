@@ -157,6 +157,7 @@ public class FacceuilController {
             try {
                 Thread.sleep(1000); // Simule une pause pour un effet plus naturel
                 String response = geminiService.getResponse(userInput);
+                scrollToBottom();
 
                 Platform.runLater(() -> {
                     chatBox.getChildren().remove(typingLabel);
