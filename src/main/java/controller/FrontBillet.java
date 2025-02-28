@@ -133,23 +133,35 @@ public class FrontBillet {
     }
     private void updateBilletDescription() {
         String selectedType = (String) typeBillet.getValue();
-        if (selectedType != null) {
+        Event selectedEvent = (Event) eventSelection.getSelectionModel().getSelectedItem();
+
+        if (selectedType != null && selectedEvent != null) {
+            int basePrice = selectedEvent.getPrix(); // Get base price from event
+            int calculatedPrice = basePrice; // Default to base price
+
             switch (selectedType) {
                 case "SIMPLE":
                     billetDescription.setText("✔ Ce billet est valide pour une seule personne.");
+                    calculatedPrice = basePrice;
                     break;
                 case "DUO":
                     billetDescription.setText("✔ Ce billet est valide pour deux personnes.");
+                    calculatedPrice = (int) (basePrice * 1.5);
                     break;
                 case "VIP":
                     billetDescription.setText("✔ Ce billet est valide pour quatre personnes.");
+                    calculatedPrice = basePrice * 3;
                     break;
                 default:
                     billetDescription.setText("");
                     break;
             }
+
+            // ✅ Update the price field
+            prixBillet.setText(calculatedPrice + " DT");
         }
     }
+
 
 
     public void goToEvents(ActionEvent actionEvent) {
