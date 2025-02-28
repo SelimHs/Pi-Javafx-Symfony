@@ -7,16 +7,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import tn.esprit.models.Billet;
 import tn.esprit.services.ServiceBillet;
 import tn.esprit.services.ServiceEvent;
 import controller.BilletsMainController;
 
-import javafx.scene.control.TextField;  // ✅ Bon import
 import tn.esprit.models.Event;
 
 import java.io.IOException;
@@ -29,6 +26,8 @@ public class FrontBillet {
     @FXML
     private TextField nomClient;
     @FXML
+    private Label billetDescription;
+    @FXML
     private ComboBox typeBillet;
     @FXML
     private Button btnAccueil, btnEvenements,btnEspace;
@@ -38,6 +37,7 @@ public class FrontBillet {
         applyHoverEffect(btnEvenements);
         applyHoverEffect(btnEspace);
         loadEvents();
+        typeBillet.setOnAction(event -> updateBilletDescription());
     }
     @FXML
     private TextField prixBillet;
@@ -130,6 +130,25 @@ public class FrontBillet {
         // ✅ Réinitialisation des champs
         nomClient.clear();
         typeBillet.getSelectionModel().clearSelection();
+    }
+    private void updateBilletDescription() {
+        String selectedType = (String) typeBillet.getValue();
+        if (selectedType != null) {
+            switch (selectedType) {
+                case "SIMPLE":
+                    billetDescription.setText("✔ Ce billet est valide pour une seule personne.");
+                    break;
+                case "DUO":
+                    billetDescription.setText("✔ Ce billet est valide pour deux personnes.");
+                    break;
+                case "VIP":
+                    billetDescription.setText("✔ Ce billet est valide pour quatre personnes.");
+                    break;
+                default:
+                    billetDescription.setText("");
+                    break;
+            }
+        }
     }
 
 

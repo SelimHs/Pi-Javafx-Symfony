@@ -66,11 +66,17 @@
                             </items>
                         </ComboBox>
 
+
                         <Label text="🎟 Événement :" textFill="white" GridPane.columnIndex="0" GridPane.rowIndex="3" />
                         <ComboBox fx:id="eventSelection" promptText="Sélectionner un événement" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                     </children>
                 </GridPane>
-                <Button text="✔ Confirmer la Réservation"  onAction="#createBilletFront" style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-border-radius: 12px; -fx-padding: 10px;"/>
+                <Label fx:id="billetDescription" text="Sélectionnez un type de billet" textFill="white"
+                       style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-background-color: rgba(0,0,0,0.5);
+              -fx-text-fill: white; -fx-padding: 5px; -fx-border-radius: 5px;"
+                       GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+                <Button text="✔ Confirmer la Réservation"  onAction="#createBilletFront" style="-fx-background-color: #F39C12; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-border-radius: 12px; -fx-padding: 10px;"/>
             </children>
         </VBox>
     </children>
