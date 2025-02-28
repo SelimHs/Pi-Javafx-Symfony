@@ -61,7 +61,7 @@ public class ValidationMail {
                 messageLabel.setText("✅ Compte créé avec succès !");
 
                 // Redirection vers la page d'accueil après la création du compte
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Acceuil.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/FrontAcceuil.fxml"));
                 Parent root = loader.load();
 
                 // Obtenir la scène actuelle et la modifier
