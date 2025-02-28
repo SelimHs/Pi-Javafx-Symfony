@@ -20,13 +20,17 @@ import javafx.util.Duration;
 import tn.esprit.services.GeminiService;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FacceuilController {
     @FXML
     private Button btnAccueil, btnEvenements,btnEspace;
+    private static final List<HBox> chatHistory = new ArrayList<>();
 
     @FXML
     public void initialize() {
+        restoreChatHistory();
         applyHoverEffect(btnAccueil);
         applyHoverEffect(btnEvenements);
         applyHoverEffect(btnEspace);
@@ -36,6 +40,7 @@ public class FacceuilController {
                 sendMessage();
             }
         });
+        scrollToBottom();
     }
 
     private void applyHoverEffect(Button button) {
@@ -131,7 +136,7 @@ public class FacceuilController {
         String userInput = chatInput.getText().trim();
         if (userInput.isEmpty()) return;
 
-        // Création du message utilisateur avec un avatar 🎭
+        // 📌 Création du message utilisateur
         ImageView userAvatar = new ImageView(new Image("images/user.png"));
         userAvatar.setFitWidth(30);
         userAvatar.setFitHeight(30);
@@ -145,24 +150,29 @@ public class FacceuilController {
         userMessageContainer.setAlignment(Pos.CENTER_RIGHT);
         userMessageContainer.setSpacing(10);
         chatBox.getChildren().add(userMessageContainer);
+        chatHistory.add(userMessageContainer); // ✅ Ajout du message utilisateur à l'historique
+        scrollToBottom();
 
         chatInput.clear();
 
-        // Ajout d’un message temporaire "Chatbot est en train d'écrire..."
+        // 📌 Message temporaire "L'Assistant rédige une réponse..."
         Label typingLabel = new Label("L'Assistant rédige une réponse...");
         typingLabel.setStyle("-fx-text-fill: #888888; -fx-font-style: italic;");
-        chatBox.getChildren().add(typingLabel);
+
+        HBox typingContainer = new HBox(typingLabel);
+        typingContainer.setAlignment(Pos.CENTER_LEFT);
+        chatBox.getChildren().add(typingContainer); // ✅ Ajout temporaire (mais PAS dans chatHistory)
+        scrollToBottom();
 
         new Thread(() -> {
             try {
-                Thread.sleep(1000); // Simule une pause pour un effet plus naturel
+                Thread.sleep(1000); // Simule un délai
                 String response = geminiService.getResponse(userInput);
-                scrollToBottom();
 
                 Platform.runLater(() -> {
-                    chatBox.getChildren().remove(typingLabel);
+                    chatBox.getChildren().remove(typingContainer); // ✅ Suppression immédiate AVANT sauvegarde
 
-                    // Message du Chatbot avec avatar 🤖
+                    // 📌 Message du Chatbot
                     ImageView botAvatar = new ImageView(new Image("images/bot.png"));
                     botAvatar.setFitWidth(30);
                     botAvatar.setFitHeight(30);
@@ -176,18 +186,30 @@ public class FacceuilController {
                     botMessageContainer.setAlignment(Pos.CENTER_LEFT);
                     botMessageContainer.setSpacing(10);
                     chatBox.getChildren().add(botMessageContainer);
+                    chatHistory.add(botMessageContainer); // ✅ Ajout du message chatbot à l'historique
 
                     scrollToBottom();
                 });
             } catch (Exception e) {
                 Platform.runLater(() -> {
-                    chatBox.getChildren().remove(typingLabel);
-                    chatBox.getChildren().add(new Label("Erreur : Impossible de contacter l'API."));
+                    chatBox.getChildren().remove(typingContainer); // ✅ Suppression immédiate même en cas d'erreur
+
+                    Label errorLabel = new Label("Erreur : Impossible de contacter l'API.");
+                    errorLabel.setStyle("-fx-background-color: red; -fx-padding: 10px; -fx-background-radius: 10px; -fx-text-fill: white;");
+
+                    HBox errorContainer = new HBox(errorLabel);
+                    errorContainer.setAlignment(Pos.CENTER_LEFT);
+
+                    chatBox.getChildren().add(errorContainer);
+                    chatHistory.add(errorContainer); // ✅ Seuls les messages permanents sont sauvegardés
+                    scrollToBottom();
                 });
                 e.printStackTrace();
             }
         }).start();
     }
+
+
     @FXML
     ScrollPane chatScrollPane;
     @FXML
@@ -198,7 +220,16 @@ public class FacceuilController {
             chatScrollPane.setVvalue(chatScrollPane.getVmax());
         });
     }
+    @FXML
+    private void restoreChatHistory() {
+        chatBox.getChildren().clear(); // Nettoie le chat avant de recharger l'historique
 
+        for (HBox message : chatHistory) {
+            if (!message.getChildren().toString().contains("L'Assistant rédige une réponse...")) {
+                chatBox.getChildren().add(message); // ✅ Recharge seulement les messages valides
+            }
+        }
+    }
 
 
 

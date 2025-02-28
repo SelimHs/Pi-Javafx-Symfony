@@ -30,9 +30,9 @@
                     <Label text="Lamma" style="-fx-font-size: 20px; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10px;"/>
                 </HBox>
                 <HBox fx:id="navBar" spacing="20.0" style="-fx-alignment: center; -fx-padding: 0 20px;">
-                    <Button fx:id="btnAccueil" onAction="#goToAcceuil" text="🏠 Accueil" style="-fx-background-color: transparent; -fx-text-fill: #F39C12;"/>
-                    <Button fx:id="btnEvenements" onAction="#goToEvents" text="📅 Événements" style="-fx-background-color: transparent; -fx-text-fill: #F39C12;"/>
-                    <Button fx:id="btnEspace" onAction="#goToEspaces" text="📌 Espaces" style="-fx-background-color: transparent; -fx-text-fill: #F39C12;"/>
+                    <Button fx:id="btnAccueil" onAction="#goToAcceuil" text="🏠 Accueil" style="-fx-background-color: transparent; -fx-text-fill: #F39C12; -fx-border-radius: 10px; -fx-padding: 10px 18px;"/>
+                    <Button fx:id="btnEvenements" onAction="#goToEvents" text="📅 Événements" style="-fx-background-color: transparent; -fx-text-fill: #F39C12; -fx-border-radius: 10px; -fx-padding: 10px 18px;"/>
+                    <Button fx:id="btnEspace" onAction="#goToEspaces" text="📌 Espaces" style="-fx-background-color: transparent; -fx-text-fill: #F39C12; -fx-border-radius: 10px; -fx-padding: 10px 18px;"/>
                 </HBox>
                 <Button fx:id="btnLogout" onAction="#handleLogout" style="-fx-background-color: transparent; -fx-padding: 0;">
                     <graphic>
