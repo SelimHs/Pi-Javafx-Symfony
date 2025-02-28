@@ -261,4 +261,9 @@ public class FacceuilController {
         }
         chatbotVisible = !chatbotVisible;
     }
+
+    public void clearChatHistory(ActionEvent actionEvent) {
+        chatBox.getChildren().clear(); // Efface l'affichage des messages
+        chatHistory.clear();
+    }
 }

@@ -53,10 +53,22 @@
 
         <!-- 🚀 Chatbot masqué par défaut -->
         <VBox fx:id="chatbotContainer" layoutX="250.0" layoutY="420.0" prefWidth="500.0" prefHeight="350.0" spacing="10"
-              style="-fx-padding: 15px; -fx-background-color: rgba(255,255,255,0.9); -fx-border-radius: 20px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 4);"
+              style="-fx-padding: 15px; -fx-background-color: rgba(255,255,255,0.9); -fx-border-radius: 20px;
+                        -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 4);"
               opacity="0" visible="false">
             <children>
-                <Label text="🎟️ Assistant Virtuel Lamma" style="-fx-font-size: 18px; -fx-text-fill: #2C3E50; -fx-font-weight: bold; -fx-padding: 5px;"/>
+                <HBox >
+                    <Label text="🔮 Oracle Lamma" style="-fx-font-size: 18px; -fx-text-fill: #2C3E50; -fx-font-weight: bold; -fx-padding: 5px;" alignment="TOP_LEFT"/>
+                    <Button fx:id="clearChatbotHistoryButton" onAction="#clearChatHistory" style="-fx-background-color: transparent; -fx-padding: 5px;" alignment="TOP_RIGHT">
+                        <graphic>
+                            <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                <image>
+                                    <Image url="/images/clear.png"/>
+                                </image>
+                            </ImageView>
+                        </graphic>
+                    </Button>
+                </HBox>
                 <ScrollPane fx:id="chatScrollPane" prefHeight="250.0" fitToWidth="true" vbarPolicy="ALWAYS">
                     <content>
                         <VBox fx:id="chatBox" spacing="10" style="-fx-padding: 10px;" VBox.vgrow="ALWAYS"/>
