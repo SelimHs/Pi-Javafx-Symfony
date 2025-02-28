@@ -10,6 +10,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -129,20 +131,25 @@ public class FacceuilController {
         String userInput = chatInput.getText().trim();
         if (userInput.isEmpty()) return;
 
-        // Message utilisateur
+        // Création du message utilisateur avec un avatar 🎭
+        ImageView userAvatar = new ImageView(new Image("images/user.png"));
+        userAvatar.setFitWidth(30);
+        userAvatar.setFitHeight(30);
+
         Label userMessage = new Label(userInput);
         userMessage.setStyle("-fx-background-color: #dcdcdc; -fx-padding: 10px; -fx-background-radius: 10px; -fx-text-fill: black;");
         userMessage.setWrapText(true);
         userMessage.setMaxWidth(350);
 
-        HBox userMessageContainer = new HBox(userMessage);
+        HBox userMessageContainer = new HBox(userMessage, userAvatar);
         userMessageContainer.setAlignment(Pos.CENTER_RIGHT);
+        userMessageContainer.setSpacing(10);
         chatBox.getChildren().add(userMessageContainer);
 
         chatInput.clear();
 
         // Ajout d’un message temporaire "Chatbot est en train d'écrire..."
-        Label typingLabel = new Label("Chatbot est en train d'écrire...");
+        Label typingLabel = new Label("L'Assistant rédige une réponse...");
         typingLabel.setStyle("-fx-text-fill: #888888; -fx-font-style: italic;");
         chatBox.getChildren().add(typingLabel);
 
@@ -150,24 +157,32 @@ public class FacceuilController {
             try {
                 Thread.sleep(1000); // Simule une pause pour un effet plus naturel
                 String response = geminiService.getResponse(userInput);
-                scrollToBottom();
 
                 Platform.runLater(() -> {
                     chatBox.getChildren().remove(typingLabel);
+
+                    // Message du Chatbot avec avatar 🤖
+                    ImageView botAvatar = new ImageView(new Image("images/bot.png"));
+                    botAvatar.setFitWidth(30);
+                    botAvatar.setFitHeight(30);
 
                     Label botMessage = new Label(response);
                     botMessage.setStyle("-fx-background-color: rgba(30,30,46,0.9); -fx-padding: 10px; -fx-background-radius: 10px; -fx-text-fill: white;");
                     botMessage.setWrapText(true);
                     botMessage.setMaxWidth(350);
 
-                    HBox botMessageContainer = new HBox(botMessage);
+                    HBox botMessageContainer = new HBox(botAvatar, botMessage);
                     botMessageContainer.setAlignment(Pos.CENTER_LEFT);
+                    botMessageContainer.setSpacing(10);
                     chatBox.getChildren().add(botMessageContainer);
 
                     scrollToBottom();
                 });
             } catch (Exception e) {
-                Platform.runLater(() -> chatBox.getChildren().add(new Label("Erreur : Impossible de contacter l'API.")));
+                Platform.runLater(() -> {
+                    chatBox.getChildren().remove(typingLabel);
+                    chatBox.getChildren().add(new Label("Erreur : Impossible de contacter l'API."));
+                });
                 e.printStackTrace();
             }
         }).start();
@@ -175,16 +190,14 @@ public class FacceuilController {
     @FXML
     ScrollPane chatScrollPane;
     @FXML
+    // Défilement automatique amélioré
     private void scrollToBottom() {
         Platform.runLater(() -> {
-            chatScrollPane.layout(); // Force la mise à jour du layout
-
-            // Attendre un court instant pour garantir la mise à jour du layout avant de scroller
-            PauseTransition delay = new PauseTransition(Duration.millis(50));
-            delay.setOnFinished(event -> chatScrollPane.setVvalue(chatScrollPane.getVmax()));
-            delay.play();
+            chatScrollPane.layout();
+            chatScrollPane.setVvalue(chatScrollPane.getVmax());
         });
     }
+
 
 
 
