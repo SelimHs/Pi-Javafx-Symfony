@@ -29,6 +29,10 @@ import tn.esprit.services.ServiceEspace;
 
 public class AcceuilController {
     @FXML
+    private BarChart<String, Number> eventStatsChart;
+    @FXML
+    private PieChart pieChartEspaces;
+    @FXML
     public void goToBilletList(ActionEvent actionEvent) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Billets.fxml"));
@@ -45,7 +49,24 @@ public class AcceuilController {
     public void initialize() {
         chargerStatistiques();
         chargerStatistiquesEspaces();
+        // Ajouter un écouteur sur la propriété scene de l'un des éléments graphiques
+        eventStatsChart.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                // La scène est maintenant disponible, on peut accéder à la fenêtre
+                Stage stage = (Stage) newScene.getWindow();
 
+                // Ajouter des écouteurs de redimensionnement
+                stage.widthProperty().addListener((obsWidth, oldVal, newVal) -> {
+                    eventStatsChart.setPrefWidth(newVal.doubleValue() * 0.4); // 40% de la largeur
+                    pieChartEspaces.setPrefWidth(newVal.doubleValue() * 0.4); // 40% de la largeur
+                });
+
+                stage.heightProperty().addListener((obsHeight, oldVal, newVal) -> {
+                    eventStatsChart.setPrefHeight(newVal.doubleValue() * 0.6); // 60% de la hauteur
+                    pieChartEspaces.setPrefHeight(newVal.doubleValue() * 0.6); // 60% de la hauteur
+                });
+            }
+        });
     }
 
 
@@ -209,8 +230,7 @@ public class AcceuilController {
 
     }
 
-    @FXML
-    private BarChart<String, Number> eventStatsChart;
+
     @FXML
     ServiceBillet sb = new ServiceBillet();
 
@@ -231,8 +251,7 @@ public class AcceuilController {
         eventStatsChart.getData().add(series);
     }
 
-    @FXML
-    private PieChart pieChartEspaces;
+
     ServiceEspace se = new ServiceEspace();
 
     private void chargerStatistiquesEspaces() {
