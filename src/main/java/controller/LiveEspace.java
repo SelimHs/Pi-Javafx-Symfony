@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import tn.esprit.models.Espace;
@@ -16,7 +17,6 @@ import tn.esprit.models.Espace;
 import java.io.IOException;
 
 public class LiveEspace {
-
     private int idEspace;
 
     @FXML private Label espaceDetailsLabel;
@@ -31,31 +31,35 @@ public class LiveEspace {
     public void initData(Espace espace) {
         System.out.println("📌 Initialisation de LiveEspace...");
 
-        if (espaceDetailsLabel == null) {
-            System.err.println("⚠️ espaceDetailsLabel est NULL !");
-        } else {
-            System.out.println("✅ espaceDetailsLabel chargé !");
-        }
-
         this.idEspace = espace.getIdEspace();
         titleLabel.setText("Détails de l'Espace : " + espace.getNomEspace());
 
         espaceDetailsLabel.setText(
                 "📍 Adresse : " + espace.getAdresse() + "\n" +
-
                         "🏢 Type : " + espace.getTypeEspace()
         );
 
+        // 🔐 Générer un Token JWT sécurisé basé sur l'adresse de l’espace
+        String token = LiveKitTokenGenerator.generateToken(espace.getAdresse());
 
-    // 🔴 Remplace "your_room_id" par ton vrai identifiant de salle LiveKit
-        /*String liveRoomId = "your_room_id";
-        if (!liveRoomId.isEmpty()) {
-            String liveURL = "https://app.livekit.io/room/" + liveRoomId;
-            liveStreamView.getEngine().load(liveURL);
+        if (token != null) {
+            // 🔗 URL LiveKit avec le bon format et le token
+            String liveURL = "https://distributed-microservice-kb493y.sandbox.livekit.io/rooms/upz2-jhek#" + token;
+
+            System.out.println("🎥 Live chargé depuis : " + liveURL);
+
+            // Charger l'URL sécurisé dans WebView
+            WebEngine webEngine = liveStreamView.getEngine();
+            webEngine.load(liveURL);
         } else {
-            espaceDetailsLabel.setText("⚠️ Live non disponible pour cet espace.");
-        }*/
+            espaceDetailsLabel.setText("⚠️ Erreur : Impossible d’accéder au live.");
+        }
     }
+
+
+
+
+
 
     @FXML
     public void retourAfficherEspaces(ActionEvent actionEvent) {
