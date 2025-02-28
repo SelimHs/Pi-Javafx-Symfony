@@ -43,6 +43,24 @@ public class UsersService implements service.IService<Users> {
             System.err.println("Error adding user: " + e.getMessage());
         }
     }
+    // Récupérer le rôle d'un utilisateur en fonction de son email
+    public String getUserRoleByEmail(String email) {
+        String role = null;
+        String query = "SELECT type FROM user WHERE email = ?"; // Assurez-vous que la colonne s'appelle bien "type" dans la base
+
+        try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                role = rs.getString("type"); // Récupérer le rôle (ex: "Administrateur", "Client")
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération du rôle de l'utilisateur : " + e.getMessage());
+        }
+
+        return role;
+    }
+
 
     // Mettre à jour un utilisateur dans la base de données
     @Override
