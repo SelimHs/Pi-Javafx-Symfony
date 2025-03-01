@@ -35,12 +35,15 @@ public class LiveEspace {
 
         espaceDetailsLabel.setText(
                 "📍 Adresse : " + espace.getAdresse() + "\n" +
-                        "🏢 Type : " + espace.getTypeEspace()
+                        "🏢 Type : " + espace.getTypeEspace() + "\n" +
+                        "👥 Capacité : " + espace.getCapacite()
         );
 
-        // 📡 Définir l'URL du live stream (Remplace avec l’IP de ton téléphone)
-        String ip = "192.168.1.8"; // Mets l'IP affichée par IP Webcam
-        String liveURL = "http://" + ip + ":8080/jsfs.html";
+        // 📡 Définir l'URL du live stream avec la capacité comme port
+        String ip = "192.168.1.8"; // Remplace par l’IP de ton téléphone
+        int port = espace.getCapacite(); // 🔥 Utilisation de la capacité comme port
+
+        String liveURL = "http://" + ip + ":" + port + "/jsfs.html";
 
         System.out.println("🎥 Live stream chargé depuis : " + liveURL);
 
@@ -48,6 +51,7 @@ public class LiveEspace {
         WebEngine webEngine = liveStreamView.getEngine();
         webEngine.load(liveURL);
     }
+
 
     @FXML
     public void retourAfficherEspaces(ActionEvent actionEvent) {
