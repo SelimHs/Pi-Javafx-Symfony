@@ -16,8 +16,6 @@ import tn.esprit.models.Espace;
 import java.io.IOException;
 
 public class LiveEspace {
-    private int idEspace;
-
     @FXML private Label espaceDetailsLabel;
     @FXML private WebView liveStreamView;
     @FXML private Button btnAccueil, btnEvenements, btnEspace;
@@ -28,9 +26,11 @@ public class LiveEspace {
      * Initialise la scène avec les données de l'espace sélectionné.
      */
     public void initData(Espace espace) {
+        applyHoverEffect(btnAccueil);
+        applyHoverEffect(btnEvenements);
+        applyHoverEffect(btnEspace);
         System.out.println("📌 Initialisation de LiveEspace...");
 
-        this.idEspace = espace.getIdEspace();
         titleLabel.setText("Détails de l'Espace : " + espace.getNomEspace());
 
         espaceDetailsLabel.setText(
@@ -81,5 +81,9 @@ public class LiveEspace {
             System.err.println("Erreur lors du chargement de la page : " + fxmlPath);
             e.printStackTrace();
         }
+    }
+    private void applyHoverEffect(Button button) {
+        button.setOnMouseEntered(event -> button.setStyle("-fx-background-color: #F39C12; -fx-text-fill: white; -fx-border-radius: 10px; -fx-padding: 10px 18px;"));
+        button.setOnMouseExited(event -> button.setStyle("-fx-background-color: transparent; -fx-text-fill: #F39C12; -fx-border-radius: 10px; -fx-padding: 10px 18px;"));
     }
 }
