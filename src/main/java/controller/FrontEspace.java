@@ -122,19 +122,18 @@ public class FrontEspace {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frontend/LiveEspace.fxml"));
             Parent root = loader.load();
 
-            // Récupérer le contrôleur et initialiser avec les données de l'espace
-            LiveEspace liveEspaceController = loader.getController();
-            liveEspaceController.initData(espace);
+            // 📌 Récupérer le contrôleur de la nouvelle page et lui envoyer les données de l'espace
+            LiveEspace controller = loader.getController();
+            controller.initData(espace);  // Transmettre les informations de l'espace
 
-            // Afficher la scène
-            Stage stage = new Stage();
+            // 📌 Afficher la nouvelle scène
+            Stage stage = (Stage) espaceCardContainer.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
-            System.err.println("Erreur lors du chargement de LiveEspace.fxml");
             e.printStackTrace();
+            System.out.println("❌ Erreur lors du chargement de LiveEspace.fxml");
         }
-
     }
 
 
