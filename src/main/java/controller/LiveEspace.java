@@ -7,7 +7,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -39,27 +38,16 @@ public class LiveEspace {
                         "🏢 Type : " + espace.getTypeEspace()
         );
 
-        // 🔐 Générer un Token JWT sécurisé basé sur l'adresse de l’espace
-        String token = LiveKitTokenGenerator.generateToken(espace.getAdresse());
+        // 📡 Définir l'URL du live stream (Remplace avec l’IP de ton téléphone)
+        String ip = "192.168.1.8"; // Mets l'IP affichée par IP Webcam
+        String liveURL = "http://" + ip + ":8080/jsfs.html";
 
-        if (token != null) {
-            // 🔗 URL LiveKit avec le bon format et le token
-            String liveURL = "https://distributed-microservice-kb493y.sandbox.livekit.io/rooms/upz2-jhek#" + token;
+        System.out.println("🎥 Live stream chargé depuis : " + liveURL);
 
-            System.out.println("🎥 Live chargé depuis : " + liveURL);
-
-            // Charger l'URL sécurisé dans WebView
-            WebEngine webEngine = liveStreamView.getEngine();
-            webEngine.load(liveURL);
-        } else {
-            espaceDetailsLabel.setText("⚠️ Erreur : Impossible d’accéder au live.");
-        }
+        // 🔗 Charger l'URL du flux vidéo dans WebView
+        WebEngine webEngine = liveStreamView.getEngine();
+        webEngine.load(liveURL);
     }
-
-
-
-
-
 
     @FXML
     public void retourAfficherEspaces(ActionEvent actionEvent) {
@@ -89,13 +77,5 @@ public class LiveEspace {
             System.err.println("Erreur lors du chargement de la page : " + fxmlPath);
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Applique un effet de survol sur les boutons.
-     */
-    private void applyHoverEffect(Button button) {
-        button.setOnMouseEntered(event -> button.setStyle("-fx-background-color: #F39C12; -fx-text-fill: white; -fx-border-radius: 10px; -fx-padding: 10px 18px;"));
-        button.setOnMouseExited(event -> button.setStyle("-fx-background-color: transparent; -fx-text-fill: #F39C12; -fx-border-radius: 10px; -fx-padding: 10px 18px;"));
     }
 }
