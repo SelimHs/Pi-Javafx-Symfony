@@ -100,6 +100,19 @@
                 </VBox>
             </VBox>
 
+            <!-- 🌟 Section QR Code -->
+            <VBox prefWidth="200.0" maxWidth="200.0" spacing="10.0" style="-fx-background-color: rgba(255, 255, 255, 0.15);
+                     -fx-padding: 20px; -fx-border-radius: 12px; -fx-border-color: white;
+                     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 2, 2);">
+                <Label text="📍 Scannez pour localiser" style="-fx-font-size: 18px; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                <ImageView fx:id="qrCodeImage" fitHeight="200.0" fitWidth="200.0" preserveRatio="true"
+                           style="-fx-border-radius: 10px;">
+                    <effect>
+                        <DropShadow color="rgba(0,0,0,0.3)" radius="8" offsetX="3" offsetY="3"/>
+                    </effect>
+                </ImageView>
+            </VBox>
+
             <!-- 📍 Section droite : Carte Google Maps seule -->
             <VBox prefWidth="500.0" maxWidth="Infinity" style="-fx-background-color: rgba(255, 255, 255, 0.1);
                      -fx-padding: 15px; -fx-border-radius: 12px; -fx-border-color: white;
@@ -111,14 +124,6 @@
 
         </HBox>
 
-        <!-- 🚀 Bouton Retour -->
-        <HBox spacing="20" layoutY="820.0" layoutX="50.0">
-            <children>
-                <Button fx:id="retourButton" text="⬅ Retour"
-                        onAction="#retourAfficherEspaces"
-                        style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-size: 18px;
-                               -fx-padding: 12px 25px; -fx-border-radius: 8px;"/>
-            </children>
-        </HBox>
+
     </children>
 </AnchorPane>
