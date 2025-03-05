@@ -1,74 +1,82 @@
 package controller;
-import javafx.scene.control.Label;
-import javafx.animation.FadeTransition;
-import javafx.util.Duration;
+
 import com.stripe.model.PaymentIntent;
+import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.util.Duration;
+import tn.esprit.models.Billet;
 import tn.esprit.models.StripeConfig;
+import tn.esprit.models.Event;
 import tn.esprit.services.StripeService;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
 import java.io.IOException;
-import java.awt.*;
-import java.net.URI;
 
 public class MainController {
     @FXML
     private Button btnPay;
     @FXML
-    private Button btnCheckout;
-    @FXML
-    private Label lblMontant; // Ajouter ce Label dans le contrôleur
+    private Label lblMontant;
 
-
-    private int prixBilletFinal = 0; // Stocker le prix réel du billet
+    private int prixBilletFinal;
+    private String proprietaire;
+    private Billet.TypeBillet typeBillet;
+    private Event selectedEvent;
+    private FrontBillet frontBilletController;
 
     public void initialize() {
-        StripeConfig.init(); // Initialisation de Stripe
+        StripeConfig.init();
 
         btnPay.setOnAction(event -> processPayment());
-        btnCheckout.setOnAction(event -> redirectToCheckout());
     }
 
-    /**
-     * 🔥 Mettre à jour le prix du billet à payer
-     */
-    public void setPrixBilletFinal(int prix) {
+    public void setPaymentDetails(int prix, String proprietaire, Billet.TypeBillet type, Event event, FrontBillet controller) {
         this.prixBilletFinal = prix;
-        lblMontant.setText("Montant à payer : " + prix + " DT"); // ✅ Mise à jour du texte
+        this.proprietaire = proprietaire;
+        this.typeBillet = type;
+        this.selectedEvent = event;
+        this.frontBilletController = controller;
+
+        lblMontant.setText("Montant à payer : " + prix + " DT");
     }
 
-    /**
-     * ✅ Processus de paiement Stripe
-     */
+    @FXML
     private void processPayment() {
         if (prixBilletFinal == 0) {
             showAlert("Erreur", "Le prix du billet n'est pas défini !");
             return;
         }
 
-        double montantStripe = prixBilletFinal; // Utiliser le prix réel
-        PaymentIntent paymentIntent = StripeService.createPayment(montantStripe, "usd");
+        PaymentIntent paymentIntent = StripeService.createPayment(prixBilletFinal, "usd");
 
         if (paymentIntent != null) {
-            // ✅ Afficher un message de confirmation
             Alert confirmationAlert = new Alert(Alert.AlertType.INFORMATION);
             confirmationAlert.setTitle("Paiement réussi !");
             confirmationAlert.setHeaderText(null);
-            confirmationAlert.setContentText("Votre paiement de " + montantStripe + " USD a été effectué avec succès !");
+            confirmationAlert.setContentText("Votre paiement de " + prixBilletFinal + " USD a été effectué avec succès !");
 
-            // ✅ Redirection après que l'utilisateur clique sur "OK"
-            confirmationAlert.showAndWait().ifPresent(response -> {
-                goToEvents(); // 🔥 Rediriger vers la liste des événements
-            });
+            confirmationAlert.showAndWait().ifPresent(response -> createBilletAfterPayment());
         } else {
             showAlert("❌ Erreur", "Échec du paiement.");
         }
     }
+
+    private void createBilletAfterPayment() {
+        if (frontBilletController == null) {
+            showAlert("Erreur", "Impossible de créer le billet après paiement.");
+            return;
+        }
+
+        frontBilletController.createBilletAfterPayment(proprietaire, prixBilletFinal, typeBillet, selectedEvent);
+        goToEvents();
+    }
+
     private void goToEvents() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frontend/FrontEvents.fxml"));
@@ -89,13 +97,6 @@ public class MainController {
             showAlert("Erreur", "Impossible d'ouvrir la liste des événements.");
         }
     }
-    /**
-     * 🔄 Redirige vers Stripe Checkout
-     */
-    private void redirectToCheckout() {
-        String checkoutUrl = "https://checkout.stripe.com/pay"; // 🔗 Remplace avec l'URL réelle
-        openWebPage(checkoutUrl);
-    }
 
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -103,13 +104,5 @@ public class MainController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
-    }
-
-    private void openWebPage(String url) {
-        try {
-            Desktop.getDesktop().browse(new URI(url));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

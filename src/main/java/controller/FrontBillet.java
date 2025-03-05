@@ -12,13 +12,12 @@ import javafx.stage.Stage;
 import tn.esprit.models.Billet;
 import tn.esprit.services.ServiceBillet;
 import tn.esprit.services.ServiceEvent;
-import controller.BilletsMainController;
-
 import tn.esprit.models.Event;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+
 
 public class FrontBillet {
     @FXML
@@ -31,6 +30,14 @@ public class FrontBillet {
     private ComboBox typeBillet;
     @FXML
     private Button btnAccueil, btnEvenements,btnEspace,btnProduit;
+
+    @FXML
+    private TextField prixBillet;
+
+
+    private int prixFinalBillet = 0;
+    private Event selectedEvent;
+
     @FXML
     public void initialize() {
         applyHoverEffect(btnAccueil);
@@ -41,8 +48,7 @@ public class FrontBillet {
         loadEvents();
         typeBillet.setOnAction(event -> updateBilletDescription());
     }
-    @FXML
-    private TextField prixBillet;
+
     private void applyHoverEffect(Button button) {
         button.setOnMouseEntered(event -> button.setStyle("-fx-background-color: #F39C12; -fx-text-fill: white; -fx-border-radius: 10px; -fx-padding: 10px 18px;"));
         button.setOnMouseExited(event -> button.setStyle("-fx-background-color: transparent; -fx-text-fill: #F39C12; -fx-border-radius: 10px; -fx-padding: 10px 18px;"));
@@ -62,92 +68,63 @@ public class FrontBillet {
             e.printStackTrace();
         }
     }
-    private int prixFinalBillet = 0; // Stocker le prix total du billet
 
     public void setPrixBillet(int prix) {
-        prixFinalBillet = prix; // Mettre à jour le prix total du billet
+        prixFinalBillet = prix;
         prixBillet.setText(prix + " DT");
         prixBillet.setDisable(true);
     }
 
-    public void loadEvents(){
+    public void loadEvents() {
         ServiceEvent serviceEvent = new ServiceEvent();
         List<Event> events = serviceEvent.getAll();
         eventSelection.setItems(FXCollections.observableArrayList(events));
     }
+
     public void setEventSelection(Event selectedEvent) {
-        loadEvents(); // Charger les événements avant de sélectionner
-        eventSelection.setValue(selectedEvent); // Sélectionner l'événement
-        eventSelection.setDisable(true); // 🔒 Désactiver la modification
+        this.selectedEvent = selectedEvent;
+        loadEvents();
+        eventSelection.setValue(selectedEvent);
+        eventSelection.setDisable(true);
     }
+
 
     @FXML
     public void createBilletFront(ActionEvent actionEvent) {
-        BilletsMainController billetController = new BilletsMainController();
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        Billet billet = new Billet();
-        ServiceBillet sb = new ServiceBillet();
-
         // ✅ Vérification des champs obligatoires
         if (nomClient.getText().isEmpty() || typeBillet.getValue() == null) {
-            alert.setContentText("Veuillez remplir tous les champs.");
-            alert.showAndWait();
+            showAlert("Erreur", "Veuillez remplir tous les champs.");
             return;
         }
 
         Event selectedEvent = (Event) eventSelection.getSelectionModel().getSelectedItem();
         if (selectedEvent == null) {
-            alert.setContentText("Veuillez sélectionner un événement.");
-            alert.showAndWait();
+            showAlert("Erreur", "Veuillez sélectionner un événement.");
             return;
         }
 
-        // ✅ Remplir les détails du billet
-        billet.setProprietaire(nomClient.getText());
-        billet.setPrix(Integer.parseInt(prixBillet.getText().replace(" DT", "").trim()));
-        billet.setDateAchat(LocalDateTime.now());
-        billet.setType(Billet.TypeBillet.valueOf(typeBillet.getValue().toString()));
-        billet.setEvent(selectedEvent);
+        // ✅ Stocker les informations nécessaires pour créer le billet après paiement
+        String proprietaire = nomClient.getText();
+        int prix = Integer.parseInt(prixBillet.getText().replace(" DT", "").trim());
+        Billet.TypeBillet type = Billet.TypeBillet.valueOf(typeBillet.getValue().toString());
 
-        // ✅ Ajouter le billet et récupérer son ID
-        int billetId = sb.addd(billet);
-        if (billetId == -1) {
-            alert.setContentText("Erreur lors de l'ajout du billet.");
-            alert.showAndWait();
-            return;
-        }
-        billet.setIdBillet(billetId); // ✅ Mise à jour de l'ID du billet
-
-        // ✅ Vérifier que l'ID du billet n'est pas null avant d'exporter
-        if (billet.getIdBillet() > 0) {
-            billetController.exportBilletToPdf(billet);
-        } else {
-            alert.setContentText("Impossible de générer le PDF : ID du billet invalide.");
-            alert.showAndWait();
-        }
-
-        // ✅ Message de confirmation
-        Alert confirmationAlert = new Alert(Alert.AlertType.INFORMATION);
-        confirmationAlert.setTitle("Billet réservé !");
-        confirmationAlert.setHeaderText(null);
-        confirmationAlert.setContentText("Votre billet pour l'événement '" + selectedEvent.getNomEvent() + "' a été réservé avec succès !");
-        confirmationAlert.showAndWait();
-
-        // ✅ Redirection vers la page de paiement
-        goToPaymentPage(actionEvent, billet.getPrix());
+        // ✅ Aller à la page de paiement en envoyant le prix et les détails du billet
+        goToPaymentPage(actionEvent, prix, proprietaire, type, selectedEvent);
     }
 
     /**
-     * 🔄 Redirige l'utilisateur vers la page de paiement et transmet le prix du billet.
+     * 🔥 Redirige vers la page de paiement avec les détails du billet à créer après paiement
      */
-    private void goToPaymentPage(ActionEvent actionEvent, int prixBillet) {
+    private void goToPaymentPage(ActionEvent actionEvent, int prix, String proprietaire, Billet.TypeBillet type, Event event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/payment.fxml"));
             Parent root = loader.load();
 
+            // ✅ Récupérer le contrôleur de paiement et lui envoyer les données du billet
             MainController paymentController = loader.getController();
-            paymentController.setPrixBilletFinal(prixBillet); // 🔥 Envoyer le prix du billet au contrôleur Stripe
+            paymentController.setPaymentDetails(prix, proprietaire, type, event, this); // 🔥 Passer "this" pour rappel après paiement
 
+            // ✅ Afficher la page de paiement
             Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
@@ -156,6 +133,36 @@ public class FrontBillet {
             showAlert("Erreur", "Impossible d'ouvrir la page de paiement.");
         }
     }
+    public void createBilletAfterPayment(String proprietaire, int prix, Billet.TypeBillet type, Event event) {
+        ServiceBillet sb = new ServiceBillet();
+        BilletsMainController billetController = new BilletsMainController();
+
+        Billet billet = new Billet();
+        billet.setProprietaire(proprietaire);
+        billet.setPrix(prix);
+        billet.setDateAchat(LocalDateTime.now());
+        billet.setType(type);
+        billet.setEvent(event);
+
+        // ✅ Ajouter le billet en base de données
+        int billetId = sb.addd(billet);
+        if (billetId == -1) {
+            showAlert("Erreur", "Impossible d'ajouter le billet après paiement.");
+            return;
+        }
+        billet.setIdBillet(billetId);
+
+        // ✅ Générer un PDF du billet
+        billetController.exportBilletToPdf(billet);
+
+        // ✅ Message de confirmation
+        showAlert("Billet réservé !", "Votre billet pour l'événement '" + event.getNomEvent() + "' a été généré !");
+    }
+
+    /**
+     * 🔄 Redirige l'utilisateur vers la page de paiement et transmet le prix du billet.
+     */
+
 
     private void updateBilletDescription() {
         String selectedType = (String) typeBillet.getValue();
