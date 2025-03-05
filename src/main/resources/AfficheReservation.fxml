@@ -43,7 +43,10 @@
 
                     style="-fx-background-color: transparent; -fx-text-fill: #a868a0;
                            -fx-font-size: 16px; -fx-border-radius: 10px; -fx-padding: 12px 20px;"/>
-            <Button text="Exporter en Excel" onAction="#exportReservations"/>
+            <Button text="📂 Exporter en Excel" onAction="#exportReservations" onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"
+                    style="-fx-background-color: transparent; -fx-text-fill: #a868a0;
+               -fx-font-size: 16px; -fx-border-radius: 10px; -fx-padding: 12px 20px;"/>
+
 
         </children>
     </VBox>

@@ -8,7 +8,9 @@ import tn.esprit.utils.myDatabase;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ServiceReservation implements Iservice<Reservation> {
 
@@ -116,25 +118,6 @@ public class ServiceReservation implements Iservice<Reservation> {
             System.out.println(e.getMessage());
         }
         return null;
-    }
-    public static String getUserNameById(int userId) {
-        String userName = "Utilisateur inconnu"; // Default value if user not found
-        String query = "SELECT * FROM `user` WHERE idUser = ?"; // Ensure your table name is correct
-
-        try (Connection conn = myDatabase.getInstance().getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-
-            pstmt.setInt(1, userId);
-            try (ResultSet rs = pstmt.executeQuery()) {  // Each query gets a fresh ResultSet
-                if (rs.next()) {
-                    userName = rs.getString("nom"); // Fetch user name from DB
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return userName;
     }
 
 
