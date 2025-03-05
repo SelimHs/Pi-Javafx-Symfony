@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.control.ScrollPane?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.FrontProduit"
+            prefHeight="900.0" prefWidth="1400.0"
+            style="-fx-background-image: url('/images/front-bg.jpg'); -fx-background-size: cover;">
+
+    <children>
+        <HBox layoutX="0.0" layoutY="0.0" prefHeight="60.0" prefWidth="1400.0"
+              style="-fx-background-color: rgba(30,30,46,0.8); -fx-padding: 10px; -fx-alignment: center-left;">
+            <children>
+                <HBox style="-fx-border-color: #F39C12; -fx-border-width: 2px; -fx-padding: 5px; -fx-border-radius: 10px; -fx-alignment: center;">
+                    <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                            <Image url="/logo.png" />
+                        </image>
+                    </ImageView>
+                    <Label text="Lamma" style="-fx-font-size: 20px; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10px;"/>
+                </HBox>
+            </children>
+        </HBox>
+
+        <HBox layoutX="50.0" layoutY="80.0" spacing="20.0">
+            <!-- Section Produits -->
+            <VBox fx:id="produitContainer" prefWidth="900.0" style="-fx-padding: 20px;">
+                <Label text="📌 Liste des Produits" style="-fx-font-size: 26px; -fx-text-fill: white; -fx-font-weight: bold;" />
+                <ScrollPane fx:id="produitScrollPane" prefWidth="900.0" prefHeight="700.0"
+                            style="-fx-background: transparent; -fx-border-color: transparent;">
+                    <content>
+                        <FlowPane fx:id="produitCardContainer"
+                                  hgap="20.0" vgap="20.0"
+                                  prefWrapLength="880.0"
+                                  style="-fx-padding: 10px;">
+                        </FlowPane>
+                    </content>
+                </ScrollPane>
+                <Button fx:id="btnGenererEvenement" text="🎉 Générer un événement"
+                        onAction="#genererEvenement"
+                        style="-fx-background-color: #F39C12; -fx-text-fill: white; -fx-padding: 10px; -fx-font-size: 16px; -fx-border-radius: 10px;"/>
+            </VBox>
+
+            <!-- Section Affichage de l'événement suggéré -->
+            <VBox fx:id="ideeEvenementContainer" prefWidth="450.0" style="-fx-padding: 20px; -fx-background-color: white; -fx-border-radius: 10px; -fx-spacing: 10px;">
+                <Label text="💡 Idée d'événement" style="-fx-font-size: 22px; -fx-text-fill: #333; -fx-font-weight: bold;" />
+                <Label fx:id="ideeEvenementText" wrapText="true" style="-fx-font-size: 16px; -fx-text-fill: #555;" />
+            </VBox>
+        </HBox>
+    </children>
+</AnchorPane>
