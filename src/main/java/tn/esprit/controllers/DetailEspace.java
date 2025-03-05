@@ -10,6 +10,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -138,18 +140,31 @@ public class DetailEspace {
 
                 detailsBox.getChildren().addAll(nameLabel, descriptionLabel, phoneLabel);
 
-                // Conteneur des boutons
+                // 📌 Conteneur des icônes
                 HBox buttonBox = new HBox(10);
                 buttonBox.setStyle("-fx-alignment: center-right;");
 
-                Button btnModifier = new Button("✏ Modifier");
-                btnModifier.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white; -fx-border-radius: 8px; -fx-padding: 7px 12px;");
+                // ✏️ Icône Modifier
+                Button btnModifier = new Button();
+                btnModifier.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
                 btnModifier.setOnAction(event -> modifierOrganisateur(organisateur));
 
-                Button btnSupprimer = new Button("🗑 Supprimer");
-                btnSupprimer.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-border-radius: 8px; -fx-padding: 7px 12px;");
+                ImageView editIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/edit-icon.png")));
+                editIcon.setFitWidth(18);
+                editIcon.setFitHeight(18);
+                btnModifier.setGraphic(editIcon);
+
+                // 🗑️ Icône Supprimer
+                Button btnSupprimer = new Button();
+                btnSupprimer.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
                 btnSupprimer.setOnAction(event -> supprimerOrganisateur(organisateur));
 
+                ImageView trashIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/trash-icon.png")));
+                trashIcon.setFitWidth(18);
+                trashIcon.setFitHeight(18);
+                btnSupprimer.setGraphic(trashIcon);
+
+                // Ajout des icônes au conteneur
                 buttonBox.getChildren().addAll(btnModifier, btnSupprimer);
 
                 card.getChildren().addAll(profileIcon, detailsBox, buttonBox);
@@ -157,6 +172,7 @@ public class DetailEspace {
             }
         }
     }
+
 
     /**
      * Supprime un organisateur après confirmation.

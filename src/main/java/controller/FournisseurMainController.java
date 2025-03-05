@@ -10,6 +10,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -95,7 +97,7 @@ public class FournisseurMainController implements Initializable {
         }
     }
 
-    // Créer une carte de fournisseur
+    // Créer une carte de fournisseur avec des icônes
     private VBox createFournisseurCard(fournisseur f) {
         VBox card = new VBox();
         card.setStyle("-fx-background-color: rgba(255, 255, 255, 0.85); " +
@@ -121,26 +123,42 @@ public class FournisseurMainController implements Initializable {
         Label tel = new Label("📞 " + f.getTelephone());
         tel.setStyle("-fx-font-size: 14px; -fx-text-fill: #2980B9;");
 
-        // 📌 Conteneur horizontal pour les boutons
+        // 📌 Conteneur horizontal pour les icônes
         HBox buttonContainer = new HBox(8);
         buttonContainer.setStyle("-fx-alignment: center;");
 
-        // 👁️ Bouton Voir Détails
-        Button detailsButton = new Button("👁️ Voir Détails");
-        detailsButton.setStyle("-fx-background-color: #BDC3C7; -fx-text-fill: black; -fx-border-radius: 8px;");
+        // 🔍 Icône Voir Détails
+        Button detailsButton = new Button();
+        detailsButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
         detailsButton.setOnAction(e -> showFournisseurDetails(f));
 
-        // ✏️ Bouton Modifier
-        Button modifyButton = new Button("✏ Modifier");
-        modifyButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white; -fx-border-radius: 8px;");
+        ImageView detailsIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/details-icon.png")));
+        detailsIcon.setFitWidth(18);
+        detailsIcon.setFitHeight(18);
+        detailsButton.setGraphic(detailsIcon);
+
+
+        // ✏️ Icône Modifier
+        Button modifyButton = new Button();
+        modifyButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
         modifyButton.setOnAction(e -> goToModifierFournisseur(f, e));
 
-        // 🗑️ Bouton Supprimer
-        Button deleteButton = new Button("🗑 Supprimer");
-        deleteButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-border-radius: 8px;");
+        ImageView editIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/edit-icon.png")));
+        editIcon.setFitWidth(18);
+        editIcon.setFitHeight(18);
+        modifyButton.setGraphic(editIcon);
+
+        // 🗑️ Icône Supprimer
+        Button deleteButton = new Button();
+        deleteButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
         deleteButton.setOnAction(e -> deleteFournisseur(f));
 
-        // Ajout des boutons au conteneur
+        ImageView trashIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/trash-icon.png")));
+        trashIcon.setFitWidth(18);
+        trashIcon.setFitHeight(18);
+        deleteButton.setGraphic(trashIcon);
+
+        // Ajout des icônes au conteneur
         buttonContainer.getChildren().addAll(detailsButton, modifyButton, deleteButton);
 
         // Ajout des éléments à la carte
@@ -148,18 +166,26 @@ public class FournisseurMainController implements Initializable {
         return card;
     }
 
-    // Afficher les détails d'un fournisseur
-    private void showFournisseurDetails(fournisseur f) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Détails du Fournisseur");
-        alert.setHeaderText(f.getNomFournisseur());
-        alert.setContentText("🆔 ID : " + f.getIdFournisseur() +
-                "\n📝 Description : " + f.getDescription() +
-                "\n🏷 Type : " + f.getType() +
-                "\n📞 Téléphone : " + f.getTelephone());
 
-        alert.showAndWait();
+    private void showFournisseurDetails(fournisseur f) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/DetailFournisseur.fxml"));
+            Parent root = loader.load();
+
+            // ✅ Récupérer le contrôleur et passer les données du fournisseur
+            DetailFournisseur controller = loader.getController();
+            controller.initData(f);
+
+            // ✅ Afficher dans une nouvelle fenêtre
+            Stage stage = new Stage();
+            stage.setTitle("Détails du Fournisseur");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 
     // Rediriger vers la page de modification d'un fournisseur
     @FXML
