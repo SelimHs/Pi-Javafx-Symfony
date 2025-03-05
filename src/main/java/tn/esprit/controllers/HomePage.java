@@ -1,7 +1,10 @@
 package tn.esprit.controllers;
 
+import controller.DetailUser;
 import javafx.event.ActionEvent;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import tn.esprit.controllers.Clock;
@@ -126,23 +129,42 @@ public class HomePage {
         emailLabel.getStyleClass().add("user-card-label");
         emailLabel.setMaxWidth(Double.MAX_VALUE);
 
-        Button detailsButton = new Button("Voir détails");
-        detailsButton.getStyleClass().add("action-button");
-        detailsButton.setStyle("-fx-font-size: 12px; -fx-background-color: #3498db; -fx-text-fill: white; -fx-background-radius: 20px; -fx-padding: 5px 10px;");
-        detailsButton.setOnAction(event -> showUserDetails(user));
+        // 📌 Conteneur des icônes
+        HBox buttonBox = new HBox(10);
+        buttonBox.setStyle("-fx-alignment: center-right;");
 
-        Button editButton = new Button("Modifier");
-        editButton.getStyleClass().add("action-button");
-        editButton.setStyle("-fx-font-size: 12px; -fx-background-color: #f1c40f; -fx-text-fill: white; -fx-background-radius: 20px; -fx-padding: 5px 10px;");
+        // 🔍 Icône Voir Détails
+        Button detailsButton = new Button();
+        detailsButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
+        detailsButton.setOnAction(e -> showUserDetails(user));
+
+        ImageView detailsIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/details-icon.png")));
+        detailsIcon.setFitWidth(18);
+        detailsIcon.setFitHeight(18);
+        detailsButton.setGraphic(detailsIcon);
+
+        // ✏️ Icône Modifier
+        Button editButton = new Button();
+        editButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
         editButton.setOnAction(event -> handleEditUser(user));
 
-        Button deleteButton = new Button("Supprimer");
-        deleteButton.getStyleClass().add("delete-button");
-        deleteButton.setStyle("-fx-font-size: 12px; -fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 20px; -fx-padding: 5px 10px;");
+        ImageView editIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/edit-icon.png")));
+        editIcon.setFitWidth(18);
+        editIcon.setFitHeight(18);
+        editButton.setGraphic(editIcon);
+
+        // 🗑️ Icône Supprimer
+        Button deleteButton = new Button();
+        deleteButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
         deleteButton.setOnAction(event -> handleDeleteUser(user));
 
-        HBox buttonBox = new HBox(detailsButton, editButton, deleteButton);
-        buttonBox.setSpacing(10);
+        ImageView trashIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/trash-icon.png")));
+        trashIcon.setFitWidth(18);
+        trashIcon.setFitHeight(18);
+        deleteButton.setGraphic(trashIcon);
+
+        // Ajout des icônes au conteneur
+        buttonBox.getChildren().addAll(detailsButton, editButton, deleteButton);
 
         VBox infoBox = new VBox(nameLabel, prenomLabel, emailLabel, buttonBox);
         infoBox.getStyleClass().add("user-card-info");
@@ -152,28 +174,25 @@ public class HomePage {
         userCard.getChildren().add(infoBox);
         return userCard;
     }
-
     private void showUserDetails(Users user) {
-        Alert detailsAlert = new Alert(Alert.AlertType.INFORMATION);
-        detailsAlert.setTitle("Détails de l'utilisateur");
-        detailsAlert.setHeaderText("Informations complètes de " + user.getNom() + " " + user.getPrenom());
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/DetailUser.fxml"));
+            Parent root = loader.load();
 
-        VBox content = new VBox(10);
-        content.setAlignment(Pos.CENTER_LEFT);
+            // ✅ Récupérer le contrôleur et passer les données de l'utilisateur
+            DetailUser controller = loader.getController();
+            controller.initData(user);
 
-        Label nameLabel = new Label("Nom: " + user.getNom());
-        Label prenomLabel = new Label("Prénom: " + user.getPrenom());
-        Label emailLabel = new Label("Email: " + user.getEmail());
-        Label phoneLabel = new Label("Téléphone: " + user.getNumeroTelephone());
-        Label addressLabel = new Label("Adresse: " + user.getAdresse());
-        Label typeLabel = new Label("Type: " + user.getType());
-        Label genreLabel = new Label("Genre: " + user.getGenre());
-
-        content.getChildren().addAll(nameLabel, prenomLabel, emailLabel, phoneLabel, addressLabel, typeLabel, genreLabel);
-
-        detailsAlert.getDialogPane().setContent(content);
-        detailsAlert.showAndWait();
+            // ✅ Afficher dans une nouvelle fenêtre
+            Stage stage = new Stage();
+            stage.setTitle("Détails de l'Utilisateur");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 
     @FXML
     private void handleAddUser() {

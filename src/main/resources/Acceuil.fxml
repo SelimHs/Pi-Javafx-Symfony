@@ -11,146 +11,131 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane prefHeight="671.0" prefWidth="950.0"
-            style="-fx-background-color: linear-gradient(to bottom, #030307, #131022);"
-            xmlns="http://javafx.com/javafx/23.0.1"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controller.AcceuilController">
+<GridPane fx:id="mainGrid" prefHeight="671.0" prefWidth="950.0"
+          style="-fx-background-color: linear-gradient(to bottom, #030307, #131022);"
+          xmlns="http://javafx.com/javafx/23.0.1"
+          xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="controller.AcceuilController">
 
-    <children>
-        <!-- 🌟 Barre latérale avec effet moderne -->
-        <VBox layoutX="0.0" layoutY="0.0" prefHeight="671.0" prefWidth="220.0"
-              style="-fx-background-color: linear-gradient(to bottom, #131022, #1A172A);
-                     -fx-padding: 15px;
-                     -fx-border-radius: 15 0 0 15;
-                     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 15, 0, 3, 3);">
-            <children>
-                <!-- Logo -->
-                <ImageView fitHeight="90.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
-                    <image>
-                        <Image url="@logo.png" />
-                    </image>
-                </ImageView>
+    <!-- Définir les colonnes -->
+    <columnConstraints>
+        <ColumnConstraints prefWidth="220" minWidth="220" maxWidth="220" /> <!-- Barre latérale fixe -->
+        <ColumnConstraints hgrow="ALWAYS" /> <!-- Contenu principal flexible -->
+    </columnConstraints>
 
-                <!-- Nom de l'application -->
-                <Label text="Dashboard"
-                       style="-fx-font-size: 20px; -fx-text-fill: white; -fx-font-weight: bold;
-                              -fx-padding: 15px; -fx-alignment: center;"/>
+    <!-- Définir les lignes -->
+    <rowConstraints>
+        <RowConstraints vgrow="ALWAYS" /> <!-- Toute la hauteur -->
+    </rowConstraints>
 
-                <!-- 🌟 Menu de navigation -->
-                <Button text="📅 Événements" onAction="#goToEventList" onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"
-                        style="-fx-background-color: transparent; -fx-text-fill: #a868a0;
-                               -fx-font-size: 16px; -fx-border-radius: 10px; -fx-padding: 10px 18px;"
-                />
+    <!-- 🌟 Barre latérale -->
+    <VBox style="-fx-background-color: linear-gradient(to bottom, #131022, #1A172A);
+                 -fx-padding: 15px;
+                 -fx-border-radius: 15 0 0 15;
+                 -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 15, 0, 3, 3);"
+          GridPane.columnIndex="0" GridPane.rowIndex="0">
+        <children>
+            <!-- Logo -->
+            <ImageView fitHeight="90.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@logo.png" />
+                </image>
+            </ImageView>
 
-                <Button text="🎟 Billets" onAction="#goToBilletList" onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"
+            <!-- Nom de l'application -->
+            <Label text="Dashboard"
+                   style="-fx-font-size: 20px; -fx-text-fill: white; -fx-font-weight: bold;
+                          -fx-padding: 15px; -fx-alignment: center;"/>
 
-                        style="-fx-background-color: transparent; -fx-text-fill: #a868a0;
-                               -fx-font-size: 18px; -fx-border-radius: 10px; -fx-padding: 10px 18px;"/>
+            <!-- 🌟 Menu de navigation -->
+            <Button text="📅 Événements" onAction="#goToEventList" onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"
+                    style="-fx-background-color: transparent; -fx-text-fill: #a868a0;
+                           -fx-font-size: 16px; -fx-border-radius: 10px; -fx-padding: 10px 18px;"/>
 
-                <Button text="📌 Réservations" onAction="#goToReservation" onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"
+            <Button text="🎟 Billets" onAction="#goToBilletList" onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"
+                    style="-fx-background-color: transparent; -fx-text-fill: #a868a0;
+                           -fx-font-size: 18px; -fx-border-radius: 10px; -fx-padding: 10px 18px;"/>
 
-                        style="-fx-background-color: transparent; -fx-text-fill: #a868a0;
-                               -fx-font-size: 18px; -fx-border-radius: 10px; -fx-padding: 10px 18px;"/>
+            <Button text="📌 Réservations" onAction="#goToReservation" onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"
+                    style="-fx-background-color: transparent; -fx-text-fill: #a868a0;
+                           -fx-font-size: 18px; -fx-border-radius: 10px; -fx-padding: 10px 18px;"/>
 
-                <Button text="💰 Remises" onAction="#goToRemise" onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"
+            <Button text="💰 Remises" onAction="#goToRemise" onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"
+                    style="-fx-background-color: transparent; -fx-text-fill: #a868a0;
+                           -fx-font-size: 18px; -fx-border-radius: 10px; -fx-padding: 10px 18px;"/>
 
-                        style="-fx-background-color: transparent; -fx-text-fill: #a868a0;
-                               -fx-font-size: 18px; -fx-border-radius: 10px; -fx-padding: 10px 18px;"/>
+            <Button text="🏢 Fournisseurs" onAction="#goToFournisseurList" onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"
+                    style="-fx-background-color: transparent; -fx-text-fill: #a868a0;
+                           -fx-font-size: 18px; -fx-border-radius: 10px; -fx-padding: 10px 18px;"/>
 
-                <Button text="🏢 Fournisseurs" onAction="#goToFournisseurList" onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"
+            <Button text="📦 Produits" onAction="#goToProduitList" onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"
+                    style="-fx-background-color: transparent; -fx-text-fill: #a868a0;
+                           -fx-font-size: 18px; -fx-border-radius: 10px; -fx-padding: 10px 18px;"/>
 
-                        style="-fx-background-color: transparent; -fx-text-fill: #a868a0;
-                               -fx-font-size: 18px; -fx-border-radius: 10px; -fx-padding: 10px 18px;"/>
+            <Button text="🏠 Espaces" onAction="#goToEspace" onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"
+                    style="-fx-background-color: transparent; -fx-text-fill: #a868a0;
+                           -fx-font-size: 18px; -fx-border-radius: 10px; -fx-padding: 10px 18px;"/>
 
-                <Button text="📦 Produits" onAction="#goToProduitList" onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"
+            <Button text="🧑‍💻 Utilisateurs" onAction="#goToHomePage" onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"
+                    style="-fx-background-color: transparent; -fx-text-fill: #a868a0;
+                           -fx-font-size: 18px; -fx-border-radius: 10px; -fx-padding: 10px 18px;"/>
 
-                        style="-fx-background-color: transparent; -fx-text-fill: #a868a0;
-                               -fx-font-size: 18px; -fx-border-radius: 10px; -fx-padding: 10px 18px;"/>
+            <!-- 🔓 Bouton Déconnexion -->
+            <Button fx:id="logoutButton" text="🔓 Déconnexion" onAction="#handleLogout"
+                    style="-fx-background-color: #E74C3C; -fx-text-fill: white; -fx-font-size: 16px;
+                           -fx-font-weight: bold; -fx-border-radius: 10px; -fx-padding: 12px 20px;"/>
+        </children>
+    </VBox>
 
-                <Button text="🏠 Espaces" onAction="#goToEspace" onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"
+    <!-- 🌟 Contenu principal -->
+    <VBox style="-fx-alignment: center; -fx-padding: 20px;" GridPane.columnIndex="1" GridPane.rowIndex="0">
+        <children>
+            <Label text="📊 Tableau de Bord"
+                   style="-fx-font-size: 26px; -fx-text-fill: white; -fx-font-weight: bold;"/>
 
-                        style="-fx-background-color: transparent; -fx-text-fill: #a868a0;
-                               -fx-font-size: 18px; -fx-border-radius: 10px; -fx-padding: 10px 18px;"/>
+            <!-- 📌 Conteneur général pour les statistiques -->
+            <HBox spacing="20" style="-fx-alignment: center; -fx-padding: 10px;">
+                <!-- 📊 Conteneur du BarChart -->
+                <VBox fx:id="vboxStats" spacing="10" style="-fx-padding: 10px; -fx-alignment: center;">
+                    <Label text="📊 Statistiques des Événements"
+                           style="-fx-font-size: 20px; -fx-text-fill: #a868a0; -fx-font-weight: bold;"/>
+                    <AnchorPane prefHeight="400.0" prefWidth="100.0"
+                                style="-fx-background-color: rgba(255, 255, 255, 0.1);
+                                       -fx-padding: 15px; -fx-border-radius: 12px;
+                                       -fx-border-color: white;
+                                       -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 3, 3);">
+                        <BarChart fx:id="eventStatsChart"
+                                  prefHeight="380.0" prefWidth="100.0"
+                                  style="-fx-background-color: transparent;">
+                            <xAxis>
+                                <CategoryAxis fx:id="eventAxis" label="Événements"/>
+                            </xAxis>
+                            <yAxis>
+                                <NumberAxis fx:id="ticketCountAxis" label="Nombre de billets"/>
+                            </yAxis>
+                        </BarChart>
+                    </AnchorPane>
+                </VBox>
 
-                <Button text="🧑‍💻 Utilisateurs" onAction="#goToHomePage" onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"
-
-                        style="-fx-background-color: transparent; -fx-text-fill: #a868a0;
-                               -fx-font-size: 18px; -fx-border-radius: 10px; -fx-padding: 10px 18px;"/>
-
-                <!-- 🔓 Bouton Déconnexion -->
-                <Button fx:id="logoutButton" text="🔓 Déconnexion" onAction="#handleLogout"
-                        style="-fx-background-color: #E74C3C; -fx-text-fill: white; -fx-font-size: 16px;
-                               -fx-font-weight: bold; -fx-border-radius: 10px; -fx-padding: 12px 20px;"/>
-            </children>
-        </VBox>
-
-        <!-- 🌟 Contenu principal -->
-        <VBox layoutX="250.0" layoutY="20.0" prefWidth="700.0"
-              style="-fx-alignment: center; -fx-padding: 20px;">
-            <children>
-
-                <Label text="📊 Tableau de Bord"
-                       style="-fx-font-size: 26px; -fx-text-fill: white; -fx-font-weight: bold;"/>
-
-                <!-- 📌 Conteneur général pour les statistiques -->
-                <HBox layoutX="250.0" layoutY="100.0" prefWidth="700.0" spacing="20"
-                      style="-fx-alignment: center; -fx-padding: 10px;">
-
-                    <!-- 📊 Conteneur du BarChart -->
-                    <VBox fx:id="vboxStats"
-                          prefWidth="50.0" spacing="10"
-                          style="-fx-padding: 10px; -fx-alignment: center;">
-
-                        <Label text="📊 Statistiques des Événements"
-                               style="-fx-font-size: 20px; -fx-text-fill: #a868a0; -fx-font-weight: bold;"/>
-
-                        <AnchorPane prefHeight="400.0" prefWidth="100.0"
-                                    style="-fx-background-color: rgba(255, 255, 255, 0.1);
-                                           -fx-padding: 15px; -fx-border-radius: 12px;
-                                           -fx-border-color: white;
-                                           -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 3, 3);">
-
-                            <BarChart fx:id="eventStatsChart"
-                                      layoutX="10.0" layoutY="10.0"
-                                      prefHeight="380.0" prefWidth="100.0"
-                                      style="-fx-background-color: transparent;">
-                                <xAxis>
-                                    <CategoryAxis fx:id="eventAxis" label="Événements"/>
-                                </xAxis>
-                                <yAxis>
-                                    <NumberAxis fx:id="ticketCountAxis" label="Nombre de billets"/>
-                                </yAxis>
-                            </BarChart>
-                        </AnchorPane>
-
-                    </VBox>
-
-                    <!-- 📌 Conteneur du PieChart -->
-                    <VBox prefWidth="50.0" spacing="10"
-                          style="-fx-padding: 10px; -fx-alignment: center;">
-
-                        <Label text="📍 Répartition des Espaces Disponibles"
-                               style="-fx-font-size: 20px; -fx-text-fill: #a868a0; -fx-font-weight: bold;"/>
-
-                        <AnchorPane prefHeight="400.0" prefWidth="100.0"
-                                    style="-fx-background-color: rgba(255, 255, 255, 0.1);
-                                           -fx-padding: 15px; -fx-border-radius: 12px;
-                                           -fx-border-color: white;
-                                           -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 3, 3);">
-
-                            <PieChart fx:id="pieChartEspaces"
-                                      layoutX="10.0" layoutY="10.0"
-                                      prefHeight="380.0" prefWidth="100.0"
-                                      style="-fx-background-color: transparent;"/>
-                        </AnchorPane>
-
-                    </VBox>
-
-                </HBox>
-
-            </children>
-        </VBox>
-    </children>
-</AnchorPane>
+                <!-- 📌 Conteneur du PieChart -->
+                <VBox spacing="10" style="-fx-padding: 10px; -fx-alignment: center;">
+                    <Label text="📍 Répartition des Espaces Disponibles"
+                           style="-fx-font-size: 20px; -fx-text-fill: #a868a0; -fx-font-weight: bold;"/>
+                    <AnchorPane prefHeight="400.0" prefWidth="100.0"
+                                style="-fx-background-color: rgba(255, 255, 255, 0.1);
+                                       -fx-padding: 15px; -fx-border-radius: 12px;
+                                       -fx-border-color: white;
+                                       -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 3, 3);">
+                        <PieChart fx:id="pieChartEspaces"
+                                  prefHeight="380.0" prefWidth="100.0"
+                                  style="-fx-background-color: transparent;"/>
+                    </AnchorPane>
+                </VBox>
+            </HBox>
+        </children>
+    </VBox>
+</GridPane>

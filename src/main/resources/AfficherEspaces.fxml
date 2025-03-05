@@ -29,6 +29,10 @@
                               -fx-padding: 15px; -fx-alignment: center;"/>
 
                 <!-- Boutons de navigation -->
+                <Button fx:id="acceuil" onAction="#retourAcceuil" text="🏠 Accueil"
+                        style="-fx-background-color: transparent; -fx-text-fill: #a868a0;
+                               -fx-font-size: 16px; -fx-border-radius: 10px; -fx-padding: 12px 20px;"
+                        onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"/>
                 <Button fx:id="ajtesp" onAction="#ajouterEspaceView" text="➕ Ajouter Espace"
                         style="-fx-background-color: transparent; -fx-text-fill: #a868a0;
                                -fx-font-size: 16px; -fx-border-radius: 10px; -fx-padding: 12px 20px;"

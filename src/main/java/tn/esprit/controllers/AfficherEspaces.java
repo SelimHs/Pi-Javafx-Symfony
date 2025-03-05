@@ -9,8 +9,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -102,32 +105,61 @@ public class AfficherEspaces {
     private VBox creerCarteEspace(Espace espace) {
         VBox card = new VBox();
         card.setStyle("-fx-background-color: white; -fx-padding: 10px; -fx-border-radius: 10px; "
-                + "-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 2, 2); -fx-spacing: 8px;");
+                + "-fx-background-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);"
+                + "-fx-min-width: 200px; -fx-max-width: 200px; -fx-alignment: center; -fx-spacing: 10;");
 
-        Button btnModifier = new Button("Modifier");
-        btnModifier.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
+        Label nomLabel = new Label("🏠 " + espace.getNomEspace());
+        nomLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
+        Label adresseLabel = new Label("📍 " + espace.getAdresse());
+        Label capaciteLabel = new Label("👥 Capacité: " + espace.getCapacite());
+        Label dispoLabel = new Label("📅 Disponibilité: " + espace.getDisponibilite());
+        Label prixLabel = new Label("💰 Prix: " + espace.getPrix() + " DT");
+        Label typeLabel = new Label("🏢 Type: " + espace.getTypeEspace());
+
+        // 📌 Conteneur horizontal pour les icônes
+        HBox buttonContainer = new HBox(8);
+        buttonContainer.setStyle("-fx-alignment: center;");
+
+        // ✏️ Icône Modifier
+        Button btnModifier = new Button();
+        btnModifier.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
         btnModifier.setOnAction(e -> modifierEspace(espace));
 
-        Button btnSupprimer = new Button("Supprimer");
-        btnSupprimer.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
+        ImageView editIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/edit-icon.png")));
+        editIcon.setFitWidth(18);
+        editIcon.setFitHeight(18);
+        btnModifier.setGraphic(editIcon);
+
+        // 🗑️ Icône Supprimer
+        Button btnSupprimer = new Button();
+        btnSupprimer.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
         btnSupprimer.setOnAction(e -> supprimerEspace(espace));
 
-        Button btnDetails = new Button("Détails");
-        btnDetails.setStyle("-fx-background-color: #3498db; -fx-text-fill: white;");
+        ImageView trashIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/trash-icon.png")));
+        trashIcon.setFitWidth(18);
+        trashIcon.setFitHeight(18);
+        btnSupprimer.setGraphic(trashIcon);
+
+        // 👁️ Icône Voir Détails
+        Button btnDetails = new Button();
+        btnDetails.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
         btnDetails.setOnAction(e -> afficherDetailsEspace(espace, e));
 
-        card.getChildren().addAll(
-                new Label("🏠 " + espace.getNomEspace()),
-                new Label("📍 " + espace.getAdresse()),
-                new Label("👥 Capacité: " + espace.getCapacite()),
-                new Label("📅 Disponibilité: " + espace.getDisponibilite()),
-                new Label("💰 Prix: " + espace.getPrix() + " DT"),
-                new Label("🏢 Type: " + espace.getTypeEspace()),
-                btnModifier, btnSupprimer, btnDetails
-        );
+        ImageView detailsIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/details-icon.png")));
+        detailsIcon.setFitWidth(18);
+        detailsIcon.setFitHeight(18);
+        btnDetails.setGraphic(detailsIcon);
+
+        // Ajout des icônes au conteneur
+        buttonContainer.getChildren().addAll(btnModifier, btnSupprimer, btnDetails);
+
+        // Ajout des éléments à la carte
+        card.getChildren().addAll(nomLabel, adresseLabel, capaciteLabel, dispoLabel, prixLabel, typeLabel, buttonContainer);
 
         return card;
     }
+
 
     private void supprimerEspace(Espace espace) {
         serviceEspace.delete(espace.getIdEspace());
@@ -199,5 +231,16 @@ public class AfficherEspaces {
         Button btn = (Button) mouseEvent.getSource();
         btn.setStyle("-fx-background-color: transparent; -fx-text-fill: #a868a0;-fx-font-size: 18px; -fx-border-radius: 10px; -fx-padding: 10px 18px;");
         btn.setEffect(null);
+    }
+
+    public void retourAcceuil(ActionEvent actionEvent) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Acceuil.fxml"));
+            Parent root = fxmlLoader.load();
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

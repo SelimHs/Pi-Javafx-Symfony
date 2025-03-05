@@ -1,4 +1,5 @@
 package controller;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,26 +19,26 @@ import tn.esprit.services.ServiceEvent;
 
 import java.io.IOException;
 import java.util.List;
-
-
+import java.util.Optional;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import java.util.Optional;
+
 public class FrontEventsController {
 
     @FXML
     private FlowPane eventCardContainer;
 
-    private ServiceEvent eventService = new ServiceEvent(); // Service pour récupérer les événements
+    private final ServiceEvent eventService = new ServiceEvent(); // Service pour récupérer les événements
+
     @FXML
-    private Button btnAccueil, btnEvenements,btnEspace;
+    private Button btnAccueil, btnEvenements, btnEspace;
 
     @FXML
     public void initialize() {
         applyHoverEffect(btnAccueil);
         applyHoverEffect(btnEvenements);
         applyHoverEffect(btnEspace);
-    displayEvents();
+        displayEvents();
     }
 
     public void displayEvents() {
@@ -83,8 +84,27 @@ public class FrontEventsController {
         }
     }
 
-    // 🎯 Méthode pour gérer la réservation d'un événement
+    // ✅ Redirige vers la page de détails de l'événement
+    private void showEventDetails(Event event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frontend/FrontDetailEvents.fxml"));
+            Parent root = loader.load();
 
+            // ✅ Récupérer le contrôleur et envoyer les données de l'événement
+            FrontDetailEvents controller = loader.getController();
+            controller.initData(event);
+
+            // ✅ Changer la scène pour afficher les détails de l'événement
+            Stage stage = (Stage) eventCardContainer.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("❌ Erreur lors du chargement de FrontDetailEvents.fxml");
+        }
+    }
+
+    // 🎯 Gérer la réservation d'un événement
     private void reserverEvent(Event event) {
         Alert confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
         confirmationDialog.setTitle("Confirmation de réservation");
@@ -97,10 +117,10 @@ public class FrontEventsController {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frontend/FrontBillet.fxml"));
                 Parent root = loader.load();
 
-                // ✅ Obtenir le contrôleur de FrontBillet et lui envoyer le prix + l'événement
+                // ✅ Obtenir le contrôleur de FrontBillet et lui envoyer les données
                 FrontBillet billetController = loader.getController();
-                billetController.setPrixBillet(event.getPrix()); // 🎯 Remplir le prix
-                billetController.setEventSelection(event); // 🎯 Sélectionner l'événement automatiquement
+                billetController.setPrixBillet(event.getPrix());
+                billetController.setEventSelection(event);
 
                 // ✅ Afficher la nouvelle interface
                 Stage stage = (Stage) eventCardContainer.getScene().getWindow();
@@ -109,59 +129,68 @@ public class FrontEventsController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else {
-            System.out.println("Réservation annulée.");
         }
-    }
-
-
-
-
-    private void showEventDetails(Event event) {
-        System.out.println("Afficher les détails de l'événement : " + event.getNomEvent());
-    }
-
-    private void openEditPopup(Event event) {
-        System.out.println("Modifier l'événement : " + event.getNomEvent());
-    }
-
-    private void deleteAndRefreshEvent(Event event) {
-        System.out.println("Supprimer l'événement : " + event.getNomEvent());
-        eventService.delete(event);
-        displayEvents(); // Rafraîchir après suppression
     }
 
     public void goToAcceuil(ActionEvent actionEvent) {
-        try {
-            // Charger le fichier FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FrontAcceuil.fxml"));
-            Parent root = loader.load();
-
-            // Récupérer la scène actuelle et changer de vue
-            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        changeScene(actionEvent, "/FrontAcceuil.fxml");
     }
 
     public void goToEspace(ActionEvent actionEvent) {
-        try {
-            // Charger le fichier FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frontend/FrontEspace.fxml"));
-            Parent root = loader.load();
+        changeScene(actionEvent, "/Frontend/FrontEspace.fxml");
+    }
 
-            // Récupérer la scène actuelle et changer de vue
-            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+    private void changeScene(ActionEvent event, String fxmlPath) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.println("❌ Erreur lors du chargement de " + fxmlPath);
         }
     }
+
     private void applyHoverEffect(Button button) {
         button.setOnMouseEntered(event -> button.setStyle("-fx-background-color: #F39C12; -fx-text-fill: white; -fx-border-radius: 10px; -fx-padding: 10px 18px;"));
         button.setOnMouseExited(event -> button.setStyle("-fx-background-color: transparent; -fx-text-fill: #F39C12; -fx-border-radius: 10px; -fx-padding: 10px 18px;"));
     }
+
+    public void handleLogout(ActionEvent event) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Déconnexion");
+        alert.setHeaderText(null);
+        alert.setContentText("Êtes-vous sûr de vouloir vous déconnecter ?");
+
+        // Vérifier si l'utilisateur clique sur "OK"
+        if (alert.showAndWait().get() == ButtonType.OK) {
+            System.out.println("🔒 Déconnexion confirmée...");
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/login.fxml"));
+                Parent loginPage = loader.load();
+
+                // Obtenir la scène actuelle et changer la page
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                stage.setScene(new Scene(loginPage));
+                stage.show();
+
+                System.out.println("✅ Déconnexion réussie !");
+            } catch (IOException e) {
+                System.out.println("❌ Erreur lors de la déconnexion : " + e.getMessage());
+                e.printStackTrace();
+                showAlert("Erreur de déconnexion", "Impossible d'ouvrir la page de connexion.");
+            }
+        }
+    }
+    // Méthode pour afficher une alerte en cas d'erreur
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
 }

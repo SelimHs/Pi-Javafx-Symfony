@@ -37,6 +37,31 @@ public class ServiceBillet implements Iservice<Billet> {
             System.out.println(e.getMessage());
         }
     }
+    public int addd(Billet billet) {
+        String qry = "INSERT INTO `billet`(`proprietaire`, `prix`, `dateAchat`, `type`, `idEvent`) VALUES (?,?,?,?,?)";
+        try {
+            PreparedStatement pstm = cnx.prepareStatement(qry, Statement.RETURN_GENERATED_KEYS);
+            pstm.setString(1, billet.getProprietaire());
+            pstm.setInt(2, billet.getPrix());
+            pstm.setString(3, billet.getDateAchat().format(formatter));
+            pstm.setString(4, billet.getType().name()); // Enregistrer le type sous forme de chaîne
+            pstm.setInt(5, billet.getEvent().getIdEvent());
+            int rowsAffected = pstm.executeUpdate();
+
+            if (rowsAffected > 0) {
+                ResultSet rs = pstm.getGeneratedKeys();
+                if (rs.next()) {
+                    int generatedId = rs.getInt(1);
+                    billet.setIdBillet(generatedId); // ✅ Met à jour l'ID du billet
+                    return generatedId; // ✅ Retourne l'ID du billet généré
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de l'ajout du billet : " + e.getMessage());
+        }
+        return -1; // Retourne -1 si l'ajout échoue
+    }
+
 
     @Override
     public List<Billet> getAll() {
@@ -174,5 +199,35 @@ public class ServiceBillet implements Iservice<Billet> {
         }
         return billetId;
     }
+
+
+    public Billet findBilletByDateAchat(LocalDateTime dateAchat) {
+        Billet billet = new Billet();
+        String query = "SELECT * FROM billet WHERE dateAchat = ?";
+
+        try {
+            PreparedStatement stmt = cnx.prepareStatement(query);
+            stmt.setTimestamp(1, Timestamp.valueOf(dateAchat));
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                billet = new Billet();
+                billet.setIdBillet(rs.getInt("idBillet"));
+                billet.setProprietaire(rs.getString("proprietaire"));
+                billet.setPrix(rs.getInt("prix"));
+                billet.setDateAchat(rs.getTimestamp("dateAchat").toLocalDateTime());
+                billet.setType(Billet.TypeBillet.valueOf(rs.getString("type")));
+
+                // Fetch associated event
+                int eventId = rs.getInt("idEvent");
+                billet.setEvent(new ServiceEvent().findById(eventId));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return billet;
+    }
+
 
 }
