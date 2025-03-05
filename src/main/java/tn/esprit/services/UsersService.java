@@ -229,4 +229,24 @@ public class UsersService implements service.IService<Users> {
         }
         return passwordHash; // Retourner le mot de passe haché (ou null si l'email n'existe pas)
     }
+    public static String findById(int userId) {
+        String userName = "Utilisateur inconnu"; // Default value if user not found
+        String query = "SELECT nom FROM users WHERE id = ?"; // Adjust table/column names if needed
+
+        try (Connection conn = myDatabase.getInstance().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setInt(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                userName = rs.getString("nom"); // Fetch user name from DB
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return userName;
+    }
+
 }

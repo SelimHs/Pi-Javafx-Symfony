@@ -5,6 +5,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import tn.esprit.models.Reservation;
 
+import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -75,6 +77,39 @@ public class ExcelExportService {
             return null;
         }
     }
+    public static void openExcelFile(String filePath) {
+        File file = new File(filePath);
+
+        if (!file.exists()) {
+            System.err.println("❌ Fichier introuvable : " + filePath);
+            return;
+        }
+
+        try {
+            if (Desktop.isDesktopSupported()) {
+                // ✅ Windows & macOS : Utilisation de Desktop
+                Desktop.getDesktop().open(file);
+                System.out.println("📂 Ouverture du fichier Excel...");
+            } else {
+                // ✅ Linux : Utilisation de ProcessBuilder
+                ProcessBuilder pb;
+                String os = System.getProperty("os.name").toLowerCase();
+                if (os.contains("linux")) {
+                    pb = new ProcessBuilder("xdg-open", filePath);
+                } else if (os.contains("mac")) {
+                    pb = new ProcessBuilder("open", filePath);
+                } else {
+                    System.err.println("❌ Ouverture automatique non supportée sur cet OS.");
+                    return;
+                }
+                pb.start();
+                System.out.println("📂 Ouverture du fichier Excel...");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("❌ Erreur lors de l'ouverture du fichier.");
+        }
+    }
 
 
     // ✅ Téléchargement du fichier Excel
@@ -91,6 +126,7 @@ public class ExcelExportService {
             if (response.isSuccessful() && response.body() != null) {
                 Files.write(Paths.get(fileName), response.body().bytes());
                 System.out.println("✅ Fichier Excel téléchargé : " + fileName);
+                openExcelFile(fileName);
             } else {
                 System.err.println("❌ Erreur de téléchargement : " + response.message());
             }

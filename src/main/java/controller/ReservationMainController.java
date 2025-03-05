@@ -16,6 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import tn.esprit.models.Reservation;
+import tn.esprit.services.ExcelDesignService;
 import tn.esprit.services.ExcelExportService;
 import tn.esprit.services.ServiceReservation;
 
@@ -25,6 +26,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
+
+import static tn.esprit.services.ExcelExportService.openExcelFile;
 
 public class ReservationMainController implements Initializable {
 
@@ -297,13 +300,16 @@ public class ReservationMainController implements Initializable {
             return;
         }
 
-        String excelUrl = ExcelExportService.generateExcelFromReservations(reservations);
+        String excelFilePath = ExcelDesignService.generateExcelWithStyle(reservations);
 
-        if (excelUrl != null) {
+        if (excelFilePath != null) {
+            // 📌 Ouvrir le fichier Excel automatiquement après l'exportation
+            openExcelFile(excelFilePath);
+
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Exportation Réussie");
             alert.setHeaderText("Les réservations ont été exportées avec succès !");
-            alert.setContentText("Téléchargez le fichier Excel ici : " + excelUrl);
+            alert.setContentText("Le fichier a été enregistré sous : " + excelFilePath);
             alert.showAndWait();
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -313,6 +319,7 @@ public class ReservationMainController implements Initializable {
             alert.showAndWait();
         }
     }
+
 
 
 }
