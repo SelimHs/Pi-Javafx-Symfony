@@ -62,10 +62,14 @@ public class FrontBillet {
             e.printStackTrace();
         }
     }
+    private int prixFinalBillet = 0; // Stocker le prix total du billet
+
     public void setPrixBillet(int prix) {
-        prixBillet.setText(String.valueOf(prix) + " DT");
+        prixFinalBillet = prix; // Mettre à jour le prix total du billet
+        prixBillet.setText(prix + " DT");
         prixBillet.setDisable(true);
     }
+
     public void loadEvents(){
         ServiceEvent serviceEvent = new ServiceEvent();
         List<Event> events = serviceEvent.getAll();
@@ -129,10 +133,30 @@ public class FrontBillet {
         confirmationAlert.setContentText("Votre billet pour l'événement '" + selectedEvent.getNomEvent() + "' a été réservé avec succès !");
         confirmationAlert.showAndWait();
 
-        // ✅ Réinitialisation des champs
-        nomClient.clear();
-        typeBillet.getSelectionModel().clearSelection();
+        // ✅ Redirection vers la page de paiement
+        goToPaymentPage(actionEvent, billet.getPrix());
     }
+
+    /**
+     * 🔄 Redirige l'utilisateur vers la page de paiement et transmet le prix du billet.
+     */
+    private void goToPaymentPage(ActionEvent actionEvent, int prixBillet) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/payment.fxml"));
+            Parent root = loader.load();
+
+            MainController paymentController = loader.getController();
+            paymentController.setPrixBilletFinal(prixBillet); // 🔥 Envoyer le prix du billet au contrôleur Stripe
+
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Erreur", "Impossible d'ouvrir la page de paiement.");
+        }
+    }
+
     private void updateBilletDescription() {
         String selectedType = (String) typeBillet.getValue();
         Event selectedEvent = (Event) eventSelection.getSelectionModel().getSelectedItem();
@@ -209,5 +233,12 @@ public class FrontBillet {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }
