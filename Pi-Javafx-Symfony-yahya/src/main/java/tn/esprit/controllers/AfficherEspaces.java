@@ -232,15 +232,4 @@ public class AfficherEspaces {
         btn.setStyle("-fx-background-color: transparent; -fx-text-fill: #a868a0;-fx-font-size: 18px; -fx-border-radius: 10px; -fx-padding: 10px 18px;");
         btn.setEffect(null);
     }
-
-    public void retourAcceuil(ActionEvent actionEvent) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Acceuil.fxml"));
-            Parent root = fxmlLoader.load();
-            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-    }
 }

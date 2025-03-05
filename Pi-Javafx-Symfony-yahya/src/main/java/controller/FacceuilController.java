@@ -1,47 +1,27 @@
 package controller;
 
-import javafx.animation.FadeTransition;
-import javafx.animation.PauseTransition;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-import tn.esprit.services.GeminiService;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class FacceuilController {
     @FXML
     private Button btnAccueil, btnEvenements,btnEspace;
-    private static final List<HBox> chatHistory = new ArrayList<>();
 
     @FXML
     public void initialize() {
-        restoreChatHistory();
         applyHoverEffect(btnAccueil);
         applyHoverEffect(btnEvenements);
         applyHoverEffect(btnEspace);
-        sendButton.setOnAction(event -> sendMessage());
-        chatInput.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER) {
-                sendMessage();
-            }
-        });
-        scrollToBottom();
     }
 
     private void applyHoverEffect(Button button) {
@@ -120,165 +100,5 @@ public class FacceuilController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
-    }
-
-    @FXML
-    private TextField chatInput;
-    @FXML
-    private Button sendButton;
-
-    @FXML
-    private VBox chatBox; // Remplace chatArea par chatBox pour afficher les messages
-
-    private final GeminiService geminiService = new GeminiService();
-
-    @FXML
-    private void sendMessage() {
-        String userInput = chatInput.getText().trim();
-        if (userInput.isEmpty()) return;
-
-        // 📌 Création du message utilisateur
-        ImageView userAvatar = new ImageView(new Image("images/user.png"));
-        userAvatar.setFitWidth(30);
-        userAvatar.setFitHeight(30);
-
-        Label userMessage = new Label(userInput);
-        userMessage.setStyle("-fx-background-color: #dcdcdc; -fx-padding: 10px; -fx-background-radius: 10px; -fx-text-fill: black;");
-        userMessage.setWrapText(true);
-        userMessage.setMaxWidth(350);
-
-        HBox userMessageContainer = new HBox(userMessage, userAvatar);
-        userMessageContainer.setAlignment(Pos.CENTER_RIGHT);
-        userMessageContainer.setSpacing(10);
-        chatBox.getChildren().add(userMessageContainer);
-        chatHistory.add(userMessageContainer); // ✅ Ajout du message utilisateur à l'historique
-        scrollToBottom();
-
-        chatInput.clear();
-
-        // 📌 Message temporaire "L'Assistant rédige une réponse..."
-        Label typingLabel = new Label("L'Assistant rédige une réponse...");
-        typingLabel.setStyle("-fx-text-fill: #888888; -fx-font-style: italic;");
-
-        HBox typingContainer = new HBox(typingLabel);
-        typingContainer.setAlignment(Pos.CENTER_LEFT);
-        chatBox.getChildren().add(typingContainer); // ✅ Ajout temporaire (mais PAS dans chatHistory)
-        scrollToBottom();
-
-        new Thread(() -> {
-            try {
-                Thread.sleep(1000); // Simule un délai
-                String response = geminiService.getResponse(userInput);
-
-                Platform.runLater(() -> {
-                    chatBox.getChildren().remove(typingContainer); // ✅ Suppression immédiate AVANT sauvegarde
-
-                    // 📌 Message du Chatbot
-                    ImageView botAvatar = new ImageView(new Image("images/bot.png"));
-                    botAvatar.setFitWidth(30);
-                    botAvatar.setFitHeight(30);
-
-                    Label botMessage = new Label(response);
-                    botMessage.setStyle("-fx-background-color: rgba(30,30,46,0.9); -fx-padding: 10px; -fx-background-radius: 10px; -fx-text-fill: white;");
-                    botMessage.setWrapText(true);
-                    botMessage.setMaxWidth(350);
-
-                    HBox botMessageContainer = new HBox(botAvatar, botMessage);
-                    botMessageContainer.setAlignment(Pos.CENTER_LEFT);
-                    botMessageContainer.setSpacing(10);
-                    chatBox.getChildren().add(botMessageContainer);
-                    chatHistory.add(botMessageContainer); // ✅ Ajout du message chatbot à l'historique
-
-                    scrollToBottom();
-                });
-            } catch (Exception e) {
-                Platform.runLater(() -> {
-                    chatBox.getChildren().remove(typingContainer); // ✅ Suppression immédiate même en cas d'erreur
-
-                    Label errorLabel = new Label("Erreur : Impossible de contacter l'API.");
-                    errorLabel.setStyle("-fx-background-color: red; -fx-padding: 10px; -fx-background-radius: 10px; -fx-text-fill: white;");
-
-                    HBox errorContainer = new HBox(errorLabel);
-                    errorContainer.setAlignment(Pos.CENTER_LEFT);
-
-                    chatBox.getChildren().add(errorContainer);
-                    chatHistory.add(errorContainer); // ✅ Seuls les messages permanents sont sauvegardés
-                    scrollToBottom();
-                });
-                e.printStackTrace();
-            }
-        }).start();
-    }
-
-
-    @FXML
-    ScrollPane chatScrollPane;
-    @FXML
-    // Défilement automatique amélioré
-    private void scrollToBottom() {
-        Platform.runLater(() -> {
-            chatScrollPane.layout();
-            chatScrollPane.setVvalue(chatScrollPane.getVmax());
-        });
-    }
-    @FXML
-    private void restoreChatHistory() {
-        chatBox.getChildren().clear(); // Nettoie le chat avant de recharger l'historique
-
-        for (HBox message : chatHistory) {
-            if (!message.getChildren().toString().contains("L'Assistant rédige une réponse...")) {
-                chatBox.getChildren().add(message); // ✅ Recharge seulement les messages valides
-            }
-        }
-    }
-
-    @FXML
-    private VBox chatbotContainer;
-    @FXML
-    private Button chatbotButton;
-
-    private boolean chatbotVisible = false;
-
-    public void toggleChatbot(ActionEvent actionEvent) {
-        if (chatbotVisible) {
-            // 📌 Masquer le chatbot avec une animation
-            FadeTransition fadeOut = new FadeTransition(Duration.millis(300), chatbotContainer);
-            fadeOut.setFromValue(1.0);
-            fadeOut.setToValue(0.0);
-            fadeOut.setOnFinished(event -> chatbotContainer.setVisible(false)); // Masquer après animation
-            fadeOut.play();
-
-            chatbotButton.setText("💬 Chatbot"); // Remettre le texte du bouton
-        } else {
-            // 📌 Afficher le chatbot avec une animation
-            chatbotContainer.setVisible(true);
-            FadeTransition fadeIn = new FadeTransition(Duration.millis(300), chatbotContainer);
-            fadeIn.setFromValue(0.0);
-            fadeIn.setToValue(1.0);
-            fadeIn.play();
-
-            chatbotButton.setText("❌ Fermer");
-        }
-        chatbotVisible = !chatbotVisible;
-    }
-
-    public void clearChatHistory(ActionEvent actionEvent) {
-        chatBox.getChildren().clear(); // Efface l'affichage des messages
-        chatHistory.clear();
-    }
-
-    public void goToProduit(ActionEvent actionEvent) {
-        try {
-            // Charger le fichier FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frontend/FrontProduit.fxml"));
-            Parent root = loader.load();
-
-            // Récupérer la scène actuelle et changer de vue
-            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

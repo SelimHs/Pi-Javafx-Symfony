@@ -1,6 +1,5 @@
 package tn.esprit.services;
 
-import model.Users;
 import tn.esprit.interfaces.Iservice;
 import tn.esprit.models.Remise;
 import tn.esprit.models.Reservation;
@@ -117,26 +116,6 @@ public class ServiceReservation implements Iservice<Reservation> {
         }
         return null;
     }
-    public static String getUserNameById(int userId) {
-        String userName = "Utilisateur inconnu"; // Default value if user not found
-        String query = "SELECT * FROM `user` WHERE idUser = ?"; // Ensure your table name is correct
-
-        try (Connection conn = myDatabase.getInstance().getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-
-            pstmt.setInt(1, userId);
-            try (ResultSet rs = pstmt.executeQuery()) {  // Each query gets a fresh ResultSet
-                if (rs.next()) {
-                    userName = rs.getString("nom"); // Fetch user name from DB
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return userName;
-    }
-
 
 
     public List<Reservation> search(String searchText) {

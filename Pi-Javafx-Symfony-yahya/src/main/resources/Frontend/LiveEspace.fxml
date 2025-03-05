@@ -37,15 +37,19 @@
                             style="-fx-background-color: transparent; -fx-text-fill: #F39C12; -fx-border-radius: 10px; -fx-padding: 10px 18px;"/>
                 </HBox>
 
-                <Button fx:id="btnLogout" onAction="#handleLogout" style="-fx-background-color: transparent; -fx-padding: 0;">
-                    <graphic>
-                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                            <image>
-                                <Image url="/images/logout.png"/>
-                            </image>
-                        </ImageView>
-                    </graphic>
-                </Button>
+                <!-- Icônes à droite -->
+                <HBox spacing="15.0" style="-fx-alignment: right;">
+                    <ImageView fx:id="cartIcon" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                            <Image url="/images/reserver.png"/>
+                        </image>
+                    </ImageView>
+                    <ImageView fx:id="profileIcon" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                            <Image url="/images/profile.png"/>
+                        </image>
+                    </ImageView>
+                </HBox>
             </children>
         </HBox>
 

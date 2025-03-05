@@ -157,40 +157,4 @@ public class FrontEventsController {
         button.setOnMouseEntered(event -> button.setStyle("-fx-background-color: #F39C12; -fx-text-fill: white; -fx-border-radius: 10px; -fx-padding: 10px 18px;"));
         button.setOnMouseExited(event -> button.setStyle("-fx-background-color: transparent; -fx-text-fill: #F39C12; -fx-border-radius: 10px; -fx-padding: 10px 18px;"));
     }
-
-    public void handleLogout(ActionEvent event) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Déconnexion");
-        alert.setHeaderText(null);
-        alert.setContentText("Êtes-vous sûr de vouloir vous déconnecter ?");
-
-        // Vérifier si l'utilisateur clique sur "OK"
-        if (alert.showAndWait().get() == ButtonType.OK) {
-            System.out.println("🔒 Déconnexion confirmée...");
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/login.fxml"));
-                Parent loginPage = loader.load();
-
-                // Obtenir la scène actuelle et changer la page
-                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                stage.setScene(new Scene(loginPage));
-                stage.show();
-
-                System.out.println("✅ Déconnexion réussie !");
-            } catch (IOException e) {
-                System.out.println("❌ Erreur lors de la déconnexion : " + e.getMessage());
-                e.printStackTrace();
-                showAlert("Erreur de déconnexion", "Impossible d'ouvrir la page de connexion.");
-            }
-        }
-    }
-    // Méthode pour afficher une alerte en cas d'erreur
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
 }

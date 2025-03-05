@@ -22,30 +22,20 @@ import tn.esprit.services.ServiceOrganisateur;
 
 import java.io.IOException;
 import java.util.List;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
-import com.google.zxing.client.j2se.MatrixToImageWriter;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 
 public class FrontDetailEspace {
-    @FXML private ImageView qrCodeImage;
 
     @FXML private Label titleLabel;
     @FXML private Label espaceDetailsLabel;
     @FXML private VBox organisateurContainer;
     @FXML private WebView mapView;
     @FXML private Button retourButton;
-    @FXML private ImageView espaceImage;
+    @FXML private ImageView espaceImage; // ✅ Ajout de l'ImageView
 
     private int idEspace;
     private final ServiceOrganisateur serviceOrganisateur = new ServiceOrganisateur();
     @FXML
-    private Button btnAccueil, btnEvenements, btnEspace;
-
+    private Button btnAccueil, btnEvenements,btnEspace;
     /**
      * Initialise les détails de l'espace et charge les organisateurs + la carte.
      * @param espace L'objet Espace à afficher
@@ -63,43 +53,14 @@ public class FrontDetailEspace {
                         "📅 Disponibilité : " + espace.getDisponibilite() + "\n" +
                         "💰 Prix : " + espace.getPrix() + " DT\n" +
                         "🏢 Type : " + espace.getTypeEspace()
-        );
 
+        );
         espaceImage.setImage(new Image(getClass().getResourceAsStream("/images/espace-placeholder.jpg")));
+
 
         afficherOrganisateurs(idEspace);
         afficherCarte(espace.getAdresse());
-        generateQRCode(espace.getAdresse());
     }
-
-    /**
-     * Génère un QR code pour l'adresse de l'espace.
-     * @param address L'adresse de l'espace
-     */
-    private void generateQRCode(String address) {
-        String googleMapsUrl = "https://www.google.com/maps/search/?api=1&query=" + address.replace(" ", "+");
-        int width = 200;
-        int height = 200;
-
-        QRCodeWriter qrCodeWriter = new QRCodeWriter();
-        try {
-            BitMatrix bitMatrix = qrCodeWriter.encode(googleMapsUrl, BarcodeFormat.QR_CODE, width, height);
-
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            MatrixToImageWriter.writeToStream(bitMatrix, "PNG", outputStream);
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
-
-            Image qrImage = new Image(inputStream);
-            qrCodeImage.setImage(qrImage);
-        } catch (WriterException | IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Applique un effet de survol aux boutons.
-     * @param button Le bouton à styliser
-     */
     private void applyHoverEffect(Button button) {
         button.setOnMouseEntered(event -> button.setStyle("-fx-background-color: #F39C12; -fx-text-fill: white; -fx-border-radius: 10px; -fx-padding: 10px 18px;"));
         button.setOnMouseExited(event -> button.setStyle("-fx-background-color: transparent; -fx-text-fill: #F39C12; -fx-border-radius: 10px; -fx-padding: 10px 18px;"));
@@ -188,10 +149,6 @@ public class FrontDetailEspace {
         }
     }
 
-    /**
-     * Redirige vers la page des événements.
-     * @param event Événement déclenché par un bouton
-     */
     public void goToEvenements(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frontend/FrontEvents.fxml"));
@@ -204,10 +161,6 @@ public class FrontDetailEspace {
         }
     }
 
-    /**
-     * Redirige vers la page des espaces.
-     * @param event Événement déclenché par un bouton
-     */
     public void goToEspace(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frontend/FrontEspace.fxml"));
@@ -219,40 +172,4 @@ public class FrontDetailEspace {
             e.printStackTrace();
         }
     }
-
-    public void handleLogout(ActionEvent event) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Déconnexion");
-        alert.setHeaderText(null);
-        alert.setContentText("Êtes-vous sûr de vouloir vous déconnecter ?");
-
-        // Vérifier si l'utilisateur clique sur "OK"
-        if (alert.showAndWait().get() == ButtonType.OK) {
-            System.out.println("🔒 Déconnexion confirmée...");
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/login.fxml"));
-                Parent loginPage = loader.load();
-
-                // Obtenir la scène actuelle et changer la page
-                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                stage.setScene(new Scene(loginPage));
-                stage.show();
-
-                System.out.println("✅ Déconnexion réussie !");
-            } catch (IOException e) {
-                System.out.println("❌ Erreur lors de la déconnexion : " + e.getMessage());
-                e.printStackTrace();
-                showAlert("Erreur de déconnexion", "Impossible d'ouvrir la page de connexion.");
-            }
-        }
-    }
-    // Méthode pour afficher une alerte en cas d'erreur
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
 }

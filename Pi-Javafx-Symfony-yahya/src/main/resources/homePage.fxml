@@ -30,7 +30,7 @@
         <!-- Logo -->
         <ImageView fitWidth="90" fitHeight="90" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="/logo.png"/>
+                <Image url="@images/logo.jpeg"/>
             </image>
         </ImageView>
 

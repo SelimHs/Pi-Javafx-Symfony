@@ -7,13 +7,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 import tn.esprit.models.Billet;
 import tn.esprit.services.ServiceBillet;
 import tn.esprit.services.ServiceEvent;
 import controller.BilletsMainController;
 
+import javafx.scene.control.TextField;  // ✅ Bon import
 import tn.esprit.models.Event;
 
 import java.io.IOException;
@@ -26,8 +29,6 @@ public class FrontBillet {
     @FXML
     private TextField nomClient;
     @FXML
-    private Label billetDescription;
-    @FXML
     private ComboBox typeBillet;
     @FXML
     private Button btnAccueil, btnEvenements,btnEspace;
@@ -37,7 +38,6 @@ public class FrontBillet {
         applyHoverEffect(btnEvenements);
         applyHoverEffect(btnEspace);
         loadEvents();
-        typeBillet.setOnAction(event -> updateBilletDescription());
     }
     @FXML
     private TextField prixBillet;
@@ -131,37 +131,6 @@ public class FrontBillet {
         nomClient.clear();
         typeBillet.getSelectionModel().clearSelection();
     }
-    private void updateBilletDescription() {
-        String selectedType = (String) typeBillet.getValue();
-        Event selectedEvent = (Event) eventSelection.getSelectionModel().getSelectedItem();
-
-        if (selectedType != null && selectedEvent != null) {
-            int basePrice = selectedEvent.getPrix(); // Get base price from event
-            int calculatedPrice = basePrice; // Default to base price
-
-            switch (selectedType) {
-                case "SIMPLE":
-                    billetDescription.setText("✔ Ce billet est valide pour une seule personne.");
-                    calculatedPrice = basePrice;
-                    break;
-                case "DUO":
-                    billetDescription.setText("✔ Ce billet est valide pour deux personnes.");
-                    calculatedPrice = (int) (basePrice * 1.5);
-                    break;
-                case "VIP":
-                    billetDescription.setText("✔ Ce billet est valide pour quatre personnes.");
-                    calculatedPrice = basePrice * 3;
-                    break;
-                default:
-                    billetDescription.setText("");
-                    break;
-            }
-
-            // ✅ Update the price field
-            prixBillet.setText(calculatedPrice + " DT");
-        }
-    }
-
 
 
     public void goToEvents(ActionEvent actionEvent) {

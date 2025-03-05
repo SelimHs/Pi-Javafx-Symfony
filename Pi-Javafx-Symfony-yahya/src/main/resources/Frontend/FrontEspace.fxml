@@ -39,15 +39,18 @@
                 </HBox>
 
                 <!-- Icônes à l'extrême droite -->
-            <Button fx:id="btnLogout" onAction="#handleLogout" style="-fx-background-color: transparent; -fx-padding: 0;">
-                <graphic>
-                    <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                <HBox spacing="15.0" style="-fx-alignment: right; -fx-margin-left: auto;">
+                    <ImageView fx:id="cartIcon" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                         <image>
-                            <Image url="/images/logout.png"/>
+                            <Image url="/images/reserver.png"/>
                         </image>
                     </ImageView>
-                </graphic>
-            </Button>
+                    <ImageView fx:id="profileIcon" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                            <Image url="/images/profile.png"/>
+                        </image>
+                    </ImageView>
+                </HBox>
             </children>
         </HBox>
 

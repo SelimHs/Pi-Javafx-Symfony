@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="cfdb1d07-b643-481e-a175-e94af9a5d743" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/captcha.png" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/captcha.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/reservations.xlsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/controller/AI_Predictive.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/controller/DetailBillet.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/controller/DetailBillet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/controller/DetailEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/controller/DetailEvents.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/controller/DetailFournisseur.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/controller/DetailFournisseur.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/controller/DetailProduit.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/controller/DetailProduit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/controller/DetailRemise.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/controller/DetailRemise.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/controller/DetailReservation.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/controller/DetailReservation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/controller/DetailUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/controller/DetailUser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/controller/FacceuilController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/controller/FacceuilController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/controller/FrontBillet.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/controller/FrontBillet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/controller/FrontDetailEspace.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/controller/FrontDetailEspace.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/controller/FrontDetailEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/controller/FrontDetailEvents.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/controller/FrontEspace.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/controller/FrontEspace.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/controller/FrontEventsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/controller/FrontEventsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/controller/FrontProduit.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/controller/LiveEspace.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/controller/LiveEspace.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/controller/LiveKitTokenGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/controller/LiveKitTokenGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/controller/ReservationMainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/controller/ReservationMainController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/tn/esprit/controllers/AfficherEspaces.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/tn/esprit/controllers/AfficherEspaces.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/tn/esprit/controllers/GestionOrganisateur.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/tn/esprit/controllers/GestionOrganisateur.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/tn/esprit/services/ExcelDesignService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/tn/esprit/services/ExcelExportService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/tn/esprit/services/GeminiService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/tn/esprit/services/PdfService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/tn/esprit/services/PdfService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/tn/esprit/services/ServiceReservation.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/tn/esprit/services/ServiceReservation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/tn/esprit/services/UsersService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/tn/esprit/services/UsersService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/tn/esprit/utils/myDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/java/tn/esprit/utils/myDatabase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/AfficheReservation.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/AfficheReservation.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/AfficherEspaces.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/AfficherEspaces.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/DetailBillet.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/DetailBillet.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/DetailEvents.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/DetailEvents.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/DetailFournisseur.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/DetailFournisseur.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/DetailProduit.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/DetailProduit.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/DetailRemise.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/DetailRemise.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/DetailReservation.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/DetailReservation.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/DetailUser.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/DetailUser.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/FrontAcceuil.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/FrontAcceuil.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/Frontend/FrontBillet.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/Frontend/FrontBillet.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/Frontend/FrontDetailEspace.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/Frontend/FrontDetailEspace.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/Frontend/FrontDetailEvents.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/Frontend/FrontDetailEvents.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/Frontend/FrontEspace.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/Frontend/FrontEspace.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/Frontend/FrontEvents.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/Frontend/FrontEvents.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/Frontend/FrontProduit.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/Frontend/LiveEspace.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/Frontend/LiveEspace.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/homePage.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/homePage.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/images/TeamViewerQS_x64.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/images/bot.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/images/chatbot-bg.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/images/clear.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/images/logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/images/produit-placeholder.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/images/scoped_dir10012_1762218529/TeamViewerQS_x64.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/images/user.png" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/images/user.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/login.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/login.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/logo.png" beforeDir="false" afterPath="$PROJECT_DIR$/Pi-Javafx-Symfony-yahya/src/main/resources/logo.png" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2ttnn6YyHiCvpjlWyf0lLt79kB5" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Maven.Lamma [org.openjfx:javafx-maven-plugin:0.0.8:run].executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "yahya",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9f38398b9061-18abd8497189-intellij.indexing.shared.core-IU-241.14494.240" />
+        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-IU-241.14494.240" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="cfdb1d07-b643-481e-a175-e94af9a5d743" name="Changes" comment="" />
+      <created>1741180403414</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1741180403414</updated>
+      <workItem from="1741180405557" duration="113000" />
+      <workItem from="1741180546615" duration="691000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
