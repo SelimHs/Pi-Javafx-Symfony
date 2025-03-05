@@ -5,9 +5,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class myDatabase {
-    public static myDatabase instance;
-    public static myDatabase ins;
-private final String URL="jdbc:mysql://localhost:3306/lamma";
+public static myDatabase instance;
+private final String URL="jdbc:mysql://localhost:3306/lammaInteg";
 private final String Username="root";
 private final String Password="";
 
