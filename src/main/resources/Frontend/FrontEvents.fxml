@@ -36,6 +36,7 @@
                     <Button fx:id="btnEvenements" text="📅 Événements"
                             style="-fx-background-color: transparent; -fx-text-fill: #F39C12; -fx-border-radius: 10px; -fx-padding: 10px 18px;"/>
                     <Button fx:id="btnEspace" text="📌 Espaces" onAction="#goToEspace" style="-fx-background-color: transparent; -fx-text-fill: #F39C12; -fx-border-radius: 10px; -fx-padding: 10px 18px;"/>
+                    <Button fx:id="btnProduit" onAction="#goToProduit" text="🛍️ Produits" style="-fx-background-color: transparent; -fx-text-fill: #F39C12; -fx-border-radius: 10px; -fx-padding: 10px 18px;"/>
 
                 </HBox>
 
@@ -59,8 +60,8 @@
                 <ScrollPane fx:id="eventScrollPane" prefWidth="1000.0" prefHeight="500.0" maxWidth="Infinity"
                             style="-fx-background: transparent; -fx-border-color: transparent;">
                     <content>
-                        <FlowPane fx:id="eventCardContainer" hgap="20.0" vgap="20.0" prefWrapLength="1000.0" maxWidth="Infinity"
-                                  style="-fx-padding: 10px; -fx-alignment: center-left;">
+                        <FlowPane fx:id="eventCardContainer" hgap="20.0" vgap="20.0" prefWrapLength="750.0" maxWidth="Infinity"
+                                  style="-fx-padding: 10px; -fx-alignment: center;">
                         </FlowPane>
                     </content>
                 </ScrollPane>

@@ -44,7 +44,7 @@ public class FrontDetailEspace {
     private int idEspace;
     private final ServiceOrganisateur serviceOrganisateur = new ServiceOrganisateur();
     @FXML
-    private Button btnAccueil, btnEvenements, btnEspace;
+    private Button btnAccueil, btnEvenements, btnEspace,btnProduit;
 
     /**
      * Initialise les détails de l'espace et charge les organisateurs + la carte.
@@ -54,6 +54,8 @@ public class FrontDetailEspace {
         applyHoverEffect(btnAccueil);
         applyHoverEffect(btnEvenements);
         applyHoverEffect(btnEspace);
+        applyHoverEffect(btnProduit);
+
         this.idEspace = espace.getIdEspace();
         titleLabel.setText("Détails de l'Espace : " + espace.getNomEspace());
 
@@ -255,4 +257,15 @@ public class FrontDetailEspace {
         alert.showAndWait();
     }
 
+    public void goToProduit(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frontend/FrontProduit.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -30,12 +30,14 @@ public class FrontBillet {
     @FXML
     private ComboBox typeBillet;
     @FXML
-    private Button btnAccueil, btnEvenements,btnEspace;
+    private Button btnAccueil, btnEvenements,btnEspace,btnProduit;
     @FXML
     public void initialize() {
         applyHoverEffect(btnAccueil);
         applyHoverEffect(btnEvenements);
         applyHoverEffect(btnEspace);
+        applyHoverEffect(btnProduit);
+
         loadEvents();
         typeBillet.setOnAction(event -> updateBilletDescription());
     }
@@ -167,7 +169,7 @@ public class FrontBillet {
     public void goToEvents(ActionEvent actionEvent) {
         try {
             // Charger le fichier FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FrontEvents.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frontend/FrontEvents.fxml"));
             Parent root = loader.load();
 
             // Récupérer la scène actuelle et changer de vue
@@ -182,7 +184,22 @@ public class FrontBillet {
     public void goToEspaces(ActionEvent actionEvent) {
         try {
             // Charger le fichier FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FrontEspace.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frontend/FrontEspace.fxml"));
+            Parent root = loader.load();
+
+            // Récupérer la scène actuelle et changer de vue
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void goToProduit(ActionEvent actionEvent) {
+        try {
+            // Charger le fichier FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frontend/FrontProduit.fxml"));
             Parent root = loader.load();
 
             // Récupérer la scène actuelle et changer de vue
