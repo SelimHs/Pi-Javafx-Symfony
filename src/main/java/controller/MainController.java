@@ -1,12 +1,11 @@
 package controller;
 
 import com.stripe.model.PaymentIntent;
-import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import javafx.util.Duration;
 import tn.esprit.models.Billet;
 import tn.esprit.models.StripeConfig;
 import tn.esprit.models.Event;
@@ -17,10 +16,13 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public class MainController {
     @FXML
     private Button btnPay;
+    @FXML
+    private Button btnCheckout;
     @FXML
     private Label lblMontant;
 
@@ -34,6 +36,7 @@ public class MainController {
         StripeConfig.init();
 
         btnPay.setOnAction(event -> processPayment());
+        btnCheckout.setOnAction(event -> goToBilletPage());
     }
 
     public void setPaymentDetails(int prix, String proprietaire, Billet.TypeBillet type, Event event, FrontBillet controller) {
@@ -56,7 +59,7 @@ public class MainController {
         PaymentIntent paymentIntent = StripeService.createPayment(prixBilletFinal, "usd");
 
         if (paymentIntent != null) {
-            Alert confirmationAlert = new Alert(Alert.AlertType.INFORMATION);
+            Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
             confirmationAlert.setTitle("Paiement réussi !");
             confirmationAlert.setHeaderText(null);
             confirmationAlert.setContentText("Votre paiement de " + prixBilletFinal + " USD a été effectué avec succès !");
@@ -64,6 +67,45 @@ public class MainController {
             confirmationAlert.showAndWait().ifPresent(response -> createBilletAfterPayment());
         } else {
             showAlert("❌ Erreur", "Échec du paiement.");
+        }
+    }
+
+    /**
+     * 🔄 Redirige vers Stripe Checkout et gère l'annulation
+     */
+    private void redirectToCheckout() {
+        Optional<ButtonType> result = showConfirmationDialog("Confirmation", "Voulez-vous continuer le paiement ?");
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            String checkoutUrl = "https://checkout.stripe.com/pay"; // 🔗 Remplace avec l'URL réelle
+            openWebPage(checkoutUrl);
+        } else {
+            goToBilletPage(); // 🔥 Annulation : Retour à la page des billets
+        }
+    }
+
+    /**
+     * ✅ Si le paiement est annulé, retourne à la page des billets en gardant les données
+     */
+    private void goToBilletPage() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frontend/FrontBillet.fxml"));
+            Parent root = loader.load();
+
+            // ✅ Récupérer le contrôleur et remettre les valeurs saisies
+            FrontBillet billetController = loader.getController();
+            billetController.setPrixBillet(prixBilletFinal);
+            billetController.setEventSelection(selectedEvent);
+            billetController.setNomClient(proprietaire);
+            billetController.setTypeBillet(typeBillet);
+
+
+            Stage stage = (Stage) btnCheckout.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Erreur", "Impossible de retourner à la page des billets.");
         }
     }
 
@@ -81,17 +123,9 @@ public class MainController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frontend/FrontEvents.fxml"));
             Parent root = loader.load();
-
-            // ✅ Animation de fondu (transition douce)
-            root.setOpacity(0);
             Stage stage = (Stage) btnPay.getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-
-            FadeTransition fadeIn = new FadeTransition(Duration.millis(800), root);
-            fadeIn.setFromValue(0);
-            fadeIn.setToValue(1);
-            fadeIn.play();
+            stage.setScene(new Scene(root));
+            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
             showAlert("Erreur", "Impossible d'ouvrir la liste des événements.");
@@ -104,5 +138,21 @@ public class MainController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    private Optional<ButtonType> showConfirmationDialog(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        return alert.showAndWait();
+    }
+
+    private void openWebPage(String url) {
+        try {
+            java.awt.Desktop.getDesktop().browse(new java.net.URI(url));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

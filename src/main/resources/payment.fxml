@@ -23,7 +23,7 @@
 
     <!-- Boutons de paiement -->
     <VBox spacing="10" alignment="CENTER">
-        <Button fx:id="btnPay" text="💳 Payer avec Stripe"
+        <Button fx:id="btnPay" text="💳 Payer "
                 style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size: 16px; -fx-padding: 10px 20px; -fx-border-radius: 10px;"/>
 
         <Button fx:id="btnCheckout" text="🛒 Paiement Checkout"

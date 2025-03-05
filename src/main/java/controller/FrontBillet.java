@@ -248,4 +248,13 @@ public class FrontBillet {
         alert.setContentText(message);
         alert.showAndWait();
     }
+    // Ajoute ces méthodes dans FrontBillet.java
+    public  void setNomClient(String nom) {
+        this.nomClient.setText(nom);
+    }
+
+    public  void setTypeBillet(Billet.TypeBillet type) {
+        this.typeBillet.setValue(type);
+    }
+
 }
