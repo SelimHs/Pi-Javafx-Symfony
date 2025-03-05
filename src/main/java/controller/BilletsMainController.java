@@ -203,12 +203,6 @@ public class BilletsMainController {
 
         if (pdfUrl != null) {
             openPdfInBrowser(pdfUrl);
-            // Afficher le lien de téléchargement
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Exportation Réussie");
-            alert.setHeaderText("Le billet a été exporté avec succès !");
-            alert.setContentText("Téléchargez le PDF ici : " + pdfUrl);
-            alert.showAndWait();
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Erreur");

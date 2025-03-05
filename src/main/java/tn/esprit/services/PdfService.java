@@ -16,18 +16,23 @@ public class PdfService {
 
         // ✅ Encode event details in QR code as JSON
         JSONObject qrJson = new JSONObject();
-        qrJson.put("Nom évènement:", billet.getEvent().getNomEvent());
+        qrJson.put("Nom évènement", billet.getEvent().getNomEvent());
         qrJson.put("Date", billet.getEvent().getDate().toString());
         qrJson.put("Adresse", billet.getEvent().getNomEspace());
         qrJson.put("Type billet", billet.getType().toString());
         qrJson.put("Prix", billet.getPrix());
 
-        // ✅ Convert JSON to String and URL-encode it for QR code
-        String qrData = URLEncoder.encode(qrJson.toString(), StandardCharsets.UTF_8);
+        // ✅ Generate a properly encoded local server URL
+        String encodedQrData = URLEncoder.encode(qrJson.toString(), StandardCharsets.UTF_8);
+        String doubleEncodedQrData = URLEncoder.encode(encodedQrData, StandardCharsets.UTF_8); // Extra encoding
+        String localServerUrl = "http://192.168.1.25:5000/event?data=" + doubleEncodedQrData;
+
+        // ✅ Generate QR Code URL
+        String qrCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + localServerUrl;
 
         String apiUrl = "https://api.pdf.co/v1/pdf/convert/from/html";
 
-        // ✅ HTML content for PDF with QR Code containing event details
+        // ✅ Updated HTML content with QR Code
         String htmlContent = "<!DOCTYPE html>\n" +
                 "<html lang='fr'>\n" +
                 "<head>\n" +
@@ -64,7 +69,7 @@ public class PdfService {
                 "        </div>\n" +
                 "        <div class='divider'></div>\n" +
                 "        <div class='qr-section'>\n" +
-                "            <img src='https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + qrData + "'>\n" +
+                "            <img src='" + qrCodeUrl + "'>\n" +
                 "        </div>\n" +
                 "        <div class='footer'>Merci pour votre réservation 🎉</div>\n" +
                 "    </div>\n" +
@@ -95,7 +100,7 @@ public class PdfService {
                 JSONObject jsonResponse = new JSONObject(response.body().string());
                 return jsonResponse.getString("url"); // 📥 Return the generated PDF URL
             } else {
-                System.out.println("❌ Erreur API PDF.co : " + response.body().string());
+                System.out.println("❌ Error from PDF.co API: " + response.body().string());
                 return null;
             }
         } catch (IOException e) {
@@ -103,4 +108,5 @@ public class PdfService {
             return null;
         }
     }
+
 }
