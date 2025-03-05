@@ -1,5 +1,6 @@
 package tn.esprit.services;
 
+import model.Users;
 import tn.esprit.interfaces.Iservice;
 import tn.esprit.models.Remise;
 import tn.esprit.models.Reservation;
@@ -7,7 +8,9 @@ import tn.esprit.utils.myDatabase;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ServiceReservation implements Iservice<Reservation> {
 
@@ -116,6 +119,7 @@ public class ServiceReservation implements Iservice<Reservation> {
         }
         return null;
     }
+
 
 
     public List<Reservation> search(String searchText) {

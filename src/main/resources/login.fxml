@@ -25,7 +25,7 @@
         <VBox prefWidth="250.0" style="-fx-background-color: linear-gradient(to bottom, #131022, #1A172A);
                                       -fx-padding: 40px; -fx-border-radius: 10px; -fx-alignment: center;">
             <ImageView fitHeight="90.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
-                <Image url="@/images/logo.jpeg"/>
+                <Image url="/logo.png"/>
             </ImageView>
 
             <VBox spacing="30.0" style="-fx-alignment: center; -fx-padding: 30px 0;">

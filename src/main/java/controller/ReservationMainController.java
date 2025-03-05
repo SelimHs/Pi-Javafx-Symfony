@@ -10,13 +10,14 @@ import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import tn.esprit.models.Reservation;
+import tn.esprit.services.ExcelDesignService;
+import tn.esprit.services.ExcelExportService;
 import tn.esprit.services.ServiceReservation;
 
 import java.io.IOException;
@@ -25,6 +26,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
+
+import static tn.esprit.services.ExcelExportService.openExcelFile;
 
 public class ReservationMainController implements Initializable {
 
@@ -283,4 +286,40 @@ public class ReservationMainController implements Initializable {
         btn.setStyle("-fx-background-color: transparent; -fx-text-fill: #a868a0;-fx-font-size: 18px; -fx-border-radius: 10px; -fx-padding: 10px 18px;");
         btn.setEffect(null);
     }
+
+    @FXML
+    private void exportReservations() {
+        List<Reservation> reservations = reservationService.getAll(); // Récupère les réservations
+
+        if (reservations.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Aucune réservation");
+            alert.setHeaderText("Pas de données à exporter");
+            alert.setContentText("Il n'y a aucune réservation à exporter.");
+            alert.showAndWait();
+            return;
+        }
+
+        String excelFilePath = ExcelDesignService.generateExcelWithStyle(reservations);
+
+        if (excelFilePath != null) {
+            // 📌 Ouvrir le fichier Excel automatiquement après l'exportation
+            openExcelFile(excelFilePath);
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Exportation Réussie");
+            alert.setHeaderText("Les réservations ont été exportées avec succès !");
+            alert.setContentText("Le fichier a été enregistré sous : " + excelFilePath);
+            alert.showAndWait();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText("Échec de l'exportation");
+            alert.setContentText("Impossible de générer le fichier Excel.");
+            alert.showAndWait();
+        }
+    }
+
+
+
 }
