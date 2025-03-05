@@ -134,6 +134,7 @@ public class ExcelDesignService {
 
 
     public static Map<Integer, String> getAllUserNames() {
+        System.out.println("🔵 getAllUserNames() is being called...");
 
         Map<Integer, String> userNames = new HashMap<>();
         String query = "SELECT idUser, nom FROM user"; // Ensure this matches your DB schema
@@ -150,6 +151,9 @@ public class ExcelDesignService {
                 int userId = rs.getInt("idUser");
                 String userName = rs.getString("nom");
                 userNames.put(userId, userName);
+
+                // 📌 Print user data for debugging
+                System.out.println("🟢 User Loaded → ID: " + userId + ", Name: " + userName);
             }
 
             if (!hasUsers) {

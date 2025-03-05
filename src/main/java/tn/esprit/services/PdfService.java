@@ -2,19 +2,37 @@ package tn.esprit.services;
 
 import okhttp3.*;
 import org.json.JSONObject;
+import tn.esprit.models.Billet;
+
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 public class PdfService {
 
     private static final String API_KEY = "selim.hassani@esprit.tn_7sGsfZw8OXsK0B0ACUDF7S1GqLNzKPf9P8syuyQlnx6dRBGIpFiYSf9HLUhv3fbK"; // 🔑 Remplace avec ta clé PDF.co
 
-    public static String generatePdfFromBillet(String billetId, String proprietaire, String event, int prix) {
+    public static String generatePdfFromBillet(Billet billet, String proprietaire, String event, int prix) {
+
+        // ✅ Encode event details in QR code as JSON
+        JSONObject qrJson = new JSONObject();
+        qrJson.put("Nom évènement", billet.getEvent().getNomEvent());
+        qrJson.put("Date", billet.getEvent().getDate().toString());
+        qrJson.put("Adresse", billet.getEvent().getNomEspace());
+        qrJson.put("Type billet", billet.getType().toString());
+        qrJson.put("Prix", billet.getPrix());
+
+        // ✅ Generate a properly encoded local server URL
+        String encodedQrData = URLEncoder.encode(qrJson.toString(), StandardCharsets.UTF_8);
+        String doubleEncodedQrData = URLEncoder.encode(encodedQrData, StandardCharsets.UTF_8); // Extra encoding
+        String localServerUrl = "http://192.168.1.23:5000/event?data=" + doubleEncodedQrData;
+
+        // ✅ Generate QR Code URL
+        String qrCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + localServerUrl;
+
         String apiUrl = "https://api.pdf.co/v1/pdf/convert/from/html";
 
-        // 📌 HTML stylisé pour le billet
-        // 📌 HTML stylisé avec bonne syntaxe
-        // 📌 HTML Billet avec QR Code et design stylisé
-        // 📌 HTML Billet Premium avec QR Code et séparation stylisée
+        // ✅ Updated HTML content with QR Code
         String htmlContent = "<!DOCTYPE html>\n" +
                 "<html lang='fr'>\n" +
                 "<head>\n" +
@@ -32,9 +50,9 @@ public class PdfService {
                 "        .content p { font-size: 16px; margin: 8px 0; }\n" +
                 "        .content span { font-weight: bold; color: #2c3e50; }\n" +
                 "        .divider { border-top: 2px dashed #2c3e50; margin: 15px 0; }\n" +
-                "        .qr-section { display: flex; align-items: center; justify-content: space-between;\n" +
+                "        .qr-section { display: flex; align-items: center; justify-content: center;\n" +
                 "                     padding: 10px; }\n" +
-                "        .qr-section img { width: 100px; height: 100px; }\n" +
+                "        .qr-section img { width: 120px; height: 120px; }\n" +
                 "        .badge { background: #e74c3c; color: white; padding: 5px 10px; font-size: 14px;\n" +
                 "                  border-radius: 5px; text-transform: uppercase; font-weight: bold; }\n" +
                 "        .footer { font-size: 12px; color: #666; margin-top: 10px; }\n" +
@@ -51,22 +69,18 @@ public class PdfService {
                 "        </div>\n" +
                 "        <div class='divider'></div>\n" +
                 "        <div class='qr-section'>\n" +
-                "            <p><span>Code QR :</span></p>\n" +
-                "            <img src='https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + billetId + "'>\n" +
+                "            <img src='" + qrCodeUrl + "'>\n" +
                 "        </div>\n" +
                 "        <div class='footer'>Merci pour votre réservation 🎉</div>\n" +
                 "    </div>\n" +
                 "</body>\n" +
                 "</html>";
 
-
-
-
-        // 📌 Création de la requête HTTP
+        // ✅ Create HTTP Request to generate PDF
         OkHttpClient client = new OkHttpClient();
         JSONObject jsonBody = new JSONObject();
         jsonBody.put("html", htmlContent);
-        jsonBody.put("name", "billet_" + billetId + ".pdf");
+        jsonBody.put("name", "billet_" + billet.getIdBillet() + ".pdf");
 
         RequestBody body = RequestBody.create(
                 jsonBody.toString(),
@@ -84,9 +98,9 @@ public class PdfService {
             Response response = client.newCall(request).execute();
             if (response.isSuccessful() && response.body() != null) {
                 JSONObject jsonResponse = new JSONObject(response.body().string());
-                return jsonResponse.getString("url"); // 📥 Retourne l'URL du PDF généré
+                return jsonResponse.getString("url"); // 📥 Return the generated PDF URL
             } else {
-                System.out.println("❌ Erreur API PDF.co : " + response.body().string());
+                System.out.println("❌ Error from PDF.co API: " + response.body().string());
                 return null;
             }
         } catch (IOException e) {
@@ -94,4 +108,5 @@ public class PdfService {
             return null;
         }
     }
+
 }

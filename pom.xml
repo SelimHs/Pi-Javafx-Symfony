@@ -37,25 +37,26 @@
             <version>23.0.1</version> <!-- Version compatible -->
         </dependency>
 
+
         <dependency>
 
             <groupId>org.mindrot</groupId>
             <artifactId>jbcrypt</artifactId>
             <version>0.4</version>
         </dependency>
-            <!-- Stripe SDK -->
-            <dependency>
-                <groupId>com.stripe</groupId>
-                <artifactId>stripe-java</artifactId>
-                <version>24.8.0</version>
-            </dependency>
+        <!-- Stripe SDK -->
+        <dependency>
+            <groupId>com.stripe</groupId>
+            <artifactId>stripe-java</artifactId>
+            <version>24.8.0</version>
+        </dependency>
 
-            <!-- JSON Parser (nécessaire pour lire les réponses Stripe) -->
-            <dependency>
-                <groupId>org.json</groupId>
-                <artifactId>json</artifactId>
-                <version>20210307</version>
-            </dependency>
+        <!-- JSON Parser (nécessaire pour lire les réponses Stripe) -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20210307</version>
+        </dependency>
 
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -134,11 +135,11 @@
             <version>1.4.7</version>
             <scope>compile</scope>
         </dependency>
-            <dependency>
-                <groupId>uk.co.caprica</groupId>
-                <artifactId>vlcj</artifactId>
-                <version>4.7.1</version>
-            </dependency>
+        <dependency>
+            <groupId>uk.co.caprica</groupId>
+            <artifactId>vlcj</artifactId>
+            <version>4.7.1</version>
+        </dependency>
 
         <dependency>
             <groupId>uk.co.caprica</groupId>
