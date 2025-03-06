@@ -3,12 +3,17 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import tn.esprit.models.Reservation;
+import tn.esprit.utils.myDatabase;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
-
-import static tn.esprit.services.ServiceReservation.getUserNameById;
+import java.util.Map;
 
 public class ExcelDesignService {
 
@@ -19,6 +24,9 @@ public class ExcelDesignService {
         }
 
         String filePath = "reservations.xlsx";
+
+        // ✅ Fetch all user names once and store in a map (Optimized for performance)
+        Map<Integer, String> userNamesMap = getAllUserNames();
 
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Réservations");
@@ -85,8 +93,10 @@ public class ExcelDesignService {
             for (Reservation res : reservations) {
                 Row row = sheet.createRow(rowIndex++);
 
+                // 🔹 Fetch user name from the preloaded map
                 Cell userCell = row.createCell(0);
-                userCell.setCellValue(getUserNameById(res.getIdUser())); // Fetch user name dynamically
+                String userName = userNamesMap.getOrDefault(res.getIdUser(), "Utilisateur inconnu");
+                userCell.setCellValue(userName);
 
                 Cell dateCell = row.createCell(1);
                 dateCell.setCellValue(res.getDateReservation().toString());
@@ -120,5 +130,49 @@ public class ExcelDesignService {
 
         return filePath;
     }
+
+
+
+    public static Map<Integer, String> getAllUserNames() {
+        System.out.println("🔵 getAllUserNames() is being called...");
+
+        Map<Integer, String> userNames = new HashMap<>();
+        String query = "SELECT idUser, nom FROM user"; // Ensure this matches your DB schema
+
+        try (Connection conn = myDatabase.getInstance().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            System.out.println("🔍 Fetching all users from the database...");
+
+            boolean hasUsers = false;
+            while (rs.next()) {
+                hasUsers = true;
+                int userId = rs.getInt("idUser");
+                String userName = rs.getString("nom");
+                userNames.put(userId, userName);
+
+                // 📌 Print user data for debugging
+                System.out.println("🟢 User Loaded → ID: " + userId + ", Name: " + userName);
+            }
+
+            if (!hasUsers) {
+                System.out.println("❌ SQL Query returned no users! Something is wrong.");
+                System.out.println("✅ Debug: Are you using the correct table name? (`users`)");
+                System.out.println("✅ Debug: Does the `users` table have data?");
+                System.out.println("✅ Debug: Try running `SELECT * FROM users` in phpMyAdmin.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("❌ SQL Error: " + e.getMessage());
+        }
+
+        return userNames;
+    }
+
+
+
+
+
 }
 

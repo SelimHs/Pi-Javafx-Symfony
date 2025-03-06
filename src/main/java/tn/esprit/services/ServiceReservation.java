@@ -8,7 +8,9 @@ import tn.esprit.utils.myDatabase;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ServiceReservation implements Iservice<Reservation> {
 
@@ -20,18 +22,20 @@ public class ServiceReservation implements Iservice<Reservation> {
 
     @Override
     public void add(Reservation reservation) {
-        String qry = "INSERT INTO `reservation`(`dateReservation`, `statut`, `idUser`, `idEvent`) VALUES (?,?,?,?)";
+        String qry = "INSERT INTO `reservation`(`dateReservation`, `statut`, `idUser`, `idEvent`) VALUES (?, ?, ?, ?)";
         try {
             PreparedStatement pstm = cnx.prepareStatement(qry);
             pstm.setString(1, reservation.getDateReservation());
             pstm.setString(2, reservation.getStatut());
-            pstm.setInt(3, reservation.getIdUser());
+            pstm.setInt(3, reservation.getIdUser() > 0 ? reservation.getIdUser() : 1); // ✅ Default to 1
             pstm.setInt(4, reservation.getIdEvent());
             pstm.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Erreur lors de l'ajout de la réservation: " + e.getMessage());
         }
     }
+
+
 
     @Override
     public List<Reservation> getAll() {
@@ -116,25 +120,6 @@ public class ServiceReservation implements Iservice<Reservation> {
             System.out.println(e.getMessage());
         }
         return null;
-    }
-    public static String getUserNameById(int userId) {
-        String userName = "Utilisateur inconnu"; // Default value if user not found
-        String query = "SELECT * FROM `user` WHERE idUser = ?"; // Ensure your table name is correct
-
-        try (Connection conn = myDatabase.getInstance().getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-
-            pstmt.setInt(1, userId);
-            try (ResultSet rs = pstmt.executeQuery()) {  // Each query gets a fresh ResultSet
-                if (rs.next()) {
-                    userName = rs.getString("nom"); // Fetch user name from DB
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return userName;
     }
 
 

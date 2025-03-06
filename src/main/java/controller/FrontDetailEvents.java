@@ -31,14 +31,21 @@ public class FrontDetailEvents {
 
     private Event selectedEvent;
     @FXML
-    private Button btnAccueil, btnEvenements,btnEspace;
+    private Button btnAccueil, btnEvenements,btnEspace,btnProduit;
 
     /**
      * Initialise les détails de l'événement sélectionné.
      *
      * @param event L'événement à afficher.
      */
+
     public void initData(Event event) {
+        applyHoverEffect(btnAccueil);
+        applyHoverEffect(btnEvenements);
+        applyHoverEffect(btnEspace);
+        applyHoverEffect(btnProduit);
+
+
         System.out.println("🔍 Vérification : eventDescriptionLabel = " + eventDescriptionLabel);
         if (eventDescriptionLabel == null) {
             System.out.println("⚠️ eventDescriptionLabel est NULL ! Vérifiez le FXML.");
@@ -109,7 +116,7 @@ public class FrontDetailEvents {
     public void goToAcceuil(ActionEvent actionEvent) {
         try {
             // Charger le fichier FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frontend/FrontAcceuil.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FrontAcceuil.fxml"));
             Parent root = loader.load();
 
             // Récupérer la scène actuelle et changer de vue
@@ -156,4 +163,18 @@ public class FrontDetailEvents {
         alert.showAndWait();
     }
 
+    public void goToProduit(ActionEvent actionEvent) {
+        try {
+            // Charger le fichier FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frontend/FrontProduit.fxml"));
+            Parent root = loader.load();
+
+            // Récupérer la scène actuelle et changer de vue
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

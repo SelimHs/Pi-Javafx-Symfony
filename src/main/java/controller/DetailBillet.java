@@ -69,7 +69,7 @@ public class DetailBillet {
     @FXML
     private void exporterBilletPDF() {
         String pdfUrl = PdfService.generatePdfFromBillet(
-                String.valueOf(currentBillet.getIdBillet()),
+                currentBillet,
                 currentBillet.getProprietaire(),
                 currentBillet.getEvent().toString(),
                 currentBillet.getPrix()

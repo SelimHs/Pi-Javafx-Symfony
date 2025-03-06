@@ -26,7 +26,7 @@ import java.util.List;
 
 public class FacceuilController {
     @FXML
-    private Button btnAccueil, btnEvenements,btnEspace;
+    private Button btnAccueil, btnEvenements,btnEspace,btnProduit;
     private static final List<HBox> chatHistory = new ArrayList<>();
 
     @FXML
@@ -35,6 +35,8 @@ public class FacceuilController {
         applyHoverEffect(btnAccueil);
         applyHoverEffect(btnEvenements);
         applyHoverEffect(btnEspace);
+        applyHoverEffect(btnProduit);
+
         sendButton.setOnAction(event -> sendMessage());
         chatInput.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {

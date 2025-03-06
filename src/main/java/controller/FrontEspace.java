@@ -32,13 +32,15 @@ public class FrontEspace {
 
     private final ServiceEspace serviceEspace = new ServiceEspace(); // Service for fetching spaces
     @FXML
-    private Button btnAccueil, btnEvenements,btnEspace;
+    private Button btnAccueil, btnEvenements,btnEspace,btnProduit;
 
     @FXML
     public void initialize() {
         applyHoverEffect(btnAccueil);
         applyHoverEffect(btnEvenements);
         applyHoverEffect(btnEspace);
+        applyHoverEffect(btnProduit);
+
         displaySpaces(); // Call the display method when the interface is initialized
     }
 
@@ -236,4 +238,15 @@ public class FrontEspace {
         alert.showAndWait();
     }
 
+    public void goToProduit(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frontend/FrontProduit.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
