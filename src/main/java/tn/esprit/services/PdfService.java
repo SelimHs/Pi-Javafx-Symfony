@@ -16,7 +16,8 @@ public class PdfService {
 
         // ✅ Encode event details in QR code as JSON
         JSONObject qrJson = new JSONObject();
-        qrJson.put("Nom évènement", billet.getEvent().getNomEvent());
+        qrJson.put("Nom event", billet.getEvent().getNomEvent()); // ✅ Corrected field name
+        qrJson.put("Proprietaire", proprietaire); // ✅ Added owner
         qrJson.put("Date", billet.getEvent().getDate().toString());
         qrJson.put("Adresse", billet.getEvent().getNomEspace());
         qrJson.put("Type billet", billet.getType().toString());
@@ -80,7 +81,7 @@ public class PdfService {
         OkHttpClient client = new OkHttpClient();
         JSONObject jsonBody = new JSONObject();
         jsonBody.put("html", htmlContent);
-        jsonBody.put("name", "billet_" + billet.getIdBillet() + ".pdf");
+        jsonBody.put("name", "billet_" + proprietaire + ".pdf");
 
         RequestBody body = RequestBody.create(
                 jsonBody.toString(),
