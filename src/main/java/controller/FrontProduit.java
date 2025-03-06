@@ -2,6 +2,7 @@ package controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -59,41 +60,53 @@ public class FrontProduit {
         button.setOnMouseExited(event -> button.setStyle("-fx-background-color: transparent; -fx-text-fill: #F39C12; -fx-border-radius: 10px; -fx-padding: 10px 18px;"));
     }
 
-    // 📌 Création d'une carte produit avec le design du Code 1
     private VBox createProduitCard(Produit produit) {
         VBox card = new VBox();
-        card.setStyle("-fx-background-color: white; -fx-padding: 15px; -fx-border-radius: 10px; "
-                + "-fx-background-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);"
-                + "-fx-min-width: 250px; -fx-max-width: 250px; -fx-alignment: center; -fx-spacing: 12;");
+        card.setStyle("-fx-background-color: white; -fx-padding: 15px; -fx-border-radius: 15px; "
+                + "-fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 12, 0, 0, 4);"
+                + "-fx-min-width: 280px; -fx-max-width: 280px; -fx-alignment: center; -fx-spacing: 10;");
 
         // 📌 Image du produit
         ImageView produitImage = new ImageView();
-        produitImage.setFitHeight(150);
-        produitImage.setFitWidth(230);
+        produitImage.setFitHeight(160);
+        produitImage.setFitWidth(260);
         produitImage.setPreserveRatio(true);
+        produitImage.setSmooth(true);
         produitImage.setImage(new Image(getClass().getResourceAsStream("/images/produit-placeholder.jpg")));
 
-        // 📌 Labels d'information
+        // 📌 Nom du produit
         Label title = new Label(produit.getNomProduit());
-        title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+        title.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #34495e;");
 
-        Label prix = new Label("💰 Prix: " + produit.getPrixProduit() + " DT");
-        prix.setStyle("-fx-font-size: 15px; -fx-text-fill: #27AE60; -fx-font-weight: bold;");
+        // 📌 Prix
+        Label prix = new Label("💰 " + produit.getPrixProduit() + " DT");
+        prix.setStyle("-fx-font-size: 16px; -fx-text-fill: #27AE60; -fx-font-weight: bold;");
 
-        Label description = new Label("📝 " + produit.getDescription());
-        description.setStyle("-fx-font-size: 14px; -fx-text-fill: #555;");
+        // 📌 Description (limité à 2 lignes)
+        Label description = new Label(produit.getDescription());
+        description.setWrapText(true);
+        description.setMaxWidth(250);
+        description.setMaxHeight(40);
+        description.setStyle("-fx-font-size: 14px; -fx-text-fill: #606060;");
+
+        // 📌 Catégorie, Quantité et Fournisseur regroupés
+        VBox infos = new VBox(4);
+        infos.setAlignment(Pos.CENTER_LEFT);
 
         Label categorie = new Label("📦 Catégorie: " + produit.getCategorie().name());
-        categorie.setStyle("-fx-font-size: 14px; -fx-text-fill: #555;");
+        categorie.setStyle("-fx-font-size: 13px; -fx-text-fill: #555;");
 
         Label quantite = new Label("🔢 Quantité: " + produit.getQuantite());
-        quantite.setStyle("-fx-font-size: 14px; -fx-text-fill: #555;");
+        quantite.setStyle("-fx-font-size: 13px; -fx-text-fill: #555;");
 
         Label fournisseur = new Label("🏢 Fournisseur: " + produit.getFournisseur().getNomFournisseur());
-        fournisseur.setStyle("-fx-font-size: 14px; -fx-text-fill: #555;");
+        fournisseur.setStyle("-fx-font-size: 13px; -fx-text-fill: #555;");
+
+        infos.getChildren().addAll(categorie, quantite, fournisseur);
 
         // 📌 CheckBox pour sélectionner un produit
         CheckBox checkBox = new CheckBox("Sélectionner");
+        checkBox.setStyle("-fx-font-size: 14px; -fx-text-fill: #2980b9;");
         checkBox.setOnAction(event -> {
             if (checkBox.isSelected()) {
                 selectedProduits.add(produit);
@@ -103,16 +116,18 @@ public class FrontProduit {
         });
 
 
-        // 📌 Conteneur pour les boutons
-        HBox buttonContainer = new HBox(10);
-        buttonContainer.setStyle("-fx-alignment: center;");
-        buttonContainer.getChildren().addAll(checkBox);
+
+        // 📌 Conteneur pour boutons
+        HBox buttonContainer = new HBox(15, checkBox);
+        buttonContainer.setAlignment(Pos.CENTER);
 
         // 📌 Ajouter les éléments à la carte
-        card.getChildren().addAll(produitImage, title, prix, description, categorie, quantite, fournisseur, buttonContainer);
+        card.getChildren().addAll(produitImage, title, prix, description, infos, buttonContainer);
 
         return card;
     }
+
+
 
     // 📌 Méthode pour afficher les détails d'un produit
     private void showProduitDetails(Produit produit) {
