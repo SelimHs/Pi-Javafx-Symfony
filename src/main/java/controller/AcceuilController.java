@@ -88,7 +88,7 @@ public class AcceuilController {
     }
     public void goToReservation(ActionEvent actionEvent) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/GestionReservation.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/AfficheReservation.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
 
@@ -102,7 +102,7 @@ public class AcceuilController {
 
     public void goToRemise(ActionEvent actionEvent) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/GestionRemise.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/AfficherRemise.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
 
@@ -141,7 +141,7 @@ public class AcceuilController {
 
     public void goToEspace(ActionEvent actionEvent) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/GestionEspace.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/AfficherEspaces.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
 
