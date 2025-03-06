@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Pos?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="15" alignment="CENTER" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController"
+      style="-fx-background-color: #f8f9fa; -fx-padding: 30px; -fx-border-radius: 15px; -fx-background-radius: 15px;">
+
+    <!-- Icône de confirmation -->
+    <ImageView fitWidth="80" fitHeight="80">
+        <image>
+            <Image url="/images/payment-success.png"/>
+        </image>
+    </ImageView>
+
+    <!-- Message de confirmation -->
+    <Label text="Paiement sécurisé" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #28a745;"/>
+    <Label fx:id="lblMontant" text="Montant à payer : 0 DT" style="-fx-font-size: 18px; -fx-text-fill: #333;"/>
+
+    <!-- Boutons de paiement -->
+    <VBox spacing="10" alignment="CENTER">
+        <Button fx:id="btnPay" text="💳 Payer "
+                style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size: 16px; -fx-padding: 10px 20px; -fx-border-radius: 10px;"/>
+
+        <Button fx:id="btnCheckout" text="🛒 Paiement Checkout"
+                style="-fx-background-color: #17a2b8; -fx-text-fill: white; -fx-font-size: 16px; -fx-padding: 10px 20px; -fx-border-radius: 10px;"/>
+    </VBox>
+
+</VBox>

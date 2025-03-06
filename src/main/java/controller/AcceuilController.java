@@ -1,6 +1,9 @@
 package controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.effect.DropShadow;
@@ -18,10 +21,17 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.EventObject;
+import java.util.Map;
 
 import javafx.scene.control.Button;
+import tn.esprit.services.ServiceBillet;
+import tn.esprit.services.ServiceEspace;
 
 public class AcceuilController {
+    @FXML
+    private BarChart<String, Number> eventStatsChart;
+    @FXML
+    private PieChart pieChartEspaces;
     @FXML
     public void goToBilletList(ActionEvent actionEvent) {
         try {
@@ -35,6 +45,30 @@ public class AcceuilController {
             System.out.println(e.getMessage());
         }
     }
+    @FXML
+    public void initialize() {
+        chargerStatistiques();
+        chargerStatistiquesEspaces();
+        // Ajouter un écouteur sur la propriété scene de l'un des éléments graphiques
+        eventStatsChart.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                // La scène est maintenant disponible, on peut accéder à la fenêtre
+                Stage stage = (Stage) newScene.getWindow();
+
+                // Ajouter des écouteurs de redimensionnement
+                stage.widthProperty().addListener((obsWidth, oldVal, newVal) -> {
+                    eventStatsChart.setPrefWidth(newVal.doubleValue() * 0.4); // 40% de la largeur
+                    pieChartEspaces.setPrefWidth(newVal.doubleValue() * 0.4); // 40% de la largeur
+                });
+
+                stage.heightProperty().addListener((obsHeight, oldVal, newVal) -> {
+                    eventStatsChart.setPrefHeight(newVal.doubleValue() * 0.6); // 60% de la hauteur
+                    pieChartEspaces.setPrefHeight(newVal.doubleValue() * 0.6); // 60% de la hauteur
+                });
+            }
+        });
+    }
+
 
     @FXML
     public void goToEventList(ActionEvent actionEvent) {
@@ -54,7 +88,7 @@ public class AcceuilController {
     }
     public void goToReservation(ActionEvent actionEvent) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/GestionReservation.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/AfficheReservation.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
 
@@ -68,7 +102,7 @@ public class AcceuilController {
 
     public void goToRemise(ActionEvent actionEvent) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/GestionRemise.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/AfficherRemise.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
 
@@ -107,7 +141,7 @@ public class AcceuilController {
 
     public void goToEspace(ActionEvent actionEvent) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/GestionEspace.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/AfficherEspaces.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
 
@@ -195,6 +229,54 @@ public class AcceuilController {
         btn.setEffect(null);
 
     }
+
+
+    @FXML
+    ServiceBillet sb = new ServiceBillet();
+
+    private void chargerStatistiques() {
+        // 📌 Récupérer les données des statistiques
+        Map<String, Integer> stats = sb.getBilletStatsParEvenement();
+
+        // Créer une série de données pour le graphique
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Billets par événement");
+
+        for (Map.Entry<String, Integer> entry : stats.entrySet()) {
+            series.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
+        }
+
+        // Ajouter la série au BarChart
+        eventStatsChart.getData().clear();
+        eventStatsChart.getData().add(series);
+    }
+
+
+    ServiceEspace se = new ServiceEspace();
+
+    private void chargerStatistiquesEspaces() {
+        // 📌 Récupérer les statistiques des espaces groupés par adresse
+        Map<String, Integer> statsEspaces = se.getNombreEspacesParAdresse();
+
+        // Effacer les anciennes données avant d'ajouter les nouvelles
+        pieChartEspaces.getData().clear();
+
+        // Calculer le total des espaces
+        int total = statsEspaces.values().stream().mapToInt(Integer::intValue).sum();
+
+        // Ajouter les données avec pourcentage
+        for (Map.Entry<String, Integer> entry : statsEspaces.entrySet()) {
+            String adresse = entry.getKey();
+            int count = entry.getValue();
+            double percentage = ((double) count / total) * 100;
+
+            // 🎯 Modifier l'affichage pour inclure le pourcentage
+            PieChart.Data slice = new PieChart.Data(adresse + " (" + String.format("%.1f", percentage) + "%)", count);
+            pieChartEspaces.getData().add(slice);
+        }
+    }
+
+
 
 
 

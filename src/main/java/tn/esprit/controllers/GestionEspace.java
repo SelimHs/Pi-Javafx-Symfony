@@ -9,10 +9,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import tn.esprit.models.Espace;
 import tn.esprit.services.ServiceEspace;
+
+import javafx.scene.control.Button;
+import javafx.scene.paint.Color; // Import the Color class
 
 import java.io.IOException;
 import java.util.Optional;
@@ -25,6 +29,11 @@ public class GestionEspace {
     private ComboBox<String> disponibiliteEspace;
 
     private final ServiceEspace serviceEspace = new ServiceEspace();
+
+    @FXML
+    public void initialize() {
+        disponibiliteEspace.setValue("Disponible"); // Définit "Disponible" par défaut
+    }
 
     // 🔹 Navigation vers l'affichage des espaces
     @FXML
@@ -141,10 +150,22 @@ public class GestionEspace {
         }
     }
 
-    public void buttonHoverEffect(MouseEvent mouseEvent) {
-
+    @FXML
+    public void buttonHoverEffect(javafx.scene.input.MouseEvent mouseEvent) {
+        Button btn = (Button) mouseEvent.getSource();
+        btn.setStyle("-fx-background-color: #8e44ad; -fx-text-fill: white; -fx-padding: 18px; -fx-border-width: 2px; -fx-border-color: white;");
+        DropShadow shadow = new DropShadow();
+        shadow.setRadius(10);
+        shadow.setOffsetX(0);
+        shadow.setOffsetY(5);
+        shadow.setColor(Color.web("#a868a0", 0.7));  // Une ombre douce
+        btn.setEffect(shadow);
     }
 
-    public void buttonExitEffect(MouseEvent mouseEvent) {
+    @FXML
+    public void buttonExitEffect(javafx.scene.input.MouseEvent mouseEvent) {
+        Button btn = (Button) mouseEvent.getSource();
+        btn.setStyle("-fx-background-color: transparent; -fx-text-fill: #a868a0;-fx-font-size: 18px; -fx-border-radius: 10px; -fx-padding: 10px 18px;");
+        btn.setEffect(null);
     }
 }

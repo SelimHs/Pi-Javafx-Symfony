@@ -3,7 +3,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.image.*?>
-
 <AnchorPane fx:id="root" xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="tn.esprit.controllers.AfficherEspaces"
@@ -11,12 +10,14 @@
             style="-fx-background-color: linear-gradient(to bottom, #030307, #131022);">
 
     <children>
+        <!-- 🌟 Barre latérale modernisée -->
         <VBox layoutX="0.0" layoutY="0.0" prefHeight="671.0" prefWidth="220.0"
               style="-fx-background-color: linear-gradient(to bottom, #131022, #1A172A);
                      -fx-padding: 15px;
                      -fx-border-radius: 15 0 0 15;
                      -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 15, 0, 3, 3);">
             <children>
+                <!-- Logo -->
                 <ImageView fitHeight="90.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@logo.png"/>
@@ -27,47 +28,78 @@
                        style="-fx-font-size: 20px; -fx-text-fill: white; -fx-font-weight: bold;
                               -fx-padding: 15px; -fx-alignment: center;"/>
 
+                <!-- Boutons de navigation -->
+                <Button fx:id="acceuil" onAction="#retourAcceuil" text="🏠 Accueil"
+                        style="-fx-background-color: transparent; -fx-text-fill: #a868a0;
+                               -fx-font-size: 16px; -fx-border-radius: 10px; -fx-padding: 12px 20px;"
+                        onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"/>
                 <Button fx:id="ajtesp" onAction="#ajouterEspaceView" text="➕ Ajouter Espace"
                         style="-fx-background-color: transparent; -fx-text-fill: #a868a0;
                                -fx-font-size: 16px; -fx-border-radius: 10px; -fx-padding: 12px 20px;"
                         onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"/>
 
-                <Button fx:id="affichesp" onAction="#afficherEspaces" text="📋 Liste des Espaces"
-                        style="-fx-background-color: transparent; -fx-text-fill: #e67e22;
+                <Button fx:id="affichesp"  text="📋 Liste des Espaces"
+                        style="-fx-background-color: transparent; -fx-text-fill: #a868a0;
                                -fx-font-size: 16px; -fx-border-radius: 10px; -fx-padding: 12px 20px;"
                         onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"/>
             </children>
         </VBox>
 
+        <!-- 🌟 Contenu principal -->
         <VBox layoutX="250.0" layoutY="20.0" prefWidth="700.0"
               style="-fx-alignment: center; -fx-padding: 20px;">
             <children>
+
+                <!-- 🔵 Titre avec ombre -->
                 <Label text="🌟 Nos Espaces Disponibles"
                        style="-fx-font-size: 26px; -fx-text-fill: white; -fx-font-weight: bold;
                               -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.8), 10, 0, 2, 2);"/>
 
+                <!-- 📌 Barre de recherche et filtres -->
                 <HBox spacing="15" style="-fx-padding: 20px; -fx-alignment: center;">
+                    <!-- ComboBox pour le critère de filtrage -->
+                    <!-- ComboBox pour le critère de filtrage -->
+                    <ComboBox fx:id="filterCriteriaComboBox" promptText="Filtrer par..."
+                              style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-size: 14px;"/>
+
+                    <!-- ComboBox pour l'ordre de tri -->
+                    <ComboBox fx:id="sortOrderComboBox" promptText="Trier par ordre"
+                              style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-size: 14px;"/>
+
+
+                    <!-- Champ de recherche -->
                     <TextField fx:id="searchField" prefWidth="400.0" promptText="🔍 Rechercher un espace..."
-                               style="-fx-border-radius: 10px; -fx-background-radius: 10px;
-                                      -fx-padding: 10px; -fx-border-color: white;
+                               style="-fx-border-radius: 10px;
+                                      -fx-background-radius: 10px;
+                                      -fx-padding: 10px;
+                                      -fx-border-color: white;
                                       -fx-background-color: rgba(255, 255, 255, 0.3);"/>
 
-                    <Button fx:id="searchButton" text="Rechercher"
-                            style="-fx-background-color: #8e44ad; -fx-text-fill: white;
-                                   -fx-font-size: 14px; -fx-border-radius: 10px; -fx-padding: 10px 20px;
-                                   -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 2, 2);"
-                            onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"/>
+
                 </HBox>
 
-                <FlowPane fx:id="espaceCardContainer" hgap="15" vgap="15" prefHeight="500.0" prefWidth="700.0"
-                          style="-fx-background-color: rgba(255, 255, 255, 0.1); -fx-padding: 15px;
-                                 -fx-border-radius: 12px; -fx-border-color: white;
-                                 -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 2, 2);"/>
+                <!-- 🌟 Zone d'affichage des espaces avec ScrollPane -->
+                <ScrollPane fitToWidth="true" fitToHeight="true" hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED"
+                            style="-fx-padding: 10px;">
+                    <FlowPane fx:id="espaceCardContainer" hgap="15" vgap="15" prefHeight="500.0" prefWidth="700.0"
+                              style="-fx-background-color: rgba(255, 255, 255, 0.1);
+                                     -fx-padding: 15px;
+                                     -fx-border-radius: 12px;
+                                     -fx-border-color: white;
+                                     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 2, 2);"/>
+                </ScrollPane>
 
+                <!-- ✅ Bouton de retour avec effet d'ombre -->
                 <Button fx:id="btnRetour" layoutX="20.0" layoutY="590.0" text="⬅ Retour"
                         onAction="#retourAjouterEspace"
-                        style="-fx-background-color: #8a2be2; -fx-text-fill: white; -fx-font-size: 16px;
-                               -fx-font-weight: bold; -fx-border-radius: 12px; -fx-padding: 10px;"/>
+                        style="-fx-background-color: #9b59b6;
+                               -fx-text-fill: white;
+                               -fx-font-size: 16px;
+                               -fx-font-weight: bold;
+                               -fx-border-radius: 12px;
+                               -fx-padding: 10px;
+                               -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 12, 0, 2, 2);"
+                        onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"/>
             </children>
         </VBox>
     </children>

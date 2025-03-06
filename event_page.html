@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            text-align: center;
+            padding: 50px;
+        }
+        .event-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
+            display: inline-block;
+            text-align: left;
+        }
+        h1 {
+            color: #007bff;
+        }
+        p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        #countdown {
+            font-size: 24px;
+            font-weight: bold;
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+<h1>🎉 Event Details 🎉</h1>
+<div class="event-container">
+    <p><strong>🎭 Event Name:</strong> <span id="eventName">Loading...</span></p>
+    <p><strong>👤 Ticket Owner:</strong> <span id="owner">Loading...</span></p>
+    <p><strong>📍 Location:</strong> <span id="location">Loading...</span></p>
+    <p><strong>📅 Date:</strong> <span id="date">Loading...</span></p>
+    <p><strong>🎟️ Ticket Type:</strong> <span id="ticketType">Loading...</span></p>
+    <p><strong>💰 Price:</strong> <span id="price">Loading...</span></p>
+    <p id="countdown"></p>
+</div>
+
+<script>
+    fetch("event_data.json?t=" + new Date().getTime())
+        .then(response => response.json())
+        .then(data => {
+            console.log("✅ Data fetched:", data);
+
+            // ✅ Affichage des nouvelles informations (Nom de l'événement et Propriétaire)
+            document.getElementById("eventName").innerText = data["Nom event"] || "N/A";
+            document.getElementById("owner").innerText = data["Proprietaire"] || "N/A";
+
+            // ✅ Informations existantes
+            document.getElementById("location").innerText = data.Adresse || "N/A";
+            document.getElementById("date").innerText = data.Date || "N/A";
+            document.getElementById("ticketType").innerText = data["Type billet"] || "N/A";
+            document.getElementById("price").innerText = data.Prix + " DT" || "N/A";
+
+            startCountdown(data.Date);
+        })
+        .catch(error => console.error("❌ Error fetching event data:", error));
+
+    function startCountdown(eventDate) {
+        console.log("⏳ Countdown started for:", eventDate);
+
+        // ✅ Convert "DD/MM/YYYY" to "YYYY-MM-DD" format if necessary
+        let parts = eventDate.split("/");
+        if (parts.length === 3) {
+            eventDate = `${parts[2]}-${parts[1]}-${parts[0]}T00:00:00`;
+        }
+
+        let countDownDate = new Date(eventDate).getTime();
+
+        if (isNaN(countDownDate)) {
+            console.error("❌ Invalid date format:", eventDate);
+            document.getElementById("countdown").innerText = "⚠️ Invalid Date Format";
+            return;
+        }
+
+        // ✅ Update the countdown every second
+        let countdownFunction = setInterval(function () {
+            let now = new Date().getTime();
+            let distance = countDownDate - now;
+
+            if (distance < 0) {
+                clearInterval(countdownFunction);
+                document.getElementById("countdown").innerText = "🎉 Event Started!";
+                return;
+            }
+
+            let days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("countdown").innerText = `⏳ Time Left: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+        }, 1000);
+    }
+</script>
+</body>
+</html>

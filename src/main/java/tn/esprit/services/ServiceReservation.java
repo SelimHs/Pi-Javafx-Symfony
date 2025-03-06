@@ -1,5 +1,6 @@
 package tn.esprit.services;
 
+import model.Users;
 import tn.esprit.interfaces.Iservice;
 import tn.esprit.models.Remise;
 import tn.esprit.models.Reservation;
@@ -7,7 +8,9 @@ import tn.esprit.utils.myDatabase;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ServiceReservation implements Iservice<Reservation> {
 
@@ -19,18 +22,20 @@ public class ServiceReservation implements Iservice<Reservation> {
 
     @Override
     public void add(Reservation reservation) {
-        String qry = "INSERT INTO `reservation`(`dateReservation`, `statut`, `idUser`, `idEvent`) VALUES (?,?,?,?)";
+        String qry = "INSERT INTO `reservation`(`dateReservation`, `statut`, `idUser`, `idEvent`) VALUES (?, ?, ?, ?)";
         try {
             PreparedStatement pstm = cnx.prepareStatement(qry);
             pstm.setString(1, reservation.getDateReservation());
             pstm.setString(2, reservation.getStatut());
-            pstm.setInt(3, reservation.getIdUser());
+            pstm.setInt(3, reservation.getIdUser() > 0 ? reservation.getIdUser() : 1); // ✅ Default to 1
             pstm.setInt(4, reservation.getIdEvent());
             pstm.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Erreur lors de l'ajout de la réservation: " + e.getMessage());
         }
     }
+
+
 
     @Override
     public List<Reservation> getAll() {
@@ -116,6 +121,7 @@ public class ServiceReservation implements Iservice<Reservation> {
         }
         return null;
     }
+
 
 
     public List<Reservation> search(String searchText) {
