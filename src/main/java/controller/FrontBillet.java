@@ -199,10 +199,16 @@ public class FrontBillet {
                     break;
             }
 
-            // ✅ Update the price field
-            prixBillet.setText(calculatedPrice + " DT");
+            // 🔥 Apply remise (if available)
+            if (remiseAppliquee > 0) {
+                int priceAfterDiscount = (int) (calculatedPrice * (1 - (remiseAppliquee / 100)));
+                prixBillet.setText(priceAfterDiscount + " DT"); // ✅ Update price with discount
+            } else {
+                prixBillet.setText(calculatedPrice + " DT"); // ✅ Update price without discount
+            }
         }
     }
+
 
 
 
@@ -278,14 +284,15 @@ public class FrontBillet {
         Remise remise = serviceRemise.getRemiseByCode(codeSaisi);
 
         if (remise != null) {
-            remiseAppliquee = remise.getPourcentageRemise(); // Récupérer le pourcentage
-            int prixOriginal = selectedEvent.getPrix();
-            int prixAvecRemise = (int) (prixOriginal * (1 - (remiseAppliquee / 100)));
+            remiseAppliquee = remise.getPourcentageRemise(); // ✅ Store the discount percentage
 
-            prixBillet.setText(prixAvecRemise + " DT"); // Mettre à jour le prix avec remise
+            // ✅ Automatically update the price after applying remise
+            updateBilletDescription();
+
             showAlert("Succès", "✅ Code promo appliqué ! Vous bénéficiez de " + remiseAppliquee + "% de réduction.");
         } else {
             showAlert("Erreur", "❌ Code promo invalide !");
         }
     }
+
 }

@@ -107,7 +107,7 @@ public class ServiceRemise implements Iservice<Remise>{
     }
 
     public Remise getRemiseByCode(String codePromo) {
-        String query = "SELECT * FROM remise WHERE codePromo = ?";
+        String query = "SELECT * FROM remise WHERE codePromo = ? AND dateExpiration > NOW();\n";
         try {
             PreparedStatement pst = cnx.prepareStatement(query);
             pst.setString(1, codePromo);
