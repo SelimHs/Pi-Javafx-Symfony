@@ -20,6 +20,7 @@ import tn.esprit.services.ServiceReservation;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
@@ -149,11 +150,10 @@ public class FrontBillet {
         BilletsMainController billetController = new BilletsMainController();
         ServiceReservation sr = new ServiceReservation();
 
-        int finalPrice = (int) (prix * (1 - (remiseAppliquee / 100)));
 
         Billet billet = new Billet();
         billet.setProprietaire(proprietaire);
-        billet.setPrix(finalPrice);
+        billet.setPrix(getUpdatedPrixBillet());
         billet.setDateAchat(LocalDateTime.now());
         billet.setType(type);
         billet.setEvent(event);
@@ -163,14 +163,14 @@ public class FrontBillet {
             showAlert("Erreur", "Impossible d'ajouter le billet après paiement.");
             return;
         }
-        billet.setIdBillet(billetId);
-
         billetController.exportBilletToPdf(billet);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         Reservation reservation = new Reservation();
         reservation.setIdUser(1);
         reservation.setIdEvent(event.getIdEvent());
-        reservation.setDateReservation(LocalDateTime.now().toString());
+        reservation.setDateReservation(LocalDateTime.now().format(formatter));
         reservation.setStatut("Confirmé");
 
         sr.add(reservation);

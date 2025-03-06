@@ -16,7 +16,8 @@ public class PdfService {
 
         // ✅ Encode event details in QR code as JSON
         JSONObject qrJson = new JSONObject();
-        qrJson.put("Nom évènement", billet.getEvent().getNomEvent());
+        qrJson.put("Nom event", billet.getEvent().getNomEvent()); // ✅ Corrected field name
+        qrJson.put("Proprietaire", proprietaire); // ✅ Added owner
         qrJson.put("Date", billet.getEvent().getDate().toString());
         qrJson.put("Adresse", billet.getEvent().getNomEspace());
         qrJson.put("Type billet", billet.getType().toString());
@@ -25,7 +26,7 @@ public class PdfService {
         // ✅ Generate a properly encoded local server URL
         String encodedQrData = URLEncoder.encode(qrJson.toString(), StandardCharsets.UTF_8);
         String doubleEncodedQrData = URLEncoder.encode(encodedQrData, StandardCharsets.UTF_8); // Extra encoding
-        String localServerUrl = "http://172.16.0.208:5000/event?data=" + doubleEncodedQrData;
+        String localServerUrl = "http://172.16.12.163:5000/event?data=" + doubleEncodedQrData;
 
         // ✅ Generate QR Code URL
         String qrCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + localServerUrl;
@@ -64,7 +65,7 @@ public class PdfService {
                 "        <div class='content'>\n" +
                 "            <p><span>Nom :</span> " + proprietaire + "</p>\n" +
                 "            <p><span>Événement :</span> " + event + "</p>\n" +
-                "            <p><span>Prix :</span> " + prix + " DT</p>\n" +
+                "            <p><span>Prix :</span> " + billet.getPrix() + " DT</p>\n" +
                 "            <p class='badge'>Valide uniquement pour cet événement</p>\n" +
                 "        </div>\n" +
                 "        <div class='divider'></div>\n" +
@@ -80,7 +81,7 @@ public class PdfService {
         OkHttpClient client = new OkHttpClient();
         JSONObject jsonBody = new JSONObject();
         jsonBody.put("html", htmlContent);
-        jsonBody.put("name", "billet_" + billet.getIdBillet() + ".pdf");
+        jsonBody.put("name", "billet_" + proprietaire + ".pdf");
 
         RequestBody body = RequestBody.create(
                 jsonBody.toString(),

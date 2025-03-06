@@ -37,7 +37,7 @@ public class LocalServer {
 
         server.setExecutor(null);
         server.start();
-        System.out.println("🚀 Server started at http://172.16.0.208:5000/");
+        System.out.println("🚀 Server started at http://172.16.12.163:5000/");
     }
 
     // ✅ Serve the HTML page
@@ -80,7 +80,7 @@ public class LocalServer {
                     }
 
                     // ✅ Open the event page automatically
-                    openWebPage("http://172.16.0.208:5000/");
+                    openWebPage("http://172.16.12.163:5000/");
                 }
 
                 // ✅ Send response to phone scanner
