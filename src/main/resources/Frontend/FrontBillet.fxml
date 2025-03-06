@@ -70,6 +70,11 @@
 
 
                         <Label text="🎟 Événement :" textFill="white" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                        <Label text="🎟 Code Promo :" textFill="white" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                        <TextField fx:id="codePromo" promptText="Entrez un code promo" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                        <Button text="🔍 Vérifier" onAction="#applyPromoCode" GridPane.columnIndex="2" GridPane.rowIndex="4"
+                                style="-fx-background-color: #27AE60; -fx-text-fill: white; -fx-border-radius: 5px;"/>
+
                         <ComboBox fx:id="eventSelection" promptText="Sélectionner un événement" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                     </children>
                 </GridPane>

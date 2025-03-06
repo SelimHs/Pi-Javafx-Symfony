@@ -38,21 +38,16 @@ public class GestionReservation {
         Reservation reservation = new Reservation();
         ServiceReservation sr = new ServiceReservation();
 
-        reservation.setIdUser(Integer.parseInt(userIdField.getText()));
+        reservation.setIdUser(1); // ✅ Always set to 1
         reservation.setIdEvent(Integer.parseInt(eventIdField.getText()));
         reservation.setDateReservation(dateReservationPicker.getValue().toString());
         reservation.setStatut(statutComboBox.getValue());
+
         sr.add(reservation);
-        /*if (userId.isEmpty() || eventId.isEmpty() || date.isEmpty() || statut == null) {
-            showAlert(AlertType.ERROR, "Erreur", "Veuillez remplir tous les champs !");
-            return;
-        }*/
-
-        //System.out.println("Réservation ajoutée : Utilisateur " + userId + ", Événement " + eventId + ", Date " + date + ", Statut " + statut);
-        showAlert(AlertType.INFORMATION, "Succès", "Réservation ajoutée avec succès !");
-
+        showAlert(Alert.AlertType.INFORMATION, "Succès", "Réservation ajoutée avec succès !");
         clearFields();
     }
+
 
     private void showAlert(AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
