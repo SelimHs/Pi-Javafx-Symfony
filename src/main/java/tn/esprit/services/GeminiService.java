@@ -24,17 +24,17 @@ public class GeminiService {
 
     public String getResponse(String userInput) {
         if (userInput.toLowerCase().contains("événements disponibles") || userInput.toLowerCase().contains("quel événement") || userInput.toLowerCase().contains("événement") || userInput.toLowerCase().contains("événements")) {
-            return getUpcomingEvents(); // 🔹 Récupération des événements depuis la BDD
+            return getUpcomingEvents();
         }
         if (userInput.toLowerCase().contains("produits disponibles") || userInput.toLowerCase().contains("quel produit") || userInput.toLowerCase().contains("produit")) {
-            return getAvailableProducts(userInput); // 🔹 Vérification des produits
+            return getAvailableProducts(userInput);
         }
 
         if (userInput.toLowerCase().contains("espaces disponibles") || userInput.toLowerCase().contains("quel espace") || userInput.toLowerCase().contains("espace") || userInput.toLowerCase().contains("espaces")) {
-            return getAvailableSpaces(); // 🔹 Vérification des espaces disponibles
+            return getAvailableSpaces();
         }
 
-        return askGemini(userInput); // 🔹 Si la question ne concerne pas la BDD, on utilise l'API Gemini
+        return askGemini(userInput);
     }
 
     // 🔹 Méthode pour récupérer les événements disponibles depuis `lammaInteg`
