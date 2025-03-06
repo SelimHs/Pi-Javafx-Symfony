@@ -31,13 +31,15 @@ public class FrontEventsController {
     private final ServiceEvent eventService = new ServiceEvent(); // Service pour récupérer les événements
 
     @FXML
-    private Button btnAccueil, btnEvenements, btnEspace;
+    private Button btnAccueil, btnEvenements, btnEspace,btnProduit;
 
     @FXML
     public void initialize() {
         applyHoverEffect(btnAccueil);
         applyHoverEffect(btnEvenements);
         applyHoverEffect(btnEspace);
+        applyHoverEffect(btnProduit);
+
         displayEvents();
     }
 
@@ -193,4 +195,15 @@ public class FrontEventsController {
         alert.showAndWait();
     }
 
+    public void goToProduit(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frontend/FrontProduit.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

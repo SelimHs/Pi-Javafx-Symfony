@@ -125,4 +125,19 @@ public class LiveEspace {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    public void goToProduit(ActionEvent actionEvent) {
+        try {
+            // Charger le fichier FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frontend/FrontProduit.fxml"));
+            Parent root = loader.load();
+
+            // Récupérer la scène actuelle et changer de vue
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

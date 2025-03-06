@@ -32,10 +32,15 @@ public class FrontProduit {
     private final List<Produit> selectedProduits = new ArrayList<>();
 
     @FXML
-    private Button btnAccueil, btnEvenements, btnEspace, btnGenererEvenement;
+    private Button btnAccueil, btnEvenements, btnEspace, btnProduit;
 
     @FXML
     public void initialize() {
+        applyHoverEffect(btnAccueil);
+        applyHoverEffect(btnEvenements);
+        applyHoverEffect(btnEspace);
+        //applyHoverEffect(btnProduit);
+
         displayProduits(); // Afficher les produits au démarrage
     }
 
@@ -48,6 +53,10 @@ public class FrontProduit {
             VBox card = createProduitCard(produit);
             produitCardContainer.getChildren().add(card);
         }
+    }
+    private void applyHoverEffect(Button button) {
+        button.setOnMouseEntered(event -> button.setStyle("-fx-background-color: #F39C12; -fx-text-fill: white; -fx-border-radius: 10px; -fx-padding: 10px 18px;"));
+        button.setOnMouseExited(event -> button.setStyle("-fx-background-color: transparent; -fx-text-fill: #F39C12; -fx-border-radius: 10px; -fx-padding: 10px 18px;"));
     }
 
     // 📌 Création d'une carte produit avec le design du Code 1
@@ -93,15 +102,11 @@ public class FrontProduit {
             }
         });
 
-        // 📌 Bouton "Voir Détails"
-        Button detailsButton = new Button("Voir Détails");
-        detailsButton.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-border-radius: 5px;");
-        detailsButton.setOnAction(e -> showProduitDetails(produit)); // Affiche les détails du produit
 
         // 📌 Conteneur pour les boutons
         HBox buttonContainer = new HBox(10);
         buttonContainer.setStyle("-fx-alignment: center;");
-        buttonContainer.getChildren().addAll(checkBox, detailsButton);
+        buttonContainer.getChildren().addAll(checkBox);
 
         // 📌 Ajouter les éléments à la carte
         card.getChildren().addAll(produitImage, title, prix, description, categorie, quantite, fournisseur, buttonContainer);
@@ -153,6 +158,34 @@ public class FrontProduit {
         }
     }
 
+    public void handleLogout(ActionEvent event) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Déconnexion");
+        alert.setHeaderText(null);
+        alert.setContentText("Êtes-vous sûr de vouloir vous déconnecter ?");
+
+        // Vérifier si l'utilisateur clique sur "OK"
+        if (alert.showAndWait().get() == ButtonType.OK) {
+            System.out.println("🔒 Déconnexion confirmée...");
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/login.fxml"));
+                Parent loginPage = loader.load();
+
+                // Obtenir la scène actuelle et changer la page
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                stage.setScene(new Scene(loginPage));
+                stage.show();
+
+                System.out.println("✅ Déconnexion réussie !");
+            } catch (IOException e) {
+                System.out.println("❌ Erreur lors de la déconnexion : " + e.getMessage());
+                e.printStackTrace();
+                showAlert("Erreur de déconnexion", "Impossible d'ouvrir la page de connexion.");
+            }
+        }
+
+    }
+    // Méthode pour afficher une alerte en cas d'erreur
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);

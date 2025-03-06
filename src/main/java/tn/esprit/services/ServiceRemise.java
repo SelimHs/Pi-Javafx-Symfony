@@ -105,5 +105,28 @@ public class ServiceRemise implements Iservice<Remise>{
         }
         return null;
     }
+
+    public Remise getRemiseByCode(String codePromo) {
+        String query = "SELECT * FROM remise WHERE codePromo = ?";
+        try {
+            PreparedStatement pst = cnx.prepareStatement(query);
+            pst.setString(1, codePromo);
+            ResultSet rs = pst.executeQuery();
+
+            if (rs.next()) {
+                return new Remise(
+                        rs.getInt("idRemise"),
+                        rs.getString("codePromo"),
+                        rs.getString("description"),
+                        rs.getDouble("pourcentageRemise"),
+                        rs.getString("dateExpiration")
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }
 

@@ -35,6 +35,8 @@
                             style="-fx-background-color: transparent; -fx-text-fill: #F39C12; -fx-border-radius: 10px; -fx-padding: 10px 18px;"/>
                     <Button fx:id="btnEspace" text="📌 Espaces" onAction="#goToEspace"
                             style="-fx-background-color: transparent; -fx-text-fill: #F39C12; -fx-border-radius: 10px; -fx-padding: 10px 18px;"/>
+                    <Button fx:id="btnProduit" onAction="#goToProduit" text="🛍️ Produits" style="-fx-background-color: transparent; -fx-text-fill: #F39C12; -fx-border-radius: 10px; -fx-padding: 10px 18px;"/>
+
                 </HBox>
 
                 <Button fx:id="btnLogout" onAction="#handleLogout" style="-fx-background-color: transparent; -fx-padding: 0;">

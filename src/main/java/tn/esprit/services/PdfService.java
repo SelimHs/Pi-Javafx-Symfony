@@ -25,7 +25,7 @@ public class PdfService {
         // ✅ Generate a properly encoded local server URL
         String encodedQrData = URLEncoder.encode(qrJson.toString(), StandardCharsets.UTF_8);
         String doubleEncodedQrData = URLEncoder.encode(encodedQrData, StandardCharsets.UTF_8); // Extra encoding
-        String localServerUrl = "http://192.168.1.25:5000/event?data=" + doubleEncodedQrData;
+        String localServerUrl = "http://192.168.137.174:5000/event?data=" + doubleEncodedQrData;
 
         // ✅ Generate QR Code URL
         String qrCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + localServerUrl;

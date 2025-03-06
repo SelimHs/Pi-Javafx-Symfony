@@ -39,6 +39,8 @@
                     <Button fx:id="btnAccueil" onAction="#goToAcceuil" text="🏠 Accueil" style="-fx-background-color: transparent; -fx-text-fill: #F39C12; -fx-border-radius: 10px; -fx-padding: 10px 18px;"/>
                     <Button fx:id="btnEvenements" onAction="#goToEvents" text="📅 Événements"  style="-fx-background-color: transparent; -fx-text-fill: #F39C12; -fx-border-radius: 10px; -fx-padding: 10px 18px;"/>
                     <Button fx:id="btnEspace" onAction="#goToEspaces" text="📌 Espaces"  style="-fx-background-color: transparent; -fx-text-fill: #F39C12; -fx-border-radius: 10px; -fx-padding: 10px 18px;"/>
+                    <Button fx:id="btnProduit" onAction="#goToProduit" text="🛍️ Produits" style="-fx-background-color: transparent; -fx-text-fill: #F39C12; -fx-border-radius: 10px; -fx-padding: 10px 18px;"/>
+
                 </HBox>
             </children>
         </HBox>
@@ -68,6 +70,11 @@
 
 
                         <Label text="🎟 Événement :" textFill="white" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                        <Label text="🎟 Code Promo :" textFill="white" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                        <TextField fx:id="codePromo" promptText="Entrez un code promo" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                        <Button text="🔍 Vérifier" onAction="#applyPromoCode" GridPane.columnIndex="2" GridPane.rowIndex="4"
+                                style="-fx-background-color: #27AE60; -fx-text-fill: white; -fx-border-radius: 5px;"/>
+
                         <ComboBox fx:id="eventSelection" promptText="Sélectionner un événement" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                     </children>
                 </GridPane>

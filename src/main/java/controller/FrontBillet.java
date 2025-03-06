@@ -10,15 +10,16 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import tn.esprit.models.Billet;
+import tn.esprit.models.Remise;
 import tn.esprit.services.ServiceBillet;
 import tn.esprit.services.ServiceEvent;
-import controller.BilletsMainController;
-
 import tn.esprit.models.Event;
+import tn.esprit.services.ServiceRemise;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+
 
 public class FrontBillet {
     @FXML
@@ -30,17 +31,33 @@ public class FrontBillet {
     @FXML
     private ComboBox typeBillet;
     @FXML
-    private Button btnAccueil, btnEvenements,btnEspace;
+    private Button btnAccueil, btnEvenements,btnEspace,btnProduit;
+
+    @FXML
+    private TextField prixBillet;
+
+    @FXML
+    private TextField codePromo; // Champ pour entrer un code promo
+    @FXML
+    private double remiseAppliquee = 0.0; // Stocker le pourcentage de la remise
+
+
+
+
+    private int prixFinalBillet = 0;
+    private Event selectedEvent;
+
     @FXML
     public void initialize() {
         applyHoverEffect(btnAccueil);
         applyHoverEffect(btnEvenements);
         applyHoverEffect(btnEspace);
+        applyHoverEffect(btnProduit);
+
         loadEvents();
         typeBillet.setOnAction(event -> updateBilletDescription());
     }
-    @FXML
-    private TextField prixBillet;
+
     private void applyHoverEffect(Button button) {
         button.setOnMouseEntered(event -> button.setStyle("-fx-background-color: #F39C12; -fx-text-fill: white; -fx-border-radius: 10px; -fx-padding: 10px 18px;"));
         button.setOnMouseExited(event -> button.setStyle("-fx-background-color: transparent; -fx-text-fill: #F39C12; -fx-border-radius: 10px; -fx-padding: 10px 18px;"));
@@ -60,77 +77,102 @@ public class FrontBillet {
             e.printStackTrace();
         }
     }
+
     public void setPrixBillet(int prix) {
-        prixBillet.setText(String.valueOf(prix) + " DT");
+        prixFinalBillet = prix;
+        prixBillet.setText(prix + " DT");
         prixBillet.setDisable(true);
     }
-    public void loadEvents(){
+
+    public void loadEvents() {
         ServiceEvent serviceEvent = new ServiceEvent();
         List<Event> events = serviceEvent.getAll();
         eventSelection.setItems(FXCollections.observableArrayList(events));
     }
+
     public void setEventSelection(Event selectedEvent) {
-        loadEvents(); // Charger les événements avant de sélectionner
-        eventSelection.setValue(selectedEvent); // Sélectionner l'événement
-        eventSelection.setDisable(true); // 🔒 Désactiver la modification
+        this.selectedEvent = selectedEvent;
+        loadEvents();
+        eventSelection.setValue(selectedEvent);
+        eventSelection.setDisable(true);
     }
+
 
     @FXML
     public void createBilletFront(ActionEvent actionEvent) {
-        BilletsMainController billetController = new BilletsMainController();
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        Billet billet = new Billet();
-        ServiceBillet sb = new ServiceBillet();
-
         // ✅ Vérification des champs obligatoires
         if (nomClient.getText().isEmpty() || typeBillet.getValue() == null) {
-            alert.setContentText("Veuillez remplir tous les champs.");
-            alert.showAndWait();
+            showAlert("Erreur", "Veuillez remplir tous les champs.");
             return;
         }
 
         Event selectedEvent = (Event) eventSelection.getSelectionModel().getSelectedItem();
         if (selectedEvent == null) {
-            alert.setContentText("Veuillez sélectionner un événement.");
-            alert.showAndWait();
+            showAlert("Erreur", "Veuillez sélectionner un événement.");
             return;
         }
 
-        // ✅ Remplir les détails du billet
-        billet.setProprietaire(nomClient.getText());
-        billet.setPrix(Integer.parseInt(prixBillet.getText().replace(" DT", "").trim()));
-        billet.setDateAchat(LocalDateTime.now());
-        billet.setType(Billet.TypeBillet.valueOf(typeBillet.getValue().toString()));
-        billet.setEvent(selectedEvent);
+        // ✅ Stocker les informations nécessaires pour créer le billet après paiement
+        String proprietaire = nomClient.getText();
+        int prix = (int) (selectedEvent.getPrix() * (1 - (remiseAppliquee / 100)));
+        Billet.TypeBillet type = Billet.TypeBillet.valueOf(typeBillet.getValue().toString());
 
-        // ✅ Ajouter le billet et récupérer son ID
+        // ✅ Aller à la page de paiement en envoyant le prix et les détails du billet
+        goToPaymentPage(actionEvent, prix, proprietaire, type, selectedEvent);
+    }
+
+    /**
+     * 🔥 Redirige vers la page de paiement avec les détails du billet à créer après paiement
+     */
+    private void goToPaymentPage(ActionEvent actionEvent, int prix, String proprietaire, Billet.TypeBillet type, Event event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/payment.fxml"));
+            Parent root = loader.load();
+
+            // ✅ Récupérer le contrôleur de paiement et lui envoyer les données du billet
+            MainController paymentController = loader.getController();
+            paymentController.setPaymentDetails(prix, proprietaire, type, event, this); // 🔥 Passer "this" pour rappel après paiement
+
+            // ✅ Afficher la page de paiement
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Erreur", "Impossible d'ouvrir la page de paiement.");
+        }
+    }
+    public void createBilletAfterPayment(String proprietaire, int prix, Billet.TypeBillet type, Event event) {
+        ServiceBillet sb = new ServiceBillet();
+        BilletsMainController billetController = new BilletsMainController();
+
+        Billet billet = new Billet();
+        billet.setProprietaire(proprietaire);
+        billet.setPrix(prix);
+        billet.setDateAchat(LocalDateTime.now());
+        billet.setType(type);
+        billet.setEvent(event);
+
+        // ✅ Ajouter le billet en base de données
         int billetId = sb.addd(billet);
         if (billetId == -1) {
-            alert.setContentText("Erreur lors de l'ajout du billet.");
-            alert.showAndWait();
+            showAlert("Erreur", "Impossible d'ajouter le billet après paiement.");
             return;
         }
-        billet.setIdBillet(billetId); // ✅ Mise à jour de l'ID du billet
+        billet.setIdBillet(billetId);
 
-        // ✅ Vérifier que l'ID du billet n'est pas null avant d'exporter
-        if (billet.getIdBillet() > 0) {
-            billetController.exportBilletToPdf(billet);
-        } else {
-            alert.setContentText("Impossible de générer le PDF : ID du billet invalide.");
-            alert.showAndWait();
-        }
+        // ✅ Générer un PDF du billet
+        billetController.exportBilletToPdf(billet);
 
         // ✅ Message de confirmation
-        Alert confirmationAlert = new Alert(Alert.AlertType.INFORMATION);
-        confirmationAlert.setTitle("Billet réservé !");
-        confirmationAlert.setHeaderText(null);
-        confirmationAlert.setContentText("Votre billet pour l'événement '" + selectedEvent.getNomEvent() + "' a été réservé avec succès !");
-        confirmationAlert.showAndWait();
-
-        // ✅ Réinitialisation des champs
-        nomClient.clear();
-        typeBillet.getSelectionModel().clearSelection();
+        showAlert("Billet réservé !", "Votre billet pour l'événement '" + event.getNomEvent() + "' a été généré !");
     }
+
+    /**
+     * 🔄 Redirige l'utilisateur vers la page de paiement et transmet le prix du billet.
+     */
+
+
     private void updateBilletDescription() {
         String selectedType = (String) typeBillet.getValue();
         Event selectedEvent = (Event) eventSelection.getSelectionModel().getSelectedItem();
@@ -167,7 +209,7 @@ public class FrontBillet {
     public void goToEvents(ActionEvent actionEvent) {
         try {
             // Charger le fichier FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FrontEvents.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frontend/FrontEvents.fxml"));
             Parent root = loader.load();
 
             // Récupérer la scène actuelle et changer de vue
@@ -182,7 +224,7 @@ public class FrontBillet {
     public void goToEspaces(ActionEvent actionEvent) {
         try {
             // Charger le fichier FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FrontEspace.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frontend/FrontEspace.fxml"));
             Parent root = loader.load();
 
             // Récupérer la scène actuelle et changer de vue
@@ -191,6 +233,59 @@ public class FrontBillet {
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void goToProduit(ActionEvent actionEvent) {
+        try {
+            // Charger le fichier FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frontend/FrontProduit.fxml"));
+            Parent root = loader.load();
+
+            // Récupérer la scène actuelle et changer de vue
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+    // Ajoute ces méthodes dans FrontBillet.java
+    public  void setNomClient(String nom) {
+        this.nomClient.setText(nom);
+    }
+
+    public  void setTypeBillet(Billet.TypeBillet type) {
+        this.typeBillet.setValue(type);
+    }
+
+    public void applyPromoCode(ActionEvent actionEvent) {
+        String codeSaisi = codePromo.getText().trim();
+
+        if (codeSaisi.isEmpty()) {
+            showAlert("Erreur", "Veuillez entrer un code promo !");
+            return;
+        }
+
+        ServiceRemise serviceRemise = new ServiceRemise();
+        Remise remise = serviceRemise.getRemiseByCode(codeSaisi);
+
+        if (remise != null) {
+            remiseAppliquee = remise.getPourcentageRemise(); // Récupérer le pourcentage
+            int prixOriginal = selectedEvent.getPrix();
+            int prixAvecRemise = (int) (prixOriginal * (1 - (remiseAppliquee / 100)));
+
+            prixBillet.setText(prixAvecRemise + " DT"); // Mettre à jour le prix avec remise
+            showAlert("Succès", "✅ Code promo appliqué ! Vous bénéficiez de " + remiseAppliquee + "% de réduction.");
+        } else {
+            showAlert("Erreur", "❌ Code promo invalide !");
         }
     }
 }
