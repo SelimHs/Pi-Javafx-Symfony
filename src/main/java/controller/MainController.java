@@ -123,9 +123,13 @@ public class MainController {
             return;
         }
 
+        // ✅ Création du billet après paiement
         frontBilletController.createBilletAfterPayment(proprietaire, prixBilletFinal, typeBillet, selectedEvent);
+
+        // ✅ Redirection vers la page des événements après paiement
         goToEvents();
     }
+
 
     /**
      * 🔄 Redirect to events page after payment
@@ -134,7 +138,10 @@ public class MainController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frontend/FrontEvents.fxml"));
             Parent root = loader.load();
+
+            // ✅ Récupérer la fenêtre actuelle de manière plus sûre
             Stage stage = (Stage) btnPay.getScene().getWindow();
+
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
@@ -142,6 +149,7 @@ public class MainController {
             showAlert("Erreur", "Impossible d'ouvrir la liste des événements.");
         }
     }
+
 
     /**
      * 📢 Show alert message

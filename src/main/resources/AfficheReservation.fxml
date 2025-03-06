@@ -34,16 +34,13 @@
                     style="-fx-background-color: transparent; -fx-text-fill: #a868a0;
                            -fx-font-size: 16px; -fx-border-radius: 10px; -fx-padding: 12px 20px;"/>
 
-            <Button text="➕ Ajouter Réservation" onAction="#goToAjoutReservation" onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"
 
-                    style="-fx-background-color: transparent; -fx-text-fill: #a868a0;
-                           -fx-font-size: 16px; -fx-border-radius: 10px; -fx-padding: 12px 20px;"/>
 
             <Button text="📋 Liste des Réservations" onAction="#displayReservations" onMouseEntered="#buttonHoverEffect" onMouseExited="#buttonExitEffect"
 
                     style="-fx-background-color: transparent; -fx-text-fill: #a868a0;
                            -fx-font-size: 16px; -fx-border-radius: 10px; -fx-padding: 12px 20px;"/>
-            <Button text="Exporter en Excel" onAction="#exportReservations"/>
+
 
         </children>
     </VBox>
@@ -68,9 +65,10 @@
                            style="-fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;
                                   -fx-border-color: white; -fx-background-color: rgba(255, 255, 255, 0.3);"/>
 
-                <Button text="Rechercher" onAction="#searchReservations"
-                        style="-fx-background-color: #8e44ad; -fx-text-fill: white; -fx-border-radius: 10px; -fx-padding: 10px;"/>
+                <Button text="📂 Export" onAction="#exportReservations"
+                        style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-size: 14px;"/>
             </HBox>
+
 
             <!-- 📌 Zone d'affichage des réservations -->
             <ScrollPane fitToWidth="true" fitToHeight="true" hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED"
