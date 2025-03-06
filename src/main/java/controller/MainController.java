@@ -39,15 +39,21 @@ public class MainController {
         btnCheckout.setOnAction(event -> goToBilletPage());
     }
 
+    /**
+     * ✅ Set payment details and apply remise if available
+     */
     public void setPaymentDetails(int prix, String proprietaire, Billet.TypeBillet type, Event event, FrontBillet controller) {
-        this.prixBilletFinal = prix;
         this.proprietaire = proprietaire;
         this.typeBillet = type;
         this.selectedEvent = event;
         this.frontBilletController = controller;
 
-        lblMontant.setText("Montant à payer : " + prix + " DT");
+        // ✅ Fetch the FINAL updated price after remise
+        this.prixBilletFinal = controller.getUpdatedPrixBillet();
+
+        lblMontant.setText("Montant à payer : " + prixBilletFinal + " DT");
     }
+
 
     @FXML
     private void processPayment() {
@@ -71,34 +77,33 @@ public class MainController {
     }
 
     /**
-     * 🔄 Redirige vers Stripe Checkout et gère l'annulation
+     * 🔄 Handle payment cancellation and return to the billet page
      */
     private void redirectToCheckout() {
         Optional<ButtonType> result = showConfirmationDialog("Confirmation", "Voulez-vous continuer le paiement ?");
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            String checkoutUrl = "https://checkout.stripe.com/pay"; // 🔗 Remplace avec l'URL réelle
+            String checkoutUrl = "https://checkout.stripe.com/pay"; // 🔗 Replace with real URL
             openWebPage(checkoutUrl);
         } else {
-            goToBilletPage(); // 🔥 Annulation : Retour à la page des billets
+            goToBilletPage(); // 🔥 If canceled, return to the billet page
         }
     }
 
     /**
-     * ✅ Si le paiement est annulé, retourne à la page des billets en gardant les données
+     * ✅ Return to the billet page while keeping entered data
      */
     private void goToBilletPage() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frontend/FrontBillet.fxml"));
             Parent root = loader.load();
 
-            // ✅ Récupérer le contrôleur et remettre les valeurs saisies
+            // ✅ Retrieve the controller and restore values
             FrontBillet billetController = loader.getController();
             billetController.setPrixBillet(prixBilletFinal);
             billetController.setEventSelection(selectedEvent);
             billetController.setNomClient(proprietaire);
             billetController.setTypeBillet(typeBillet);
-
 
             Stage stage = (Stage) btnCheckout.getScene().getWindow();
             stage.setScene(new Scene(root));
@@ -109,6 +114,9 @@ public class MainController {
         }
     }
 
+    /**
+     * ✅ Create the ticket after successful payment
+     */
     private void createBilletAfterPayment() {
         if (frontBilletController == null) {
             showAlert("Erreur", "Impossible de créer le billet après paiement.");
@@ -119,6 +127,9 @@ public class MainController {
         goToEvents();
     }
 
+    /**
+     * 🔄 Redirect to events page after payment
+     */
     private void goToEvents() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Frontend/FrontEvents.fxml"));
@@ -132,6 +143,9 @@ public class MainController {
         }
     }
 
+    /**
+     * 📢 Show alert message
+     */
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -140,6 +154,9 @@ public class MainController {
         alert.showAndWait();
     }
 
+    /**
+     * 🔥 Show confirmation dialog before proceeding with checkout
+     */
     private Optional<ButtonType> showConfirmationDialog(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(title);
@@ -148,6 +165,9 @@ public class MainController {
         return alert.showAndWait();
     }
 
+    /**
+     * 🌐 Open Stripe checkout page in the browser
+     */
     private void openWebPage(String url) {
         try {
             java.awt.Desktop.getDesktop().browse(new java.net.URI(url));

@@ -146,9 +146,12 @@ public class FrontBillet {
         ServiceBillet sb = new ServiceBillet();
         BilletsMainController billetController = new BilletsMainController();
 
+        // ✅ Ensure the remise is applied only once
+        int finalPrice = prix; // `prix` is already discounted when passed to this function
+
         Billet billet = new Billet();
         billet.setProprietaire(proprietaire);
-        billet.setPrix(prix);
+        billet.setPrix(prix); // ✅ Store the correct final price
         billet.setDateAchat(LocalDateTime.now());
         billet.setType(type);
         billet.setEvent(event);
@@ -165,8 +168,11 @@ public class FrontBillet {
         billetController.exportBilletToPdf(billet);
 
         // ✅ Message de confirmation
-        showAlert("Billet réservé !", "Votre billet pour l'événement '" + event.getNomEvent() + "' a été généré !");
+        showAlert("Billet réservé !", "Votre billet pour l'événement '" + event.getNomEvent() + "' a été généré !\nPrix payé : " + prix + " DT");
     }
+
+
+
 
     /**
      * 🔄 Redirige l'utilisateur vers la page de paiement et transmet le prix du billet.
@@ -178,9 +184,10 @@ public class FrontBillet {
         Event selectedEvent = (Event) eventSelection.getSelectionModel().getSelectedItem();
 
         if (selectedType != null && selectedEvent != null) {
-            int basePrice = selectedEvent.getPrix(); // Get base price from event
-            int calculatedPrice = basePrice; // Default to base price
+            int basePrice = selectedEvent.getPrix(); // Base event price
+            int calculatedPrice = basePrice; // Default price
 
+            // ✅ Adjust price based on ticket type
             switch (selectedType) {
                 case "SIMPLE":
                     billetDescription.setText("✔ Ce billet est valide pour une seule personne.");
@@ -199,12 +206,13 @@ public class FrontBillet {
                     break;
             }
 
-            // 🔥 Apply remise (if available)
+            // ✅ Apply remise if available
             if (remiseAppliquee > 0) {
                 int priceAfterDiscount = (int) (calculatedPrice * (1 - (remiseAppliquee / 100)));
-                prixBillet.setText(priceAfterDiscount + " DT"); // ✅ Update price with discount
+                prixBillet.setText(priceAfterDiscount + " DT"); // ✅ Display discounted price
+                billetDescription.setText(billetDescription.getText() + " 🔥 Promo appliquée !");
             } else {
-                prixBillet.setText(calculatedPrice + " DT"); // ✅ Update price without discount
+                prixBillet.setText(calculatedPrice + " DT"); // ✅ Display price without discount
             }
         }
     }
@@ -281,18 +289,23 @@ public class FrontBillet {
         }
 
         ServiceRemise serviceRemise = new ServiceRemise();
-        Remise remise = serviceRemise.getRemiseByCode(codeSaisi);
+        Remise remise = serviceRemise.getRemiseByCode(codeSaisi); // ✅ Ensure only valid & non-expired remises
 
         if (remise != null) {
-            remiseAppliquee = remise.getPourcentageRemise(); // ✅ Store the discount percentage
+            remiseAppliquee = remise.getPourcentageRemise(); // ✅ Store remise percentage
 
             // ✅ Automatically update the price after applying remise
             updateBilletDescription();
 
             showAlert("Succès", "✅ Code promo appliqué ! Vous bénéficiez de " + remiseAppliquee + "% de réduction.");
         } else {
-            showAlert("Erreur", "❌ Code promo invalide !");
+            showAlert("Erreur", "❌ Code promo invalide ou expiré !");
         }
     }
+    public int getUpdatedPrixBillet() {
+        return Integer.parseInt(prixBillet.getText().replace(" DT", "").trim()); // Get the displayed updated price
+    }
+
+
 
 }
