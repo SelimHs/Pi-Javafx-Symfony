@@ -35,9 +35,9 @@ public class AI_Predictive {
                 return "⚠️ Impossible de générer un événement car les produits sont vides.";
             }
 
-            String prompt = "I am an event planning expert. Based on these products: "
+            String prompt = "Je suis un expert en organisation d'événements. En te basant sur ces produits : "
                     + productList.toString()
-                    + " suggest an event I could organize. Provide a short and practical answer.";
+                    + ", suggère-moi un événement que je pourrais organiser. Réponds brièvement et de manière pratique.";
 
             // 🔹 Utilisation de l'API Chat Cohere
             URL url = new URL("https://api.cohere.ai/v1/chat");
