@@ -23,6 +23,9 @@ import tn.esprit.models.Espace;
 import tn.esprit.models.Organisateur;
 import tn.esprit.services.ServiceOrganisateur;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +38,7 @@ public class DetailEspace {
     @FXML private Button retourButton;
     @FXML private Button ajouterOrganisateurButton;
     @FXML private WebView mapView; // Affichage de la carte Google Maps
+    @FXML private ImageView espaceImageView;
 
     private int idEspace;
     private final ServiceOrganisateur serviceOrganisateur = new ServiceOrganisateur();
@@ -48,7 +52,7 @@ public class DetailEspace {
         this.idEspace = espace.getIdEspace();
         titleLabel.setText("Détails de l'Espace : " + espace.getNomEspace());
 
-        // Afficher les détails de l'espace
+        // Afficher les détails
         espaceDetailsLabel.setText(
                 "📍 Adresse : " + espace.getAdresse() + "\n" +
                         "👥 Capacité : " + espace.getCapacite() + "\n" +
@@ -57,9 +61,28 @@ public class DetailEspace {
                         "🏢 Type : " + espace.getTypeEspace()
         );
 
-        // Afficher les organisateurs et la carte
+        // Charger et afficher l'image
+        afficherImage(espace.getImage());
+
         afficherOrganisateurs(idEspace);
         afficherCarte(espace.getAdresse());
+    }
+    private void afficherImage(String imagePath) {
+        if (imagePath != null && !imagePath.isEmpty()) {
+            File file = new File(imagePath);
+            if (file.exists()) {
+                try {
+                    espaceImageView.setImage(new Image(new FileInputStream(file)));
+                } catch (FileNotFoundException e) {
+                    System.out.println("Erreur chargement image : " + e.getMessage());
+                    espaceImageView.setImage(null); // Ne rien afficher en cas d'erreur
+                }
+            } else {
+                espaceImageView.setImage(null); // Ne rien afficher si le fichier n'existe pas
+            }
+        } else {
+            espaceImageView.setImage(null); // Ne rien afficher si le chemin est vide
+        }
     }
 
     /**

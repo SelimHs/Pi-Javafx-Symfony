@@ -12,9 +12,15 @@ public class Espace {
     private final IntegerProperty idUser = new SimpleIntegerProperty();
     private final StringProperty typeEspace = new SimpleStringProperty();
 
+    private final StringProperty image = new SimpleStringProperty();
+
+    public String getImage() { return image.get(); }
+    public void setImage(String img) { this.image.set(img); }
+    public StringProperty imageProperty() { return image; }
+
     public Espace() {}
 
-    public Espace(int idEspace, String nomEspace, String adresse, int capacite, String disponibilite, float prix, int idUser, String typeEspace) {
+    public Espace(int idEspace, String nomEspace, String adresse, int capacite, String disponibilite, float prix, int idUser, String typeEspace, String image) {
         this.idEspace.set(idEspace);
         this.nomEspace.set(nomEspace);
         this.adresse.set(adresse);
@@ -23,7 +29,9 @@ public class Espace {
         this.prix.set(prix);
         this.idUser.set(idUser);
         this.typeEspace.set(typeEspace);
+        this.image.set(image);
     }
+
 
     // ✅ Getters & Setters using JavaFX properties
 

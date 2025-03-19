@@ -17,7 +17,7 @@ public class ServiceEspace implements Iservice<Optional<Espace>> {
 
     @Override
     public void add(Optional<Espace> espace) {
-        String qry = "INSERT INTO `espace`(`nomEspace`, `adresse`, `capacite`, `disponibilite`, `prix`, `idUser`, `Type_espace`) VALUES (?,?,?,?,?,?,?)";
+        String qry = "INSERT INTO `espace`(`nomEspace`, `adresse`, `capacite`, `disponibilite`, `prix`, `idUser`, `Type_espace`, `image`) VALUES (?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement pstm = cnx.prepareStatement(qry);
             pstm.setString(1, espace.get().getNomEspace());
@@ -27,11 +27,13 @@ public class ServiceEspace implements Iservice<Optional<Espace>> {
             pstm.setFloat(5, espace.get().getPrix());
             pstm.setInt(6, espace.get().getIdUser());
             pstm.setString(7, espace.get().getTypeEspace());
+            pstm.setString(8, espace.get().getImage());
             pstm.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Erreur lors de l'ajout : " + e.getMessage());
         }
     }
+
 
     @Override
     public List<Optional<Espace>> getAll() {
@@ -49,8 +51,10 @@ public class ServiceEspace implements Iservice<Optional<Espace>> {
                         rs.getString("disponibilite"),
                         rs.getFloat("prix"),
                         rs.getInt("idUser"),
-                        rs.getString("Type_espace") // Récupération du champ Type_espace
+                        rs.getString("Type_espace"),
+                        rs.getString("image")
                 ));
+
                 espaces.add(espace);
             }
         } catch (SQLException e) {
@@ -106,7 +110,9 @@ public class ServiceEspace implements Iservice<Optional<Espace>> {
                         rs.getString("disponibilite"),
                         rs.getFloat("prix"),
                         rs.getInt("idUser"),
-                        rs.getString("Type_espace") // Ajout de Type_espace dans findById
+                        rs.getString("Type_espace") ,
+                        rs.getString("image")
+// Ajout de Type_espace dans findById
                 ));
             }
         } catch (SQLException e) {

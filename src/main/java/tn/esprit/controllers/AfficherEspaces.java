@@ -20,6 +20,9 @@ import javafx.stage.Stage;
 import tn.esprit.models.Espace;
 import tn.esprit.services.ServiceEspace;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
@@ -101,7 +104,6 @@ public class AfficherEspaces {
             espaceCardContainer.getChildren().add(creerCarteEspace(espace));
         }
     }
-
     private VBox creerCarteEspace(Espace espace) {
         VBox card = new VBox();
         card.setStyle("-fx-background-color: white; -fx-padding: 10px; -fx-border-radius: 10px; "
@@ -116,6 +118,30 @@ public class AfficherEspaces {
         Label dispoLabel = new Label("📅 Disponibilité: " + espace.getDisponibilite());
         Label prixLabel = new Label("💰 Prix: " + espace.getPrix() + " DT");
         Label typeLabel = new Label("🏢 Type: " + espace.getTypeEspace());
+
+        // 🖼️ Affichage de l'image de l'espace
+        ImageView imageView = new ImageView();
+        imageView.setFitWidth(180);
+        imageView.setFitHeight(120);
+        imageView.setPreserveRatio(false);
+        imageView.setSmooth(true);
+        imageView.setCache(true);
+
+        File file = new File(espace.getImage());
+        if (file.exists()) {
+            try {
+                FileInputStream fis = new FileInputStream(file);
+                Image img = new Image(fis);
+                imageView.setImage(img);
+            } catch (FileNotFoundException e) {
+                System.out.println("Erreur chargement image : " + e.getMessage());
+                imageView.setImage(null);  // aucune image affichée
+            }
+        } else {
+            imageView.setImage(null); // aucune image affichée si fichier non trouvé
+        }
+
+
 
         // 📌 Conteneur horizontal pour les icônes
         HBox buttonContainer = new HBox(8);
@@ -155,10 +181,11 @@ public class AfficherEspaces {
         buttonContainer.getChildren().addAll(btnModifier, btnSupprimer, btnDetails);
 
         // Ajout des éléments à la carte
-        card.getChildren().addAll(nomLabel, adresseLabel, capaciteLabel, dispoLabel, prixLabel, typeLabel, buttonContainer);
+        card.getChildren().addAll(imageView, nomLabel, adresseLabel, capaciteLabel, dispoLabel, prixLabel, typeLabel, buttonContainer);
 
         return card;
     }
+
 
 
     private void supprimerEspace(Espace espace) {

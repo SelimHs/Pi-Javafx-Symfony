@@ -10,7 +10,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import tn.esprit.models.Espace;
 import tn.esprit.services.ServiceEspace;
@@ -18,8 +21,14 @@ import tn.esprit.services.ServiceEspace;
 import javafx.scene.control.Button;
 import javafx.scene.paint.Color; // Import the Color class
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Optional;
+import java.util.UUID;
 
 public class GestionEspace {
 
@@ -28,12 +37,54 @@ public class GestionEspace {
     @FXML
     private ComboBox<String> disponibiliteEspace;
 
+
     private final ServiceEspace serviceEspace = new ServiceEspace();
 
     @FXML
     public void initialize() {
         disponibiliteEspace.setValue("Disponible"); // Définit "Disponible" par défaut
     }
+
+
+    @FXML private ImageView espaceImageView;
+    private String imagePath = null;
+
+
+
+    @FXML
+    public void choisirImage(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choisir une image");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif")
+        );
+
+        File selectedFile = fileChooser.showOpenDialog(null);
+        if (selectedFile != null) {
+            try {
+                // Générer un nom unique pour éviter les conflits
+                String uniqueName = UUID.randomUUID() + "_" + selectedFile.getName();
+                String targetDir = "C:/wamp64/www/img/";
+
+                // Copier l'image vers le dossier cible
+                Files.copy(
+                        selectedFile.toPath(),
+                        Paths.get(targetDir + uniqueName),
+                        StandardCopyOption.REPLACE_EXISTING
+                );
+
+                // Stocker le chemin complet dans imagePath
+                imagePath = targetDir + uniqueName;
+
+                // Afficher l'image dans l'ImageView
+                espaceImageView.setImage(new Image(new FileInputStream(imagePath)));
+
+            } catch (IOException e) {
+                afficherAlerte("Erreur", "Impossible de charger l'image : " + e.getMessage());
+            }
+        }
+    }
+
 
     // 🔹 Navigation vers l'affichage des espaces
     @FXML
@@ -92,7 +143,11 @@ public class GestionEspace {
                 return;
             }
 
-            // 🔹 Création de l'objet Espace
+            if (imagePath == null) {
+                afficherAlerte("Erreur", "Veuillez sélectionner une image !");
+                return;
+            }
+
             Espace espace = new Espace();
             espace.setNomEspace(nomEspace.getText());
             espace.setAdresse(adresseEspace.getText());
@@ -100,7 +155,9 @@ public class GestionEspace {
             espace.setPrix(prix);
             espace.setTypeEspace(typeEspace.getText());
             espace.setDisponibilite(disponibiliteEspace.getValue());
-            espace.setIdUser(1); // À remplacer par l'ID utilisateur réel
+            espace.setIdUser(1);
+            espace.setImage(imagePath); // Chemin absolu stocké en BD
+
 
             // 🔹 Ajout dans la base de données
             serviceEspace.add(Optional.of(espace));
@@ -133,6 +190,9 @@ public class GestionEspace {
         prixEspace.clear();
         typeEspace.clear();
         disponibiliteEspace.getSelectionModel().clearSelection();
+        espaceImageView.setImage(null);
+        imagePath = null;
+
     }
 
     @FXML
