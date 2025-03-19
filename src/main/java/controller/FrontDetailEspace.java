@@ -67,12 +67,25 @@ public class FrontDetailEspace {
                         "🏢 Type : " + espace.getTypeEspace()
         );
 
-        espaceImage.setImage(new Image(getClass().getResourceAsStream("/images/espace-placeholder.jpg")));
+        // 📌 Chargement de l'image de l'espace avec vérification
+        String imagePath = espace.getImage(); // Récupérer le chemin depuis la BD
+
+        if (imagePath != null && !imagePath.isEmpty()) {
+            try {
+                espaceImage.setImage(new Image("file:" + imagePath)); // Charger l'image
+            } catch (Exception e) {
+                System.out.println("⚠️ Erreur de chargement de l'image: " + imagePath);
+                espaceImage.setImage(new Image(getClass().getResourceAsStream("/images/espace-placeholder.jpg"))); // Placeholder en cas d'erreur
+            }
+        } else {
+            espaceImage.setImage(new Image(getClass().getResourceAsStream("/images/espace-placeholder.jpg"))); // Placeholder si image non trouvée
+        }
 
         afficherOrganisateurs(idEspace);
         afficherCarte(espace.getAdresse());
         generateQRCode(espace.getAdresse());
     }
+
 
     /**
      * Génère un QR code pour l'adresse de l'espace.

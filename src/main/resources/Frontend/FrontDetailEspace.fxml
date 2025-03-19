@@ -77,6 +77,7 @@
                         </effect>
                     </ImageView>
 
+
                     <Label fx:id="espaceDetailsLabel" text="Chargement..."
                            style="-fx-font-size: 18px; -fx-text-fill: white; -fx-line-spacing: 6px;
                                   -fx-padding: 15px;"/>

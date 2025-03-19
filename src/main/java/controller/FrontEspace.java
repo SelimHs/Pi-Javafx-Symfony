@@ -45,17 +45,17 @@ public class FrontEspace {
     }
 
     public void displaySpaces() {
-        espaceCardContainer.getChildren().clear(); // Clear existing spaces
+        espaceCardContainer.getChildren().clear(); // Nettoyer les espaces existants
 
         List<Espace> espaces = serviceEspace.getAll().stream()
-                .filter(Optional::isPresent) // Keep only present values
-                .map(Optional::get) // Extract Espace from Optional
-                .collect(Collectors.toList()); // Collect to List<Espace>
+                .filter(Optional::isPresent) // Garde uniquement les valeurs présentes
+                .map(Optional::get) // Extrait les objets Espace
+                .collect(Collectors.toList()); // Convertit en liste
 
         int columnCount = 3; // 3 espaces par ligne
         int index = 0;
 
-        HBox rowContainer = new HBox(20); // Conteneur de ligne pour l'affichage horizontal
+        HBox rowContainer = new HBox(20); // Conteneur pour affichage horizontal
         rowContainer.setStyle("-fx-alignment: center;");
 
         for (Espace espace : espaces) {
@@ -64,12 +64,23 @@ public class FrontEspace {
                     + "-fx-background-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);"
                     + "-fx-min-width: 250px; -fx-max-width: 250px; -fx-alignment: center; -fx-spacing: 12;");
 
-            // 📌 Image de l’espace
+            // 📌 Image de l’espace avec vérification
             ImageView espaceImage = new ImageView();
             espaceImage.setFitHeight(150);
             espaceImage.setFitWidth(230);
             espaceImage.setPreserveRatio(true);
-            espaceImage.setImage(new Image(getClass().getResourceAsStream("/images/espace-placeholder.jpg"))); // Placeholder
+
+            String imagePath = espace.getImage(); // Récupérer le chemin de l’image de l’espace depuis la BD
+
+            if (imagePath != null && !imagePath.isEmpty()) {
+                try {
+                    espaceImage.setImage(new Image("file:" + imagePath)); // Charge l’image si elle existe
+                } catch (Exception e) {
+                    espaceImage.setImage(new Image(getClass().getResourceAsStream("/images/espace-placeholder.jpg"))); // Placeholder en cas d'erreur
+                }
+            } else {
+                espaceImage.setImage(new Image(getClass().getResourceAsStream("/images/espace-placeholder.jpg"))); // Placeholder si aucun chemin trouvé
+            }
 
             // 📌 Labels d'information
             Label title = new Label(espace.getNomEspace());
@@ -119,6 +130,7 @@ public class FrontEspace {
             }
         }
     }
+
 
     @FXML
     public void goToLiveEspace(Espace espace) {
