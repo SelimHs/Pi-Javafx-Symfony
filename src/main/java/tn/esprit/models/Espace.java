@@ -13,6 +13,7 @@ public class Espace {
     private final StringProperty typeEspace = new SimpleStringProperty();
 
     private final StringProperty image = new SimpleStringProperty();
+    private String imagePath; // 🔥 Chemin de l'image
 
     public String getImage() { return image.get(); }
     public void setImage(String img) { this.image.set(img); }
@@ -66,4 +67,12 @@ public class Espace {
     public String getTypeEspace() { return typeEspace.get(); }
     public void setTypeEspace(String type) { this.typeEspace.set(type); }
     public StringProperty typeEspaceProperty() { return typeEspace; }
+    // ✅ Ajout du getter et setter pour l'image
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
 }

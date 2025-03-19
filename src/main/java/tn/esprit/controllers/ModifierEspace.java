@@ -6,15 +6,18 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import tn.esprit.models.Espace;
 import tn.esprit.services.ServiceEspace;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Optional;
 
 public class ModifierEspace {
@@ -24,10 +27,13 @@ public class ModifierEspace {
     @FXML
     private ComboBox<String> disponibiliteEspace;
     @FXML
-    private Button btnModifier, btnRetour;
+    private Button btnModifier, btnRetour, btnChoisirImage;
+    @FXML
+    private ImageView espaceImage;
 
     private final ServiceEspace serviceEspace = new ServiceEspace();
     private Espace espaceActuel;
+    private String imagePath; // Stocke le chemin de l'image sélectionnée
 
     public void initData(Espace espace) {
         this.espaceActuel = espace;
@@ -38,6 +44,18 @@ public class ModifierEspace {
         prixEspace.setText(String.valueOf(espace.getPrix()));
         typeEspace.setText(espace.getTypeEspace());
         disponibiliteEspace.setValue(espace.getDisponibilite());
+
+        // 📌 Vérifier si une image est stockée en base et existe
+        if (espace.getImage() != null && !espace.getImage().isEmpty()) {
+            File file = new File(espace.getImage());
+            if (file.exists()) {
+                espaceImage.setImage(new Image(file.toURI().toString()));
+            } else {
+                espaceImage.setImage(new Image(getClass().getResourceAsStream("/images/espace-placeholder.jpg")));
+            }
+        } else {
+            espaceImage.setImage(new Image(getClass().getResourceAsStream("/images/espace-placeholder.jpg")));
+        }
     }
 
     @FXML
@@ -56,6 +74,13 @@ public class ModifierEspace {
             espaceActuel.setTypeEspace(typeEspace.getText());
             espaceActuel.setDisponibilite(disponibiliteEspace.getValue());
 
+            // 📌 Vérifier si une nouvelle image a été choisie, sinon garder l'ancienne
+            if (imagePath != null) {
+                espaceActuel.setImage(imagePath);
+            } else {
+                espaceActuel.setImage(espaceActuel.getImage()); // Garde l'image existante
+            }
+
             serviceEspace.update(Optional.ofNullable(espaceActuel));
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "L'espace a été modifié avec succès !");
@@ -67,6 +92,43 @@ public class ModifierEspace {
             alert.show();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+
+    @FXML
+    public void choisirImage(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choisir une image");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg")
+        );
+
+        File selectedFile = fileChooser.showOpenDialog(((Node) event.getSource()).getScene().getWindow());
+
+        if (selectedFile != null) {
+            try {
+                // 📌 Définir le dossier de stockage des images
+                String targetDir = "C:/wamp64/www/img/";
+                File dir = new File(targetDir);
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
+
+                // 📌 Éviter les conflits de nom en ajoutant un timestamp
+                String fileName = System.currentTimeMillis() + "_" + selectedFile.getName();
+                File destination = new File(targetDir + fileName);
+
+                // 📌 Copier l'image sélectionnée dans le dossier cible
+                Files.copy(selectedFile.toPath(), destination.toPath());
+
+                imagePath = destination.getAbsolutePath(); // Mise à jour du chemin de l'image
+                espaceImage.setImage(new Image(destination.toURI().toString()));
+
+            } catch (IOException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Erreur lors du téléchargement de l'image.");
+                alert.show();
+            }
         }
     }
 

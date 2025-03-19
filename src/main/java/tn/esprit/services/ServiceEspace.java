@@ -62,12 +62,16 @@ public class ServiceEspace implements Iservice<Optional<Espace>> {
         }
         return espaces;
     }
-
     @Override
     public void update(Optional<Espace> espace) {
-        String qry = "UPDATE `espace` SET `nomEspace` = ?, `adresse` = ?, `capacite` = ?, `disponibilite` = ?, `prix` = ?, `idUser` = ?, `Type_espace` = ? WHERE `idEspace` = ?";
-        try {
-            PreparedStatement pstm = cnx.prepareStatement(qry);
+        if (espace.isEmpty()) {
+            System.out.println("Erreur : Aucun espace fourni pour la mise à jour !");
+            return;
+        }
+
+        String qry = "UPDATE `espace` SET `nomEspace` = ?, `adresse` = ?, `capacite` = ?, `disponibilite` = ?, `prix` = ?, `idUser` = ?, `Type_espace` = ?, `image` = ? WHERE `idEspace` = ?";
+
+        try (PreparedStatement pstm = cnx.prepareStatement(qry)) {
             pstm.setString(1, espace.get().getNomEspace());
             pstm.setString(2, espace.get().getAdresse());
             pstm.setInt(3, espace.get().getCapacite());
@@ -75,12 +79,49 @@ public class ServiceEspace implements Iservice<Optional<Espace>> {
             pstm.setFloat(5, espace.get().getPrix());
             pstm.setInt(6, espace.get().getIdUser());
             pstm.setString(7, espace.get().getTypeEspace());
-            pstm.setInt(8, espace.get().getIdEspace());
-            pstm.executeUpdate();
+
+            // 🔥 Vérification et mise à jour de l'image
+            String currentImage = getImagePathFromDB(espace.get().getIdEspace()); // Récupère l'image actuelle
+            if (espace.get().getImage() != null && !espace.get().getImage().isEmpty()) {
+                pstm.setString(8, espace.get().getImage()); // Mettre la nouvelle image si elle existe
+            } else {
+                pstm.setString(8, currentImage); // Garde l'image actuelle si aucune nouvelle image n'est sélectionnée
+            }
+
+            pstm.setInt(9, espace.get().getIdEspace());
+
+            int rowsUpdated = pstm.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("✅ Espace mis à jour avec succès !");
+            } else {
+                System.out.println("❌ Aucun espace mis à jour !");
+            }
+
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la mise à jour : " + e.getMessage());
+            System.out.println("❌ Erreur lors de la mise à jour : " + e.getMessage());
         }
     }
+
+    /**
+     * 🔍 Récupère le chemin actuel de l'image pour un espace donné
+     */
+    private String getImagePathFromDB(int idEspace) {
+        String imagePath = null;
+        String qry = "SELECT image FROM `espace` WHERE `idEspace` = ?";
+
+        try (PreparedStatement pstm = cnx.prepareStatement(qry)) {
+            pstm.setInt(1, idEspace);
+            ResultSet rs = pstm.executeQuery();
+            if (rs.next()) {
+                imagePath = rs.getString("image");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération de l'image : " + e.getMessage());
+        }
+
+        return imagePath;
+    }
+
 
     @Override
     public void delete(int id) {
