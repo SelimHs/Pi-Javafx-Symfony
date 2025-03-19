@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 import tn.esprit.models.Produit;
 import tn.esprit.services.ServiceProduit;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Comparator;
@@ -144,6 +145,7 @@ public class ProduitMainController implements Initializable {
         editIcon.setFitHeight(18);
         modifyButton.setGraphic(editIcon);
 
+
         // 🗑️ Icône Supprimer
         Button deleteButton = new Button();
         deleteButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
@@ -156,8 +158,25 @@ public class ProduitMainController implements Initializable {
 
         // Ajout des icônes au conteneur de boutons
         buttonContainer.getChildren().addAll(detailsButton, modifyButton, deleteButton);
+// Ajouter l'image du produit
+        ImageView produitImage = new ImageView();
+        produitImage.setFitHeight(120);
+        produitImage.setFitWidth(200);
+        produitImage.setPreserveRatio(true);
 
-        card.getChildren().addAll(title, prix, description, categorie, quantite, fournisseur, buttonContainer);
+        if (produit.getImagePath() != null && !produit.getImagePath().isEmpty()) {
+            File imageFile = new File(produit.getImagePath());
+            if (imageFile.exists()) {
+                produitImage.setImage(new Image(imageFile.toURI().toString()));
+            } else {
+                produitImage.setImage(new Image(getClass().getResourceAsStream("/images/event-placeholder.jpg")));
+            }
+        } else {
+            produitImage.setImage(new Image(getClass().getResourceAsStream("/images/event-placeholder.jpg")));
+        }
+
+        card.getChildren().addAll(produitImage, title, prix, description, categorie, quantite, fournisseur, buttonContainer);
+
         return card;
     }
 

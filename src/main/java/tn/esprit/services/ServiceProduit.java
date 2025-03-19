@@ -20,18 +20,19 @@ public class ServiceProduit implements Iservice<Produit> {
 
     @Override
     public void add(Produit produit) {
-        String qry = "INSERT INTO `produit`(`nomProduit`, `prixProduit`, `description`, `categorie`, `quantite`, `idFournisseur`) VALUES (?, ?, ?, ?, ?, ?)";
+        String qry = "INSERT INTO `produit`(`nomProduit`, `prixProduit`, `description`, `categorie`, `quantite`, `idFournisseur`, `imagePath`) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement pstm = cnx.prepareStatement(qry);
             pstm.setString(1, produit.getNomProduit());
             pstm.setInt(2, produit.getPrixProduit());
             pstm.setString(3, produit.getDescription());
-            pstm.setString(4, produit.getCategorie().name()); // Stocke l'énumération en String
+            pstm.setString(4, produit.getCategorie().name());
             pstm.setInt(5, produit.getQuantite());
-            pstm.setInt(6, produit.getFournisseur().getIdFournisseur()); // Récupérer l'ID du fournisseur
+            pstm.setInt(6, produit.getFournisseur().getIdFournisseur());
+            pstm.setString(7, produit.getImagePath()); // ✅ Ajout du chemin de l'image
             pstm.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Erreur lors de l'ajout du produit : " + e.getMessage());
         }
     }
 
@@ -59,15 +60,17 @@ public class ServiceProduit implements Iservice<Produit> {
                         rs.getString("description"),
                         Produit.CategorieProduit.valueOf(rs.getString("categorie").toUpperCase()),
                         rs.getInt("quantite"),
-                        fournisseur
+                        fournisseur,
+                        rs.getString("imagePath") // ✅ Récupération de l'image
                 );
                 produits.add(produit);
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Erreur lors de la récupération des produits : " + e.getMessage());
         }
         return produits;
     }
+
 
     @Override
     public void delete(int id) {
@@ -75,7 +78,7 @@ public class ServiceProduit implements Iservice<Produit> {
     }
     @Override
     public void update(Produit produit) {
-        String qry = "UPDATE `produit` SET `nomProduit` = ?, `prixProduit` = ?, `description` = ?, `categorie` = ?, `quantite` = ?, `idFournisseur` = ? WHERE `idProduit` = ?";
+        String qry = "UPDATE `produit` SET `nomProduit` = ?, `prixProduit` = ?, `description` = ?, `categorie` = ?, `quantite` = ?, `idFournisseur` = ?, `imagePath` = ? WHERE `idProduit` = ?";
         try {
             PreparedStatement pstm = cnx.prepareStatement(qry);
             pstm.setString(1, produit.getNomProduit());
@@ -84,10 +87,11 @@ public class ServiceProduit implements Iservice<Produit> {
             pstm.setString(4, produit.getCategorie().name());
             pstm.setInt(5, produit.getQuantite());
             pstm.setInt(6, produit.getFournisseur().getIdFournisseur());
-            pstm.setInt(7, produit.getIdProduit());
+            pstm.setString(7, produit.getImagePath()); // ✅ Mettre à jour l'image si modifiée
+            pstm.setInt(8, produit.getIdProduit());
             pstm.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Erreur lors de la mise à jour du produit : " + e.getMessage());
         }
     }
 
@@ -103,6 +107,8 @@ public class ServiceProduit implements Iservice<Produit> {
             System.out.println(e.getMessage());
         }
     }
+
+
 
 
     @Override
@@ -127,11 +133,12 @@ public class ServiceProduit implements Iservice<Produit> {
                         rs.getString("description"),
                         Produit.CategorieProduit.valueOf(rs.getString("categorie").toUpperCase()),
                         rs.getInt("quantite"),
-                        fournisseur
+                        fournisseur,
+                        rs.getString("imagePath") // ✅ Récupération du chemin de l'image
                 );
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Erreur lors de la recherche du produit : " + e.getMessage());
         }
         return null;
     }

@@ -9,18 +9,19 @@ public class Produit {
         MEUBLES,
         SPORT
     }
+
     private int idProduit;
     private String nomProduit;
     private int prixProduit;
     private String description;
-    private CategorieProduit categorie; // Utilisation de l'énumération
+    private CategorieProduit categorie;
     private int quantite;
-    private fournisseur  fournisseur; // Association avec Fournisseur
+    private fournisseur fournisseur;
+    private String imagePath; // ✅ Nouveau champ pour stocker l'image
 
-    // Constructeurs, Getters et Setters
     public Produit() {}
 
-    public Produit(int idProduit, String nomProduit, int prixProduit, String description, CategorieProduit categorie, int quantite, fournisseur fournisseur) {
+    public Produit(int idProduit, String nomProduit, int prixProduit, String description, CategorieProduit categorie, int quantite, fournisseur fournisseur, String imagePath) {
         this.idProduit = idProduit;
         this.nomProduit = nomProduit;
         this.prixProduit = prixProduit;
@@ -28,6 +29,7 @@ public class Produit {
         this.categorie = categorie;
         this.quantite = quantite;
         this.fournisseur = fournisseur;
+        this.imagePath = imagePath; // ✅ Ajouter l’image
     }
 
     public int getIdProduit() {
@@ -86,6 +88,14 @@ public class Produit {
         this.fournisseur = fournisseur;
     }
 
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
     @Override
     public String toString() {
         return "Produit{" +
@@ -96,6 +106,7 @@ public class Produit {
                 ", categorie=" + categorie +
                 ", quantite=" + quantite +
                 ", fournisseur=" + fournisseur +
+                ", imagePath='" + imagePath + '\'' +
                 '}';
     }
 }

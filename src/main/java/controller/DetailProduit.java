@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import tn.esprit.models.Produit;
 
+import java.io.File;
 import java.io.IOException;
 
 public class DetailProduit {
@@ -37,7 +38,6 @@ public class DetailProduit {
     private Button retourButton;
 
     private Produit selectedProduit;
-
     public void initData(Produit produit) {
         this.selectedProduit = produit;
         titleLabel.setText("Détails du Produit : " + produit.getNomProduit());
@@ -49,8 +49,22 @@ public class DetailProduit {
         produitFournisseurLabel.setText("🏢 Fournisseur : " +
                 (produit.getFournisseur() != null ? produit.getFournisseur().getNomFournisseur() : "Non défini"));
 
-
+        // 📷 Vérifier si une image existe et l'afficher
+        if (produit.getImagePath() != null && !produit.getImagePath().isEmpty()) {
+            File imageFile = new File(produit.getImagePath());
+            if (imageFile.exists()) {
+                produitImage.setImage(new Image(imageFile.toURI().toString()));
+            } else {
+                // Si l'image n'existe pas, afficher une image par défaut
+                produitImage.setImage(new Image(getClass().getResourceAsStream("/images/produit-placeholder.jpg")));
+            }
+        } else {
+            // Si aucun chemin d'image n'est défini, utiliser l'image par défaut
+            produitImage.setImage(new Image(getClass().getResourceAsStream("/images/produit-placeholder.jpg")));
+        }
     }
+
+
 
     @FXML
     private void retourProduits(ActionEvent actionEvent) {

@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import tn.esprit.models.Produit;
 import tn.esprit.services.ServiceProduit;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +73,22 @@ public class FrontProduit {
         produitImage.setFitWidth(260);
         produitImage.setPreserveRatio(true);
         produitImage.setSmooth(true);
-        produitImage.setImage(new Image(getClass().getResourceAsStream("/images/produit-placeholder.jpg")));
+
+        // 🔍 Vérifier si l'image existe en base
+        if (produit.getImagePath() != null && !produit.getImagePath().isEmpty()) {
+            File imageFile = new File(produit.getImagePath());
+            if (imageFile.exists()) {
+                // 🚀 Charger l'image du produit
+                produitImage.setImage(new Image(imageFile.toURI().toString()));
+            } else {
+                // 🛑 Fallback si le fichier n'existe pas
+                System.out.println("⚠ Fichier image introuvable : " + produit.getImagePath());
+                produitImage.setImage(new Image(getClass().getResourceAsStream("/images/produit-placeholder.jpg")));
+            }
+        } else {
+            // 🛑 Si aucun chemin n'est spécifié, on affiche le placeholder
+            produitImage.setImage(new Image(getClass().getResourceAsStream("/images/produit-placeholder.jpg")));
+        }
 
         // 📌 Nom du produit
         Label title = new Label(produit.getNomProduit());
@@ -82,14 +98,14 @@ public class FrontProduit {
         Label prix = new Label("💰 " + produit.getPrixProduit() + " DT");
         prix.setStyle("-fx-font-size: 16px; -fx-text-fill: #27AE60; -fx-font-weight: bold;");
 
-        // 📌 Description (limité à 2 lignes)
+        // 📌 Description
         Label description = new Label(produit.getDescription());
         description.setWrapText(true);
         description.setMaxWidth(250);
         description.setMaxHeight(40);
         description.setStyle("-fx-font-size: 14px; -fx-text-fill: #606060;");
 
-        // 📌 Catégorie, Quantité et Fournisseur regroupés
+        // 📌 Catégorie, Quantité et Fournisseur
         VBox infos = new VBox(4);
         infos.setAlignment(Pos.CENTER_LEFT);
 
@@ -115,8 +131,6 @@ public class FrontProduit {
             }
         });
 
-
-
         // 📌 Conteneur pour boutons
         HBox buttonContainer = new HBox(15, checkBox);
         buttonContainer.setAlignment(Pos.CENTER);
@@ -126,6 +140,7 @@ public class FrontProduit {
 
         return card;
     }
+
 
 
 
