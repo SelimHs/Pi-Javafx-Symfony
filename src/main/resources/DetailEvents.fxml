@@ -69,6 +69,7 @@
                 </effect>
             </ImageView>
 
+
             <Label fx:id="eventDateLabel" text="📅 Date : "
                    style="-fx-font-size: 18px; -fx-text-fill: white;"/>
 

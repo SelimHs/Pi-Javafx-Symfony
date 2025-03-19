@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import tn.esprit.models.Event;
 import tn.esprit.services.ServiceEvent;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
@@ -182,36 +183,54 @@ public class EventsMainController {
     // Affichage des événements
     @FXML
     private FlowPane eventCardContainer;
-
     public void displayEvents() {
         eventCardContainer.getChildren().clear();
-        List<Event> events = se.getAll();
+        List<Event> events = se.getAll(); // Récupérer tous les événements depuis la BD
 
         for (Event event : events) {
             VBox card = new VBox();
             card.setStyle("-fx-background-color: white; -fx-padding: 10px; -fx-border-radius: 10px; "
                     + "-fx-background-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);"
-                    + "-fx-min-width: 200px; -fx-max-width: 200px; -fx-alignment: center; -fx-spacing: 8;");
+                    + "-fx-min-width: 220px; -fx-max-width: 220px; -fx-alignment: center; -fx-spacing: 8;");
 
+            // 📸 Affichage de l'image de l'événement
+            ImageView eventImageView = new ImageView();
+            eventImageView.setFitWidth(180);
+            eventImageView.setFitHeight(120);
+            eventImageView.setPreserveRatio(true);
+
+            if (event.getImagePath() != null && !event.getImagePath().isEmpty()) {
+                File file = new File(event.getImagePath());
+                if (file.exists()) {
+                    eventImageView.setImage(new Image(file.toURI().toString())); // Afficher l'image depuis la BD
+                } else {
+                    eventImageView.setImage(new Image(getClass().getResourceAsStream("/images/event-placeholder.jpg"))); // Image par défaut
+                }
+            } else {
+                eventImageView.setImage(new Image(getClass().getResourceAsStream("/images/event-placeholder.jpg")));
+            }
+
+            // 🔤 Détails texte
             Label title = new Label(event.getNomEvent());
             title.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
-            Label date = new Label("📅 " + event.getDate().toString());
+            Label date = new Label("📅 " + event.getDate());
             Label price = new Label("💰 " + event.getPrix() + " DT");
+            Label visitors = new Label("👥 " + event.getNbrVisiteurs() + " visiteurs");
 
             // 🔍 Bouton Voir Détails avec icône
             Button detailsButton = new Button();
             detailsButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
-            detailsButton.setOnAction(e -> showEventDetails(event)); // Appel de la méthode pour afficher les détails
+            detailsButton.setOnAction(e -> showEventDetails(event));
 
             ImageView detailsIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/details-icon.png")));
             detailsIcon.setFitWidth(18);
             detailsIcon.setFitHeight(18);
             detailsButton.setGraphic(detailsIcon);
 
-            // Boutons Modifier et Supprimer
-            HBox buttonContainer = new HBox(2);
-            buttonContainer.setStyle("-fx-alignment: left; -fx-min-width: 100%;");
+            // ✏️ Boutons Modifier et Supprimer
+            HBox buttonContainer = new HBox(8);
+            buttonContainer.setStyle("-fx-alignment: center; -fx-padding: 5px;");
 
             Button editButton = new Button();
             editButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-padding: 2px;");
@@ -232,10 +251,12 @@ public class EventsMainController {
             deleteButton.setGraphic(trashIcon);
 
             buttonContainer.getChildren().addAll(editButton, deleteButton);
-            card.getChildren().addAll(title, date, price, detailsButton, buttonContainer);
+            card.getChildren().addAll(eventImageView, title, date, price, visitors, detailsButton, buttonContainer);
             eventCardContainer.getChildren().add(card);
         }
     }
+
+
 
 
     // Supprimer un événement

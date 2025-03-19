@@ -74,7 +74,9 @@ public class ServiceBillet implements Iservice<Billet> {
                 Event event = new Event(
                         rs.getInt("idEvent"),
                         rs.getString("nomEvent"),
-                        rs.getString("date")
+                        rs.getString("date"),
+                        rs.getString("image") // Récupération du chemin de l'image
+
                 );
 
                 Billet billet = new Billet(
@@ -127,18 +129,19 @@ public class ServiceBillet implements Iservice<Billet> {
         }
     }
 
-    @Override
     public Billet findById(int id) {
-        String qry = "SELECT b.*, e.nomEvent, e.date FROM billet b INNER JOIN event e ON b.idEvent = e.idEvent WHERE b.idBillet = ?";
+        String qry = "SELECT b.*, e.nomEvent, e.date, e.image FROM billet b INNER JOIN event e ON b.idEvent = e.idEvent WHERE b.idBillet = ?";
         try {
             PreparedStatement pstm = cnx.prepareStatement(qry);
             pstm.setInt(1, id);
             ResultSet rs = pstm.executeQuery();
+
             if (rs.next()) {
                 Event event = new Event(
                         rs.getInt("idEvent"),
                         rs.getString("nomEvent"),
-                        rs.getString("date")
+                        rs.getString("date"),
+                        rs.getString("image") // Récupération du chemin de l'image
                 );
 
                 return new Billet(
@@ -151,10 +154,11 @@ public class ServiceBillet implements Iservice<Billet> {
                 );
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Erreur lors de la récupération du billet : " + e.getMessage());
         }
         return null;
     }
+
 
     public Map<String, Integer> getBilletStatsParEvenement() {
         Map<String, Integer> stats = new HashMap<>();

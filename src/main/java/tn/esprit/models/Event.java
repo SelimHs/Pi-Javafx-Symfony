@@ -4,11 +4,12 @@ package tn.esprit.models;
 public class Event {
     private int idEvent, prix, nbrVisiteurs;
     private String nomEvent, nomEspace, details,date;
+    private String imagePath; // Ajout pour stocker l'image
 
     public Event() {
     }
 
-    public Event(int idEvent, int prix, int nbrVisiteurs, String nomEvent, String nomEspace, String details, String date) {
+    public Event(int idEvent, int prix, int nbrVisiteurs, String nomEvent, String nomEspace, String details, String date, String imagePath) {
         this.idEvent = idEvent;
         this.prix = prix;
         this.nbrVisiteurs = nbrVisiteurs;
@@ -16,18 +17,22 @@ public class Event {
         this.nomEspace = nomEspace;
         this.details = details;
         this.date = date;
+        this.imagePath = imagePath;
     }
 
-    public Event(int prix, int nbrVisiteurs, String nomEvent, String nomEspace, String details, String date) {
+
+    public Event(int prix, int nbrVisiteurs, String nomEvent, String nomEspace, String details, String date, String imagePath) {
         this.prix = prix;
         this.nbrVisiteurs = nbrVisiteurs;
         this.nomEvent = nomEvent;
         this.nomEspace = nomEspace;
         this.details = details;
         this.date = date;
+        this.imagePath = imagePath;
+
     }
 
-    public Event(int idEvent, String nomEvent, String date) {
+    public Event(int idEvent, String nomEvent, String date, String imagePath) {
         this.idEvent = idEvent;
         this.nomEvent = nomEvent;
         this.date = date;
@@ -87,6 +92,14 @@ public class Event {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     @Override
