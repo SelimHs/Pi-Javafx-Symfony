@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import tn.esprit.models.Event;
 import tn.esprit.services.ServiceEvent;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -53,11 +54,23 @@ public class FrontEventsController {
                     + "-fx-background-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);"
                     + "-fx-min-width: 220px; -fx-max-width: 220px; -fx-alignment: center; -fx-spacing: 10;");
 
+            // 📷 ImageView pour afficher l'image de l'événement
             ImageView eventImage = new ImageView();
             eventImage.setFitHeight(120);
             eventImage.setFitWidth(200);
             eventImage.setPreserveRatio(true);
-            eventImage.setImage(new Image(getClass().getResourceAsStream("/images/event-placeholder.jpg"))); // Placeholder si pas d'image
+
+            // Vérifier si l'événement a une image enregistrée
+            if (event.getImagePath() != null && !event.getImagePath().isEmpty()) {
+                File imageFile = new File(event.getImagePath());
+                if (imageFile.exists()) {
+                    eventImage.setImage(new Image(imageFile.toURI().toString())); // Charger l'image réelle
+                } else {
+                    eventImage.setImage(new Image(getClass().getResourceAsStream("/images/event-placeholder.jpg"))); // Placeholder si l'image n'existe pas
+                }
+            } else {
+                eventImage.setImage(new Image(getClass().getResourceAsStream("/images/event-placeholder.jpg"))); // Image par défaut
+            }
 
             Label title = new Label(event.getNomEvent());
             title.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333;");
@@ -72,7 +85,7 @@ public class FrontEventsController {
             detailsButton.setStyle("-fx-background-color: #F39C12; -fx-text-fill: white; -fx-border-radius: 5px;");
             detailsButton.setOnAction(e -> showEventDetails(event));
 
-            // ✅ Nouveau bouton Réserver
+            // ✅ Bouton Réserver
             Button reserverButton = new Button("Réserver");
             reserverButton.setStyle("-fx-background-color: #2ECC71; -fx-text-fill: white; -fx-border-radius: 5px;");
             reserverButton.setOnAction(e -> reserverEvent(event));

@@ -17,6 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import tn.esprit.models.Event;
 
+import java.io.File;
 import java.io.IOException;
 
 public class FrontDetailEvents {
@@ -45,7 +46,6 @@ public class FrontDetailEvents {
         applyHoverEffect(btnEspace);
         applyHoverEffect(btnProduit);
 
-
         System.out.println("🔍 Vérification : eventDescriptionLabel = " + eventDescriptionLabel);
         if (eventDescriptionLabel == null) {
             System.out.println("⚠️ eventDescriptionLabel est NULL ! Vérifiez le FXML.");
@@ -57,12 +57,21 @@ public class FrontDetailEvents {
         eventPriceLabel.setText("💰 Prix : " + event.getPrix() + " DT");
         eventDescriptionLabel.setText(event.getDetails());
 
-
-    // Charger l'image si disponible
-
-        eventImage.setImage(new Image(getClass().getResourceAsStream("/images/event-placeholder.jpg")));
-
+        // 🔍 Vérifier si l'événement a une image enregistrée
+        if (event.getImagePath() != null && !event.getImagePath().isEmpty()) {
+            File imageFile = new File(event.getImagePath());
+            if (imageFile.exists()) {
+                eventImage.setImage(new Image(imageFile.toURI().toString())); // Charger l'image réelle
+            } else {
+                System.out.println("⚠️ L'image de l'événement n'existe pas sur le disque, chargement du placeholder.");
+                eventImage.setImage(new Image(getClass().getResourceAsStream("/images/event-placeholder.jpg"))); // Image par défaut
+            }
+        } else {
+            System.out.println("⚠️ Aucun chemin d'image enregistré pour cet événement.");
+            eventImage.setImage(new Image(getClass().getResourceAsStream("/images/event-placeholder.jpg"))); // Image par défaut
+        }
     }
+
     private void applyHoverEffect(Button button) {
         button.setOnMouseEntered(event -> button.setStyle("-fx-background-color: #F39C12; -fx-text-fill: white; -fx-border-radius: 10px; -fx-padding: 10px 18px;"));
         button.setOnMouseExited(event -> button.setStyle("-fx-background-color: transparent; -fx-text-fill: #F39C12; -fx-border-radius: 10px; -fx-padding: 10px 18px;"));
