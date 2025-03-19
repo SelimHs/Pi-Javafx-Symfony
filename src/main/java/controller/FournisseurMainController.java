@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 import tn.esprit.models.fournisseur;
 import tn.esprit.services.ServiceFournisseur;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Comparator;
@@ -157,12 +158,32 @@ public class FournisseurMainController implements Initializable {
         trashIcon.setFitWidth(18);
         trashIcon.setFitHeight(18);
         deleteButton.setGraphic(trashIcon);
+// 📷 Image du fournisseur
+        ImageView fournImage = new ImageView();
+        fournImage.setFitHeight(120);
+        fournImage.setFitWidth(200);
+        fournImage.setPreserveRatio(true);
+        fournImage.setSmooth(true);
+
+// Vérifier si le fournisseur a un chemin d'image
+        if (f.getImagePath() != null && !f.getImagePath().isEmpty()) {
+            File imageFile = new File(f.getImagePath());
+            if (imageFile.exists()) {
+                fournImage.setImage(new Image(imageFile.toURI().toString()));  // Chargement depuis le disque
+            } else {
+                System.out.println("⚠ Fichier image introuvable : " + f.getImagePath());
+                fournImage.setImage(new Image(getClass().getResourceAsStream("/images/fournisseur-placeholder.jpg")));
+            }
+        } else {
+            // Placeholder si aucun chemin n'est défini
+            fournImage.setImage(new Image(getClass().getResourceAsStream("/images/fournisseur-placeholder.jpg")));
+        }
 
         // Ajout des icônes au conteneur
         buttonContainer.getChildren().addAll(detailsButton, modifyButton, deleteButton);
 
         // Ajout des éléments à la carte
-        card.getChildren().addAll(nom, desc, type, tel, buttonContainer);
+        card.getChildren().addAll(fournImage,nom, desc, type, tel, buttonContainer);
         return card;
     }
 

@@ -113,6 +113,14 @@
                                           -fx-border-color: white;
                                           -fx-background-color: rgba(255, 255, 255, 0.3);"
                              GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                  <Label text="📷 Image :" textFill="white" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                  <ImageView fx:id="fournisseurImage" fitHeight="120" fitWidth="180" preserveRatio="true"
+                             GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+                  <Button text="📂 Choisir Image" onAction="#choisirImage"
+                          style="-fx-background-color: #3498db; -fx-text-fill: white;
+               -fx-border-radius: 12px; -fx-padding: 10px 18px;"
+                          GridPane.columnIndex="1" GridPane.rowIndex="6" />
+
                </children>
             </GridPane>
 

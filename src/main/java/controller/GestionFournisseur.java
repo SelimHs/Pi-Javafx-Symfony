@@ -4,19 +4,27 @@ import com.twilio.exception.ApiException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import tn.esprit.models.fournisseur;
 import tn.esprit.services.ServiceFournisseur;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.UUID;
 
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
@@ -36,6 +44,9 @@ public class GestionFournisseur {
     private TextField descriptionFournisseur;
     @FXML
     private TextField telephoneFournisseur;
+    @FXML
+    private ImageView fournisseurImage; // Afficher l'image
+    private String imagePath;           // Chemin de l'image sélectionnée
 
     // Twilio credentials
     private static final String ACCOUNT_SID = "AC805dd6d0c1103969ade5ad32ff09b34a";
@@ -52,21 +63,32 @@ public class GestionFournisseur {
         f.setType(typeFournisseur.getText());
         f.setTelephone(telephoneFournisseur.getText());
 
+        // ✅ Assigner l'idFournisseur si nécessaire
         if (!idFournisseur.getText().isEmpty()) {
             f.setIdFournisseur(Integer.parseInt(idFournisseur.getText()));
         }
 
+        // ✅ Assigner l'image si elle a été choisie
+        if (imagePath != null && !imagePath.isEmpty()) {
+            f.setImagePath(imagePath);
+        }
+
+        // Insertion en base
         sf.add(f);
 
-        // Send SMS
+        // Envoi du SMS (optionnel)
         sendSms(telephoneFournisseur.getText(), nomFournisseur.getText());
 
+        // Réinitialiser les champs
         nomFournisseur.clear();
         descriptionFournisseur.clear();
         typeFournisseur.clear();
         telephoneFournisseur.clear();
         idFournisseur.clear();
+        fournisseurImage.setImage(null); // Retirer l'image
+        imagePath = null;
     }
+
 
     private void sendSms(String phoneNumber, String fournisseurName) {
         if (phoneNumber == null || phoneNumber.isEmpty()) {
@@ -158,4 +180,27 @@ public class GestionFournisseur {
         btn.setStyle("-fx-background-color: transparent; -fx-text-fill: #a868a0;-fx-font-size: 18px; -fx-border-radius: 10px; -fx-padding: 10px 18px;");
         btn.setEffect(null);
     }
+    @FXML
+    public void choisirImage(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choisir une image du fournisseur");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg"));
+
+        File selectedFile = fileChooser.showOpenDialog(((Node) event.getSource()).getScene().getWindow());
+        if (selectedFile != null) {
+            try {
+                String targetDir = "C:/wamp64/www/img/";
+                String fileName = UUID.randomUUID() + "_" + selectedFile.getName();
+                File destination = new File(targetDir + fileName);
+                Files.copy(selectedFile.toPath(), destination.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+                imagePath = destination.getAbsolutePath();
+                fournisseurImage.setImage(new Image(destination.toURI().toString()));
+
+            } catch (IOException e) {
+                System.out.println("Erreur lors de la copie de l'image : " + e.getMessage());
+            }
+        }
+    }
+
 }

@@ -4,6 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.image.ImageView?>
 <AnchorPane style="-fx-background-color: linear-gradient(to bottom, #a868a0, #34495e);"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="controller.ModifierFournisseur">
@@ -49,6 +50,13 @@
                   -fx-border-radius: 10px; -fx-padding: 10px;
                   -fx-border-color: white; -fx-text-fill: white;"
                        GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+            <Label text="📷 Image :" textFill="white" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+            <ImageView fx:id="fournisseurImage" fitHeight="120" fitWidth="180" preserveRatio="true"
+                       GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+            <Button text="📂 Choisir Image" onAction="#choisirImage"
+                    style="-fx-background-color: #3498db; -fx-text-fill: white;
+               -fx-border-radius: 12px; -fx-padding: 10px 18px;"
+                    GridPane.rowIndex="5" GridPane.columnIndex="1" />
 
 
         </GridPane>

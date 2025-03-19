@@ -7,25 +7,31 @@ public class fournisseur {
     private String description;
     private String type;
     private String telephone;  // Ajout de l'attribut téléphone
+    private String imagePath; // Stocke le chemin de l'image
 
     // Constructeur par défaut
     public fournisseur() {}
 
     // Constructeur avec paramètres
-    public fournisseur(int idFournisseur, String nomFournisseur, String description, String type) {
+    public fournisseur(int idFournisseur, String nomFournisseur, String description, String type, String telephone, String imagePath) {
         this.idFournisseur = idFournisseur;
         this.nomFournisseur = nomFournisseur;
         this.description = description;
         this.type = type;
         this.telephone = telephone;
+        this.imagePath = imagePath;
     }
 
-    public fournisseur(String nomFournisseur, String description, String type, String telephone) {
+
+    public fournisseur(int idFournisseur, String nomFournisseur, String description, String type) {
+        this.idFournisseur = idFournisseur;
         this.nomFournisseur = nomFournisseur;
         this.description = description;
         this.type = type;
-        this.telephone = telephone;
+        this.telephone = telephone; // <-- Ce code n'ajoute rien, la variable "telephone" n'est pas passée.
     }
+
+
 
     // Getters et Setters
     public int getIdFournisseur() { return idFournisseur; }
@@ -42,6 +48,14 @@ public class fournisseur {
 
     public String getTelephone() { return telephone; }
     public void setTelephone(String telephone) { this.telephone = telephone; }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
 
     @Override
     public String toString() {

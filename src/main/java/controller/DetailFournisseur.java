@@ -8,9 +8,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import tn.esprit.models.fournisseur;
 
+import java.io.File;
 import java.io.IOException;
 
 public class DetailFournisseur {
@@ -27,6 +30,8 @@ public class DetailFournisseur {
     private Label fournisseurDescriptionLabel;
     @FXML
     private Button retourButton;
+    @FXML
+    private ImageView fournisseurImage;
 
     private fournisseur selectedFournisseur;
 
@@ -37,7 +42,22 @@ public class DetailFournisseur {
         fournisseurTypeLabel.setText("🏷 Type : " + f.getType());
         fournisseurTelephoneLabel.setText("📞 Téléphone : " + f.getTelephone());
         fournisseurDescriptionLabel.setText("📝 Description : " + f.getDescription());
+
+        // 📷 Vérifier si l'image existe et l'afficher
+        if (f.getImagePath() != null && !f.getImagePath().isEmpty()) {
+            File imageFile = new File(f.getImagePath());
+            if (imageFile.exists()) {
+                fournisseurImage.setImage(new Image(imageFile.toURI().toString()));
+            } else {
+                System.out.println("⚠ Fichier image introuvable : " + f.getImagePath());
+                fournisseurImage.setImage(new Image(getClass().getResourceAsStream("/images/fournisseur-placeholder.jpg")));
+            }
+        } else {
+            // Image par défaut si aucun chemin
+            fournisseurImage.setImage(new Image(getClass().getResourceAsStream("/images/fournisseur-placeholder.jpg")));
+        }
     }
+
 
     @FXML
     private void retourFournisseurs(ActionEvent actionEvent) {
