@@ -1,17 +1,46 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
+<html lang="en">
+    {% include 'partials/head.html.twig' %}
 
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
-    </head>
     <body>
-        {% block body %}{% endblock %}
+        {% block body %}
+        {% include 'partials/header.html.twig' %}
+        <div class="main-banner">
+            <div class="owl-carousel owl-banner">
+              <div class="item item-1">
+                <div class="header-text">
+                  <span class="category">Toronto, <em>Canada</em></span>
+                  <h2>Hurry!<br>Get the Best Villa for you</h2>
+                </div>
+              </div>
+              <div class="item item-2">
+                <div class="header-text">
+                  <span class="category">Melbourne, <em>Australia</em></span>
+                  <h2>Be Quick!<br>Get the best villa in town</h2>
+                </div>
+              </div>
+              <div class="item item-3">
+                <div class="header-text">
+                  <span class="category">Miami, <em>South Florida</em></span>
+                  <h2>Act Now!<br>Get the highest level penthouse</h2>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% include 'partials/indexBody.html.twig' %}
+
+
+
+
+        {% include 'partials/footer.html.twig' %}
+        <script src="{{ asset('assets/js/jquery.min.js') }}"></script>
+        <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
+
+        <script src="{{ asset('assets/js/isotope.min.js') }}"></script>
+        <script src="{{ asset('assets/js/owl-carousel.js') }}"></script>
+        <script src="{{ asset('assets/js/counter.js') }}"></script>
+        <script src="{{ asset('assets/js/custom.js') }}"></script>
+
+        {% endblock %}
     </body>
 </html>
