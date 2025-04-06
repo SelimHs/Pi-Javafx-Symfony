@@ -15,7 +15,7 @@ class Billet
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(name: 'idBillet',type: 'integer')]
     private ?int $idBillet = null;
 
     public function getIdBillet(): ?int
@@ -29,7 +29,7 @@ class Billet
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(name: 'proprietaire',type: 'string', nullable: false)]
     private ?string $proprietaire = null;
 
     public function getProprietaire(): ?string
@@ -43,7 +43,7 @@ class Billet
         return $this;
     }
 
-    #[ORM\Column(type: 'integer', nullable: false)]
+    #[ORM\Column(name: 'prix',type: 'integer', nullable: false)]
     private ?int $prix = null;
 
     public function getPrix(): ?int
@@ -57,7 +57,7 @@ class Billet
         return $this;
     }
 
-    #[ORM\Column(type: 'datetime', nullable: false)]
+    #[ORM\Column(name: 'dateAchat',type: 'datetime', nullable: false)]
     private ?\DateTimeInterface $dateAchat = null;
 
     public function getDateAchat(): ?\DateTimeInterface
@@ -71,7 +71,7 @@ class Billet
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(name: 'type', type: 'string', nullable: false)]
     private ?string $type = null;
 
     public function getType(): ?string

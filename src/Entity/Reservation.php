@@ -86,4 +86,19 @@ class Reservation
         return $this;
     }
 
+    #[ORM\ManyToOne(targetEntity: Remise::class, inversedBy: 'reservations')]
+    #[ORM\JoinColumn(name: 'idRemise', referencedColumnName: 'idRemise')]
+    private ?Remise $remise = null;
+
+    public function getRemise(): ?Remise
+    {
+        return $this->remise;
+    }
+
+    public function setRemise(?Remise $remise): self
+    {
+        $this->remise = $remise;
+        return $this;
+    }
+
 }

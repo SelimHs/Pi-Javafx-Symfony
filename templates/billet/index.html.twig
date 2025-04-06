@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Billet index{% endblock %}
+
+{% block body %}
+    <h1>Billet index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>IdBillet</th>
+                <th>Proprietaire</th>
+                <th>Prix</th>
+                <th>DateAchat</th>
+                <th>Type</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for billet in billets %}
+            <tr>
+                <td>{{ billet.idBillet }}</td>
+                <td>{{ billet.proprietaire }}</td>
+                <td>{{ billet.prix }}</td>
+                <td>{{ billet.dateAchat ? billet.dateAchat|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ billet.type }}</td>
+                <td>
+                    <a href="{{ path('app_billet_show', {'idBillet': billet.idBillet}) }}">show</a>
+                    <a href="{{ path('app_billet_edit', {'idBillet': billet.idBillet}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_billet_new') }}">Create new</a>
+{% endblock %}
