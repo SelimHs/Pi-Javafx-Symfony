@@ -39,59 +39,50 @@ final class EspaceController extends AbstractController
         return $this->render('home/index.html.twig');
     }
     #[Route('/new', name: 'app_espace_new', methods: ['GET', 'POST'])]
-public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
-{
-    $espace = new Espace();
-    $espace->setDisponibilite("Disponible");
-    $user = $entityManager->getRepository(User::class)->find(1);
-    $espace->setUser($user);
+    public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    {
+        $espace = new Espace();
+        $espace->setDisponibilite("Disponible");
+        $user = $entityManager->getRepository(User::class)->find(1);
+        $espace->setUser($user);
 
-    $form = $this->createForm(EspaceType::class, $espace);
-    $form->handleRequest($request);
+        $form = $this->createForm(EspaceType::class, $espace);
+        $form->handleRequest($request);
 
-    if ($form->isSubmitted() && $form->isValid()) {
-        /** @var UploadedFile $imageFile */
-        $imageFile = $form->get('image')->getData();
-        
         if ($form->isSubmitted() && $form->isValid()) {
-            // ✅ récupérer l'image depuis la requête HTTP (car Symfony ne sait pas convertir automatiquement en UploadedFile)
             /** @var UploadedFile $imageFile */
             $imageFile = $request->files->get('form')['image'] ?? null;
-        
+
             if ($imageFile instanceof UploadedFile) {
                 $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
                 $safeFilename = $slugger->slug($originalFilename);
                 $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
-        
+
                 try {
                     $imageFile->move(
-                        $this->getParameter('images_directory'), // tu dois avoir cette config dans `services.yaml`
+                        $this->getParameter('images_directory'),
                         $newFilename
                     );
                 } catch (FileException $e) {
-                    // log error or show flash
+                    // Handle error
                 }
-        
-                $espace->setImage($newFilename);
+
+                // ✅ Enregistrer l'URL complète
+                $imageUrl = '/uploads/images/' . $newFilename;
+                $espace->setImage($imageUrl);
             }
-        
+
             $entityManager->persist($espace);
             $entityManager->flush();
-        
+
             return $this->redirectToRoute('app_espace_index');
         }
 
-        $entityManager->persist($espace);
-        $entityManager->flush();
-
-        $this->addFlash('success', 'L\'espace a été créé avec succès');
-        return $this->redirectToRoute('app_espace_index');
+        return $this->render('espace/new.html.twig', [
+            'form' => $form,
+        ]);
     }
 
-    return $this->render('espace/new.html.twig', [
-        'form' => $form->createView(),
-    ]);
-}
 
     #[Route('/{idEspace}', name: 'app_espace_show', methods: ['GET'])]
     public function show(

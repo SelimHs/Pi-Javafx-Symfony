@@ -1,47 +1,51 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Espace index{% endblock %}
+{% block title %}Liste des Espaces{% endblock %}
 
 {% block body %}
-    <h1>Espace index</h1>
+  <div class="properties section">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4 offset-lg-4">
+          <div class="section-heading text-center">
+            <h6>| Espaces</h6>
+            <h2>Découvrez Nos Espaces Disponibles</h2>
+          </div>
+        </div>
+      </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>IdEspace</th>
-                <th>NomEspace</th>
-                <th>Adresse</th>
-                <th>Capacite</th>
-                <th>Disponibilite</th>
-                <th>Prix</th>
-                <th>Type_espace</th>
-                <th>Image</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
+      <div class="row">
         {% for espace in espaces %}
-            <tr>
-                <td>{{ espace.idEspace }}</td>
-                <td>{{ espace.nomEspace }}</td>
-                <td>{{ espace.adresse }}</td>
-                <td>{{ espace.capacite }}</td>
-                <td>{{ espace.disponibilite }}</td>
-                <td>{{ espace.prix }}</td>
-                <td>{{ espace.TypeEspace }}</td>
-                <td>{{ espace.image }}</td>
-                <td>
-                    <a href="{{ path('app_espace_show', {'idEspace': espace.idEspace}) }}">show</a>
-                    <a href="{{ path('app_espace_edit', {'idEspace': espace.idEspace}) }}">edit</a>
-                </td>
-            </tr>
+          <div class="col-lg-4 col-md-6 mb-4">
+            <div class="item">
+              <a href="{{ path('app_espace_show', {'idEspace': espace.idEspace}) }}">
+                <img src="{{ asset('uploads/images/' ~ espace.image) }}" alt="{{ espace.nomEspace }}">
+              </a>
+              <span class="category">{{ espace.Type_espace }}</span>
+              <h6>{{ espace.prix }} DT</h6>
+              <h4>
+                <a href="{{ path('app_espace_show', {'idEspace': espace.idEspace}) }}">
+                  {{ espace.nomEspace }}
+                </a>
+              </h4>
+              <ul>
+                <li>Adresse: <span>{{ espace.adresse }}</span></li>
+                <li>Capacité: <span>{{ espace.capacite }}</span></li>
+                <li>Disponibilité: <span>{{ espace.disponibilite }}</span></li>
+              </ul>
+              <div class="main-button">
+                <a href="{{ path('app_espace_show', {'idEspace': espace.idEspace}) }}">
+                  Voir Détails
+                </a>
+              </div>
+            </div>
+          </div>
         {% else %}
-            <tr>
-                <td colspan="9">no records found</td>
-            </tr>
+          <div class="col-12 text-center">
+            <p>Aucun espace trouvé.</p>
+          </div>
         {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_espace_new') }}">Create new</a>
+      </div>
+    </div>
+  </div>
 {% endblock %}

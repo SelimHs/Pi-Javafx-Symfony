@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8">
     <title>{% block title %}Welcome!{% endblock %}</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='#fff'>sf</text></svg>">
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='#fff'>sf</text></svg>'>
 
     {% block stylesheets %}
       <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -15,6 +16,11 @@
     {% endblock %}
   </head>
   <body>
+
+    <!-- ***** Preloader Start ***** -->
+   
+    <!-- ***** Preloader End ***** -->
+
     {% block subheader %}
     <div class="sub-header">
       <div class="container">
