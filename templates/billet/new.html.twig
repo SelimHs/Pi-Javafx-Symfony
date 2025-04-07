@@ -1,11 +1,49 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Billet{% endblock %}
+{% block title %}Create Billet{% endblock %}
 
 {% block body %}
-    <h1>Create new Billet</h1>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-5">
+          <h2 class="mb-4 text-center">Create a New Billet</h2>
 
-    {{ include('billet/_form.html.twig') }}
+          {{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
 
-    <a href="{{ path('app_billet_index') }}">back to list</a>
+          <div class="mb-3">
+            {{ form_label(form.proprietaire) }}
+            {{ form_widget(form.proprietaire, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.proprietaire) }}
+          </div>
+
+          <div class="mb-3">
+            {{ form_label(form.prix) }}
+            {{ form_widget(form.prix, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.prix) }}
+          </div>
+
+          <div class="mb-3">
+            {{ form_label(form.type) }}
+            {{ form_widget(form.type, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.type) }}
+          </div>
+
+          <div class="mb-3">
+            {{ form_label(form.event) }}
+            {{ form_widget(form.event, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.event) }}
+          </div>
+
+          <div class="text-center">
+            <button class="btn btn-primary px-4">{{ button_label|default('Save') }}</button>
+          </div>
+
+          {{ form_end(form) }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

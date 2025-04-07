@@ -8,6 +8,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class BilletType extends AbstractType
 {
@@ -16,13 +17,18 @@ class BilletType extends AbstractType
         $builder
             ->add('proprietaire')
             ->add('prix')
-            ->add('dateAchat', null, [
-                'widget' => 'single_text',
+            ->add('type', ChoiceType::class, [
+                'choices' => [
+                    'Simple' => 'SIMPLE',
+                    'Duo' => 'DUO',
+                    'VIP' => 'VIP',
+                ],
+                'placeholder' => 'Choisissez un type de billet',
             ])
-            ->add('type')
             ->add('event', EntityType::class, [
                 'class' => Event::class,
-                'choice_label' => 'idEvent',
+                'choice_label' => 'nomEvent',
+                'placeholder'=> 'Pour quel évènement?',
             ])
         ;
     }

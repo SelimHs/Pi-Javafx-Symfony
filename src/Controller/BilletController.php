@@ -30,6 +30,7 @@ final class BilletController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $billet->setDateAchat(new \DateTime());
             $entityManager->persist($billet);
             $entityManager->flush();
 
