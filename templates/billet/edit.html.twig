@@ -4,6 +4,7 @@
 
 {% block body %}
     <h1>Edit Billet</h1>
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
 
     {{ include('billet/_form.html.twig', {'button_label': 'Update'}) }}
 

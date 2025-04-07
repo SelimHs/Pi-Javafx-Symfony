@@ -8,6 +8,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 class EventType extends AbstractType
@@ -31,11 +32,23 @@ class EventType extends AbstractType
             ->add('nomEspace')
             ->add('image', FileType::class, [
                 'label' => 'Upload Image',
-                'mapped' => false, // Important: this tells Symfony not to map it directly to the Event entity
-                'required' => false,
-                'attr' => [
-                    'class' => 'form-control'
-                ]
+                'mapped' => false,
+                'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank([
+                        'message' => 'Veuillez sélectionner une image.',
+                    ]),
+                    new Assert\File([
+                        'maxSize' => '2M',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                            'image/webp',
+                        ],
+                        'mimeTypesMessage' => 'Veuillez uploader une image valide (JPG, PNG, WEBP)',
+                    ])
+                ],
+                'attr' => ['class' => 'form-control']
             ])
         ;
     }

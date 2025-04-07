@@ -79,7 +79,6 @@ class Event
     }
 
     #[ORM\Column(name: 'date', type: 'string', nullable: false)]
-    #[Assert\NotBlank(message: 'La date est obligatoire.')]
     private ?string $date = null;
 
     public function getDate(): ?string
@@ -125,7 +124,6 @@ class Event
     }
 
     #[ORM\Column(name: 'image', type: 'string', nullable: false)]
-    #[Assert\NotBlank(message: 'L’image est obligatoire.')]
     private ?string $image = null;
 
     public function getImage(): ?string
