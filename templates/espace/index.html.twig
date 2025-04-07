@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Espace index{% endblock %}
+
+{% block body %}
+    <h1>Espace index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>IdEspace</th>
+                <th>NomEspace</th>
+                <th>Adresse</th>
+                <th>Capacite</th>
+                <th>Disponibilite</th>
+                <th>Prix</th>
+                <th>Type_espace</th>
+                <th>Image</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for espace in espaces %}
+            <tr>
+                <td>{{ espace.idEspace }}</td>
+                <td>{{ espace.nomEspace }}</td>
+                <td>{{ espace.adresse }}</td>
+                <td>{{ espace.capacite }}</td>
+                <td>{{ espace.disponibilite }}</td>
+                <td>{{ espace.prix }}</td>
+                <td>{{ espace.TypeEspace }}</td>
+                <td>{{ espace.image }}</td>
+                <td>
+                    <a href="{{ path('app_espace_show', {'idEspace': espace.idEspace}) }}">show</a>
+                    <a href="{{ path('app_espace_edit', {'idEspace': espace.idEspace}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_espace_new') }}">Create new</a>
+{% endblock %}
