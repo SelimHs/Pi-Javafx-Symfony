@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 use App\Repository\EventRepository;
 
@@ -30,6 +31,8 @@ class Event
     }
 
     #[ORM\Column(name: 'nomEvent', type: 'string', nullable: false)]
+    #[Assert\NotBlank(message: 'Le nom de l’événement est obligatoire.')]
+    #[Assert\Length(min: 3, minMessage: 'Le nom doit faire au moins {{ limit }} caractères.')]
     private ?string $nomEvent = null;
 
     public function getNomEvent(): ?string
@@ -44,6 +47,8 @@ class Event
     }
 
     #[ORM\Column(name: 'prix', type: 'integer', nullable: false)]
+    #[Assert\NotBlank(message: 'Le prix est obligatoire.')]
+    #[Assert\Positive(message: 'Le prix doit être un entier positif.')]
     private ?int $prix = null;
 
     public function getPrix(): ?int
@@ -58,6 +63,8 @@ class Event
     }
 
     #[ORM\Column(name: 'details', type: 'string', nullable: false)]
+    #[Assert\NotBlank(message: 'Les détails sont obligatoires.')]
+    #[Assert\Length(min: 5, minMessage: 'Les détails doivent contenir au moins {{ limit }} caractères.')]
     private ?string $details = null;
 
     public function getDetails(): ?string
@@ -72,6 +79,7 @@ class Event
     }
 
     #[ORM\Column(name: 'date', type: 'string', nullable: false)]
+    #[Assert\NotBlank(message: 'La date est obligatoire.')]
     private ?string $date = null;
 
     public function getDate(): ?string
@@ -86,6 +94,8 @@ class Event
     }
 
     #[ORM\Column(name: 'nbrVisiteurs', type: 'integer', nullable: false)]
+    #[Assert\NotBlank(message: 'Le nombre de visiteurs est obligatoire.')]
+    #[Assert\Positive(message: 'Le nombre de visiteurs doit être un entier positif.')]
     private ?int $nbrVisiteurs = null;
 
     public function getNbrVisiteurs(): ?int
@@ -100,6 +110,7 @@ class Event
     }
 
     #[ORM\Column(name: 'nomEspace', type: 'string', nullable: false)]
+    #[Assert\NotBlank(message: 'Le nom de l’espace est obligatoire.')]
     private ?string $nomEspace = null;
 
     public function getNomEspace(): ?string
@@ -114,6 +125,7 @@ class Event
     }
 
     #[ORM\Column(name: 'image', type: 'string', nullable: false)]
+    #[Assert\NotBlank(message: 'L’image est obligatoire.')]
     private ?string $image = null;
 
     public function getImage(): ?string
