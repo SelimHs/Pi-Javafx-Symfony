@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 
 class EventType extends AbstractType
@@ -19,6 +20,7 @@ class EventType extends AbstractType
             ->add('details')
             ->add('date', DateType::class, [
                 'widget' => 'single_text',
+                'mapped' => false, 
                 'attr' => [
                     'min' => (new \DateTime())->format('Y-m-d'),
                     'class' => 'form-control'
@@ -27,7 +29,14 @@ class EventType extends AbstractType
             
             ->add('nbrVisiteurs')
             ->add('nomEspace')
-            ->add('image')
+            ->add('image', FileType::class, [
+                'label' => 'Upload Image',
+                'mapped' => false, // Important: this tells Symfony not to map it directly to the Event entity
+                'required' => false,
+                'attr' => [
+                    'class' => 'form-control'
+                ]
+            ])
         ;
     }
 

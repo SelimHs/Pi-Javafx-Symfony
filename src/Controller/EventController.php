@@ -30,11 +30,30 @@ final class EventController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // ✅ convert date first
+            $dateObject = $form->get('date')->getData();
+            if ($dateObject instanceof \DateTimeInterface) {
+                $event->setDate($dateObject->format('Y-m-d'));
+            }
+        
+            // ✅ handle image
+            $imageFile = $form->get('image')->getData();
+            if ($imageFile) {
+                $newFilename = uniqid() . '.' . $imageFile->guessExtension();
+                $imageFile->move(
+                    $this->getParameter('event_images_directory'),
+                    $newFilename
+                );
+                $event->setImage($newFilename);
+            }
+        
+            // ✅ now persist
             $entityManager->persist($event);
             $entityManager->flush();
-
-            return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
+        
+            return $this->redirectToRoute('app_event_index');
         }
+        
 
         return $this->render('event/new.html.twig', [
             'event' => $event,

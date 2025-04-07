@@ -17,6 +17,11 @@
 <div class="section properties">
   <div class="container">
     <div class="row properties-box">
+      <div class="col-lg-12">
+        <fieldset>
+          <button type="submit" id="form-submit" class="orange-button">Send Message</button>
+        </fieldset>
+      </div>
       {% for event in events %}
         <div class="col-lg-4 col-md-6 align-self-center mb-30 properties-items">
           <div class="item">
@@ -24,7 +29,7 @@
               <img src="{{ asset('uploads/images/' ~ event.image) }}" alt="">
             </a>
             <span class="category">{{ event.nomEspace }}</span>
-            <h6>${{ event.prix }}</h6>
+            <h6>{{ event.prix }} Dt</h6>
             <h4>
               <a href="{{ path('app_event_show', {'idEvent': event.idEvent}) }}">
                 {{ event.nomEvent }}
