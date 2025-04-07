@@ -20,7 +20,7 @@
   <div class="card shadow-lg border-0 rounded-4 p-5" style="width: 100%; max-width: 600px;">
     <h2 class="mb-4 text-center fw-bold">Create a New Espace</h2>
 
-    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}, 'enctype': 'multipart/form-data'}) }}
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'espace-form'}, 'enctype': 'multipart/form-data'}) }}
 
     <div class="mb-4">
       {{ form_label(form.nomEspace) }}
@@ -36,13 +36,13 @@
 
     <div class="mb-4">
       {{ form_label(form.capacite) }}
-      {{ form_widget(form.capacite, {'attr': {'class': 'form-control', 'placeholder': 'Capacité'}}) }}
+      {{ form_widget(form.capacite, {'attr': {'class': 'form-control', 'placeholder': 'Capacity...'}}) }}
       <div class="form-error-message">{{ form_errors(form.capacite) }}</div>
     </div>
 
     <div class="mb-4">
       {{ form_label(form.prix) }}
-      {{ form_widget(form.prix, {'attr': {'class': 'form-control', 'placeholder': 'Prix'}}) }}
+      {{ form_widget(form.prix, {'attr': {'class': 'form-control', 'placeholder': 'Price...'}}) }}
       <div class="form-error-message">{{ form_errors(form.prix) }}</div>
     </div>
 
@@ -53,28 +53,49 @@
     </div>
 
     <div class="mb-4">
-  {{ form_label(form.disponibilite) }}
-  {{ form_widget(form.disponibilite, {
+      {{ form_label(form.disponibilite) }}
+      {{ form_widget(form.disponibilite, {
+        'attr': {
+          'class': 'form-control',
+          'readonly': 'readonly'
+        }
+      }) }}
+      <div class="form-error-message">{{ form_errors(form.disponibilite) }}</div>
+    </div>
+
+    <div class="mb-4">
+  {{ form_label(form.image, 'Image') }}
+
+  <div class="input-group">
+    <input type="text" class="form-control" id="filename" placeholder="Choose image..." readonly>
+    <button type="button" class="btn btn-outline-secondary" id="browse-button">Browse</button>
+  </div>
+
+  {{ form_widget(form.image, {
     'attr': {
-      'class': 'form-control',
-      'readonly': 'readonly'
+      'class': 'd-none',
+      'accept': 'image/*',
+      'onchange': 'previewImage(this)'
     }
   }) }}
-  <div class="form-error-message">{{ form_errors(form.disponibilite) }}</div>
+
+  <div class="form-error-message">{{ form_errors(form.image) }}</div>
+
+  <div class="text-center mt-3">
+    <img id="image-preview" class="img-thumbnail" style="max-height: 200px; display: none;" alt="Preview">
+  </div>
 </div>
 
 
-    <div class="mb-4">
-      {{ form_label(form.image) }}
-      {{ form_widget(form.image, {'attr': {'class': 'form-control'}}) }}
-      <div class="form-error-message">{{ form_errors(form.image) }}</div>
-    </div>
-
-    {# Champ user caché #}
     {{ form_widget(form.user, {'attr': {'style': 'display:none'}}) }}
 
-    <div class="text-center">
-      <button class="btn btn-primary px-5 py-2 rounded-pill">{{ button_label|default('Save') }}</button>
+    <div class="text-center mt-4">
+      <button type="submit" class="btn btn-primary px-5 py-2 rounded-pill">
+        <i class="fas fa-save me-2"></i>{{ button_label|default('Save') }}
+      </button>
+      <a href="{{ path('app_espace_index') }}" class="btn btn-outline-secondary px-5 py-2 rounded-pill ms-3">
+        <i class="fas fa-times me-2"></i>Cancel
+      </a>
     </div>
 
     {{ form_end(form) }}
@@ -122,14 +143,40 @@
       padding-left: 10px;
     }
 
-    .form-error-message ul {
-      margin: 0;
-      padding: 0;
-      list-style: none;
+    .img-thumbnail {
+      border-radius: 8px;
+      border: 1px dashed #ccc;
+      padding: 5px;
+      background-color: #f8f9fa;
     }
   </style>
 {% endblock %}
 
 {% block javascripts %}
   {{ parent() }}
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+  const inputFile = document.getElementById('{{ form.image.vars.id }}');
+  const browseBtn = document.getElementById('browse-button');
+  const filename = document.getElementById('filename');
+
+  browseBtn.addEventListener('click', () => inputFile.click());
+
+  inputFile.addEventListener('change', function () {
+    const file = this.files[0];
+    if (file) {
+      filename.value = file.name;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const preview = document.getElementById('image-preview');
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+});
+
+  </script>
 {% endblock %}
