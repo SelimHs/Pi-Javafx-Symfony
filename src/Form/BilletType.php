@@ -22,7 +22,7 @@ class BilletType extends AbstractType
             ->add('type')
             ->add('event', EntityType::class, [
                 'class' => Event::class,
-                'choice_label' => 'id',
+                'choice_label' => 'idEvent',
             ])
         ;
     }

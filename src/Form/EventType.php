@@ -6,6 +6,8 @@ use App\Entity\Event;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+
 
 class EventType extends AbstractType
 {
@@ -15,7 +17,14 @@ class EventType extends AbstractType
             ->add('nomEvent')
             ->add('prix')
             ->add('details')
-            ->add('date')
+            ->add('date', DateType::class, [
+                'widget' => 'single_text',
+                'attr' => [
+                    'min' => (new \DateTime())->format('Y-m-d'),
+                    'class' => 'form-control'
+                ]
+            ])
+            
             ->add('nbrVisiteurs')
             ->add('nomEspace')
             ->add('image')
