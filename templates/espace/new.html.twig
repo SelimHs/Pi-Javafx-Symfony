@@ -2,10 +2,83 @@
 
 {% block title %}New Espace{% endblock %}
 
+{% block banner %}
+<div class="main-banner">
+  <div class="owl-carousel owl-banner">
+    <div class="item item-1">
+      <div class="header-text">
+        <span class="category">Tunisia, <em>Create Mode</em></span>
+        <h2>Create a new <br>Espace with Style</h2>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
 {% block body %}
-    <h1>Create new Espace</h1>
+  <div class="featured section">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="section-heading text-center">
+            <h6>| New Espace</h6>
+            <h2>Create a New Espace</h2>
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="property-form">
+            {{ include('espace/_form.html.twig') }}
 
-    {{ include('espace/_form.html.twig') }}
+            <div class="main-button mt-4 text-center">
+              <a href="{{ path('app_espace_index') }}" class="btn btn-secondary">
+                <i class="fa fa-arrow-left"></i> Back to list
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
 
-    <a href="{{ path('app_espace_index') }}">back to list</a>
+{% block stylesheets %}
+  {{ parent() }}
+  <style>
+    .property-form {
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-control {
+      height: 50px;
+      border-radius: 5px;
+    }
+    textarea.form-control {
+      height: auto;
+    }
+    .btn-primary {
+      background-color: #f35525;
+      border-color: #f35525;
+      padding: 12px 30px;
+      font-weight: 600;
+    }
+    .btn-primary:hover {
+      background-color: #d14821;
+      border-color: #d14821;
+    }
+    .btn-secondary {
+      padding: 12px 30px;
+      font-weight: 600;
+    }
+  </style>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
 {% endblock %}
