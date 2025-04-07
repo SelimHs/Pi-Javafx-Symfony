@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controller;
+
 use App\Entity\User;
 
 use App\Entity\Espace;
@@ -12,6 +13,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/espace')]
 final class EspaceController extends AbstractController
@@ -23,7 +26,7 @@ final class EspaceController extends AbstractController
             'espaces' => $espaceRepository->findAll(),
         ]);
     }
-    
+
     // src/Controller/HomeController.php
     #[Route('/', name: 'app_home')]
     public function indexx(): Response
@@ -31,33 +34,49 @@ final class EspaceController extends AbstractController
         return $this->render('home/index.html.twig');
     }
     #[Route('/new', name: 'app_espace_new', methods: ['GET', 'POST'])]
-public function new(Request $request, EntityManagerInterface $entityManager): Response
-{
-    $espace = new Espace();
+    public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    {
+        $espace = new Espace();
+        $espace->setDisponibilite("Disponible");
+        $user = $entityManager->getRepository(User::class)->find(1);
+        $espace->setUser($user);
 
-    // Valeurs par défaut
-    $espace->setDisponibilite("Disponible");
-    $user = $entityManager->getRepository(User::class)->find(1);
-    $espace->setUser($user);
+        $form = $this->createForm(EspaceType::class, $espace);
+        $form->handleRequest($request);
 
-    $form = $this->createForm(EspaceType::class, $espace);
-    $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('image')->getData();
+            if ($imageFile) {
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
 
-    if ($form->isSubmitted() && $form->isValid()) {
-        $entityManager->persist($espace);
-        $entityManager->flush();
+                try {
+                    $imageFile->move(
+                        $this->getParameter('uploads_directory'),
+                        $newFilename
+                    );
+                    $espace->setImage($newFilename);
+                } catch (FileException $e) {
+                    // handle error
+                }
+            }
 
-        return $this->redirectToRoute('app_espace_index');
+            $entityManager->persist($espace);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_espace_index');
+        }
+
+        return $this->render('espace/new.html.twig', [
+            'form' => $form,
+        ]);
     }
 
-    return $this->render('espace/new.html.twig', [
-        'form' => $form,
-    ]);
-}
 
     #[Route('/{idEspace}', name: 'app_espace_show', methods: ['GET'])]
     public function show(
-        #[MapEntity(mapping: ['idEspace' => 'idEspace'])] 
+        #[MapEntity(mapping: ['idEspace' => 'idEspace'])]
         Espace $espace
     ): Response {
         return $this->render('espace/show.html.twig', [

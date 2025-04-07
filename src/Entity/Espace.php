@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 use App\Repository\EspaceRepository;
 
@@ -29,7 +30,10 @@ class Espace
     }
 
     #[ORM\Column(name: "nomEspace", type: 'string', nullable: false)]
+    #[Assert\NotBlank(message: "Le nom de l'espace est requis.")]
+    #[Assert\Length(min: 3, minMessage: "Le nom doit contenir au moins 3 caractères.")]
     private ?string $nomEspace = null;
+
 
     public function getNomEspace(): ?string
     {
@@ -43,6 +47,7 @@ class Espace
     }
 
     #[ORM\Column(name: "adresse", type: 'string', nullable: false)]
+    #[Assert\NotBlank(message: "L'adresse est requise.")]
     private ?string $adresse = null;
 
     public function getAdresse(): ?string
@@ -57,6 +62,8 @@ class Espace
     }
 
     #[ORM\Column(name: "capacite", type: 'integer', nullable: false)]
+    #[Assert\NotBlank(message: "La capacité est requise.")]
+    #[Assert\Positive(message: "La capacité doit être un nombre positif.")]
     private ?int $capacite = null;
 
     public function getCapacite(): ?int
@@ -85,6 +92,8 @@ class Espace
     }
 
     #[ORM\Column(name: "prix", type: 'float', nullable: false)]
+    #[Assert\NotBlank(message: "Le prix est requis.")]
+    #[Assert\PositiveOrZero(message: "Le prix ne peut pas être négatif.")]
     private ?float $prix = null;
 
     public function getPrix(): ?float
