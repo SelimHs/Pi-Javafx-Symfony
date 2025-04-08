@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Organisateur index{% endblock %}
+
+{% block body %}
+    <h1>Organisateur index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id_org</th>
+                <th>Nom_org</th>
+                <th>Prenom_org</th>
+                <th>Description_org</th>
+                <th>Telef</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for organisateur in organisateurs %}
+            <tr>
+                <td>{{ organisateur.idOrg }}</td>
+                <td>{{ organisateur.nomOrg }}</td>
+                <td>{{ organisateur.prenomOrg }}</td>
+                <td>{{ organisateur.descriptionOrg }}</td>
+                <td>{{ organisateur.telef }}</td>
+                <td>
+                    <a href="{{ path('app_organisateur_show', {'id_org': organisateur.id_org}) }}">show</a>
+                    <a href="{{ path('app_organisateur_edit', {'id_org': organisateur.id_org}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_organisateur_new') }}">Create new</a>
+{% endblock %}
