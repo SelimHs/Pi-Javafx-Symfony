@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : dim. 06 avr. 2025 à 11:09
+-- Généré le : mar. 01 avr. 2025 à 10:18
 -- Version du serveur : 8.3.0
 -- Version de PHP : 8.2.18
 
@@ -218,7 +218,7 @@ CREATE TABLE IF NOT EXISTS `organisateur` (
   `telef` int NOT NULL,
   PRIMARY KEY (`id_org`),
   KEY `fk_org` (`idEspace`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `organisateur`
@@ -293,9 +293,17 @@ CREATE TABLE IF NOT EXISTS `remise` (
   `pourcentageRemise` double NOT NULL,
   `dateExpiration` varchar(100) NOT NULL,
   `idReservation` int NOT NULL,
-  PRIMARY KEY (`idRemise`),
-  KEY `fk_remise_reservation` (`idReservation`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`idRemise`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `remise`
+--
+
+INSERT INTO `remise` (`idRemise`, `codePromo`, `description`, `pourcentageRemise`, `dateExpiration`, `idReservation`) VALUES
+(3, 'azertyu', 'ytcy', 20, '2025-02-27', 0),
+(2, '7dcdv', 'remise pr', 96, '2025-03-09', 0),
+(4, 'kopaska', 'm3allem', 20, '2025-03-22', 0);
 
 -- --------------------------------------------------------
 
@@ -310,35 +318,33 @@ CREATE TABLE IF NOT EXISTS `reservation` (
   `statut` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `idUser` int NOT NULL,
   `idEvent` int NOT NULL,
-  `idRemise` int DEFAULT NULL,
   PRIMARY KEY (`idReservation`),
   KEY `idRUser` (`idUser`),
-  KEY `idREvent` (`idEvent`),
-  KEY `fk_reservation_remise` (`idRemise`)
+  KEY `idREvent` (`idEvent`)
 ) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `reservation`
 --
 
-INSERT INTO `reservation` (`idReservation`, `dateReservation`, `statut`, `idUser`, `idEvent`, `idRemise`) VALUES
-(4, '2025-02-28', 'Confirmée', 1, 20, NULL),
-(5, '2025-02-26', 'En attente', 556, 21, NULL),
-(6, '2025-02-25', 'Confirmée', 1, 20, NULL),
-(10, '2025-03-06T12:34:49.917466400', 'Confirmé', 1, 21, NULL),
-(11, '2025-03-06T12:40:07.667345', 'Confirmé', 1, 21, NULL),
-(12, '2025-03-06T12:44:21.003296400', 'Confirmé', 1, 27, NULL),
-(13, '2025-03-06T12:44:34.228014700', 'Confirmé', 1, 27, NULL),
-(14, '2025-03-06T12:53:51.661579400', 'Confirmé', 1, 21, NULL),
-(15, '2025-03-06T12:58:30.918849200', 'Confirmé', 1, 25, NULL),
-(16, '2025-03-06T13:01:30.447345700', 'Confirmé', 1, 26, NULL),
-(17, '2025-03-06T13:02:13.757866900', 'Confirmé', 1, 25, NULL),
-(18, '2025-03-06T14:12:36.012794600', 'Confirmé', 1, 21, NULL),
-(19, '2025-03-06 14:46:52', 'Confirmé', 1, 21, NULL),
-(20, '2025-03-07 08:41:23', 'Confirmé', 1, 21, NULL),
-(21, '2025-03-07 09:05:09', 'Confirmé', 1, 30, NULL),
-(22, '2025-03-07 09:26:47', 'Confirmé', 1, 21, NULL),
-(23, '2025-03-07 09:52:35', 'Confirmé', 1, 25, NULL);
+INSERT INTO `reservation` (`idReservation`, `dateReservation`, `statut`, `idUser`, `idEvent`) VALUES
+(4, '2025-02-28', 'Confirmée', 1, 20),
+(5, '2025-02-26', 'En attente', 556, 21),
+(6, '2025-02-25', 'Confirmée', 1, 20),
+(10, '2025-03-06T12:34:49.917466400', 'Confirmé', 1, 21),
+(11, '2025-03-06T12:40:07.667345', 'Confirmé', 1, 21),
+(12, '2025-03-06T12:44:21.003296400', 'Confirmé', 1, 27),
+(13, '2025-03-06T12:44:34.228014700', 'Confirmé', 1, 27),
+(14, '2025-03-06T12:53:51.661579400', 'Confirmé', 1, 21),
+(15, '2025-03-06T12:58:30.918849200', 'Confirmé', 1, 25),
+(16, '2025-03-06T13:01:30.447345700', 'Confirmé', 1, 26),
+(17, '2025-03-06T13:02:13.757866900', 'Confirmé', 1, 25),
+(18, '2025-03-06T14:12:36.012794600', 'Confirmé', 1, 21),
+(19, '2025-03-06 14:46:52', 'Confirmé', 1, 21),
+(20, '2025-03-07 08:41:23', 'Confirmé', 1, 21),
+(21, '2025-03-07 09:05:09', 'Confirmé', 1, 30),
+(22, '2025-03-07 09:26:47', 'Confirmé', 1, 21),
+(23, '2025-03-07 09:52:35', 'Confirmé', 1, 25);
 
 -- --------------------------------------------------------
 
@@ -413,7 +419,6 @@ ALTER TABLE `produit`
 -- Contraintes pour la table `reservation`
 --
 ALTER TABLE `reservation`
-  ADD CONSTRAINT `fk_reservation_remise` FOREIGN KEY (`idRemise`) REFERENCES `remise` (`idRemise`) ON DELETE SET NULL,
   ADD CONSTRAINT `idREvent` FOREIGN KEY (`idEvent`) REFERENCES `event` (`idEvent`),
   ADD CONSTRAINT `idRUser` FOREIGN KEY (`idUser`) REFERENCES `user` (`idUser`);
 COMMIT;

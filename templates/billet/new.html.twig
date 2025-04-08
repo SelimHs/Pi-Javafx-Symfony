@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create Billet{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-5">
+          <h2 class="mb-4 text-center">Create a New Billet</h2>
+
+          {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+          <div class="mb-3">
+            {{ form_label(form.proprietaire) }}
+            {{ form_widget(form.proprietaire, {'attr': {'class': 'form-control'}}) }}
+            <div class="text-danger mt-1" style="font-size: 0.95rem;">
+              {{ form_errors(form.proprietaire) }}
+            </div>
+          </div>
+
+          <div class="mb-3">
+            {{ form_label(form.prix) }}
+            {{ form_widget(form.prix, {'attr': {'class': 'form-control'}}) }}
+            <div class="text-danger mt-1" style="font-size: 0.95rem;">
+              {{ form_errors(form.prix) }}
+            </div>
+          </div>
+
+          <div class="mb-3">
+            {{ form_label(form.type) }}
+            {{ form_widget(form.type, {'attr': {'class': 'form-control'}}) }}
+            <div class="text-danger mt-1" style="font-size: 0.95rem;">
+              {{ form_errors(form.type) }}
+            </div>
+          </div>
+
+          <div class="mb-3">
+            {{ form_label(form.event) }}
+            {{ form_widget(form.event, {'attr': {'class': 'form-control'}}) }}
+            <div class="text-danger mt-1" style="font-size: 0.95rem;">
+              {{ form_errors(form.event) }}
+            </div>
+          </div>
+
+          <div class="text-center">
+            <button class="btn btn-primary px-4">{{ button_label|default('Save') }}</button>
+          </div>
+
+          {{ form_end(form) }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

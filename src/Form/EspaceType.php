@@ -8,6 +8,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 class EspaceType extends AbstractType
 {
@@ -20,7 +21,12 @@ class EspaceType extends AbstractType
             ->add('disponibilite')
             ->add('prix')
             ->add('Type_espace')
-            ->add('image')
+            ->add('image', FileType::class, [
+                'mapped' => false, // Important : le fichier n'est pas lié directement à l'entité
+                'required' => false,
+                'attr' => ['class' => 'form-control'],
+            ])
+        
             ->add('user', EntityType::class, [
                 'class' => User::class,
                 'choice_label' => 'id',
