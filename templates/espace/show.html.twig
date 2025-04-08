@@ -3,48 +3,76 @@
 {% block title %}Espace{% endblock %}
 
 {% block body %}
-    <h1>Espace</h1>
+<div class="page-heading header-text">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <span class="breadcrumb"><a href="#">Accueil</a> / Espace</span>
+        <h3>Détails de l'Espace</h3>
+      </div>
+    </div>
+  </div>
+</div>
 
-    <table class="table">
-        <tbody>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div class="card shadow-lg border-0 rounded-4 p-4">
+        <h4 class="mb-4 text-center">Informations de l'espace</h4>
+        <table class="table table-bordered">
+          <tbody>
             <tr>
-                <th>IdEspace</th>
-                <td>{{ espace.idEspace }}</td>
+              <th>Id</th>
+              <td>{{ espace.idEspace }}</td>
             </tr>
             <tr>
-                <th>NomEspace</th>
-                <td>{{ espace.nomEspace }}</td>
+              <th>Nom</th>
+              <td>{{ espace.nomEspace }}</td>
             </tr>
             <tr>
-                <th>Adresse</th>
-                <td>{{ espace.adresse }}</td>
+              <th>Adresse</th>
+              <td>{{ espace.adresse }}</td>
             </tr>
             <tr>
-                <th>Capacite</th>
-                <td>{{ espace.capacite }}</td>
+              <th>Capacité</th>
+              <td>{{ espace.capacite }}</td>
             </tr>
             <tr>
-                <th>Disponibilite</th>
-                <td>{{ espace.disponibilite }}</td>
+              <th>Disponibilité</th>
+              <td>{{ espace.disponibilite }}</td>
             </tr>
             <tr>
-                <th>Prix</th>
-                <td>{{ espace.prix }}</td>
+              <th>Prix</th>
+              <td>{{ espace.prix }} TND</td>
             </tr>
             <tr>
-                <th>Type_espace</th>
-                <td>{{ espace.TypeEspace }}</td>
+              <th>Type</th>
+              <td>{{ espace.TypeEspace }}</td>
             </tr>
             <tr>
-                <th>Image</th>
-                <td>{{ espace.image }}</td>
+              <th>Image</th>
+              <td>
+                {% if espace.image %}
+                  <img src="{{ asset('uploads/' ~ espace.image) }}" alt="Image de l'espace" class="img-thumbnail" style="max-height: 200px;">
+                {% else %}
+                  <em>Aucune image</em>
+                {% endif %}
+              </td>
             </tr>
-        </tbody>
-    </table>
+          </tbody>
+        </table>
 
-    <a href="{{ path('app_espace_index') }}">back to list</a>
-
-    <a href="{{ path('app_espace_edit', {'idEspace': espace.idEspace}) }}">edit</a>
-
-    {{ include('espace/_delete_form.html.twig') }}
+        <div class="text-center mt-4">
+          <a href="{{ path('app_espace_index') }}" class="btn btn-secondary me-2">
+            <i class="fas fa-arrow-left me-1"></i> Retour à la liste
+          </a>
+          <a href="{{ path('app_espace_edit', {'idEspace': espace.idEspace}) }}" class="btn btn-warning me-2">
+            <i class="fas fa-edit me-1"></i> Modifier
+          </a>
+          {{ include('espace/_delete_form.html.twig') }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
