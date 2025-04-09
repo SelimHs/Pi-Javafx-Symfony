@@ -16,7 +16,7 @@
           </div>
         </div>
         <div class="page-title-actions">
-          <a href="{{ path('app_billet_new') }}" class="btn btn-success">
+          <a href="{{ path('dashboard_event_new') }}" class="btn btn-success">
             <i class="pe-7s-plus mr-2"></i> Nouvel Evènement
           </a>
         </div>
@@ -40,7 +40,7 @@
           </p>
           <div class="d-flex justify-content-between align-items-center">
             <span class="badge badge-info p-2">{{ event.prix }} DT</span>
-            <a href="{{ path('app_event_show', {'idEvent': event.idEvent}) }}" class="btn btn-sm btn-outline-primary">
+            <a href="{{ path('dashboard_event_show', {'idEvent': event.idEvent}) }}" class="btn btn-sm btn-outline-primary">
               Voir détails
             </a>
           </div>

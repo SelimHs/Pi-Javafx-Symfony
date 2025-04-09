@@ -116,6 +116,13 @@ final class EventController extends AbstractController
             'event' => $event,
         ]);
     }
+    #[Route('/show/{idEvent}', name: 'dashboard_event_show', methods: ['GET'])]
+    public function showDashboard(Event $event): Response
+    {
+        return $this->render('event/showBack.html.twig', [
+            'event' => $event,
+        ]);
+    }
 
     #[Route('/{idEvent}/edit', name: 'app_event_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Event $event, EntityManagerInterface $entityManager): Response

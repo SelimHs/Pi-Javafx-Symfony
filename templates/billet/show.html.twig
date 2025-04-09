@@ -1,38 +1,81 @@
-{% extends 'base.html.twig' %}
+{% extends 'baseBack.html.twig' %}
 
-{% block title %}Billet{% endblock %}
+{% block title %}Billet Details{% endblock %}
 
 {% block body %}
-    <h1>Billet</h1>
+<div class="app-main__outer">
+  <div class="app-main__inner">
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>IdBillet</th>
-                <td>{{ billet.idBillet }}</td>
-            </tr>
-            <tr>
-                <th>Proprietaire</th>
-                <td>{{ billet.proprietaire }}</td>
-            </tr>
-            <tr>
-                <th>Prix</th>
-                <td>{{ billet.prix }}</td>
-            </tr>
-            <tr>
-                <th>DateAchat</th>
-                <td>{{ billet.dateAchat ? billet.dateAchat|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Type</th>
-                <td>{{ billet.type }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <!-- Page Title -->
+    <div class="app-page-title">
+      <div class="page-title-wrapper">
+        <div class="page-title-heading">
+          <div class="page-title-icon">
+            <i class="pe-7s-ticket icon-gradient bg-happy-itmeo"></i>
+          </div>
+          <div>
+            Détails du Billet
+            <div class="page-title-subheading">Toutes les informations du billet sélectionné.</div>
+          </div>
+        </div>
+        <div class="page-title-actions">
+          <a href="{{ path('app_billet_index') }}" class="btn btn-outline-secondary mr-2">
+            <i class="pe-7s-back"></i> Retour
+          </a>
+          <a href="{{ path('app_billet_edit', {'idBillet': billet.idBillet}) }}" class="btn btn-warning mr-2">
+            <i class="pe-7s-note"></i> 
+          </a>
 
-    <a href="{{ path('app_billet_index') }}">back to list</a>
+          <!-- Delete Button as Icon -->
+          <form method="post" action="{{ path('app_billet_delete', {'idBillet': billet.idBillet}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce billet ?');" style="display: inline;">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ billet.idBillet) }}">
+            <button class="btn btn-danger" title="Supprimer">
+              <i class="pe-7s-trash"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
 
-    <a href="{{ path('app_billet_edit', {'idBillet': billet.idBillet}) }}">edit</a>
+    <!-- Content Card -->
+    <div class="row">
+      <div class="col-md-8 offset-md-2">
+        <div class="main-card mb-3 card">
+          <div class="card-body">
+            <h5 class="card-title">Informations du Billet</h5>
+            <table class="mb-0 table table-bordered table-striped">
+              <tbody>
+                <tr>
+                  <th>Propriétaire</th>
+                  <td>{{ billet.proprietaire }}</td>
+                </tr>
+                <tr>
+                  <th>Prix</th>
+                  <td>{{ billet.prix }} Dt</td>
+                </tr>
+                <tr>
+                  <th>Date d'Achat</th>
+                  <td>{{ billet.dateAchat ? billet.dateAchat|date('d/m/Y H:i') : '—' }}</td>
+                </tr>
+                <tr>
+                  <th>Type</th>
+                  <td>
+                    {% if billet.type == 'VIP' %}
+                      <span class="badge badge-danger">VIP</span>
+                    {% elseif billet.type == 'DUO' %}
+                      <span class="badge badge-info">DUO</span>
+                    {% else %}
+                      <span class="badge badge-success">SIMPLE</span>
+                    {% endif %}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    {{ include('billet/_delete_form.html.twig') }}
+  </div>
+</div>
 {% endblock %}
