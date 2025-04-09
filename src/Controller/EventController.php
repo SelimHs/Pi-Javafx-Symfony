@@ -21,6 +21,13 @@ final class EventController extends AbstractController
             'events' => $eventRepository->findAll(),
         ]);
     }
+    #[Route('/dashboard', name: 'dashboard_event_index', methods: ['GET'])]
+    public function indexDashboard(EventRepository $eventRepository): Response
+    {
+        return $this->render('event/indexBack.html.twig', [
+            'events' => $eventRepository->findAll(),
+        ]);
+    }
 
     #[Route('/new', name: 'app_event_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response

@@ -17,9 +17,18 @@ final class BilletController extends AbstractController
     #[Route(name: 'app_billet_index', methods: ['GET'])]
     public function index(BilletRepository $billetRepository): Response
     {
-        return $this->render('billet/index.html.twig', [
-            'billets' => $billetRepository->findAll(),
-        ]);
+        $billets = $billetRepository->findAll();
+
+    $totalBillets = count($billets);
+    $totalVip = count(array_filter($billets, fn($b) => $b->getType() === 'VIP'));
+    $totalDuo = count(array_filter($billets, fn($b) => $b->getType() === 'DUO'));
+
+    return $this->render('billet/index.html.twig', [
+        'billets' => $billets,
+        'totalBillets' => $totalBillets,
+        'totalVip' => $totalVip,
+        'totalDuo' => $totalDuo,
+    ]);
     }
 
     #[Route('/new', name: 'app_billet_new', methods: ['GET', 'POST'])]
