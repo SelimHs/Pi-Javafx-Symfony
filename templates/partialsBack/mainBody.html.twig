@@ -130,7 +130,7 @@
                       Billets Vendus par Évènement
                     </div>
                     <div class="card-body">
-                      <canvas id="billetChart"></canvas>
+                      <canvas id="billetChart" height="300" ></canvas>
                     </div>
                   </div>
                 </div>
@@ -629,32 +629,78 @@
         </div>
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
-  const ctx = document.getElementById('billetChart').getContext('2d');
-  const billetChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: {{ billetStats|map(stat => stat.event)|json_encode|raw }},
-      datasets: [{
-        label: 'Billets Vendus',
-        data: {{ billetStats|map(stat => stat.count)|json_encode|raw }},
-        backgroundColor: 'rgba(54, 162, 235, 0.7)',
-        borderColor: 'rgba(54, 162, 235, 1)',
-        borderWidth: 1,
-        borderRadius: 5
-      }]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            stepSize: 1
+    const ctx = document.getElementById('billetChart').getContext('2d');
+
+    // Create a vertical gradient background for the bars
+    const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+    gradient.addColorStop(0, 'rgba(54, 162, 235, 0.9)');
+    gradient.addColorStop(1, 'rgba(54, 162, 235, 0.3)');
+    
+    const billetChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: {{ billetStats|map(stat => stat.event)|json_encode|raw }},
+        datasets: [{
+          label: 'Billets Vendus',
+          data: {{ billetStats|map(stat => stat.count)|json_encode|raw }},
+          backgroundColor: gradient,
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1,
+          borderRadius: 10
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          datalabels: {
+            anchor: 'end',
+            align: 'top',
+            color: '#444',
+            font: {
+              weight: 'bold'
+            },
+            formatter: Math.round
+          },
+          legend: {
+            display: false
+          },
+          tooltip: {
+            backgroundColor: 'rgba(0,0,0,0.75)',
+            titleFont: { size: 14 },
+            bodyFont: { size: 12 },
+            cornerRadius: 6,
+            padding: 10
+          }
+        },
+        animation: {
+          duration: 1200,
+          easing: 'easeOutQuart'
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              stepSize: 1
+            },
+            grid: {
+              color: 'rgba(200,200,200,0.1)'
+            }
+          },
+          x: {
+            ticks: {
+              autoSkip: false,
+              maxRotation: 45,
+              minRotation: 45
+            },
+            grid: {
+              display: false
+            }
           }
         }
-      }
-    }
-  });
+      },
+      plugins: [ChartDataLabels]
+    });
+    
 </script>
