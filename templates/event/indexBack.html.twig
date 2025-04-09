@@ -3,59 +3,54 @@
 {% block title %}Events{% endblock %}
 
 {% block body %}
-<div class="page-heading header-text">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-12">
-        <span class="breadcrumb"><a href="{{path('app_home')}}">Accueil</a> / Évènements</span>
-        <h3>Évènements</h3>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="section properties">
-  <div class="container">
-  
-    {# Bouton Send Message #}
-    <div class="row mb-4">
-      <div class="col-lg-12 text-center">
-        <a href="{{path('app_event_new')}}" class="main-button custom-message-btn">
-          <i></i> + Créer un nouvel évènement
-        </a>
-      </div>
-    </div>
-    
-
-    <div class="row properties-box">
-      {% for event in events %}
-        <div class="col-lg-4 col-md-6 align-self-center mb-30 properties-items">
-          <div class="item">
-            <a href="{{ path('app_event_show', {'idEvent': event.idEvent}) }}">
-              <img src="{{ asset('uploads/' ~ event.image) }}" alt="">
-
-            </a>
-            <span class="category">{{ event.nomEspace }}</span>
-            <h6>{{ event.prix }} Dt</h6>
-            <h4>
-              <a href="{{ path('app_event_show', {'idEvent': event.idEvent}) }}">
-                {{ event.nomEvent }}
-              </a>
-            </h4>
-            <ul>
-              <li>Details: <span>{{ event.details|length > 40 ? event.details[:40] ~ '...' : event.details }}</span></li>
-              <li>Date: <span>{{ event.date }}</span></li>
-              <li>Visitors: <span>{{ event.nbrVisiteurs }}</span></li>
-            </ul>
-            <div class="main-button">
-              <a href="{{ path('app_event_show', {'idEvent': event.idEvent}) }}">Détails</a>
-            </div>
+<div class="app-main__outer">
+  <div class="app-main__inner">
+    <div class="app-page-title">
+      <div class="page-title-wrapper">
+        <div class="page-title-heading">
+          <div class="page-title-icon">
+            <i class="pe-7s-ticket icon-gradient bg-happy-itmeo"></i>
+          </div>
+          <div>Gestion des Evènements
+            <div class="page-title-subheading">Liste des Evènements et leurs informations.</div>
           </div>
         </div>
-      {% else %}
-        <p>No events found.</p>
-      {% endfor %}
+        <div class="page-title-actions">
+          <a href="{{ path('app_billet_new') }}" class="btn btn-success">
+            <i class="pe-7s-plus mr-2"></i> Nouvel Evènement
+          </a>
+        </div>
+      </div>
     </div>
-  </div>
+
+<div class="row">
+  {% for event in events %}
+    <div class="col-md-6 col-xl-4">
+      <div class="card mb-4 shadow-sm">
+        <img src="{{ asset('uploads/' ~ event.image) }}" class="card-img-top" alt="{{ event.nomEvent }}">
+        <div class="card-body">
+          <h5 class="card-title text-uppercase">{{ event.nomEvent }}</h5>
+          <p class="card-text text-muted mb-1">
+            <strong>Lieu :</strong> {{ event.nomEspace }}<br>
+            <strong>Date :</strong> {{ event.date }}<br>
+            <strong>Visiteurs :</strong> {{ event.nbrVisiteurs }}
+          </p>
+          <p class="card-text">
+            {{ event.details|length > 80 ? event.details[:80] ~ '...' : event.details }}
+          </p>
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="badge badge-info p-2">{{ event.prix }} DT</span>
+            <a href="{{ path('app_event_show', {'idEvent': event.idEvent}) }}" class="btn btn-sm btn-outline-primary">
+              Voir détails
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="col-12">
+      <div class="alert alert-warning text-center">Aucun évènement trouvé.</div>
+    </div>
+  {% endfor %}
 </div>
 {% endblock %}
