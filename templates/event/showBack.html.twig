@@ -22,7 +22,7 @@
           <a href="{{ path('dashboard_event_index') }}" class="btn btn-outline-secondary mr-2">
             <i class="pe-7s-back"></i> Retour
           </a>
-          <a href="{{ path('app_event_edit', {'idEvent': event.idEvent}) }}" class="btn btn-warning mr-2">
+          <a href="{{ path('dashboard_event_edit', {'idEvent': event.idEvent}) }}" class="btn btn-warning mr-2">
             <i class="pe-7s-note"></i>
           </a>
           <form method="post" action="{{ path('dashboard_event_delete', {'idEvent': event.idEvent}) }}"

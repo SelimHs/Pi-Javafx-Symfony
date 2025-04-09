@@ -141,6 +141,23 @@ final class EventController extends AbstractController
             'form' => $form,
         ]);
     }
+     #[Route('/edit/{idEvent}', name: 'dashboard_event_edit', methods: ['GET', 'POST'])]
+    public function editDashboard(Request $request, Event $event, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(EventType::class, $event);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('dashboard_event_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('event/editBack.html.twig', [
+            'event' => $event,
+            'form' => $form,
+        ]);
+    }
 
     #[Route('/delete/{idEvent}', name: 'app_event_delete', methods: ['POST'])]
     public function delete(Request $request, Event $event, EntityManagerInterface $entityManager): Response
