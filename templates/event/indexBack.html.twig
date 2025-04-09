@@ -27,7 +27,23 @@
   {% for event in events %}
     <div class="col-md-6 col-xl-4">
       <div class="card mb-4 shadow-sm">
-        <img src="{{ asset('uploads/' ~ event.image) }}" class="card-img-top" alt="{{ event.nomEvent }}">
+        <div class="position-relative">
+        <img 
+  src="{{ asset('uploads/' ~ (event.image is not empty ? event.image : 'exemple.jpg')) }}" 
+  class="card-img-top" 
+  alt="{{ event.nomEvent }}"
+>
+{% if event.image is empty %}
+<span class="badge badge-secondary position-absolute"
+      style="top: 10px; left: 10px; background-color: rgba(0,0,0,0.7); font-size: 0.75rem;">
+  Placeholder
+</span>
+{% endif %}
+</div>
+
+
+
+
         <div class="card-body">
           <h5 class="card-title text-uppercase">{{ event.nomEvent }}</h5>
           <p class="card-text text-muted mb-1">

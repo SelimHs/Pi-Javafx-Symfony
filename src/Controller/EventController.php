@@ -152,4 +152,14 @@ final class EventController extends AbstractController
 
         return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
     }
+     #[Route('/{idEvent}/delete', name: 'dashboard_event_delete', methods: ['POST'])]
+    public function deleteDashboard(Request $request, Event $event, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$event->getIdEvent(), $request->getPayload()->getString('_token'))) {
+            $entityManager->remove($event);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('dashboard_event_index', [], Response::HTTP_SEE_OTHER);
+    }
 }
