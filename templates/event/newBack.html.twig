@@ -1,6 +1,6 @@
-{% extends 'base.html.twig' %}
+{% extends 'baseBack.html.twig' %}
 
-{% block title %}Create Espace{% endblock %}
+{% block title %}Create Event{% endblock %}
 
 {% block body %}
 <div class="container mt-5">
@@ -8,31 +8,15 @@
     <div class="col-lg-8">
       <div class="card shadow-lg border-0 rounded-4">
         <div class="card-body p-5">
-          <h2 class="mb-4 text-center">Create a New Espace</h2>
+          <h2 class="mb-4 text-center">Create a New Event</h2>
 
           {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
 
           <div class="mb-3">
-            {{ form_label(form.nomEspace, null, {'label_attr': {'class': 'form-label'}}) }}
-            {{ form_widget(form.nomEspace, {'attr': {'class': 'form-control'}}) }}
+            {{ form_label(form.nomEvent, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.nomEvent, {'attr': {'class': 'form-control'}}) }}
             <div class="text-danger mt-1" style="font-size: 0.95rem;">
-              {{ form_errors(form.nomEspace) }}
-            </div>
-          </div>
-
-          <div class="mb-3">
-            {{ form_label(form.adresse) }}
-            {{ form_widget(form.adresse, {'attr': {'class': 'form-control'}}) }}
-            <div class="text-danger mt-1" style="font-size: 0.95rem;">
-              {{ form_errors(form.adresse) }}
-            </div>
-          </div>
-
-          <div class="mb-3">
-            {{ form_label(form.capacite) }}
-            {{ form_widget(form.capacite, {'attr': {'class': 'form-control'}}) }}
-            <div class="text-danger mt-1" style="font-size: 0.95rem;">
-              {{ form_errors(form.capacite) }}
+              {{ form_errors(form.nomEvent) }}
             </div>
           </div>
 
@@ -45,21 +29,36 @@
           </div>
 
           <div class="mb-3">
-            {{ form_label(form.Type_espace) }}
-            {{ form_widget(form.Type_espace, {'attr': {'class': 'form-control'}}) }}
+            {{ form_label(form.details) }}
+            {{ form_widget(form.details, {'attr': {'class': 'form-control', 'rows': '3'}}) }}
             <div class="text-danger mt-1" style="font-size: 0.95rem;">
-              {{ form_errors(form.Type_espace) }}
+              {{ form_errors(form.details) }}
             </div>
           </div>
 
           <div class="mb-3">
-  {{ form_label(form.disponibilite) }}
-  {{ form_widget(form.disponibilite, {'attr': {'class': 'form-control', 'readonly': 'readonly'}}) }}
-  <div class="text-danger mt-1" style="font-size: 0.95rem;">
-    {{ form_errors(form.disponibilite) }}
-  </div>
-</div>
+            {{ form_label(form.date) }}
+            {{ form_widget(form.date, {'attr': {'class': 'form-control'}}) }}
+            <div class="text-danger mt-1" style="font-size: 0.95rem;">
+              {{ form_errors(form.date) }}
+            </div>
+          </div>
 
+          <div class="mb-3">
+            {{ form_label(form.nbrVisiteurs) }}
+            {{ form_widget(form.nbrVisiteurs, {'attr': {'class': 'form-control'}}) }}
+            <div class="text-danger mt-1" style="font-size: 0.95rem;">
+              {{ form_errors(form.nbrVisiteurs) }}
+            </div>
+          </div>
+
+          <div class="mb-3">
+            {{ form_label(form.nomEspace) }}
+            {{ form_widget(form.nomEspace, {'attr': {'class': 'form-control'}}) }}
+            <div class="text-danger mt-1" style="font-size: 0.95rem;">
+              {{ form_errors(form.nomEspace) }}
+            </div>
+          </div>
 
           <div class="mb-3">
             {{ form_label(form.image) }}
@@ -68,8 +67,6 @@
               {{ form_errors(form.image) }}
             </div>
           </div>
-
-          {{ form_widget(form.user, {'attr': {'style': 'display: none'}}) }}
 
           <div class="text-center">
             <button class="btn btn-primary px-4">{{ button_label|default('Save') }}</button>
@@ -80,9 +77,5 @@
       </div>
     </div>
   </div>
-</div>
-
-<div class="text-center mt-3">
-  <a href="{{ path('app_espace_index') }}" class="btn btn-link">← Back to list</a>
 </div>
 {% endblock %}

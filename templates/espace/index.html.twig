@@ -17,10 +17,11 @@
 <div class="section properties">
   <div class="container">
 
+    <!-- Bouton Création -->
     <div class="row mb-4">
       <div class="col-lg-12 text-center">
         <a href="{{ path('app_espace_new') }}" class="main-button custom-message-btn">
-          <i></i> Créer un espace
+          <i></i> + Créer un nouvel espace
         </a>
       </div>
     </div>
@@ -28,11 +29,21 @@
     <div class="row properties-box">
       {% for espace in espaces %}
         <div class="col-lg-4 col-md-6 align-self-center mb-30 properties-items">
-          <div class="item">
+          <div class="item position-relative">
             <a href="{{ path('app_espace_show', {'idEspace': espace.idEspace}) }}">
-              <img src="{{ asset('uploads/images/' ~ espace.image) }}" alt="">
+              <img 
+                src="{{ asset('uploads/' ~ (espace.image is not empty ? espace.image : 'exemple.jpg')) }}" 
+                class="card-img-top" 
+                alt="{{ espace.nomEspace }}"
+              >
+              {% if espace.image is empty %}
+                <span class="badge badge-secondary position-absolute"
+                      style="top: 10px; left: 10px; background-color: rgba(0,0,0,0.7); font-size: 0.75rem;">
+                  Placeholder
+                </span>
+              {% endif %}
             </a>
-            <span class="category">{{ espace.Type_espace }}</span>
+            <span class="category">{{ espace.TypeEspace }}</span>
             <h6>{{ espace.prix }} Dt</h6>
             <h4>
               <a href="{{ path('app_espace_show', {'idEspace': espace.idEspace}) }}">
@@ -40,17 +51,19 @@
               </a>
             </h4>
             <ul>
-              <li>Adresse: <span>{{ espace.adresse }}</span></li>
-              <li>Capacité: <span>{{ espace.capacite }}</span></li>
-              <li>Disponibilité: <span>{{ espace.disponibilite }}</span></li>
+              <li>Adresse : <span>{{ espace.adresse }}</span></li>
+              <li>Capacité : <span>{{ espace.capacite }}</span></li>
+              <li>Disponibilité : <span>{{ espace.disponibilite }}</span></li>
             </ul>
-            <div class="main-button">
+            <div class="main-button d-flex justify-content-center">
               <a href="{{ path('app_espace_show', {'idEspace': espace.idEspace}) }}">Détails</a>
             </div>
           </div>
         </div>
       {% else %}
-        <p>Aucun espace trouvé.</p>
+        <div class="col-12 text-center">
+          <div class="alert alert-warning">Aucun espace trouvé.</div>
+        </div>
       {% endfor %}
     </div>
   </div>

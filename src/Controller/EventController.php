@@ -21,6 +21,13 @@ final class EventController extends AbstractController
             'events' => $eventRepository->findAll(),
         ]);
     }
+    #[Route('/dashboard', name: 'dashboard_event_index', methods: ['GET'])]
+    public function indexDashboard(EventRepository $eventRepository): Response
+    {
+        return $this->render('event/indexBack.html.twig', [
+            'events' => $eventRepository->findAll(),
+        ]);
+    }
 
     #[Route('/new', name: 'app_event_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -28,43 +35,91 @@ final class EventController extends AbstractController
         $event = new Event();
         $form = $this->createForm(EventType::class, $event);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
-            // ✅ convert date first
+            // ✅ Convertir la date en string
             $dateObject = $form->get('date')->getData();
             if ($dateObject instanceof \DateTimeInterface) {
                 $event->setDate($dateObject->format('Y-m-d'));
             }
-        
-            // ✅ handle image
+    
+            // ✅ Gérer l'image
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
                 $newFilename = uniqid() . '.' . $imageFile->guessExtension();
-                $imageFile->move(
-                    $this->getParameter('event_images_directory'),
-                    $newFilename
-                );
+    
+                // Chemin vers le dossier uploads
+                $uploadDir = $this->getParameter('uploads_directory');
+                $imageFile->move($uploadDir, $newFilename);
+    
+                // Chemin absolu à sauvegarder dans la BD
                 $event->setImage($newFilename);
             }
-        
-            // ✅ now persist
+    
+            // ✅ Sauvegarder l'event
             $entityManager->persist($event);
             $entityManager->flush();
-        
+    
             return $this->redirectToRoute('app_event_index');
         }
-        
-
+    
         return $this->render('event/new.html.twig', [
             'event' => $event,
             'form' => $form,
         ]);
     }
+    #[Route('/newBack', name: 'dashboard_event_new', methods: ['GET', 'POST'])]
+    public function newDashboard(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $event = new Event();
+        $form = $this->createForm(EventType::class, $event);
+        $form->handleRequest($request);
+    
+        if ($form->isSubmitted() && $form->isValid()) {
+            // ✅ Convertir la date en string
+            $dateObject = $form->get('date')->getData();
+            if ($dateObject instanceof \DateTimeInterface) {
+                $event->setDate($dateObject->format('Y-m-d'));
+            }
+    
+            // ✅ Gérer l'image
+            $imageFile = $form->get('image')->getData();
+            if ($imageFile) {
+                $newFilename = uniqid() . '.' . $imageFile->guessExtension();
+    
+                // Chemin vers le dossier uploads
+                $uploadDir = $this->getParameter('uploads_directory');
+                $imageFile->move($uploadDir, $newFilename);
+    
+                // Chemin absolu à sauvegarder dans la BD
+                $event->setImage($newFilename);
+            }
+    
+            // ✅ Sauvegarder l'event
+            $entityManager->persist($event);
+            $entityManager->flush();
+    
+            return $this->redirectToRoute('dashboard_event_index');
+        }
+    
+        return $this->render('event/newBack.html.twig', [
+            'event' => $event,
+            'form' => $form,
+        ]);
+    }
+    
 
     #[Route('/{idEvent}', name: 'app_event_show', methods: ['GET'])]
     public function show(Event $event): Response
     {
         return $this->render('event/show.html.twig', [
+            'event' => $event,
+        ]);
+    }
+    #[Route('/show/{idEvent}', name: 'dashboard_event_show', methods: ['GET'])]
+    public function showDashboard(Event $event): Response
+    {
+        return $this->render('event/showBack.html.twig', [
             'event' => $event,
         ]);
     }
@@ -86,6 +141,23 @@ final class EventController extends AbstractController
             'form' => $form,
         ]);
     }
+     #[Route('/edit/{idEvent}', name: 'dashboard_event_edit', methods: ['GET', 'POST'])]
+    public function editDashboard(Request $request, Event $event, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(EventType::class, $event);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('dashboard_event_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('event/editBack.html.twig', [
+            'event' => $event,
+            'form' => $form,
+        ]);
+    }
 
     #[Route('/delete/{idEvent}', name: 'app_event_delete', methods: ['POST'])]
     public function delete(Request $request, Event $event, EntityManagerInterface $entityManager): Response
@@ -96,5 +168,15 @@ final class EventController extends AbstractController
         }
 
         return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
+    }
+     #[Route('/{idEvent}/delete', name: 'dashboard_event_delete', methods: ['POST'])]
+    public function deleteDashboard(Request $request, Event $event, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$event->getIdEvent(), $request->getPayload()->getString('_token'))) {
+            $entityManager->remove($event);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('dashboard_event_index', [], Response::HTTP_SEE_OTHER);
     }
 }

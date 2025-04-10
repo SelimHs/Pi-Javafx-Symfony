@@ -69,7 +69,7 @@ class EventType extends AbstractType
                     'message' => 'Veuillez sélectionner une image.',
                 ]),
                 new Assert\File([
-                    'maxSize' => '2M',
+                    'maxSize' => '3M',
                     'mimeTypes' => [
                         'image/jpeg',
                         'image/png',

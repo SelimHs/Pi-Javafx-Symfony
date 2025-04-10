@@ -20,9 +20,10 @@ class OrganisateurType extends AbstractType
             ->add('telef')
             ->add('espace', EntityType::class, [
                 'class' => Espace::class,
-                'choice_label' => 'id',
-            ])
-        ;
+                'choice_label' => 'nomEspace',     // Ce qui s'affiche dans le menu déroulant
+                'choice_value' => 'idEspace',      // L'identifiant réel de l'objet
+                'placeholder' => 'Sélectionnez un espace',
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

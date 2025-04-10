@@ -1,60 +1,126 @@
-{% extends 'base.html.twig' %}
+{% extends 'baseBack.html.twig' %}
 
-{% block title %}Billet index{% endblock %}
+{% block title %}Liste des Billets{% endblock %}
 
 {% block body %}
-<div class="page-heading header-text">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-12">
-          <span class="breadcrumb"><a href="{{path('app_home')}}">Accueil</a> / Billets</span>
-          <h3>Billets</h3>
+<div class="app-main__outer">
+  <div class="app-main__inner">
+    <div class="app-page-title">
+      <div class="page-title-wrapper">
+        <div class="page-title-heading">
+          <div class="page-title-icon">
+            <i class="pe-7s-ticket icon-gradient bg-happy-itmeo"></i>
+          </div>
+          <div>Gestion des Billets
+            <div class="page-title-subheading">Liste des billets achetés et leurs informations.</div>
+          </div>
+        </div>
+        <div class="page-title-actions">
+          <a href="{{ path('app_billet_new') }}" class="btn btn-success">
+            <i class="pe-7s-plus mr-2"></i> Nouveau Billet
+          </a>
         </div>
       </div>
     </div>
-  </div>
-  {# Bouton Send Message #}
-    <div class="row mb-4" style="padding-top: 10px;">
-      <div class="col-lg-12 text-center">
-        <a href="{{path('app_billet_new')}}" class="main-button custom-message-btn">
-          <i></i> Créer billet
-        </a>
+
+    <div class="row">
+      <div class="col-md-6 col-xl-4">
+        <div class="card mb-3 widget-content bg-midnight-bloom">
+          <div class="widget-content-wrapper text-white">
+            <div class="widget-content-left">
+              <div class="widget-heading">Billets Totaux</div>
+              <div class="widget-subheading">Nombre de billets vendus</div>
+            </div>
+            <div class="widget-content-right">
+              <div class="widget-numbers text-white"><span>{{ totalBillets }}</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+      <div class="col-md-6 col-xl-4">
+        <div class="card mb-3 widget-content bg-arielle-smile">
+          <div class="widget-content-wrapper text-white">
+            <div class="widget-content-left">
+              <div class="widget-heading">Billets VIP</div>
+              <div class="widget-subheading">Nombre de billets VIP</div>
+            </div>
+            <div class="widget-content-right">
+              <div class="widget-numbers text-white"><span>{{ totalVip }}</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+      <div class="col-md-6 col-xl-4">
+        <div class="card mb-3 widget-content bg-grow-early">
+          <div class="widget-content-wrapper text-white">
+            <div class="widget-content-left">
+              <div class="widget-heading">Billets Duo</div>
+              <div class="widget-subheading">Nombre de billets DUO</div>
+            </div>
+            <div class="widget-content-right">
+              <div class="widget-numbers text-white"><span>{{ totalDuo }}</span></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <h1>Billet index</h1>
+    
 
-    <table class="table">
-        <thead>
+    <div class="main-card mb-3 card">
+      <div class="card-header">
+        Billets enregistrés
+      </div>
+      <div class="table-responsive">
+        <table class="align-middle mb-0 table table-striped table-hover">
+          <thead>
             <tr>
-                <th>IdBillet</th>
-                <th>Proprietaire</th>
-                <th>Prix</th>
-                <th>DateAchat</th>
-                <th>Type</th>
-                <th>actions</th>
+              <th class="text-center">#</th>
+              <th>Propriétaire</th>
+              <th class="text-center">Prix</th>
+              <th class="text-center">Date d'achat</th>
+              <th class="text-center">Type</th>
+              <th class="text-center">Actions</th>
             </tr>
-        </thead>
-        <tbody>
-        {% for billet in billets %}
-            <tr>
-                <td>{{ billet.idBillet }}</td>
-                <td>{{ billet.proprietaire }}</td>
-                <td>{{ billet.prix }}</td>
-                <td>{{ billet.dateAchat ? billet.dateAchat|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ billet.type }}</td>
+          </thead>
+          <tbody>
+            {% for billet in billets %}
+              <tr>
+                <td class="text-center text-muted">#{{ billet.idBillet }}</td>
                 <td>
-                    <a href="{{ path('app_billet_show', {'idBillet': billet.idBillet}) }}">show</a>
-                    <a href="{{ path('app_billet_edit', {'idBillet': billet.idBillet}) }}">edit</a>
+                  <div class="widget-content p-0">
+                    <div class="widget-content-wrapper">
+                      <div class="widget-content-left flex2">
+                        <div class="widget-heading">{{ billet.proprietaire }}</div>
+                      </div>
+                    </div>
+                  </div>
                 </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_billet_new') }}">Create new</a>
+                <td class="text-center">{{ billet.prix }} DT</td>
+                <td class="text-center">{{ billet.dateAchat ? billet.dateAchat|date('Y-m-d H:i') : '—' }}</td>
+                <td class="text-center">
+                  <div class="badge badge-pill 
+                    {% if billet.type == 'VIP' %}badge-danger
+                    {% elseif billet.type == 'DUO' %}badge-warning
+                    {% else %}badge-info{% endif %}">
+                    {{ billet.type }}
+                  </div>
+                </td>
+                <td class="text-center">
+                  <a href="{{ path('app_billet_show', {'idBillet': billet.idBillet}) }}" class="btn btn-sm btn-info">Détails</a>
+                </td>
+              </tr>
+            {% else %}
+              <tr>
+                <td colspan="6" class="text-center text-muted">Aucun billet trouvé.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
