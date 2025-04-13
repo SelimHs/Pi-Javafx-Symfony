@@ -58,12 +58,16 @@ final class EspaceController extends AbstractController
 
 
     #[Route('/{idEspace}', name: 'app_espace_show', methods: ['GET'])]
-    public function show(Espace $espace): Response
+    public function show(Espace $espace, Request $request): Response
     {
+        $request->getSession()->set('idEspace', $espace->getIdEspace());
+
         return $this->render('espace/show.html.twig', [
             'espace' => $espace,
         ]);
     }
+
+
 
     #[Route('/{idEspace}/edit', name: 'app_espace_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Espace $espace, EntityManagerInterface $entityManager): Response
@@ -72,9 +76,27 @@ final class EspaceController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            /** @var UploadedFile $imageFile */
+            $imageFile = $form->get('image')->getData();
+
+            if ($imageFile) {
+                $newFilename = uniqid() . '.' . $imageFile->guessExtension();
+
+                try {
+                    $imageFile->move(
+                        $this->getParameter('uploads_directory'),
+                        $newFilename
+                    );
+                    $espace->setImage($newFilename);
+                } catch (FileException $e) {
+                    // Gérer l'erreur ici si besoin
+                }
+            }
+
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_espace_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_espace_show', ['idEspace' => $espace->getIdEspace()]);
         }
 
         return $this->render('espace/edit.html.twig', [

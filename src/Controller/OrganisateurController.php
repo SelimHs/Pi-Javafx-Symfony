@@ -33,7 +33,15 @@ final class OrganisateurController extends AbstractController
             $entityManager->persist($organisateur);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_organisateur_index', [], Response::HTTP_SEE_OTHER);
+            // 🔁 Rediriger vers la page de détails de l'espace
+            $espaceId = $organisateur->getEspace()?->getIdEspace(); // méthode safe pour éviter une erreur si null
+
+            if ($espaceId) {
+                return $this->redirectToRoute('app_espace_show', ['idEspace' => $espaceId]);
+            }
+
+            // Si pas d'espace, revenir à la liste générale
+            return $this->redirectToRoute('app_organisateur_index');
         }
 
         return $this->render('organisateur/new.html.twig', [
@@ -41,6 +49,7 @@ final class OrganisateurController extends AbstractController
             'form' => $form,
         ]);
     }
+
 
     #[Route('/{id_org}', name: 'app_organisateur_show', methods: ['GET'])]
     public function show(Organisateur $organisateur): Response
@@ -71,11 +80,20 @@ final class OrganisateurController extends AbstractController
     #[Route('/{id_org}', name: 'app_organisateur_delete', methods: ['POST'])]
     public function delete(Request $request, Organisateur $organisateur, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$organisateur->getId_org(), $request->getPayload()->getString('_token'))) {
+        // Récupérer l'ID de l'espace AVANT de supprimer l'organisateur
+        $idEspace = $organisateur->getEspace()?->getIdEspace();
+
+        if ($this->isCsrfTokenValid('delete' . $organisateur->getId_org(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($organisateur);
             $entityManager->flush();
         }
 
+        // Redirection vers la page de détail de l'espace (si espace lié)
+        if ($idEspace) {
+            return $this->redirectToRoute('app_espace_show', ['idEspace' => $idEspace]);
+        }
+
+        // Fallback si pas d'espace (très peu probable)
         return $this->redirectToRoute('app_organisateur_index', [], Response::HTTP_SEE_OTHER);
     }
 }
