@@ -27,21 +27,21 @@
         {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
 
         <div class="mb-3">
-          {{ form_label(form.nomOrg) }}
-          {{ form_widget(form.nomOrg, {'attr': {'class': 'form-control', 'required': true, 'minlength': '3'}}) }}
-          <div class="text-danger small mt-1">{{ form_errors(form.nomOrg) }}</div>
+          {{ form_label(form.nom_org) }}
+          {{ form_widget(form.nom_org, {'attr': {'class': 'form-control', 'required': true, 'minlength': '3'}}) }}
+          <div class="text-danger small mt-1">{{ form_errors(form.nom_org) }}</div>
         </div>
 
         <div class="mb-3">
-          {{ form_label(form.prenomOrg) }}
-          {{ form_widget(form.prenomOrg, {'attr': {'class': 'form-control', 'required': true, 'minlength': '3'}}) }}
-          <div class="text-danger small mt-1">{{ form_errors(form.prenomOrg) }}</div>
+          {{ form_label(form.prenom_org) }}
+          {{ form_widget(form.prenom_org, {'attr': {'class': 'form-control', 'required': true, 'minlength': '3'}}) }}
+          <div class="text-danger small mt-1">{{ form_errors(form.prenom_org) }}</div>
         </div>
 
         <div class="mb-3">
-          {{ form_label(form.descriptionOrg) }}
-          {{ form_widget(form.descriptionOrg, {'attr': {'class': 'form-control', 'rows': '3', 'required': true}}) }}
-          <div class="text-danger small mt-1">{{ form_errors(form.descriptionOrg) }}</div>
+          {{ form_label(form.description_org) }}
+          {{ form_widget(form.description_org, {'attr': {'class': 'form-control', 'rows': '3', 'required': true}}) }}
+          <div class="text-danger small mt-1">{{ form_errors(form.description_org) }}</div>
         </div>
 
         <div class="mb-3">
