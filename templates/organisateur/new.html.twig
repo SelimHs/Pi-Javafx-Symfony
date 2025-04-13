@@ -79,17 +79,8 @@
           </div>
 
           {# Espace : requis #}
-          <div class="mb-3">
-            {{ form_label(form.espace) }}
-            {{ form_widget(form.espace, {
-              'attr': {
-                'class': 'form-control',
-                'required': 'required'
-              }
-            }) }}
-            <div class="text-danger mt-1" style="font-size: 0.95rem;">
-              {{ form_errors(form.espace) }}
-            </div>
+                  {{ form_row(form.espace) }}
+
           </div>
 
           <div class="text-center mt-4">
