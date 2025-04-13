@@ -27,25 +27,29 @@ final class EspaceController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $espace = new Espace();
-
-        // ✅ Initialiser la disponibilité par défaut à "Disponible"
-        $espace->setDisponibilite('Disponible');
-
         $form = $this->createForm(EspaceType::class, $espace);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
-                $newFilename = uniqid() . '.' . $imageFile->guessExtension();
-                $imageFile->move($this->getParameter('uploads_directory'), $newFilename);
-                $espace->setImage($newFilename);
+                $newFilename = uniqid().'.'.$imageFile->guessExtension();
+    
+                try {
+                    $imageFile->move(
+                        $this->getParameter('espace_images_directory'), // configure in services.yaml
+                        $newFilename
+                    );
+                    $espace->setImage($newFilename);
+                } catch (FileException $e) {
+                    // handle error
+                }
             }
 
             $entityManager->persist($espace);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_espace_index');
+            return $this->redirectToRoute('app_espace_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('espace/new.html.twig', [
@@ -53,8 +57,6 @@ final class EspaceController extends AbstractController
             'form' => $form,
         ]);
     }
-
-
 
     #[Route('/{idEspace}', name: 'app_espace_show', methods: ['GET'])]
     public function show(Espace $espace): Response
@@ -85,7 +87,7 @@ final class EspaceController extends AbstractController
     #[Route('/{idEspace}', name: 'app_espace_delete', methods: ['POST'])]
     public function delete(Request $request, Espace $espace, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $espace->getIdEspace(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$espace->getIdEspace(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($espace);
             $entityManager->flush();
         }
