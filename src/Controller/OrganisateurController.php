@@ -96,4 +96,81 @@ final class OrganisateurController extends AbstractController
         // Fallback si pas d'espace (très peu probable)
         return $this->redirectToRoute('app_organisateur_index', [], Response::HTTP_SEE_OTHER);
     }
+    // Route ajout depuis le détail d’un espace
+    #[Route('/newBack/{idEspace}', name: 'dashboard_organisateur_new', methods: ['GET', 'POST'])]
+    public function newBack(Request $request, int $idEspace, EntityManagerInterface $entityManager): Response
+    {
+        $organisateur = new Organisateur();
+
+        // Lier à l'espace
+        $espace = $entityManager->getRepository(\App\Entity\Espace::class)->find($idEspace);
+        if (!$espace) {
+            throw $this->createNotFoundException('Espace non trouvé');
+        }
+
+        $organisateur->setEspace($espace);
+
+        $form = $this->createForm(OrganisateurType::class, $organisateur);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($organisateur);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('dashboard_espace_show', ['idEspace' => $idEspace]);
+        }
+
+        return $this->render('organisateur/newBack.html.twig', [
+            'organisateur' => $organisateur,
+            'form' => $form,
+        ]);
+    }
+
+    // Route ajout général depuis la liste des organisateurs
+    #[Route('/newBack', name: 'dashboard_organisateur_new_general', methods: ['GET', 'POST'])]
+    public function newBackGeneral(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $organisateur = new Organisateur();
+
+        $form = $this->createForm(OrganisateurType::class, $organisateur);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($organisateur);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_organisateur_index');
+        }
+
+        return $this->render('organisateur/newBackGeneral.html.twig', [
+            'organisateur' => $organisateur,
+            'form' => $form,
+        ]);
+    }
+
+
+
+    #[Route('/editBack/{id_org}', name: 'dashboard_organisateur_edit', methods: ['GET', 'POST'])]
+    public function editBack(Request $request, Organisateur $organisateur, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(OrganisateurType::class, $organisateur);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            $espaceId = $organisateur->getEspace()?->getIdEspace();
+
+            if ($espaceId) {
+                return $this->redirectToRoute('dashboard_espace_show', ['idEspace' => $espaceId]);
+            }
+
+            return $this->redirectToRoute('dashboard_espace_index');
+        }
+
+        return $this->render('organisateur/editBack.html.twig', [
+            'organisateur' => $organisateur,
+            'form' => $form,
+        ]);
+    }
 }

@@ -1,0 +1,55 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %}Modifier Organisateur{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow border-0 rounded-4">
+        <div class="card-body p-5">
+          <h2 class="mb-4 text-center">Modifier l'Organisateur</h2>
+
+          {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+          <div class="mb-3">
+            {{ form_label(form.nom_org) }}
+            {{ form_widget(form.nom_org, {'attr': {'class': 'form-control', 'required': true, 'minlength': 3}}) }}
+            <div class="text-danger small">{{ form_errors(form.nom_org) }}</div>
+          </div>
+
+          <div class="mb-3">
+            {{ form_label(form.prenom_org) }}
+            {{ form_widget(form.prenom_org, {'attr': {'class': 'form-control', 'required': true, 'minlength': 3}}) }}
+            <div class="text-danger small">{{ form_errors(form.prenom_org) }}</div>
+          </div>
+
+          <div class="mb-3">
+            {{ form_label(form.description_org) }}
+            {{ form_widget(form.description_org, {'attr': {'class': 'form-control', 'rows': 3}}) }}
+            <div class="text-danger small">{{ form_errors(form.description_org) }}</div>
+          </div>
+
+          <div class="mb-3">
+            {{ form_label(form.telef) }}
+            {{ form_widget(form.telef, {'attr': {'class': 'form-control', 'type': 'tel'}}) }}
+            <div class="text-danger small">{{ form_errors(form.telef) }}</div>
+          </div>
+
+          <div class="mb-3">
+            {{ form_label(form.espace) }}
+            {{ form_widget(form.espace, {'attr': {'class': 'form-control'}}) }}
+            <div class="text-danger small">{{ form_errors(form.espace) }}</div>
+          </div>
+
+          <div class="text-center">
+            <button class="btn btn-warning px-4">Mettre à jour</button>
+          </div>
+
+          {{ form_end(form) }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
