@@ -31,19 +31,17 @@ final class EspaceController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Gestion de l'image comme dans le code Event
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
-                $newFilename = uniqid().'.'.$imageFile->guessExtension();
-    
-                try {
-                    $imageFile->move(
-                        $this->getParameter('espace_images_directory'), // configure in services.yaml
-                        $newFilename
-                    );
-                    $espace->setImage($newFilename);
-                } catch (FileException $e) {
-                    // handle error
-                }
+                $newFilename = uniqid() . '.' . $imageFile->guessExtension();
+
+                // Chemin vers le dossier uploads (ici, on utilise le même paramètre que pour event)
+                $uploadDir = $this->getParameter('uploads_directory');
+                $imageFile->move($uploadDir, $newFilename);
+
+                // Sauvegarder le nom de l'image dans l'entité
+                $espace->setImage($newFilename);
             }
 
             $entityManager->persist($espace);
@@ -57,6 +55,7 @@ final class EspaceController extends AbstractController
             'form' => $form,
         ]);
     }
+
 
     #[Route('/{idEspace}', name: 'app_espace_show', methods: ['GET'])]
     public function show(Espace $espace): Response
@@ -87,7 +86,7 @@ final class EspaceController extends AbstractController
     #[Route('/{idEspace}', name: 'app_espace_delete', methods: ['POST'])]
     public function delete(Request $request, Espace $espace, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$espace->getIdEspace(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $espace->getIdEspace(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($espace);
             $entityManager->flush();
         }
