@@ -448,6 +448,6 @@ class __TwigTemplate_25d1a6efb5877ada536ef54018ddeefb extends Template
   <a href=\"{{ path('app_espace_index') }}\" class=\"btn btn-link\">← Back to list</a>
 </div>
 {% endblock %}
-", "espace/new.html.twig", "C:\\wamp64\\gestion_espace_symfony\\templates\\espace\\new.html.twig");
+", "espace/new.html.twig", "C:\\wamp64\\Pi-Javafx-Symfony-selimWeb (8)\\Pi-Javafx-Symfony-selimWeb\\templates\\espace\\new.html.twig");
     }
 }

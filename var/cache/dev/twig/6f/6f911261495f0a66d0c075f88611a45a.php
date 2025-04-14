@@ -137,7 +137,7 @@ class __TwigTemplate_eb2871166b35352af9c697c2ba5b0d0e extends Template
           </div>
         </div>
       </div>
-    
+
       <div class=\"col-md-6 col-xl-4\">
         <div class=\"card mb-3 widget-content bg-arielle-smile\">
           <div class=\"widget-content-wrapper text-white\">
@@ -154,7 +154,7 @@ class __TwigTemplate_eb2871166b35352af9c697c2ba5b0d0e extends Template
           </div>
         </div>
       </div>
-    
+
       <div class=\"col-md-6 col-xl-4\">
         <div class=\"card mb-3 widget-content bg-grow-early\">
           <div class=\"widget-content-wrapper text-white\">
@@ -173,11 +173,10 @@ class __TwigTemplate_eb2871166b35352af9c697c2ba5b0d0e extends Template
       </div>
     </div>
 
-    
-
     <div class=\"main-card mb-3 card\">
-      <div class=\"card-header\">
+      <div class=\"card-header d-flex justify-content-between align-items-center\">
         Billets enregistrés
+        <input type=\"text\" id=\"billetSearch\" class=\"form-control w-25\" placeholder=\"Rechercher un billet...\">
       </div>
       <div class=\"table-responsive\">
         <table class=\"align-middle mb-0 table table-striped table-hover\">
@@ -191,74 +190,74 @@ class __TwigTemplate_eb2871166b35352af9c697c2ba5b0d0e extends Template
               <th class=\"text-center\">Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id=\"billetTableBody\">
             ";
-        // line 89
+        // line 88
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["billets"]) || array_key_exists("billets", $context) ? $context["billets"] : (function () { throw new RuntimeError('Variable "billets" does not exist.', 89, $this->source); })()));
+        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["billets"]) || array_key_exists("billets", $context) ? $context["billets"] : (function () { throw new RuntimeError('Variable "billets" does not exist.', 88, $this->source); })()));
         $context['_iterated'] = false;
         foreach ($context['_seq'] as $context["_key"] => $context["billet"]) {
-            // line 90
-            yield "              <tr>
+            // line 89
+            yield "              <tr class=\"billet-row\">
                 <td class=\"text-center text-muted\">#";
-            // line 91
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["billet"], "idBillet", [], "any", false, false, false, 91), "html", null, true);
+            // line 90
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["billet"], "idBillet", [], "any", false, false, false, 90), "html", null, true);
             yield "</td>
                 <td>
                   <div class=\"widget-content p-0\">
                     <div class=\"widget-content-wrapper\">
                       <div class=\"widget-content-left flex2\">
                         <div class=\"widget-heading\">";
-            // line 96
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["billet"], "proprietaire", [], "any", false, false, false, 96), "html", null, true);
+            // line 95
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["billet"], "proprietaire", [], "any", false, false, false, 95), "html", null, true);
             yield "</div>
                       </div>
                     </div>
                   </div>
                 </td>
                 <td class=\"text-center\">";
-            // line 101
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["billet"], "prix", [], "any", false, false, false, 101), "html", null, true);
+            // line 100
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["billet"], "prix", [], "any", false, false, false, 100), "html", null, true);
             yield " DT</td>
                 <td class=\"text-center\">";
-            // line 102
-            yield ((CoreExtension::getAttribute($this->env, $this->source, $context["billet"], "dateAchat", [], "any", false, false, false, 102)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["billet"], "dateAchat", [], "any", false, false, false, 102), "Y-m-d H:i"), "html", null, true)) : ("—"));
+            // line 101
+            yield ((CoreExtension::getAttribute($this->env, $this->source, $context["billet"], "dateAchat", [], "any", false, false, false, 101)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["billet"], "dateAchat", [], "any", false, false, false, 101), "Y-m-d H:i"), "html", null, true)) : ("—"));
             yield "</td>
                 <td class=\"text-center\">
                   <div class=\"badge badge-pill 
                     ";
-            // line 105
-            if ((CoreExtension::getAttribute($this->env, $this->source, $context["billet"], "type", [], "any", false, false, false, 105) == "VIP")) {
+            // line 104
+            if ((CoreExtension::getAttribute($this->env, $this->source, $context["billet"], "type", [], "any", false, false, false, 104) == "VIP")) {
                 yield "badge-danger
                     ";
-            } elseif ((CoreExtension::getAttribute($this->env, $this->source,             // line 106
-$context["billet"], "type", [], "any", false, false, false, 106) == "DUO")) {
+            } elseif ((CoreExtension::getAttribute($this->env, $this->source,             // line 105
+$context["billet"], "type", [], "any", false, false, false, 105) == "DUO")) {
                 yield "badge-warning
                     ";
             } else {
-                // line 107
+                // line 106
                 yield "badge-info";
             }
             yield "\">
                     ";
-            // line 108
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["billet"], "type", [], "any", false, false, false, 108), "html", null, true);
+            // line 107
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["billet"], "type", [], "any", false, false, false, 107), "html", null, true);
             yield "
                   </div>
                 </td>
                 <td class=\"text-center\">
                   <a href=\"";
-            // line 112
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_billet_show", ["idBillet" => CoreExtension::getAttribute($this->env, $this->source, $context["billet"], "idBillet", [], "any", false, false, false, 112)]), "html", null, true);
+            // line 111
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_billet_show", ["idBillet" => CoreExtension::getAttribute($this->env, $this->source, $context["billet"], "idBillet", [], "any", false, false, false, 111)]), "html", null, true);
             yield "\" class=\"btn btn-sm btn-info\">Détails</a>
                 </td>
               </tr>
             ";
             $context['_iterated'] = true;
         }
-        // line 115
+        // line 114
         if (!$context['_iterated']) {
-            // line 116
+            // line 115
             yield "              <tr>
                 <td colspan=\"6\" class=\"text-center text-muted\">Aucun billet trouvé.</td>
               </tr>
@@ -267,13 +266,25 @@ $context["billet"], "type", [], "any", false, false, false, 106) == "DUO")) {
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['billet'], $context['_parent'], $context['_iterated']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 120
+        // line 119
         yield "          </tbody>
         </table>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+  document.getElementById('billetSearch').addEventListener('input', function () {
+    const query = this.value.toLowerCase();
+    const rows = document.querySelectorAll('#billetTableBody .billet-row');
+
+    rows.forEach(row => {
+      const text = row.textContent.toLowerCase();
+      row.style.display = text.includes(query) ? '' : 'none';
+    });
+  });
+</script>
 ";
         
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
@@ -305,7 +316,7 @@ $context["billet"], "type", [], "any", false, false, false, 106) == "DUO")) {
      */
     public function getDebugInfo(): array
     {
-        return array (  271 => 120,  262 => 116,  260 => 115,  252 => 112,  245 => 108,  240 => 107,  235 => 106,  231 => 105,  225 => 102,  221 => 101,  213 => 96,  205 => 91,  202 => 90,  197 => 89,  168 => 63,  151 => 49,  134 => 35,  115 => 19,  100 => 6,  87 => 5,  64 => 3,  41 => 1,);
+        return array (  270 => 119,  261 => 115,  259 => 114,  251 => 111,  244 => 107,  239 => 106,  234 => 105,  230 => 104,  224 => 101,  220 => 100,  212 => 95,  204 => 90,  201 => 89,  196 => 88,  168 => 63,  151 => 49,  134 => 35,  115 => 19,  100 => 6,  87 => 5,  64 => 3,  41 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -349,7 +360,7 @@ $context["billet"], "type", [], "any", false, false, false, 106) == "DUO")) {
           </div>
         </div>
       </div>
-    
+
       <div class=\"col-md-6 col-xl-4\">
         <div class=\"card mb-3 widget-content bg-arielle-smile\">
           <div class=\"widget-content-wrapper text-white\">
@@ -363,7 +374,7 @@ $context["billet"], "type", [], "any", false, false, false, 106) == "DUO")) {
           </div>
         </div>
       </div>
-    
+
       <div class=\"col-md-6 col-xl-4\">
         <div class=\"card mb-3 widget-content bg-grow-early\">
           <div class=\"widget-content-wrapper text-white\">
@@ -379,11 +390,10 @@ $context["billet"], "type", [], "any", false, false, false, 106) == "DUO")) {
       </div>
     </div>
 
-    
-
     <div class=\"main-card mb-3 card\">
-      <div class=\"card-header\">
+      <div class=\"card-header d-flex justify-content-between align-items-center\">
         Billets enregistrés
+        <input type=\"text\" id=\"billetSearch\" class=\"form-control w-25\" placeholder=\"Rechercher un billet...\">
       </div>
       <div class=\"table-responsive\">
         <table class=\"align-middle mb-0 table table-striped table-hover\">
@@ -397,9 +407,9 @@ $context["billet"], "type", [], "any", false, false, false, 106) == "DUO")) {
               <th class=\"text-center\">Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id=\"billetTableBody\">
             {% for billet in billets %}
-              <tr>
+              <tr class=\"billet-row\">
                 <td class=\"text-center text-muted\">#{{ billet.idBillet }}</td>
                 <td>
                   <div class=\"widget-content p-0\">
@@ -435,7 +445,19 @@ $context["billet"], "type", [], "any", false, false, false, 106) == "DUO")) {
     </div>
   </div>
 </div>
+
+<script>
+  document.getElementById('billetSearch').addEventListener('input', function () {
+    const query = this.value.toLowerCase();
+    const rows = document.querySelectorAll('#billetTableBody .billet-row');
+
+    rows.forEach(row => {
+      const text = row.textContent.toLowerCase();
+      row.style.display = text.includes(query) ? '' : 'none';
+    });
+  });
+</script>
 {% endblock %}
-", "billet/index.html.twig", "C:\\wamp64\\gestion_espace_symfony\\templates\\billet\\index.html.twig");
+", "billet/index.html.twig", "C:\\wamp64\\Pi-Javafx-Symfony-selimWeb (8)\\Pi-Javafx-Symfony-selimWeb\\templates\\billet\\index.html.twig");
     }
 }

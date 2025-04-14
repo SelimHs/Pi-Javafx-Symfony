@@ -126,80 +126,88 @@ class __TwigTemplate_44d3a72906849517f5cc99d41f1aea92 extends Template
       </div>
     </div>
 
-    <div class=\"row properties-box\">
+    <!-- Search Bar -->
+    <div class=\"row mb-4\">
+      <div class=\"col-lg-12 text-center\">
+        <input type=\"text\" id=\"eventSearch\" class=\"form-control w-50 mx-auto\" placeholder=\"Rechercher un évènement...\">
+      </div>
+    </div>
+
+    <!-- Events Grid -->
+    <div class=\"row properties-box\" id=\"eventGrid\">
       ";
-        // line 30
+        // line 38
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["events"]) || array_key_exists("events", $context) ? $context["events"] : (function () { throw new RuntimeError('Variable "events" does not exist.', 30, $this->source); })()));
+        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["events"]) || array_key_exists("events", $context) ? $context["events"] : (function () { throw new RuntimeError('Variable "events" does not exist.', 38, $this->source); })()));
         $context['_iterated'] = false;
         foreach ($context['_seq'] as $context["_key"] => $context["event"]) {
-            // line 31
-            yield "        <div class=\"col-lg-4 col-md-6 align-self-center mb-30 properties-items\">
+            // line 39
+            yield "        <div class=\"col-lg-4 col-md-6 align-self-center mb-30 properties-items event-card\">
           <div class=\"item position-relative\">
             <a href=\"";
-            // line 33
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_event_show", ["idEvent" => CoreExtension::getAttribute($this->env, $this->source, $context["event"], "idEvent", [], "any", false, false, false, 33)]), "html", null, true);
+            // line 41
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_event_show", ["idEvent" => CoreExtension::getAttribute($this->env, $this->source, $context["event"], "idEvent", [], "any", false, false, false, 41)]), "html", null, true);
             yield "\">
               <img 
-              src=\"";
-            // line 35
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/" . (( !Twig\Extension\CoreExtension::testEmpty(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "image", [], "any", false, false, false, 35))) ? (CoreExtension::getAttribute($this->env, $this->source, $context["event"], "image", [], "any", false, false, false, 35)) : ("exemple.jpg")))), "html", null, true);
+                src=\"";
+            // line 43
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/" . (( !Twig\Extension\CoreExtension::testEmpty(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "image", [], "any", false, false, false, 43))) ? (CoreExtension::getAttribute($this->env, $this->source, $context["event"], "image", [], "any", false, false, false, 43)) : ("exemple.jpg")))), "html", null, true);
             yield "\" 
-              class=\"card-img-top\" 
-              alt=\"";
-            // line 37
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "nomEvent", [], "any", false, false, false, 37), "html", null, true);
-            yield "\"
-            >
-            ";
-            // line 39
-            if (Twig\Extension\CoreExtension::testEmpty(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "image", [], "any", false, false, false, 39))) {
-                // line 40
-                yield "            <span class=\"badge badge-secondary position-absolute\"
-                  style=\"top: 10px; left: 10px; background-color: rgba(0,0,0,0.7); font-size: 0.75rem;\">
-              Placeholder
-            </span>
-            ";
-            }
+                class=\"card-img-top\" 
+                alt=\"";
             // line 45
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "nomEvent", [], "any", false, false, false, 45), "html", null, true);
+            yield "\"
+              >
+              ";
+            // line 47
+            if (Twig\Extension\CoreExtension::testEmpty(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "image", [], "any", false, false, false, 47))) {
+                // line 48
+                yield "                <span class=\"badge badge-secondary position-absolute\"
+                      style=\"top: 10px; left: 10px; background-color: rgba(0,0,0,0.7); font-size: 0.75rem;\">
+                  Placeholder
+                </span>
+              ";
+            }
+            // line 53
             yield "            </a>
             <span class=\"category\">";
-            // line 46
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "nomEspace", [], "any", false, false, false, 46), "html", null, true);
+            // line 54
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "nomEspace", [], "any", false, false, false, 54), "html", null, true);
             yield "</span>
             <h6>";
-            // line 47
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "prix", [], "any", false, false, false, 47), "html", null, true);
+            // line 55
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "prix", [], "any", false, false, false, 55), "html", null, true);
             yield " Dt</h6>
             <h4>
               <a href=\"";
-            // line 49
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_event_show", ["idEvent" => CoreExtension::getAttribute($this->env, $this->source, $context["event"], "idEvent", [], "any", false, false, false, 49)]), "html", null, true);
+            // line 57
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_event_show", ["idEvent" => CoreExtension::getAttribute($this->env, $this->source, $context["event"], "idEvent", [], "any", false, false, false, 57)]), "html", null, true);
             yield "\">
                 ";
-            // line 50
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "nomEvent", [], "any", false, false, false, 50), "html", null, true);
+            // line 58
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "nomEvent", [], "any", false, false, false, 58), "html", null, true);
             yield "
               </a>
             </h4>
             <ul>
               <li>Details: <span>";
-            // line 54
-            yield (((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["event"], "details", [], "any", false, false, false, 54)) > 40)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((Twig\Extension\CoreExtension::slice($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["event"], "details", [], "any", false, false, false, 54), 0, 40) . "..."), "html", null, true)) : ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "details", [], "any", false, false, false, 54), "html", null, true)));
+            // line 62
+            yield (((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["event"], "details", [], "any", false, false, false, 62)) > 40)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((Twig\Extension\CoreExtension::slice($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["event"], "details", [], "any", false, false, false, 62), 0, 40) . "..."), "html", null, true)) : ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "details", [], "any", false, false, false, 62), "html", null, true)));
             yield "</span></li>
               <li>Date: <span>";
-            // line 55
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "date", [], "any", false, false, false, 55), "html", null, true);
+            // line 63
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "date", [], "any", false, false, false, 63), "html", null, true);
             yield "</span></li>
               <li>Visitors: <span>";
-            // line 56
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "nbrVisiteurs", [], "any", false, false, false, 56), "html", null, true);
+            // line 64
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "nbrVisiteurs", [], "any", false, false, false, 64), "html", null, true);
             yield "</span></li>
             </ul>
             <div class=\"main-button\">
               <a href=\"";
-            // line 59
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_event_show", ["idEvent" => CoreExtension::getAttribute($this->env, $this->source, $context["event"], "idEvent", [], "any", false, false, false, 59)]), "html", null, true);
+            // line 67
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_event_show", ["idEvent" => CoreExtension::getAttribute($this->env, $this->source, $context["event"], "idEvent", [], "any", false, false, false, 67)]), "html", null, true);
             yield "\">Détails</a>
             </div>
           </div>
@@ -207,9 +215,9 @@ class __TwigTemplate_44d3a72906849517f5cc99d41f1aea92 extends Template
       ";
             $context['_iterated'] = true;
         }
-        // line 63
+        // line 71
         if (!$context['_iterated']) {
-            // line 64
+            // line 72
             yield "        <div class=\"col-12\">
           <div class=\"alert alert-warning text-center\">Aucun évènement trouvé.</div>
         </div>
@@ -218,10 +226,23 @@ class __TwigTemplate_44d3a72906849517f5cc99d41f1aea92 extends Template
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['event'], $context['_parent'], $context['_iterated']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 68
+        // line 76
         yield "    </div>
   </div>
 </div>
+
+<script>
+  const searchInput = document.getElementById('eventSearch');
+  const cards = document.querySelectorAll('.event-card');
+
+  searchInput.addEventListener('input', function () {
+    const query = this.value.toLowerCase();
+    cards.forEach(card => {
+      const content = card.textContent.toLowerCase();
+      card.style.display = content.includes(query) ? '' : 'none';
+    });
+  });
+</script>
 ";
         
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
@@ -253,7 +274,7 @@ class __TwigTemplate_44d3a72906849517f5cc99d41f1aea92 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  222 => 68,  213 => 64,  211 => 63,  202 => 59,  196 => 56,  192 => 55,  188 => 54,  181 => 50,  177 => 49,  172 => 47,  168 => 46,  165 => 45,  158 => 40,  156 => 39,  151 => 37,  146 => 35,  141 => 33,  137 => 31,  132 => 30,  122 => 23,  106 => 10,  100 => 6,  87 => 5,  64 => 3,  41 => 1,);
+        return array (  230 => 76,  221 => 72,  219 => 71,  210 => 67,  204 => 64,  200 => 63,  196 => 62,  189 => 58,  185 => 57,  180 => 55,  176 => 54,  173 => 53,  166 => 48,  164 => 47,  159 => 45,  154 => 43,  149 => 41,  145 => 39,  140 => 38,  122 => 23,  106 => 10,  100 => 6,  87 => 5,  64 => 3,  41 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -286,22 +307,30 @@ class __TwigTemplate_44d3a72906849517f5cc99d41f1aea92 extends Template
       </div>
     </div>
 
-    <div class=\"row properties-box\">
+    <!-- Search Bar -->
+    <div class=\"row mb-4\">
+      <div class=\"col-lg-12 text-center\">
+        <input type=\"text\" id=\"eventSearch\" class=\"form-control w-50 mx-auto\" placeholder=\"Rechercher un évènement...\">
+      </div>
+    </div>
+
+    <!-- Events Grid -->
+    <div class=\"row properties-box\" id=\"eventGrid\">
       {% for event in events %}
-        <div class=\"col-lg-4 col-md-6 align-self-center mb-30 properties-items\">
+        <div class=\"col-lg-4 col-md-6 align-self-center mb-30 properties-items event-card\">
           <div class=\"item position-relative\">
             <a href=\"{{ path('app_event_show', {'idEvent': event.idEvent}) }}\">
               <img 
-              src=\"{{ asset('uploads/' ~ (event.image is not empty ? event.image : 'exemple.jpg')) }}\" 
-              class=\"card-img-top\" 
-              alt=\"{{ event.nomEvent }}\"
-            >
-            {% if event.image is empty %}
-            <span class=\"badge badge-secondary position-absolute\"
-                  style=\"top: 10px; left: 10px; background-color: rgba(0,0,0,0.7); font-size: 0.75rem;\">
-              Placeholder
-            </span>
-            {% endif %}
+                src=\"{{ asset('uploads/' ~ (event.image is not empty ? event.image : 'exemple.jpg')) }}\" 
+                class=\"card-img-top\" 
+                alt=\"{{ event.nomEvent }}\"
+              >
+              {% if event.image is empty %}
+                <span class=\"badge badge-secondary position-absolute\"
+                      style=\"top: 10px; left: 10px; background-color: rgba(0,0,0,0.7); font-size: 0.75rem;\">
+                  Placeholder
+                </span>
+              {% endif %}
             </a>
             <span class=\"category\">{{ event.nomEspace }}</span>
             <h6>{{ event.prix }} Dt</h6>
@@ -328,7 +357,20 @@ class __TwigTemplate_44d3a72906849517f5cc99d41f1aea92 extends Template
     </div>
   </div>
 </div>
+
+<script>
+  const searchInput = document.getElementById('eventSearch');
+  const cards = document.querySelectorAll('.event-card');
+
+  searchInput.addEventListener('input', function () {
+    const query = this.value.toLowerCase();
+    cards.forEach(card => {
+      const content = card.textContent.toLowerCase();
+      card.style.display = content.includes(query) ? '' : 'none';
+    });
+  });
+</script>
 {% endblock %}
-", "event/index.html.twig", "C:\\wamp64\\gestion_espace_symfony\\templates\\event\\index.html.twig");
+", "event/index.html.twig", "C:\\wamp64\\Pi-Javafx-Symfony-selimWeb (8)\\Pi-Javafx-Symfony-selimWeb\\templates\\event\\index.html.twig");
     }
 }

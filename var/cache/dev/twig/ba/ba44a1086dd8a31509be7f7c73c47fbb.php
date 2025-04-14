@@ -400,6 +400,6 @@ class __TwigTemplate_6b2e1708cf7683c332660a670dd33a37 extends Template
   </div>
 </div>
 {% endblock %}
-", "espace/edit.html.twig", "C:\\wamp64\\gestion_espace_symfony\\templates\\espace\\edit.html.twig");
+", "espace/edit.html.twig", "C:\\wamp64\\Pi-Javafx-Symfony-selimWeb (8)\\Pi-Javafx-Symfony-selimWeb\\templates\\espace\\edit.html.twig");
     }
 }

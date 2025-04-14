@@ -356,6 +356,6 @@ class __TwigTemplate_b29b6ff3a005d56cccff487d066f3c45 extends Template
   <a href=\"{{ path('app_organisateur_index') }}\" class=\"btn btn-link\">← Back to list</a>
 </div>
 {% endblock %}
-", "organisateur/new.html.twig", "C:\\wamp64\\gestion_espace_symfony\\templates\\organisateur\\new.html.twig");
+", "organisateur/new.html.twig", "C:\\wamp64\\Pi-Javafx-Symfony-selimWeb (8)\\Pi-Javafx-Symfony-selimWeb\\templates\\organisateur\\new.html.twig");
     }
 }

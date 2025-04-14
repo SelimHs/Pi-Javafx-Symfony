@@ -162,6 +162,6 @@ class __TwigTemplate_97bee9236ac63f34c469335729729c36 extends Template
     <link rel=\"stylesheet\" href=\"{{ asset('assets/css/animate.css') }}\">
     <link rel=\"stylesheet\" href=\"https://unpkg.com/swiper@7/swiper-bundle.min.css\">
 </head>
-", "partials/head.html.twig", "C:\\wamp64\\gestion_espace_symfony\\templates\\partials\\head.html.twig");
+", "partials/head.html.twig", "C:\\wamp64\\Pi-Javafx-Symfony-selimWeb (8)\\Pi-Javafx-Symfony-selimWeb\\templates\\partials\\head.html.twig");
     }
 }

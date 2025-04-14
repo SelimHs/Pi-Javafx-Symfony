@@ -327,6 +327,6 @@ class __TwigTemplate_1f38191b4e172ec5aff023649e2022cb extends Template
   </div>
 </div>
 {% endblock %}
-", "organisateur/newBackGeneral.html.twig", "C:\\wamp64\\gestion_espace_symfony\\templates\\organisateur\\newBackGeneral.html.twig");
+", "organisateur/newBackGeneral.html.twig", "C:\\wamp64\\Pi-Javafx-Symfony-selimWeb (8)\\Pi-Javafx-Symfony-selimWeb\\templates\\organisateur\\newBackGeneral.html.twig");
     }
 }

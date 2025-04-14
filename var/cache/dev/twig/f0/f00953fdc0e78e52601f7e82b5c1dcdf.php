@@ -114,11 +114,14 @@ class __TwigTemplate_2c653635f96c9b6d6f261805a88ad590 extends Template
         // line 19
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("dashboard_organisateur_new_general");
         yield "\" class=\"btn btn-success\">
-    <i class=\"pe-7s-plus mr-2\"></i> Ajouter un Organisateur
-</a>
-
+            <i class=\"pe-7s-plus mr-2\"></i> Ajouter un Organisateur
+          </a>
         </div>
       </div>
+    </div>
+
+    <div class=\"mb-4\">
+      <input type=\"text\" id=\"searchOrganisateur\" class=\"form-control\" placeholder=\"Rechercher un organisateur...\">
     </div>
 
     <div class=\"main-card mb-3 card\">
@@ -134,70 +137,90 @@ class __TwigTemplate_2c653635f96c9b6d6f261805a88ad590 extends Template
               <th>Prénom</th>
               <th>Description</th>
               <th class=\"text-center\">Téléphone</th>
+              <th class=\"text-center\">Espace Associé</th>
               <th class=\"text-center\">Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id=\"organisateurTable\">
             ";
-        // line 44
+        // line 48
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["organisateurs"]) || array_key_exists("organisateurs", $context) ? $context["organisateurs"] : (function () { throw new RuntimeError('Variable "organisateurs" does not exist.', 44, $this->source); })()));
+        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["organisateurs"]) || array_key_exists("organisateurs", $context) ? $context["organisateurs"] : (function () { throw new RuntimeError('Variable "organisateurs" does not exist.', 48, $this->source); })()));
         $context['_iterated'] = false;
         foreach ($context['_seq'] as $context["_key"] => $context["organisateur"]) {
-            // line 45
-            yield "              <tr>
-                <td class=\"text-center text-muted\">#";
-            // line 46
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "idOrg", [], "any", false, false, false, 46), "html", null, true);
-            yield "</td>
-                <td>";
-            // line 47
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "nomOrg", [], "any", false, false, false, 47), "html", null, true);
-            yield "</td>
-                <td>";
-            // line 48
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "prenomOrg", [], "any", false, false, false, 48), "html", null, true);
-            yield "</td>
-                <td>";
             // line 49
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "descriptionOrg", [], "any", false, false, false, 49), "html", null, true);
+            yield "              <tr class=\"organisateur-row\">
+                <td class=\"text-center text-muted\">#";
+            // line 50
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "idOrg", [], "any", false, false, false, 50), "html", null, true);
+            yield "</td>
+                <td>";
+            // line 51
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "nomOrg", [], "any", false, false, false, 51), "html", null, true);
+            yield "</td>
+                <td>";
+            // line 52
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "prenomOrg", [], "any", false, false, false, 52), "html", null, true);
+            yield "</td>
+                <td>";
+            // line 53
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "descriptionOrg", [], "any", false, false, false, 53), "html", null, true);
             yield "</td>
                 <td class=\"text-center\">";
-            // line 50
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "telef", [], "any", false, false, false, 50), "html", null, true);
+            // line 54
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "telef", [], "any", false, false, false, 54), "html", null, true);
             yield "</td>
                 <td class=\"text-center\">
+                  ";
+            // line 56
+            yield ((CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "espace", [], "any", false, false, false, 56)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "espace", [], "any", false, false, false, 56), "nomEspace", [], "any", false, false, false, 56), "html", null, true)) : ("—"));
+            yield "
+                </td>
+                <td class=\"text-center\">
                   <a href=\"";
-            // line 52
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_organisateur_show", ["id_org" => CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "idOrg", [], "any", false, false, false, 52)]), "html", null, true);
+            // line 59
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_organisateur_show", ["id_org" => CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "idOrg", [], "any", false, false, false, 59)]), "html", null, true);
             yield "\" class=\"btn btn-sm btn-info\">Détails</a>
                   <a href=\"";
-            // line 53
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_organisateur_edit", ["id_org" => CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "idOrg", [], "any", false, false, false, 53)]), "html", null, true);
+            // line 60
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_organisateur_edit", ["id_org" => CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "idOrg", [], "any", false, false, false, 60)]), "html", null, true);
             yield "\" class=\"btn btn-sm btn-warning\">Modifier</a>
                 </td>
               </tr>
             ";
             $context['_iterated'] = true;
         }
-        // line 56
+        // line 63
         if (!$context['_iterated']) {
-            // line 57
+            // line 64
             yield "              <tr>
-                <td colspan=\"6\" class=\"text-center text-muted\">Aucun organisateur trouvé.</td>
+                <td colspan=\"7\" class=\"text-center text-muted\">Aucun organisateur trouvé.</td>
               </tr>
             ";
         }
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['organisateur'], $context['_parent'], $context['_iterated']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 61
+        // line 68
         yield "          </tbody>
         </table>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+  const searchInput = document.getElementById('searchOrganisateur');
+  const rows = document.querySelectorAll('.organisateur-row');
+
+  searchInput.addEventListener('input', function () {
+    const query = this.value.toLowerCase();
+    rows.forEach(row => {
+      const content = row.textContent.toLowerCase();
+      row.style.display = content.includes(query) ? '' : 'none';
+    });
+  });
+</script>
 ";
         
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
@@ -229,7 +252,7 @@ class __TwigTemplate_2c653635f96c9b6d6f261805a88ad590 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  195 => 61,  186 => 57,  184 => 56,  176 => 53,  172 => 52,  167 => 50,  163 => 49,  159 => 48,  155 => 47,  151 => 46,  148 => 45,  143 => 44,  115 => 19,  100 => 6,  87 => 5,  64 => 3,  41 => 1,);
+        return array (  205 => 68,  196 => 64,  194 => 63,  186 => 60,  182 => 59,  176 => 56,  171 => 54,  167 => 53,  163 => 52,  159 => 51,  155 => 50,  152 => 49,  147 => 48,  115 => 19,  100 => 6,  87 => 5,  64 => 3,  41 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -253,11 +276,14 @@ class __TwigTemplate_2c653635f96c9b6d6f261805a88ad590 extends Template
         </div>
         <div class=\"page-title-actions\">
           <a href=\"{{ path('dashboard_organisateur_new_general') }}\" class=\"btn btn-success\">
-    <i class=\"pe-7s-plus mr-2\"></i> Ajouter un Organisateur
-</a>
-
+            <i class=\"pe-7s-plus mr-2\"></i> Ajouter un Organisateur
+          </a>
         </div>
       </div>
+    </div>
+
+    <div class=\"mb-4\">
+      <input type=\"text\" id=\"searchOrganisateur\" class=\"form-control\" placeholder=\"Rechercher un organisateur...\">
     </div>
 
     <div class=\"main-card mb-3 card\">
@@ -273,17 +299,21 @@ class __TwigTemplate_2c653635f96c9b6d6f261805a88ad590 extends Template
               <th>Prénom</th>
               <th>Description</th>
               <th class=\"text-center\">Téléphone</th>
+              <th class=\"text-center\">Espace Associé</th>
               <th class=\"text-center\">Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id=\"organisateurTable\">
             {% for organisateur in organisateurs %}
-              <tr>
+              <tr class=\"organisateur-row\">
                 <td class=\"text-center text-muted\">#{{ organisateur.idOrg }}</td>
                 <td>{{ organisateur.nomOrg }}</td>
                 <td>{{ organisateur.prenomOrg }}</td>
                 <td>{{ organisateur.descriptionOrg }}</td>
                 <td class=\"text-center\">{{ organisateur.telef }}</td>
+                <td class=\"text-center\">
+                  {{ organisateur.espace ? organisateur.espace.nomEspace : '—' }}
+                </td>
                 <td class=\"text-center\">
                   <a href=\"{{ path('app_organisateur_show', {'id_org': organisateur.idOrg}) }}\" class=\"btn btn-sm btn-info\">Détails</a>
                   <a href=\"{{ path('app_organisateur_edit', {'id_org': organisateur.idOrg}) }}\" class=\"btn btn-sm btn-warning\">Modifier</a>
@@ -291,7 +321,7 @@ class __TwigTemplate_2c653635f96c9b6d6f261805a88ad590 extends Template
               </tr>
             {% else %}
               <tr>
-                <td colspan=\"6\" class=\"text-center text-muted\">Aucun organisateur trouvé.</td>
+                <td colspan=\"7\" class=\"text-center text-muted\">Aucun organisateur trouvé.</td>
               </tr>
             {% endfor %}
           </tbody>
@@ -300,7 +330,20 @@ class __TwigTemplate_2c653635f96c9b6d6f261805a88ad590 extends Template
     </div>
   </div>
 </div>
+
+<script>
+  const searchInput = document.getElementById('searchOrganisateur');
+  const rows = document.querySelectorAll('.organisateur-row');
+
+  searchInput.addEventListener('input', function () {
+    const query = this.value.toLowerCase();
+    rows.forEach(row => {
+      const content = row.textContent.toLowerCase();
+      row.style.display = content.includes(query) ? '' : 'none';
+    });
+  });
+</script>
 {% endblock %}
-", "organisateur/index.html.twig", "C:\\wamp64\\gestion_espace_symfony\\templates\\organisateur\\index.html.twig");
+", "organisateur/index.html.twig", "C:\\wamp64\\Pi-Javafx-Symfony-selimWeb (8)\\Pi-Javafx-Symfony-selimWeb\\templates\\organisateur\\index.html.twig");
     }
 }

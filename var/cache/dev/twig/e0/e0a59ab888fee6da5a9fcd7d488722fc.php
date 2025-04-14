@@ -186,6 +186,6 @@ class __TwigTemplate_5d6e90039b2a47f11d276cca16b7b2bf extends Template
         {% include 'partials/footer.html.twig' %}
     </body>
 </html>
-", "base.html.twig", "C:\\wamp64\\gestion_espace_symfony\\templates\\base.html.twig");
+", "base.html.twig", "C:\\wamp64\\Pi-Javafx-Symfony-selimWeb (8)\\Pi-Javafx-Symfony-selimWeb\\templates\\base.html.twig");
     }
 }

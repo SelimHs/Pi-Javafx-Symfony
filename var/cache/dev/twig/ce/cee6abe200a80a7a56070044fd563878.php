@@ -139,6 +139,6 @@ class __TwigTemplate_738f8b3f806c284a9a8cb92974fa1d33 extends Template
     <script src=\"https://cdn.jsdelivr.net/npm/chart.js\"></script>
     <script src=\"https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2\"></script>
 
-</head>", "partialsBack/headBack.html.twig", "C:\\wamp64\\gestion_espace_symfony\\templates\\partialsBack\\headBack.html.twig");
+</head>", "partialsBack/headBack.html.twig", "C:\\wamp64\\Pi-Javafx-Symfony-selimWeb (8)\\Pi-Javafx-Symfony-selimWeb\\templates\\partialsBack\\headBack.html.twig");
     }
 }

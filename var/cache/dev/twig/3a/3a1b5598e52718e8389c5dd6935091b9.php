@@ -126,80 +126,87 @@ class __TwigTemplate_473970077b12a9795feed68d13e0e0e4 extends Template
       </div>
     </div>
 
-    <div class=\"row properties-box\">
+    <!-- 🔍 Search Bar -->
+    <div class=\"row mb-4\">
+      <div class=\"col-lg-12 text-center\">
+        <input type=\"text\" id=\"searchEspace\" class=\"form-control w-50 mx-auto\" placeholder=\"Rechercher un espace...\">
+      </div>
+    </div>
+
+    <div class=\"row properties-box\" id=\"espaceGrid\">
       ";
-        // line 30
+        // line 37
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["espaces"]) || array_key_exists("espaces", $context) ? $context["espaces"] : (function () { throw new RuntimeError('Variable "espaces" does not exist.', 30, $this->source); })()));
+        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["espaces"]) || array_key_exists("espaces", $context) ? $context["espaces"] : (function () { throw new RuntimeError('Variable "espaces" does not exist.', 37, $this->source); })()));
         $context['_iterated'] = false;
         foreach ($context['_seq'] as $context["_key"] => $context["espace"]) {
-            // line 31
-            yield "        <div class=\"col-lg-4 col-md-6 align-self-center mb-30 properties-items\">
+            // line 38
+            yield "        <div class=\"col-lg-4 col-md-6 align-self-center mb-30 properties-items espace-card\">
           <div class=\"item position-relative\">
             <a href=\"";
-            // line 33
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_espace_show", ["idEspace" => CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "idEspace", [], "any", false, false, false, 33)]), "html", null, true);
+            // line 40
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_espace_show", ["idEspace" => CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "idEspace", [], "any", false, false, false, 40)]), "html", null, true);
             yield "\">
               <img 
                 src=\"";
-            // line 35
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/" . (( !Twig\Extension\CoreExtension::testEmpty(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "image", [], "any", false, false, false, 35))) ? (CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "image", [], "any", false, false, false, 35)) : ("exemple.jpg")))), "html", null, true);
+            // line 42
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/" . (( !Twig\Extension\CoreExtension::testEmpty(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "image", [], "any", false, false, false, 42))) ? (CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "image", [], "any", false, false, false, 42)) : ("exemple.jpg")))), "html", null, true);
             yield "\" 
                 class=\"card-img-top\" 
                 alt=\"";
-            // line 37
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "nomEspace", [], "any", false, false, false, 37), "html", null, true);
+            // line 44
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "nomEspace", [], "any", false, false, false, 44), "html", null, true);
             yield "\"
               >
               ";
-            // line 39
-            if (Twig\Extension\CoreExtension::testEmpty(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "image", [], "any", false, false, false, 39))) {
-                // line 40
+            // line 46
+            if (Twig\Extension\CoreExtension::testEmpty(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "image", [], "any", false, false, false, 46))) {
+                // line 47
                 yield "                <span class=\"badge badge-secondary position-absolute\"
                       style=\"top: 10px; left: 10px; background-color: rgba(0,0,0,0.7); font-size: 0.75rem;\">
                   Placeholder
                 </span>
               ";
             }
-            // line 45
+            // line 52
             yield "            </a>
             <span class=\"category\">";
-            // line 46
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "TypeEspace", [], "any", false, false, false, 46), "html", null, true);
+            // line 53
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "TypeEspace", [], "any", false, false, false, 53), "html", null, true);
             yield "</span>
             <h6>";
-            // line 47
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "prix", [], "any", false, false, false, 47), "html", null, true);
+            // line 54
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "prix", [], "any", false, false, false, 54), "html", null, true);
             yield " Dt</h6>
             <h4>
               <a href=\"";
-            // line 49
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_espace_show", ["idEspace" => CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "idEspace", [], "any", false, false, false, 49)]), "html", null, true);
+            // line 56
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_espace_show", ["idEspace" => CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "idEspace", [], "any", false, false, false, 56)]), "html", null, true);
             yield "\">
                 ";
-            // line 50
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "nomEspace", [], "any", false, false, false, 50), "html", null, true);
+            // line 57
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "nomEspace", [], "any", false, false, false, 57), "html", null, true);
             yield "
               </a>
             </h4>
             <ul>
               <li>Adresse : <span>";
-            // line 54
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "adresse", [], "any", false, false, false, 54), "html", null, true);
+            // line 61
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "adresse", [], "any", false, false, false, 61), "html", null, true);
             yield "</span></li>
               <li>Capacité : <span>";
-            // line 55
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "capacite", [], "any", false, false, false, 55), "html", null, true);
+            // line 62
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "capacite", [], "any", false, false, false, 62), "html", null, true);
             yield "</span></li>
               <li>Disponibilité : <span>";
-            // line 56
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "disponibilite", [], "any", false, false, false, 56), "html", null, true);
+            // line 63
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "disponibilite", [], "any", false, false, false, 63), "html", null, true);
             yield "</span></li>
             </ul>
             <div class=\"main-button d-flex justify-content-center\">
               <a href=\"";
-            // line 59
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_espace_show", ["idEspace" => CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "idEspace", [], "any", false, false, false, 59)]), "html", null, true);
+            // line 66
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_espace_show", ["idEspace" => CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "idEspace", [], "any", false, false, false, 66)]), "html", null, true);
             yield "\">Détails</a>
             </div>
           </div>
@@ -207,9 +214,9 @@ class __TwigTemplate_473970077b12a9795feed68d13e0e0e4 extends Template
       ";
             $context['_iterated'] = true;
         }
-        // line 63
+        // line 70
         if (!$context['_iterated']) {
-            // line 64
+            // line 71
             yield "        <div class=\"col-12 text-center\">
           <div class=\"alert alert-warning\">Aucun espace trouvé.</div>
         </div>
@@ -218,10 +225,24 @@ class __TwigTemplate_473970077b12a9795feed68d13e0e0e4 extends Template
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['espace'], $context['_parent'], $context['_iterated']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 68
+        // line 75
         yield "    </div>
   </div>
 </div>
+
+<!-- JS Live Filter -->
+<script>
+  const searchInput = document.getElementById('searchEspace');
+  const cards = document.querySelectorAll('.espace-card');
+
+  searchInput.addEventListener('input', function () {
+    const query = this.value.toLowerCase();
+    cards.forEach(card => {
+      const content = card.textContent.toLowerCase();
+      card.style.display = content.includes(query) ? '' : 'none';
+    });
+  });
+</script>
 ";
         
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
@@ -253,7 +274,7 @@ class __TwigTemplate_473970077b12a9795feed68d13e0e0e4 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  222 => 68,  213 => 64,  211 => 63,  202 => 59,  196 => 56,  192 => 55,  188 => 54,  181 => 50,  177 => 49,  172 => 47,  168 => 46,  165 => 45,  158 => 40,  156 => 39,  151 => 37,  146 => 35,  141 => 33,  137 => 31,  132 => 30,  122 => 23,  106 => 10,  100 => 6,  87 => 5,  64 => 3,  41 => 1,);
+        return array (  229 => 75,  220 => 71,  218 => 70,  209 => 66,  203 => 63,  199 => 62,  195 => 61,  188 => 57,  184 => 56,  179 => 54,  175 => 53,  172 => 52,  165 => 47,  163 => 46,  158 => 44,  153 => 42,  148 => 40,  144 => 38,  139 => 37,  122 => 23,  106 => 10,  100 => 6,  87 => 5,  64 => 3,  41 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -286,9 +307,16 @@ class __TwigTemplate_473970077b12a9795feed68d13e0e0e4 extends Template
       </div>
     </div>
 
-    <div class=\"row properties-box\">
+    <!-- 🔍 Search Bar -->
+    <div class=\"row mb-4\">
+      <div class=\"col-lg-12 text-center\">
+        <input type=\"text\" id=\"searchEspace\" class=\"form-control w-50 mx-auto\" placeholder=\"Rechercher un espace...\">
+      </div>
+    </div>
+
+    <div class=\"row properties-box\" id=\"espaceGrid\">
       {% for espace in espaces %}
-        <div class=\"col-lg-4 col-md-6 align-self-center mb-30 properties-items\">
+        <div class=\"col-lg-4 col-md-6 align-self-center mb-30 properties-items espace-card\">
           <div class=\"item position-relative\">
             <a href=\"{{ path('app_espace_show', {'idEspace': espace.idEspace}) }}\">
               <img 
@@ -328,7 +356,21 @@ class __TwigTemplate_473970077b12a9795feed68d13e0e0e4 extends Template
     </div>
   </div>
 </div>
+
+<!-- JS Live Filter -->
+<script>
+  const searchInput = document.getElementById('searchEspace');
+  const cards = document.querySelectorAll('.espace-card');
+
+  searchInput.addEventListener('input', function () {
+    const query = this.value.toLowerCase();
+    cards.forEach(card => {
+      const content = card.textContent.toLowerCase();
+      card.style.display = content.includes(query) ? '' : 'none';
+    });
+  });
+</script>
 {% endblock %}
-", "espace/index.html.twig", "C:\\wamp64\\gestion_espace_symfony\\templates\\espace\\index.html.twig");
+", "espace/index.html.twig", "C:\\wamp64\\Pi-Javafx-Symfony-selimWeb (8)\\Pi-Javafx-Symfony-selimWeb\\templates\\espace\\index.html.twig");
     }
 }

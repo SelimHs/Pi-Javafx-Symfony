@@ -105,7 +105,7 @@ return [
         400 => [[['_route' => 'app_event_show', '_controller' => 'App\\Controller\\EventController::show'], ['idEvent'], ['GET' => 0], null, false, true, null]],
         421 => [[['_route' => 'dashboard_event_show', '_controller' => 'App\\Controller\\EventController::showDashboard'], ['idEvent'], ['GET' => 0], null, false, true, null]],
         442 => [[['_route' => 'app_event_edit', '_controller' => 'App\\Controller\\EventController::edit'], ['idEvent'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        463 => [[['_route' => 'dashboard_event_edit', '_controller' => 'App\\Controller\\EventController::editDashboard'], ['idEvent'], ['GET' => 0, 'POST' => 1], null, false, true, null]],
+        463 => [[['_route' => 'dashboard_event_edit', '_controller' => 'App\\Controller\\EventController::editDasboard'], ['idEvent'], ['GET' => 0, 'POST' => 1], null, false, true, null]],
         486 => [[['_route' => 'app_event_delete', '_controller' => 'App\\Controller\\EventController::delete'], ['idEvent'], ['POST' => 0], null, false, true, null]],
         509 => [[['_route' => 'dashboard_event_delete', '_controller' => 'App\\Controller\\EventController::deleteDashboard'], ['idEvent'], ['POST' => 0], null, false, false, null]],
         552 => [[['_route' => 'dashboard_organisateur_new', '_controller' => 'App\\Controller\\OrganisateurController::newBack'], ['idEspace'], ['GET' => 0, 'POST' => 1], null, false, true, null]],

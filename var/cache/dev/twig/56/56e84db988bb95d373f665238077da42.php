@@ -152,7 +152,7 @@ class __TwigTemplate_e540aae94b18db33a1602830d8e6deef extends Template
                     </div>
                 </div>
             </div>
-        </div>
+        </div>  
     </div>
 </div>
 <div class=\"ui-theme-settings\">
@@ -664,7 +664,7 @@ class __TwigTemplate_e540aae94b18db33a1602830d8e6deef extends Template
                     </div>
                 </div>
             </div>
-        </div>
+        </div>  
     </div>
 </div>
 <div class=\"ui-theme-settings\">
@@ -1036,6 +1036,6 @@ class __TwigTemplate_e540aae94b18db33a1602830d8e6deef extends Template
         </div>
     </div>
 </div>
-", "partialsBack/navbar.html.twig", "C:\\wamp64\\gestion_espace_symfony\\templates\\partialsBack\\navbar.html.twig");
+", "partialsBack/navbar.html.twig", "C:\\wamp64\\Pi-Javafx-Symfony-selimWeb (8)\\Pi-Javafx-Symfony-selimWeb\\templates\\partialsBack\\navbar.html.twig");
     }
 }
