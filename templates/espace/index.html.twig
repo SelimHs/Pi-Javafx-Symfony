@@ -17,26 +17,27 @@
 <div class="section properties">
   <div class="container">
 
-    <!-- Bouton Création -->
+    <!-- Bouton de création -->
     <div class="row mb-4">
       <div class="col-lg-12 text-center">
         <a href="{{ path('app_espace_new') }}" class="main-button custom-message-btn">
-          <i></i> + Créer un nouvel espace
+          <i class="fa fa-plus-circle"></i> Créer un nouvel espace
         </a>
       </div>
     </div>
 
-    <!-- 🔍 Search Bar -->
+    <!-- Barre de recherche -->
     <div class="row mb-4">
       <div class="col-lg-12 text-center">
         <input type="text" id="searchEspace" class="form-control w-50 mx-auto" placeholder="Rechercher un espace...">
       </div>
     </div>
 
+    <!-- Liste des espaces -->
     <div class="row properties-box" id="espaceGrid">
       {% for espace in espaces %}
         <div class="col-lg-4 col-md-6 align-self-center mb-30 properties-items espace-card">
-          <div class="item position-relative">
+          <div class="item position-relative shadow-sm" style="transition: transform 0.3s;">
             <a href="{{ path('app_espace_show', {'idEspace': espace.idEspace}) }}">
               <img 
                 src="{{ asset('uploads/' ~ (espace.image is not empty ? espace.image : 'exemple.jpg')) }}" 
@@ -44,10 +45,7 @@
                 alt="{{ espace.nomEspace }}"
               >
               {% if espace.image is empty %}
-                <span class="badge badge-secondary position-absolute"
-                      style="top: 10px; left: 10px; background-color: rgba(0,0,0,0.7); font-size: 0.75rem;">
-                  Placeholder
-                </span>
+                <span class="badge badge-secondary position-absolute" style="top: 10px; left: 10px;">Placeholder</span>
               {% endif %}
             </a>
             <span class="category">{{ espace.TypeEspace }}</span>
@@ -60,9 +58,14 @@
             <ul>
               <li>Adresse : <span>{{ espace.adresse }}</span></li>
               <li>Capacité : <span>{{ espace.capacite }}</span></li>
-              <li>Disponibilité : <span>{{ espace.disponibilite }}</span></li>
+              <li>
+                Disponibilité :
+                <span class="badge {{ espace.disponibilite == 'Disponible' ? 'bg-success' : 'bg-danger' }}">
+                  {{ espace.disponibilite }}
+                </span>
+              </li>
             </ul>
-            <div class="main-button d-flex justify-content-center">
+            <div class="main-button d-flex justify-content-center mt-2">
               <a href="{{ path('app_espace_show', {'idEspace': espace.idEspace}) }}">Détails</a>
             </div>
           </div>
@@ -73,20 +76,95 @@
         </div>
       {% endfor %}
     </div>
+
+    <!-- Pagination dynamique JS -->
+    <div class="row mt-4 justify-content-center">
+      <div class="col-auto">
+        <button class="btn btn-outline-primary me-2" id="prevBtn">← Précédent</button>
+        <span id="pageInfo" class="align-middle"></span>
+        <button class="btn btn-outline-primary ms-2" id="nextBtn">Suivant →</button>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- JS Live Filter -->
+<!-- Bouton retour en haut -->
+<button onclick="scrollToTop()" id="scrollTopBtn" title="Retour en haut">⬆</button>
+
+<style>
+  .espace-card .item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 12px rgba(0,0,0,0.15);
+  }
+
+  #scrollTopBtn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    display: none;
+    z-index: 999;
+    background-color: #007bff;
+    color: white;
+    padding: 12px 15px;
+    border: none;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  #scrollTopBtn:hover {
+    background-color: #0056b3;
+  }
+</style>
+
 <script>
   const searchInput = document.getElementById('searchEspace');
-  const cards = document.querySelectorAll('.espace-card');
+  const cards = Array.from(document.querySelectorAll('.espace-card'));
+  const itemsPerPage = 6;
+  let currentPage = 1;
 
-  searchInput.addEventListener('input', function () {
-    const query = this.value.toLowerCase();
-    cards.forEach(card => {
-      const content = card.textContent.toLowerCase();
-      card.style.display = content.includes(query) ? '' : 'none';
+  function updatePagination() {
+    const query = searchInput.value.toLowerCase();
+    const filteredCards = cards.filter(card => card.textContent.toLowerCase().includes(query));
+    
+    filteredCards.forEach((card, index) => {
+      const start = (currentPage - 1) * itemsPerPage;
+      const end = currentPage * itemsPerPage;
+      card.style.display = index >= start && index < end ? '' : 'none';
     });
+
+    const totalPages = Math.ceil(filteredCards.length / itemsPerPage);
+    document.getElementById('pageInfo').textContent = `Page ${currentPage} / ${totalPages || 1}`;
+    document.getElementById('prevBtn').disabled = currentPage === 1;
+    document.getElementById('nextBtn').disabled = currentPage === totalPages;
+  }
+
+  searchInput.addEventListener('input', () => {
+    currentPage = 1;
+    updatePagination();
   });
+
+  document.getElementById('prevBtn').addEventListener('click', () => {
+    currentPage--;
+    updatePagination();
+  });
+
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    currentPage++;
+    updatePagination();
+  });
+
+  // Scroll to top button
+  const scrollBtn = document.getElementById("scrollTopBtn");
+  window.onscroll = () => {
+    scrollBtn.style.display = (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) ? "block" : "none";
+  };
+
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  updatePagination();
 </script>
 {% endblock %}

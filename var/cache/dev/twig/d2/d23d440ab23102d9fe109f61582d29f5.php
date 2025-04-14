@@ -73,7 +73,7 @@ class __TwigTemplate_44d3a72906849517f5cc99d41f1aea92 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "title"));
 
-        yield "Events";
+        yield "Évènements";
         
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
 
@@ -105,7 +105,7 @@ class __TwigTemplate_44d3a72906849517f5cc99d41f1aea92 extends Template
         // line 10
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_home");
         yield "\">Accueil</a> / Évènements</span>
-        <h3>Évènements</h3>
+        <h3>Nos Évènements</h3>
       </div>
     </div>
   </div>
@@ -114,110 +114,104 @@ class __TwigTemplate_44d3a72906849517f5cc99d41f1aea92 extends Template
 <div class=\"section properties\">
   <div class=\"container\">
 
-    <!-- Bouton Création -->
+    <!-- Barre de recherche -->
     <div class=\"row mb-4\">
       <div class=\"col-lg-12 text-center\">
+        <input type=\"text\" id=\"eventSearch\" class=\"form-control w-50 mx-auto\" placeholder=\"🔍 Rechercher un évènement...\">
+      </div>
+    </div>
+
+    <!-- Grille des évènements -->
+    <div class=\"row properties-box\" id=\"eventGrid\">
+      <!-- Carte d'ajout stylée -->
+      <div class=\"col-lg-4 col-md-6 align-self-center mb-30 event-card\">
         <a href=\"";
-        // line 23
+        // line 31
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_event_new");
-        yield "\" class=\"main-button custom-message-btn\">
-          <i></i> + Créer un nouvel évènement
+        yield "\" class=\"text-decoration-none\">
+          <div class=\"item add-event-card text-center shadow-lg\">
+            <h5 class=\"text-white\"><i class=\"fa fa-plus fa-3x\"></i></h5>
+            <p class=\"text-white mt-2\" style=\"font-size: 1.1rem; font-weight: bold;\">Ajouter un évènement</p>
+          </div>
         </a>
       </div>
-    </div>
 
-    <!-- Search Bar -->
-    <div class=\"row mb-4\">
-      <div class=\"col-lg-12 text-center\">
-        <input type=\"text\" id=\"eventSearch\" class=\"form-control w-50 mx-auto\" placeholder=\"Rechercher un évènement...\">
-      </div>
-    </div>
-
-    <!-- Events Grid -->
-    <div class=\"row properties-box\" id=\"eventGrid\">
+      <!-- Boucle des événements -->
       ";
-        // line 38
+        // line 40
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["events"]) || array_key_exists("events", $context) ? $context["events"] : (function () { throw new RuntimeError('Variable "events" does not exist.', 38, $this->source); })()));
+        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["events"]) || array_key_exists("events", $context) ? $context["events"] : (function () { throw new RuntimeError('Variable "events" does not exist.', 40, $this->source); })()));
         $context['_iterated'] = false;
         foreach ($context['_seq'] as $context["_key"] => $context["event"]) {
-            // line 39
-            yield "        <div class=\"col-lg-4 col-md-6 align-self-center mb-30 properties-items event-card\">
+            // line 41
+            yield "        <div class=\"col-lg-4 col-md-6 align-self-center mb-30 event-card\">
           <div class=\"item position-relative\">
             <a href=\"";
-            // line 41
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_event_show", ["idEvent" => CoreExtension::getAttribute($this->env, $this->source, $context["event"], "idEvent", [], "any", false, false, false, 41)]), "html", null, true);
+            // line 43
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_event_show", ["idEvent" => CoreExtension::getAttribute($this->env, $this->source, $context["event"], "idEvent", [], "any", false, false, false, 43)]), "html", null, true);
             yield "\">
               <img 
                 src=\"";
-            // line 43
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/" . (( !Twig\Extension\CoreExtension::testEmpty(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "image", [], "any", false, false, false, 43))) ? (CoreExtension::getAttribute($this->env, $this->source, $context["event"], "image", [], "any", false, false, false, 43)) : ("exemple.jpg")))), "html", null, true);
-            yield "\" 
-                class=\"card-img-top\" 
-                alt=\"";
             // line 45
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "nomEvent", [], "any", false, false, false, 45), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/" . ((CoreExtension::getAttribute($this->env, $this->source, $context["event"], "image", [], "any", false, false, false, 45)) ? (CoreExtension::getAttribute($this->env, $this->source, $context["event"], "image", [], "any", false, false, false, 45)) : ("exemple.jpg")))), "html", null, true);
+            yield "\" 
+                alt=\"";
+            // line 46
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "nomEvent", [], "any", false, false, false, 46), "html", null, true);
             yield "\"
+                class=\"img-fluid\"
               >
               ";
-            // line 47
-            if (Twig\Extension\CoreExtension::testEmpty(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "image", [], "any", false, false, false, 47))) {
-                // line 48
-                yield "                <span class=\"badge badge-secondary position-absolute\"
-                      style=\"top: 10px; left: 10px; background-color: rgba(0,0,0,0.7); font-size: 0.75rem;\">
-                  Placeholder
-                </span>
+            // line 49
+            if ( !CoreExtension::getAttribute($this->env, $this->source, $context["event"], "image", [], "any", false, false, false, 49)) {
+                // line 50
+                yield "                <span class=\"badge badge-dark position-absolute\" style=\"top: 10px; left: 10px;\">Aucune image</span>
               ";
             }
-            // line 53
+            // line 52
             yield "            </a>
             <span class=\"category\">";
-            // line 54
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "nomEspace", [], "any", false, false, false, 54), "html", null, true);
+            // line 53
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "nomEspace", [], "any", false, false, false, 53), "html", null, true);
             yield "</span>
             <h6>";
-            // line 55
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "prix", [], "any", false, false, false, 55), "html", null, true);
+            // line 54
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "prix", [], "any", false, false, false, 54), "html", null, true);
             yield " Dt</h6>
-            <h4>
-              <a href=\"";
-            // line 57
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_event_show", ["idEvent" => CoreExtension::getAttribute($this->env, $this->source, $context["event"], "idEvent", [], "any", false, false, false, 57)]), "html", null, true);
-            yield "\">
-                ";
-            // line 58
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "nomEvent", [], "any", false, false, false, 58), "html", null, true);
-            yield "
-              </a>
-            </h4>
+            <h4><a href=\"";
+            // line 55
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_event_show", ["idEvent" => CoreExtension::getAttribute($this->env, $this->source, $context["event"], "idEvent", [], "any", false, false, false, 55)]), "html", null, true);
+            yield "\">";
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "nomEvent", [], "any", false, false, false, 55), "html", null, true);
+            yield "</a></h4>
             <ul>
-              <li>Details: <span>";
-            // line 62
-            yield (((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["event"], "details", [], "any", false, false, false, 62)) > 40)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((Twig\Extension\CoreExtension::slice($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["event"], "details", [], "any", false, false, false, 62), 0, 40) . "..."), "html", null, true)) : ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "details", [], "any", false, false, false, 62), "html", null, true)));
+              <li>Date : <strong>";
+            // line 57
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "date", [], "any", false, false, false, 57), "html", null, true);
+            yield "</strong></li>
+              <li>Visiteurs : <span>";
+            // line 58
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "nbrVisiteurs", [], "any", false, false, false, 58), "html", null, true);
             yield "</span></li>
-              <li>Date: <span>";
-            // line 63
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "date", [], "any", false, false, false, 63), "html", null, true);
-            yield "</span></li>
-              <li>Visitors: <span>";
-            // line 64
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "nbrVisiteurs", [], "any", false, false, false, 64), "html", null, true);
+              <li>Détails : <span>";
+            // line 59
+            yield (((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["event"], "details", [], "any", false, false, false, 59)) > 40)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((Twig\Extension\CoreExtension::slice($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["event"], "details", [], "any", false, false, false, 59), 0, 40) . "..."), "html", null, true)) : ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "details", [], "any", false, false, false, 59), "html", null, true)));
             yield "</span></li>
             </ul>
             <div class=\"main-button\">
               <a href=\"";
-            // line 67
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_event_show", ["idEvent" => CoreExtension::getAttribute($this->env, $this->source, $context["event"], "idEvent", [], "any", false, false, false, 67)]), "html", null, true);
-            yield "\">Détails</a>
+            // line 62
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_event_show", ["idEvent" => CoreExtension::getAttribute($this->env, $this->source, $context["event"], "idEvent", [], "any", false, false, false, 62)]), "html", null, true);
+            yield "\">Voir Détails</a>
             </div>
           </div>
         </div>
       ";
             $context['_iterated'] = true;
         }
-        // line 71
+        // line 66
         if (!$context['_iterated']) {
-            // line 72
+            // line 67
             yield "        <div class=\"col-12\">
           <div class=\"alert alert-warning text-center\">Aucun évènement trouvé.</div>
         </div>
@@ -226,11 +220,12 @@ class __TwigTemplate_44d3a72906849517f5cc99d41f1aea92 extends Template
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['event'], $context['_parent'], $context['_iterated']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 76
+        // line 71
         yield "    </div>
   </div>
 </div>
 
+<!-- JavaScript Filtrage -->
 <script>
   const searchInput = document.getElementById('eventSearch');
   const cards = document.querySelectorAll('.event-card');
@@ -243,6 +238,56 @@ class __TwigTemplate_44d3a72906849517f5cc99d41f1aea92 extends Template
     });
   });
 </script>
+
+<!-- CSS Bonus -->
+<style>
+  .add-event-card {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    border-radius: 15px;
+    padding: 50px 20px;
+    color: white;
+    min-height: 370px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .add-event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  }
+
+  .item img {
+    height: 220px;
+    object-fit: cover;
+    width: 100%;
+    border-radius: 8px;
+  }
+
+  .category {
+    display: inline-block;
+    background: #f0f0f0;
+    padding: 5px 10px;
+    font-weight: 600;
+    margin-top: 10px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+  }
+
+  .main-button a {
+    background-color: #f35525;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-weight: 600;
+    transition: background 0.3s ease;
+  }
+
+  .main-button a:hover {
+    background-color: #d93a11;
+  }
+</style>
 ";
         
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
@@ -274,14 +319,14 @@ class __TwigTemplate_44d3a72906849517f5cc99d41f1aea92 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  230 => 76,  221 => 72,  219 => 71,  210 => 67,  204 => 64,  200 => 63,  196 => 62,  189 => 58,  185 => 57,  180 => 55,  176 => 54,  173 => 53,  166 => 48,  164 => 47,  159 => 45,  154 => 43,  149 => 41,  145 => 39,  140 => 38,  122 => 23,  106 => 10,  100 => 6,  87 => 5,  64 => 3,  41 => 1,);
+        return array (  224 => 71,  215 => 67,  213 => 66,  204 => 62,  198 => 59,  194 => 58,  190 => 57,  183 => 55,  179 => 54,  175 => 53,  172 => 52,  168 => 50,  166 => 49,  160 => 46,  156 => 45,  151 => 43,  147 => 41,  142 => 40,  130 => 31,  106 => 10,  100 => 6,  87 => 5,  64 => 3,  41 => 1,);
     }
 
     public function getSourceContext(): Source
     {
         return new Source("{% extends 'base.html.twig' %}
 
-{% block title %}Events{% endblock %}
+{% block title %}Évènements{% endblock %}
 
 {% block body %}
 <div class=\"page-heading header-text\">
@@ -289,7 +334,7 @@ class __TwigTemplate_44d3a72906849517f5cc99d41f1aea92 extends Template
     <div class=\"row\">
       <div class=\"col-lg-12\">
         <span class=\"breadcrumb\"><a href=\"{{ path('app_home') }}\">Accueil</a> / Évènements</span>
-        <h3>Évènements</h3>
+        <h3>Nos Évènements</h3>
       </div>
     </div>
   </div>
@@ -298,54 +343,49 @@ class __TwigTemplate_44d3a72906849517f5cc99d41f1aea92 extends Template
 <div class=\"section properties\">
   <div class=\"container\">
 
-    <!-- Bouton Création -->
+    <!-- Barre de recherche -->
     <div class=\"row mb-4\">
       <div class=\"col-lg-12 text-center\">
-        <a href=\"{{ path('app_event_new') }}\" class=\"main-button custom-message-btn\">
-          <i></i> + Créer un nouvel évènement
+        <input type=\"text\" id=\"eventSearch\" class=\"form-control w-50 mx-auto\" placeholder=\"🔍 Rechercher un évènement...\">
+      </div>
+    </div>
+
+    <!-- Grille des évènements -->
+    <div class=\"row properties-box\" id=\"eventGrid\">
+      <!-- Carte d'ajout stylée -->
+      <div class=\"col-lg-4 col-md-6 align-self-center mb-30 event-card\">
+        <a href=\"{{ path('app_event_new') }}\" class=\"text-decoration-none\">
+          <div class=\"item add-event-card text-center shadow-lg\">
+            <h5 class=\"text-white\"><i class=\"fa fa-plus fa-3x\"></i></h5>
+            <p class=\"text-white mt-2\" style=\"font-size: 1.1rem; font-weight: bold;\">Ajouter un évènement</p>
+          </div>
         </a>
       </div>
-    </div>
 
-    <!-- Search Bar -->
-    <div class=\"row mb-4\">
-      <div class=\"col-lg-12 text-center\">
-        <input type=\"text\" id=\"eventSearch\" class=\"form-control w-50 mx-auto\" placeholder=\"Rechercher un évènement...\">
-      </div>
-    </div>
-
-    <!-- Events Grid -->
-    <div class=\"row properties-box\" id=\"eventGrid\">
+      <!-- Boucle des événements -->
       {% for event in events %}
-        <div class=\"col-lg-4 col-md-6 align-self-center mb-30 properties-items event-card\">
+        <div class=\"col-lg-4 col-md-6 align-self-center mb-30 event-card\">
           <div class=\"item position-relative\">
             <a href=\"{{ path('app_event_show', {'idEvent': event.idEvent}) }}\">
               <img 
-                src=\"{{ asset('uploads/' ~ (event.image is not empty ? event.image : 'exemple.jpg')) }}\" 
-                class=\"card-img-top\" 
+                src=\"{{ asset('uploads/' ~ (event.image ? event.image : 'exemple.jpg')) }}\" 
                 alt=\"{{ event.nomEvent }}\"
+                class=\"img-fluid\"
               >
-              {% if event.image is empty %}
-                <span class=\"badge badge-secondary position-absolute\"
-                      style=\"top: 10px; left: 10px; background-color: rgba(0,0,0,0.7); font-size: 0.75rem;\">
-                  Placeholder
-                </span>
+              {% if not event.image %}
+                <span class=\"badge badge-dark position-absolute\" style=\"top: 10px; left: 10px;\">Aucune image</span>
               {% endif %}
             </a>
             <span class=\"category\">{{ event.nomEspace }}</span>
             <h6>{{ event.prix }} Dt</h6>
-            <h4>
-              <a href=\"{{ path('app_event_show', {'idEvent': event.idEvent}) }}\">
-                {{ event.nomEvent }}
-              </a>
-            </h4>
+            <h4><a href=\"{{ path('app_event_show', {'idEvent': event.idEvent}) }}\">{{ event.nomEvent }}</a></h4>
             <ul>
-              <li>Details: <span>{{ event.details|length > 40 ? event.details[:40] ~ '...' : event.details }}</span></li>
-              <li>Date: <span>{{ event.date }}</span></li>
-              <li>Visitors: <span>{{ event.nbrVisiteurs }}</span></li>
+              <li>Date : <strong>{{ event.date }}</strong></li>
+              <li>Visiteurs : <span>{{ event.nbrVisiteurs }}</span></li>
+              <li>Détails : <span>{{ event.details|length > 40 ? event.details[:40] ~ '...' : event.details }}</span></li>
             </ul>
             <div class=\"main-button\">
-              <a href=\"{{ path('app_event_show', {'idEvent': event.idEvent}) }}\">Détails</a>
+              <a href=\"{{ path('app_event_show', {'idEvent': event.idEvent}) }}\">Voir Détails</a>
             </div>
           </div>
         </div>
@@ -358,6 +398,7 @@ class __TwigTemplate_44d3a72906849517f5cc99d41f1aea92 extends Template
   </div>
 </div>
 
+<!-- JavaScript Filtrage -->
 <script>
   const searchInput = document.getElementById('eventSearch');
   const cards = document.querySelectorAll('.event-card');
@@ -370,7 +411,57 @@ class __TwigTemplate_44d3a72906849517f5cc99d41f1aea92 extends Template
     });
   });
 </script>
+
+<!-- CSS Bonus -->
+<style>
+  .add-event-card {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    border-radius: 15px;
+    padding: 50px 20px;
+    color: white;
+    min-height: 370px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .add-event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  }
+
+  .item img {
+    height: 220px;
+    object-fit: cover;
+    width: 100%;
+    border-radius: 8px;
+  }
+
+  .category {
+    display: inline-block;
+    background: #f0f0f0;
+    padding: 5px 10px;
+    font-weight: 600;
+    margin-top: 10px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+  }
+
+  .main-button a {
+    background-color: #f35525;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-weight: 600;
+    transition: background 0.3s ease;
+  }
+
+  .main-button a:hover {
+    background-color: #d93a11;
+  }
+</style>
 {% endblock %}
-", "event/index.html.twig", "C:\\wamp64\\Pi-Javafx-Symfony-selimWeb (8)\\Pi-Javafx-Symfony-selimWeb\\templates\\event\\index.html.twig");
+", "event/index.html.twig", "C:\\wamp64\\gestion_espace_symfony\\templates\\event\\index.html.twig");
     }
 }
