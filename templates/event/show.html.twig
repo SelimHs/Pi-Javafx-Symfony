@@ -1,61 +1,64 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Event{% endblock %}
+{% block title %}Détails de l'Évènement{% endblock %}
 
 {% block body %}
-<div class="page-heading header-text">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-12">
-          <span class="breadcrumb"><a href="#">Acceuil</a> / Évènements</span>
-          <h3>Évènements</h3>
+<div class="section best-deal animate__animated animate__fadeIn">
+  <div class="container">
+    <div class="row">
+      <!-- Titre -->
+      <div class="col-lg-4">
+        <div class="section-heading animate__animated animate__fadeInLeft">
+          <h6>| Évènement</h6>
+          <h2>{{ event.nomEvent }}</h2>
+        </div>
+      </div>
+
+      <!-- Détails & Image côte à côte -->
+      <div class="col-lg-12 mt-4">
+        <div class="row align-items-center">
+          <!-- Détails -->
+          <div class="col-lg-6 animate__animated animate__fadeInLeft">
+            <div class="info-table">
+              <ul>
+                <li>Prix <span>{{ event.prix }} DT</span></li>
+                <li>Date <span>{{ event.date }}</span></li>
+                <li>Visiteurs <span>{{ event.nbrVisiteurs }}</span></li>
+                <li>Espace <span>{{ event.nomEspace }}</span></li>
+              </ul>
+              <h5 class="mt-4">Description</h5>
+              <p>{{ event.details }}</p>
+
+              <a href="{{ path('app_event_edit', {'idEvent': event.idEvent}) }}" class="btn btn-primary mt-3 me-2">
+                <i class="fa fa-pen"></i> Modifier
+              </a>
+              {{ include('event/_delete_form.html.twig') }}
+              <a href="{{ path('app_event_index') }}" class="btn btn-outline-secondary mt-3">
+                <i class="fa fa-arrow-left"></i> Retour à la liste
+              </a>
+            </div>
+          </div>
+
+          <!-- Image -->
+          <div class="col-lg-6 text-center animate__animated animate__zoomIn">
+            <img src="{{ asset('uploads/' ~ event.image) }}" class="img-fluid rounded shadow" alt="{{ event.nomEvent }}" style="max-height: 350px;">
+          </div>
         </div>
       </div>
     </div>
   </div>
-  
-    <h1>Event</h1>
+</div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>IdEvent</th>
-                <td>{{ event.idEvent }}</td>
-            </tr>
-            <tr>
-                <th>NomEvent</th>
-                <td>{{ event.nomEvent }}</td>
-            </tr>
-            <tr>
-                <th>Prix</th>
-                <td>{{ event.prix }}</td>
-            </tr>
-            <tr>
-                <th>Details</th>
-                <td>{{ event.details }}</td>
-            </tr>
-            <tr>
-                <th>Date</th>
-                <td>{{ event.date }}</td>
-            </tr>
-            <tr>
-                <th>NbrVisiteurs</th>
-                <td>{{ event.nbrVisiteurs }}</td>
-            </tr>
-            <tr>
-                <th>NomEspace</th>
-                <td>{{ event.nomEspace }}</td>
-            </tr>
-            <tr>
-                <th>Image</th>
-                <td>{{ event.image }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_event_index') }}">back to list</a>
-
-    <a href="{{ path('app_event_edit', {'idEvent': event.idEvent}) }}">edit</a>
-
-    {{ include('event/_delete_form.html.twig') }}
+<!-- Footer -->
+<footer class="footer-no-gap mt-5">
+  <div class="container">
+    <div class="col-lg-12 text-center">
+      <p>
+        Copyright © 2048 Villa Agency Co., Ltd.
+        Design:
+        <a rel="nofollow" href="https://templatemo.com" target="_blank">TemplateMo</a>
+      </p>
+    </div>
+  </div>
+</footer>
 {% endblock %}
