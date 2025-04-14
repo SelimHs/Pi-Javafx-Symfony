@@ -1,0 +1,71 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %}Espaces{% endblock %}
+
+{% block body %}
+<div class="app-main__outer">
+  <div class="app-main__inner">
+    <div class="app-page-title">
+      <div class="page-title-wrapper">
+        <div class="page-title-heading">
+          <div class="page-title-icon">
+            <i class="pe-7s-home icon-gradient bg-happy-itmeo"></i>
+          </div>
+          <div>Gestion des Espaces
+            <div class="page-title-subheading">Liste des espaces disponibles et leurs détails.</div>
+          </div>
+        </div>
+        <div class="page-title-actions">
+          <a href="{{ path('dashboard_espace_new') }}" class="btn btn-success">
+            <i class="pe-7s-plus mr-2"></i> Nouvel Espace
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      {% for espace in espaces %}
+        <div class="col-md-6 col-xl-4">
+          <div class="card mb-4 shadow-sm">
+            <div class="position-relative">
+              <img 
+                src="{{ asset('uploads/' ~ (espace.image is not empty ? espace.image : 'placeholder.jpg')) }}" 
+                class="card-img-top" 
+                alt="{{ espace.nomEspace }}"
+              >
+              {% if espace.image is empty %}
+                <span class="badge badge-secondary position-absolute"
+                      style="top: 10px; left: 10px; background-color: rgba(0,0,0,0.7); font-size: 0.75rem;">
+                  Placeholder
+                </span>
+              {% endif %}
+            </div>
+
+            <div class="card-body">
+              <h5 class="card-title text-uppercase">{{ espace.nomEspace }}</h5>
+              <p class="card-text text-muted mb-1">
+                <strong>Adresse :</strong> {{ espace.adresse }}<br>
+                <strong>Capacité :</strong> {{ espace.capacite }}<br>
+                <strong>Type :</strong> {{ espace.Type_espace }}
+              </p>
+              <p class="card-text">
+                <strong>Disponibilité :</strong> {{ espace.disponibilite }}
+              </p>
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="badge badge-info p-2">{{ espace.prix }} DT</span>
+                <a href="{{ path('dashboard_espace_show', {'idEspace': espace.idEspace}) }}" class="btn btn-sm btn-outline-primary">
+                  Voir détails
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% else %}
+        <div class="col-12">
+          <div class="alert alert-warning text-center">Aucun espace trouvé.</div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

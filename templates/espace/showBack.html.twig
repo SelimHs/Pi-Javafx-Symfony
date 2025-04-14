@@ -1,0 +1,148 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %}Détails de l'Espace{% endblock %}
+
+{% block body %}
+<div class="app-main__outer">
+  <div class="app-main__inner">
+
+    <!-- Page Title -->
+    <div class="app-page-title">
+      <div class="page-title-wrapper">
+        <div class="page-title-heading">
+          <div class="page-title-icon">
+            <i class="pe-7s-map-marker icon-gradient bg-amy-crisp"></i>
+          </div>
+          <div>
+            Détails de l'Espace
+            <div class="page-title-subheading">Aperçu complet de l’espace sélectionné.</div>
+          </div>
+        </div>
+        <div class="page-title-actions">
+          <a href="{{ path('dashboard_espace_index') }}" class="btn btn-outline-secondary mr-2">
+            <i class="pe-7s-back"></i> Retour
+          </a>
+          <a href="{{ path('dashboard_espace_edit', {'idEspace': espace.idEspace}) }}" class="btn btn-warning mr-2">
+            <i class="pe-7s-note"></i>
+          </a>
+          <form method="post" action="{{ path('dashboard_espace_delete', {'idEspace': espace.idEspace}) }}"
+                onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet espace ?');" style="display: inline;">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ espace.idEspace) }}">
+            <button class="btn btn-danger" title="Supprimer">
+              <i class="pe-7s-trash"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Espace Image -->
+    <div class="mb-4 text-center">
+      <img 
+        src="{{ asset('uploads/' ~ (espace.image is not empty ? espace.image : 'exemple.jpg')) }}" 
+        class="img-fluid rounded shadow"
+        alt="{{ espace.nomEspace }}"
+        style="max-height: 300px;"
+      >
+    </div>
+
+    <!-- Content Card -->
+    <div class="row">
+      <div class="col-md-8 offset-md-2">
+        <div class="main-card mb-3 card">
+          <div class="card-body">
+            <h5 class="card-title">Informations de l'Espace</h5>
+            <table class="mb-0 table table-bordered table-striped">
+              <tbody>
+                <tr>
+                  <th>ID</th>
+                  <td>{{ espace.idEspace }}</td>
+                </tr>
+                <tr>
+                  <th>Nom</th>
+                  <td>{{ espace.nomEspace }}</td>
+                </tr>
+                <tr>
+                  <th>Adresse</th>
+                  <td>{{ espace.adresse }}</td>
+                </tr>
+                <tr>
+                  <th>Capacité</th>
+                  <td>{{ espace.capacite }}</td>
+                </tr>
+                <tr>
+                  <th>Disponibilité</th>
+                  <td>{{ espace.disponibilite }}</td>
+                </tr>
+                <tr>
+                  <th>Prix</th>
+                  <td>{{ espace.prix }} DT</td>
+                </tr>
+                <tr>
+                  <th>Type d'espace</th>
+                  <td>{{ espace.TypeEspace }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- ORGANISATEURS DE L'ESPACE -->
+<div class="row mt-5">
+  <div class="col-12 d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0">Organisateurs liés</h4>
+    <a href="{{ path('dashboard_organisateur_new', { 'idEspace': espace.idEspace }) }}" class="btn btn-success btn-sm">
+  <i class="pe-7s-plus"></i> Ajouter Organisateur
+</a>
+
+  </div>
+
+  {% if espace.organisateurs is not empty %}
+    {% for organisateur in espace.organisateurs %}
+      <div class="col-md-6 col-xl-4 mb-4">
+        <div class="card shadow-sm border-0">
+          <div class="card-body">
+            <h5 class="card-title text-primary text-uppercase">
+              {{ organisateur.nomOrg }} {{ organisateur.prenomOrg }}
+            </h5>
+            <p class="mb-1">
+              <i class="pe-7s-call text-muted me-2"></i><strong>Téléphone :</strong> {{ organisateur.telef }}
+            </p>
+            <p class="mb-2">
+              <i class="pe-7s-note2 text-muted me-2"></i><strong>Description :</strong><br>
+              <span class="text-muted">{{ organisateur.descriptionOrg }}</span>
+            </p>
+
+            <div class="d-flex justify-content-end">
+              <a href="{{ path('dashboard_organisateur_edit', { 'id_org': organisateur.id_org }) }}"
+                 class="btn btn-sm btn-outline-warning me-2" title="Modifier">
+                <i class="pe-7s-pen"></i>
+              </a>
+              <form method="post"
+                    action="{{ path('app_organisateur_delete', { 'id_org': organisateur.id_org }) }}"
+                    onsubmit="return confirm('Voulez-vous supprimer cet organisateur ?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ organisateur.id_org) }}">
+                <button class="btn btn-sm btn-outline-danger" title="Supprimer">
+                  <i class="pe-7s-trash"></i>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <div class="col-12">
+      <div class="alert alert-info text-center">
+        Aucun organisateur assigné à cet espace.
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+    </div>
+    
+
+  </div>
+</div>
+{% endblock %}

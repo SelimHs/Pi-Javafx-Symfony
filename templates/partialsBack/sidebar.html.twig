@@ -90,8 +90,45 @@
                         </li>
                     </ul>
                 </li>
+                <li class="app-sidebar__heading">Espaces</li>
+<li>
+    <a href="#">
+        <i class="metismenu-icon pe-7s-map-marker"></i>
+        Gestion Espaces
+        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+    </a>
+    <ul>
+        <li>
+            <a href="{{ path('dashboard_espace_new') }}">
+                <i class="metismenu-icon"></i>
+                Ajouter un Espace
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('dashboard_espace_index') }}">
+                <i class="metismenu-icon"></i>
+                Liste des Espaces
+            </a>
+        </li>
+    </ul>
+</li>
+<li class="app-sidebar__heading">Organisateurs</li>
+<li>
+    <a href="#">
+        <i class="metismenu-icon pe-7s-id"></i>
+        Gestion Organisateurs
+        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+    </a>
+    <ul>
+        <li>
+            <a href="{{ path('app_organisateur_index') }}">
+                <i class="metismenu-icon"></i>
+                Liste des organisateurs
+            </a>
+        </li>
+    </ul>
+</li>
 
-                
                 <li class="app-sidebar__heading">PRO Version</li>
                 <li>
                     <a href="https://dashboardpack.com/theme-details/architectui-dashboard-html-pro/"

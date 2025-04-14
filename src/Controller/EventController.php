@@ -125,39 +125,76 @@ final class EventController extends AbstractController
     }
 
     #[Route('/{idEvent}/edit', name: 'app_event_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Event $event, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(EventType::class, $event);
-        $form->handleRequest($request);
+public function edit(Request $request, Event $event, EntityManagerInterface $entityManager): Response
+{
+    $form = $this->createForm(EventType::class, $event);
+    $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
+    if ($form->isSubmitted() && $form->isValid()) {
+        // ✅ Convertir la date (non mappée) en string
+        $dateObject = $form->get('date')->getData();
+        if ($dateObject instanceof \DateTimeInterface) {
+            $event->setDate($dateObject->format('Y-m-d'));
         }
 
-        return $this->render('event/edit.html.twig', [
-            'event' => $event,
-            'form' => $form,
-        ]);
-    }
-     #[Route('/edit/{idEvent}', name: 'dashboard_event_edit', methods: ['GET', 'POST'])]
-    public function editDashboard(Request $request, Event $event, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(EventType::class, $event);
-        $form->handleRequest($request);
+        // ✅ Gérer l'image si une nouvelle est uploadée
+        $imageFile = $form->get('image')->getData();
+        if ($imageFile) {
+            $newFilename = uniqid() . '.' . $imageFile->guessExtension();
+            $uploadDir = $this->getParameter('uploads_directory');
+            $imageFile->move($uploadDir, $newFilename);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('dashboard_event_index', [], Response::HTTP_SEE_OTHER);
+            $event->setImage($newFilename);
         }
 
-        return $this->render('event/editBack.html.twig', [
-            'event' => $event,
-            'form' => $form,
-        ]);
+        // ✅ Enregistrer les modifications
+        $entityManager->flush();
+
+        return $this->redirectToRoute('dashboard_event_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    return $this->render('event/edit.html.twig', [
+        'event' => $event,
+        'form' => $form,
+    ]);
+}
+#[Route('/edit/{idEvent}', name: 'dashboard_event_edit', methods: ['GET', 'POST'])]
+public function editDasboard(Request $request, Event $event, EntityManagerInterface $entityManager): Response
+{
+    $form = $this->createForm(EventType::class, $event);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        // ✅ Convertir la date (non mappée) en string
+        $dateObject = $form->get('date')->getData();
+        if ($dateObject instanceof \DateTimeInterface) {
+            $event->setDate($dateObject->format('Y-m-d'));
+        }
+
+        // ✅ Gérer l'image si une nouvelle est uploadée
+        $imageFile = $form->get('image')->getData();
+        if ($imageFile) {
+            $newFilename = uniqid() . '.' . $imageFile->guessExtension();
+            $uploadDir = $this->getParameter('uploads_directory');
+            $imageFile->move($uploadDir, $newFilename);
+
+            $event->setImage($newFilename);
+        }
+
+        // ✅ Enregistrer les modifications
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    return $this->render('event/editBack.html.twig', [
+        'event' => $event,
+        'form' => $form,
+    ]);
+}
+
+
+
 
     #[Route('/delete/{idEvent}', name: 'app_event_delete', methods: ['POST'])]
     public function delete(Request $request, Event $event, EntityManagerInterface $entityManager): Response

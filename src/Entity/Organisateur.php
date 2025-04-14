@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
 use App\Repository\OrganisateurRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: OrganisateurRepository::class)]
 #[ORM\Table(name: 'organisateur')]
@@ -14,7 +15,7 @@ class Organisateur
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(name:'id_org',type: 'integer')]
+    #[ORM\Column(name: 'id_org', type: 'integer')]
     private ?int $id_org = null;
 
     public function getId_org(): ?int
@@ -28,7 +29,9 @@ class Organisateur
         return $this;
     }
 
-    #[ORM\Column(name:'nom_org',type: 'string', nullable: false)]
+    #[ORM\Column(name: 'nom_org', type: 'string', nullable: false)]
+    #[Assert\NotBlank(message: 'Le nom est obligatoire.')]
+    #[Assert\Length(min: 3, minMessage: 'Le nom doit contenir au moins {{ limit }} caractères.')]
     private ?string $nom_org = null;
 
     public function getNom_org(): ?string
@@ -42,7 +45,9 @@ class Organisateur
         return $this;
     }
 
-    #[ORM\Column(name:'prenom_org',type: 'string', nullable: false)]
+    #[ORM\Column(name: 'prenom_org', type: 'string', nullable: false)]
+    #[Assert\NotBlank(message: 'Le prénom est obligatoire.')]
+    #[Assert\Length(min: 3, minMessage: 'Le prénom doit contenir au moins {{ limit }} caractères.')]
     private ?string $prenom_org = null;
 
     public function getPrenom_org(): ?string
@@ -56,7 +61,9 @@ class Organisateur
         return $this;
     }
 
-    #[ORM\Column(name:'description_org',type: 'string', nullable: false)]
+    #[ORM\Column(name: 'description_org', type: 'string', nullable: false)]
+    #[Assert\NotBlank(message: 'La description est obligatoire.')]
+    #[Assert\Length(min: 5, minMessage: 'La description doit faire au moins {{ limit }} caractères.')]
     private ?string $description_org = null;
 
     public function getDescription_org(): ?string
@@ -70,8 +77,11 @@ class Organisateur
         return $this;
     }
 
+    // src/Entity/Organisateur.php
+
     #[ORM\ManyToOne(targetEntity: Espace::class, inversedBy: 'organisateurs')]
-    #[ORM\JoinColumn(name: 'idEspace', referencedColumnName: 'idEspace')]
+    #[ORM\JoinColumn(name: 'idEspace', referencedColumnName: 'idEspace', nullable: false)]
+    #[Assert\NotNull(message: 'Veuillez sélectionner un espace.')]
     private ?Espace $espace = null;
 
     public function getEspace(): ?Espace
@@ -86,6 +96,12 @@ class Organisateur
     }
 
     #[ORM\Column(type: 'integer', nullable: false)]
+    #[Assert\NotBlank(message: 'Le numéro de téléphone est obligatoire.')]
+    #[Assert\Regex(
+        pattern: '/^[0-9]{8}$/',
+        message: 'Le numéro doit contenir exactement 8 chiffres.'
+    )]
+
     private ?int $telef = null;
 
     public function getTelef(): ?int
@@ -139,5 +155,4 @@ class Organisateur
 
         return $this;
     }
-
 }

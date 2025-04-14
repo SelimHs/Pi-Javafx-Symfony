@@ -22,11 +22,12 @@ class EspaceType extends AbstractType
             ->add('prix')
             ->add('Type_espace')
             ->add('image', FileType::class, [
-                'mapped' => false, // Important : le fichier n'est pas lié directement à l'entité
+                'mapped' => false,
                 'required' => false,
-                'attr' => ['class' => 'form-control'],
+                'attr' => ['class' => 'form-control']
             ])
-        
+
+
             ->add('user', EntityType::class, [
                 'class' => User::class,
                 'choice_label' => 'id',
