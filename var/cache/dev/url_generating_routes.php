@@ -51,6 +51,7 @@ return [
     'app_organisateur_show' => [['id_org'], ['_controller' => 'App\\Controller\\OrganisateurController::show'], [], [['variable', '/', '[^/]++', 'id_org', true], ['text', '/organisateur']], [], [], []],
     'app_organisateur_edit' => [['id_org'], ['_controller' => 'App\\Controller\\OrganisateurController::edit'], [], [['text', '/edit'], ['variable', '/', '[^/]++', 'id_org', true], ['text', '/organisateur']], [], [], []],
     'app_organisateur_delete' => [['id_org'], ['_controller' => 'App\\Controller\\OrganisateurController::delete'], [], [['variable', '/', '[^/]++', 'id_org', true], ['text', '/organisateur']], [], [], []],
+    'dashboard_organisateur_delete' => [['id_org'], ['_controller' => 'App\\Controller\\OrganisateurController::deleteBack'], [], [['variable', '/', '[^/]++', 'id_org', true], ['text', '/organisateur/deleteBack']], [], [], []],
     'dashboard_organisateur_edit' => [['id_org'], ['_controller' => 'App\\Controller\\OrganisateurController::editBack'], [], [['variable', '/', '[^/]++', 'id_org', true], ['text', '/organisateur/editBack']], [], [], []],
     'App\Controller\BilletController::index' => [[], ['_controller' => 'App\\Controller\\BilletController::index'], [], [['text', '/billet']], [], [], []],
     'App\Controller\BilletController::new' => [[], ['_controller' => 'App\\Controller\\BilletController::new'], [], [['text', '/billet/new']], [], [], []],
@@ -86,5 +87,6 @@ return [
     'App\Controller\OrganisateurController::show' => [['id_org'], ['_controller' => 'App\\Controller\\OrganisateurController::show'], [], [['variable', '/', '[^/]++', 'id_org', true], ['text', '/organisateur']], [], [], []],
     'App\Controller\OrganisateurController::edit' => [['id_org'], ['_controller' => 'App\\Controller\\OrganisateurController::edit'], [], [['text', '/edit'], ['variable', '/', '[^/]++', 'id_org', true], ['text', '/organisateur']], [], [], []],
     'App\Controller\OrganisateurController::delete' => [['id_org'], ['_controller' => 'App\\Controller\\OrganisateurController::delete'], [], [['variable', '/', '[^/]++', 'id_org', true], ['text', '/organisateur']], [], [], []],
+    'App\Controller\OrganisateurController::deleteBack' => [['id_org'], ['_controller' => 'App\\Controller\\OrganisateurController::deleteBack'], [], [['variable', '/', '[^/]++', 'id_org', true], ['text', '/organisateur/deleteBack']], [], [], []],
     'App\Controller\OrganisateurController::editBack' => [['id_org'], ['_controller' => 'App\\Controller\\OrganisateurController::editBack'], [], [['variable', '/', '[^/]++', 'id_org', true], ['text', '/organisateur/editBack']], [], [], []],
 ];

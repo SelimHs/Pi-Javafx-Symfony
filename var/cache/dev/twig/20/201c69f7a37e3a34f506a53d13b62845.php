@@ -94,6 +94,6 @@ class __TwigTemplate_2e74960f16a733ab93625521373fd197 extends Template
     <input type=\"hidden\" name=\"_token\" value=\"{{ csrf_token('delete' ~ event.idEvent) }}\">
     <button class=\"btn\">Delete</button>
 </form>
-", "event/_delete_form.html.twig", "C:\\wamp64\\Pi-Javafx-Symfony-selimWeb (8)\\Pi-Javafx-Symfony-selimWeb\\templates\\event\\_delete_form.html.twig");
+", "event/_delete_form.html.twig", "C:\\wamp64\\gestion_espace_symfony\\templates\\event\\_delete_form.html.twig");
     }
 }

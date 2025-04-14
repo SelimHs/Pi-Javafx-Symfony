@@ -278,7 +278,7 @@ class __TwigTemplate_9150d371203e54e046b6e8513aae7fd0 extends Template
               <form method=\"post\"
                     action=\"";
                 // line 122
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_organisateur_delete", ["id_org" => CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "id_org", [], "any", false, false, false, 122)]), "html", null, true);
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("dashboard_organisateur_delete", ["id_org" => CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "id_org", [], "any", false, false, false, 122)]), "html", null, true);
                 yield "\"
                     onsubmit=\"return confirm('Voulez-vous supprimer cet organisateur ?');\">
                 <input type=\"hidden\" name=\"_token\" value=\"";
@@ -474,7 +474,7 @@ class __TwigTemplate_9150d371203e54e046b6e8513aae7fd0 extends Template
                 <i class=\"pe-7s-pen\"></i>
               </a>
               <form method=\"post\"
-                    action=\"{{ path('app_organisateur_delete', { 'id_org': organisateur.id_org }) }}\"
+                    action=\"{{ path('dashboard_organisateur_delete', { 'id_org': organisateur.id_org }) }}\"
                     onsubmit=\"return confirm('Voulez-vous supprimer cet organisateur ?');\">
                 <input type=\"hidden\" name=\"_token\" value=\"{{ csrf_token('delete' ~ organisateur.id_org) }}\">
                 <button class=\"btn btn-sm btn-outline-danger\" title=\"Supprimer\">
@@ -501,6 +501,6 @@ class __TwigTemplate_9150d371203e54e046b6e8513aae7fd0 extends Template
   </div>
 </div>
 {% endblock %}
-", "espace/showBack.html.twig", "C:\\wamp64\\Pi-Javafx-Symfony-selimWeb (8)\\Pi-Javafx-Symfony-selimWeb\\templates\\espace\\showBack.html.twig");
+", "espace/showBack.html.twig", "C:\\wamp64\\gestion_espace_symfony\\templates\\espace\\showBack.html.twig");
     }
 }

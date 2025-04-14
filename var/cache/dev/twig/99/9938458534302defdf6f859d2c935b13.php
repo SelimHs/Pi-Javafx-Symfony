@@ -91,6 +91,6 @@ class __TwigTemplate_73d48111ab7310a81aa4d974c6a8d5d0 extends Template
         Design: <a rel=\"nofollow\" href=\"https://templatemo.com\" target=\"_blank\">TemplateMo</a></p>
       </div>
     </div>
-  </footer>", "partials/footer.html.twig", "C:\\wamp64\\Pi-Javafx-Symfony-selimWeb (8)\\Pi-Javafx-Symfony-selimWeb\\templates\\partials\\footer.html.twig");
+  </footer>", "partials/footer.html.twig", "C:\\wamp64\\gestion_espace_symfony\\templates\\partials\\footer.html.twig");
     }
 }

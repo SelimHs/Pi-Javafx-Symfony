@@ -391,6 +391,6 @@ class __TwigTemplate_3cb9f18540e7d8d8e38696f6e430d556 extends Template
             </ul>
         </div>
     </div>
-</div>", "partialsBack/sidebar.html.twig", "C:\\wamp64\\Pi-Javafx-Symfony-selimWeb (8)\\Pi-Javafx-Symfony-selimWeb\\templates\\partialsBack\\sidebar.html.twig");
+</div>", "partialsBack/sidebar.html.twig", "C:\\wamp64\\gestion_espace_symfony\\templates\\partialsBack\\sidebar.html.twig");
     }
 }

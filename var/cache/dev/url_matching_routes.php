@@ -80,7 +80,8 @@ return [
                         .'|/edit(*:584)'
                         .'|(*:592)'
                     .')'
-                    .'|editBack/([^/]++)(*:618)'
+                    .'|deleteBack/([^/]++)(*:620)'
+                    .'|editBack/([^/]++)(*:645)'
                 .')'
             .')/?$}sDu',
     ],
@@ -112,7 +113,8 @@ return [
         571 => [[['_route' => 'app_organisateur_show', '_controller' => 'App\\Controller\\OrganisateurController::show'], ['id_org'], ['GET' => 0], null, false, true, null]],
         584 => [[['_route' => 'app_organisateur_edit', '_controller' => 'App\\Controller\\OrganisateurController::edit'], ['id_org'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
         592 => [[['_route' => 'app_organisateur_delete', '_controller' => 'App\\Controller\\OrganisateurController::delete'], ['id_org'], ['POST' => 0], null, false, true, null]],
-        618 => [
+        620 => [[['_route' => 'dashboard_organisateur_delete', '_controller' => 'App\\Controller\\OrganisateurController::deleteBack'], ['id_org'], ['POST' => 0], null, false, true, null]],
+        645 => [
             [['_route' => 'dashboard_organisateur_edit', '_controller' => 'App\\Controller\\OrganisateurController::editBack'], ['id_org'], ['GET' => 0, 'POST' => 1], null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],

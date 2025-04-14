@@ -183,16 +183,31 @@ class __TwigTemplate_2c653635f96c9b6d6f261805a88ad590 extends Template
             yield "\" class=\"btn btn-sm btn-info\">Détails</a>
                   <a href=\"";
             // line 60
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_organisateur_edit", ["id_org" => CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "idOrg", [], "any", false, false, false, 60)]), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("dashboard_organisateur_edit", ["id_org" => CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "idOrg", [], "any", false, false, false, 60)]), "html", null, true);
             yield "\" class=\"btn btn-sm btn-warning\">Modifier</a>
+<form method=\"post\"
+      action=\"";
+            // line 62
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("dashboard_organisateur_delete", ["id_org" => CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "idOrg", [], "any", false, false, false, 62)]), "html", null, true);
+            yield "\"
+      onsubmit=\"return confirm('Êtes-vous sûr de vouloir supprimer cet organisateur ?');\"
+      style=\"display:inline;\">
+  <input type=\"hidden\" name=\"_token\" value=\"";
+            // line 65
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken(("delete" . CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "idOrg", [], "any", false, false, false, 65))), "html", null, true);
+            yield "\">
+  <input type=\"hidden\" name=\"_from\" value=\"liste\">
+  <button class=\"btn btn-sm btn-danger\">Supprimer</button>
+</form>
+
                 </td>
               </tr>
             ";
             $context['_iterated'] = true;
         }
-        // line 63
+        // line 72
         if (!$context['_iterated']) {
-            // line 64
+            // line 73
             yield "              <tr>
                 <td colspan=\"7\" class=\"text-center text-muted\">Aucun organisateur trouvé.</td>
               </tr>
@@ -201,7 +216,7 @@ class __TwigTemplate_2c653635f96c9b6d6f261805a88ad590 extends Template
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['organisateur'], $context['_parent'], $context['_iterated']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 68
+        // line 77
         yield "          </tbody>
         </table>
       </div>
@@ -252,7 +267,7 @@ class __TwigTemplate_2c653635f96c9b6d6f261805a88ad590 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  205 => 68,  196 => 64,  194 => 63,  186 => 60,  182 => 59,  176 => 56,  171 => 54,  167 => 53,  163 => 52,  159 => 51,  155 => 50,  152 => 49,  147 => 48,  115 => 19,  100 => 6,  87 => 5,  64 => 3,  41 => 1,);
+        return array (  220 => 77,  211 => 73,  209 => 72,  197 => 65,  191 => 62,  186 => 60,  182 => 59,  176 => 56,  171 => 54,  167 => 53,  163 => 52,  159 => 51,  155 => 50,  152 => 49,  147 => 48,  115 => 19,  100 => 6,  87 => 5,  64 => 3,  41 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -316,7 +331,16 @@ class __TwigTemplate_2c653635f96c9b6d6f261805a88ad590 extends Template
                 </td>
                 <td class=\"text-center\">
                   <a href=\"{{ path('app_organisateur_show', {'id_org': organisateur.idOrg}) }}\" class=\"btn btn-sm btn-info\">Détails</a>
-                  <a href=\"{{ path('app_organisateur_edit', {'id_org': organisateur.idOrg}) }}\" class=\"btn btn-sm btn-warning\">Modifier</a>
+                  <a href=\"{{ path('dashboard_organisateur_edit', {'id_org': organisateur.idOrg}) }}\" class=\"btn btn-sm btn-warning\">Modifier</a>
+<form method=\"post\"
+      action=\"{{ path('dashboard_organisateur_delete', {'id_org': organisateur.idOrg}) }}\"
+      onsubmit=\"return confirm('Êtes-vous sûr de vouloir supprimer cet organisateur ?');\"
+      style=\"display:inline;\">
+  <input type=\"hidden\" name=\"_token\" value=\"{{ csrf_token('delete' ~ organisateur.idOrg) }}\">
+  <input type=\"hidden\" name=\"_from\" value=\"liste\">
+  <button class=\"btn btn-sm btn-danger\">Supprimer</button>
+</form>
+
                 </td>
               </tr>
             {% else %}
@@ -344,6 +368,6 @@ class __TwigTemplate_2c653635f96c9b6d6f261805a88ad590 extends Template
   });
 </script>
 {% endblock %}
-", "organisateur/index.html.twig", "C:\\wamp64\\Pi-Javafx-Symfony-selimWeb (8)\\Pi-Javafx-Symfony-selimWeb\\templates\\organisateur\\index.html.twig");
+", "organisateur/index.html.twig", "C:\\wamp64\\gestion_espace_symfony\\templates\\organisateur\\index.html.twig");
     }
 }

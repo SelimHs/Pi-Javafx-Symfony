@@ -57,7 +57,16 @@
                 </td>
                 <td class="text-center">
                   <a href="{{ path('app_organisateur_show', {'id_org': organisateur.idOrg}) }}" class="btn btn-sm btn-info">Détails</a>
-                  <a href="{{ path('app_organisateur_edit', {'id_org': organisateur.idOrg}) }}" class="btn btn-sm btn-warning">Modifier</a>
+                  <a href="{{ path('dashboard_organisateur_edit', {'id_org': organisateur.idOrg}) }}" class="btn btn-sm btn-warning">Modifier</a>
+<form method="post"
+      action="{{ path('dashboard_organisateur_delete', {'id_org': organisateur.idOrg}) }}"
+      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet organisateur ?');"
+      style="display:inline;">
+  <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ organisateur.idOrg) }}">
+  <input type="hidden" name="_from" value="liste">
+  <button class="btn btn-sm btn-danger">Supprimer</button>
+</form>
+
                 </td>
               </tr>
             {% else %}

@@ -37,12 +37,13 @@
           </div>
 
           <div class="mb-3">
-            {{ form_label(form.disponibilite) }}
-            {{ form_widget(form.disponibilite, {
-              'attr': {'class': 'form-control', 'readonly': 'readonly'}
-            }) }}
-            <div class="text-danger small mt-1">{{ form_errors(form.disponibilite) }}</div>
-          </div>
+  {{ form_label(form.disponibilite) }}
+  {{ form_widget(form.disponibilite, {
+    'attr': {'class': 'form-control'}
+  }) }}
+  <div class="text-danger small mt-1">{{ form_errors(form.disponibilite) }}</div>
+</div>
+
 
           <div class="mb-3">
             {{ form_label(form.prix) }}

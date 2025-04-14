@@ -140,6 +140,6 @@ class __TwigTemplate_e9bde212e9c9b9124a18738107c349c4 extends Template
 {% block body %}
 {% include 'partials/indexBody.html.twig'%}
 {% endblock %}
-", "home/index.html.twig", "C:\\wamp64\\Pi-Javafx-Symfony-selimWeb (8)\\Pi-Javafx-Symfony-selimWeb\\templates\\home\\index.html.twig");
+", "home/index.html.twig", "C:\\wamp64\\gestion_espace_symfony\\templates\\home\\index.html.twig");
     }
 }

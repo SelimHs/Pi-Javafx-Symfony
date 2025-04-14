@@ -49,7 +49,7 @@ final class OrganisateurController extends AbstractController
             'form' => $form,
         ]);
     }
-     // Route ajout depuis le détail d’un espace
+    // Route ajout depuis le détail d’un espace
     #[Route('/newBack/{idEspace}', name: 'dashboard_organisateur_new', methods: ['GET', 'POST'])]
     public function newBack(Request $request, int $idEspace, EntityManagerInterface $entityManager): Response
     {
@@ -147,7 +147,29 @@ final class OrganisateurController extends AbstractController
         // Fallback si pas d'espace (très peu probable)
         return $this->redirectToRoute('app_organisateur_index', [], Response::HTTP_SEE_OTHER);
     }
-   
+
+    #[Route('/deleteBack/{id_org}', name: 'dashboard_organisateur_delete', methods: ['POST'])]
+    public function deleteBack(Request $request, Organisateur $organisateur, EntityManagerInterface $entityManager): Response
+    {
+        $idEspace = $organisateur->getEspace()?->getIdEspace();
+        $from = $request->request->get('_from'); // 🔽 on lit la valeur du champ caché
+
+        if ($this->isCsrfTokenValid('delete' . $organisateur->getIdOrg(), $request->getPayload()->getString('_token'))) {
+            $entityManager->remove($organisateur);
+            $entityManager->flush();
+        }
+
+        // ✅ Redirection conditionnelle
+        if ($from === 'liste') {
+            return $this->redirectToRoute('app_organisateur_index');
+        } elseif ($idEspace) {
+            return $this->redirectToRoute('dashboard_espace_show', ['idEspace' => $idEspace]);
+        }
+
+        return $this->redirectToRoute('app_organisateur_index');
+    }
+
+
 
 
 
