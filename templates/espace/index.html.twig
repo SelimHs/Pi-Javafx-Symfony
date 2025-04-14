@@ -17,15 +17,6 @@
 <div class="section properties">
   <div class="container">
 
-    <!-- Bouton de création -->
-    <div class="row mb-4">
-      <div class="col-lg-12 text-center">
-        <a href="{{ path('app_espace_new') }}" class="main-button custom-message-btn">
-          <i class="fa fa-plus-circle"></i> Créer un nouvel espace
-        </a>
-      </div>
-    </div>
-
     <!-- Barre de recherche -->
     <div class="row mb-4">
       <div class="col-lg-12 text-center">
@@ -35,6 +26,20 @@
 
     <!-- Liste des espaces -->
     <div class="row properties-box" id="espaceGrid">
+
+      <!-- ✅ Carte Ajouter un Espace -->
+      <div class="col-lg-4 col-md-6 align-self-center mb-30 properties-items espace-card">
+        <a href="{{ path('app_espace_new') }}" class="text-decoration-none">
+          <div class="item position-relative shadow-sm text-center d-flex flex-column justify-content-center align-items-center add-espace-card"
+               style="height: 100%; min-height: 420px;">
+            <i class="fa fa-plus-circle fa-3x text-white mb-3"></i>
+            <h5 class="text-white">Créer un nouvel espace</h5>
+            <p class="text-white">Cliquez ici pour ajouter un nouvel espace</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- ✅ Cartes des espaces -->
       {% for espace in espaces %}
         <div class="col-lg-4 col-md-6 align-self-center mb-30 properties-items espace-card">
           <div class="item position-relative shadow-sm" style="transition: transform 0.3s;">
@@ -77,7 +82,7 @@
       {% endfor %}
     </div>
 
-    <!-- Pagination dynamique JS -->
+    <!-- ✅ Pagination dynamique JS -->
     <div class="row mt-4 justify-content-center">
       <div class="col-auto">
         <button class="btn btn-outline-primary me-2" id="prevBtn">← Précédent</button>
@@ -88,9 +93,10 @@
   </div>
 </div>
 
-<!-- Bouton retour en haut -->
+<!-- ✅ Bouton retour en haut -->
 <button onclick="scrollToTop()" id="scrollTopBtn" title="Retour en haut">⬆</button>
 
+{# ✅ STYLES BONUS #}
 <style>
   .espace-card .item:hover {
     transform: translateY(-5px);
@@ -116,8 +122,21 @@
   #scrollTopBtn:hover {
     background-color: #0056b3;
   }
+
+  .add-espace-card {
+    background: linear-gradient(135deg, #007bff 0%, #00c6ff 100%);
+    border-radius: 10px;
+    color: white;
+    transition: all 0.3s ease;
+  }
+
+  .add-espace-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 10px 20px rgba(0, 123, 255, 0.3);
+  }
 </style>
 
+{# ✅ SCRIPT JS : filtrage + pagination + retour en haut #}
 <script>
   const searchInput = document.getElementById('searchEspace');
   const cards = Array.from(document.querySelectorAll('.espace-card'));
@@ -127,7 +146,7 @@
   function updatePagination() {
     const query = searchInput.value.toLowerCase();
     const filteredCards = cards.filter(card => card.textContent.toLowerCase().includes(query));
-    
+
     filteredCards.forEach((card, index) => {
       const start = (currentPage - 1) * itemsPerPage;
       const end = currentPage * itemsPerPage;

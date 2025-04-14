@@ -114,18 +114,6 @@ class __TwigTemplate_473970077b12a9795feed68d13e0e0e4 extends Template
 <div class=\"section properties\">
   <div class=\"container\">
 
-    <!-- Bouton de création -->
-    <div class=\"row mb-4\">
-      <div class=\"col-lg-12 text-center\">
-        <a href=\"";
-        // line 23
-        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_espace_new");
-        yield "\" class=\"main-button custom-message-btn\">
-          <i class=\"fa fa-plus-circle\"></i> Créer un nouvel espace
-        </a>
-      </div>
-    </div>
-
     <!-- Barre de recherche -->
     <div class=\"row mb-4\">
       <div class=\"col-lg-12 text-center\">
@@ -135,84 +123,101 @@ class __TwigTemplate_473970077b12a9795feed68d13e0e0e4 extends Template
 
     <!-- Liste des espaces -->
     <div class=\"row properties-box\" id=\"espaceGrid\">
+
+      <!-- ✅ Carte Ajouter un Espace -->
+      <div class=\"col-lg-4 col-md-6 align-self-center mb-30 properties-items espace-card\">
+        <a href=\"";
+        // line 32
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_espace_new");
+        yield "\" class=\"text-decoration-none\">
+          <div class=\"item position-relative shadow-sm text-center d-flex flex-column justify-content-center align-items-center add-espace-card\"
+               style=\"height: 100%; min-height: 420px;\">
+            <i class=\"fa fa-plus-circle fa-3x text-white mb-3\"></i>
+            <h5 class=\"text-white\">Créer un nouvel espace</h5>
+            <p class=\"text-white\">Cliquez ici pour ajouter un nouvel espace</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- ✅ Cartes des espaces -->
       ";
-        // line 38
+        // line 43
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["espaces"]) || array_key_exists("espaces", $context) ? $context["espaces"] : (function () { throw new RuntimeError('Variable "espaces" does not exist.', 38, $this->source); })()));
+        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["espaces"]) || array_key_exists("espaces", $context) ? $context["espaces"] : (function () { throw new RuntimeError('Variable "espaces" does not exist.', 43, $this->source); })()));
         $context['_iterated'] = false;
         foreach ($context['_seq'] as $context["_key"] => $context["espace"]) {
-            // line 39
+            // line 44
             yield "        <div class=\"col-lg-4 col-md-6 align-self-center mb-30 properties-items espace-card\">
           <div class=\"item position-relative shadow-sm\" style=\"transition: transform 0.3s;\">
             <a href=\"";
-            // line 41
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_espace_show", ["idEspace" => CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "idEspace", [], "any", false, false, false, 41)]), "html", null, true);
+            // line 46
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_espace_show", ["idEspace" => CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "idEspace", [], "any", false, false, false, 46)]), "html", null, true);
             yield "\">
               <img 
                 src=\"";
-            // line 43
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/" . (( !Twig\Extension\CoreExtension::testEmpty(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "image", [], "any", false, false, false, 43))) ? (CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "image", [], "any", false, false, false, 43)) : ("exemple.jpg")))), "html", null, true);
+            // line 48
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/" . (( !Twig\Extension\CoreExtension::testEmpty(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "image", [], "any", false, false, false, 48))) ? (CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "image", [], "any", false, false, false, 48)) : ("exemple.jpg")))), "html", null, true);
             yield "\" 
                 class=\"card-img-top\" 
                 alt=\"";
-            // line 45
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "nomEspace", [], "any", false, false, false, 45), "html", null, true);
+            // line 50
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "nomEspace", [], "any", false, false, false, 50), "html", null, true);
             yield "\"
               >
               ";
-            // line 47
-            if (Twig\Extension\CoreExtension::testEmpty(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "image", [], "any", false, false, false, 47))) {
-                // line 48
+            // line 52
+            if (Twig\Extension\CoreExtension::testEmpty(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "image", [], "any", false, false, false, 52))) {
+                // line 53
                 yield "                <span class=\"badge badge-secondary position-absolute\" style=\"top: 10px; left: 10px;\">Placeholder</span>
               ";
             }
-            // line 50
+            // line 55
             yield "            </a>
             <span class=\"category\">";
-            // line 51
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "TypeEspace", [], "any", false, false, false, 51), "html", null, true);
+            // line 56
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "TypeEspace", [], "any", false, false, false, 56), "html", null, true);
             yield "</span>
             <h6>";
-            // line 52
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "prix", [], "any", false, false, false, 52), "html", null, true);
+            // line 57
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "prix", [], "any", false, false, false, 57), "html", null, true);
             yield " Dt</h6>
             <h4>
               <a href=\"";
-            // line 54
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_espace_show", ["idEspace" => CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "idEspace", [], "any", false, false, false, 54)]), "html", null, true);
+            // line 59
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_espace_show", ["idEspace" => CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "idEspace", [], "any", false, false, false, 59)]), "html", null, true);
             yield "\">
                 ";
-            // line 55
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "nomEspace", [], "any", false, false, false, 55), "html", null, true);
+            // line 60
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "nomEspace", [], "any", false, false, false, 60), "html", null, true);
             yield "
               </a>
             </h4>
             <ul>
               <li>Adresse : <span>";
-            // line 59
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "adresse", [], "any", false, false, false, 59), "html", null, true);
+            // line 64
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "adresse", [], "any", false, false, false, 64), "html", null, true);
             yield "</span></li>
               <li>Capacité : <span>";
-            // line 60
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "capacite", [], "any", false, false, false, 60), "html", null, true);
+            // line 65
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "capacite", [], "any", false, false, false, 65), "html", null, true);
             yield "</span></li>
               <li>
                 Disponibilité :
                 <span class=\"badge ";
-            // line 63
-            yield (((CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "disponibilite", [], "any", false, false, false, 63) == "Disponible")) ? ("bg-success") : ("bg-danger"));
+            // line 68
+            yield (((CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "disponibilite", [], "any", false, false, false, 68) == "Disponible")) ? ("bg-success") : ("bg-danger"));
             yield "\">
                   ";
-            // line 64
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "disponibilite", [], "any", false, false, false, 64), "html", null, true);
+            // line 69
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "disponibilite", [], "any", false, false, false, 69), "html", null, true);
             yield "
                 </span>
               </li>
             </ul>
             <div class=\"main-button d-flex justify-content-center mt-2\">
               <a href=\"";
-            // line 69
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_espace_show", ["idEspace" => CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "idEspace", [], "any", false, false, false, 69)]), "html", null, true);
+            // line 74
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_espace_show", ["idEspace" => CoreExtension::getAttribute($this->env, $this->source, $context["espace"], "idEspace", [], "any", false, false, false, 74)]), "html", null, true);
             yield "\">Détails</a>
             </div>
           </div>
@@ -220,9 +225,9 @@ class __TwigTemplate_473970077b12a9795feed68d13e0e0e4 extends Template
       ";
             $context['_iterated'] = true;
         }
-        // line 73
+        // line 78
         if (!$context['_iterated']) {
-            // line 74
+            // line 79
             yield "        <div class=\"col-12 text-center\">
           <div class=\"alert alert-warning\">Aucun espace trouvé.</div>
         </div>
@@ -231,10 +236,10 @@ class __TwigTemplate_473970077b12a9795feed68d13e0e0e4 extends Template
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['espace'], $context['_parent'], $context['_iterated']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 78
+        // line 83
         yield "    </div>
 
-    <!-- Pagination dynamique JS -->
+    <!-- ✅ Pagination dynamique JS -->
     <div class=\"row mt-4 justify-content-center\">
       <div class=\"col-auto\">
         <button class=\"btn btn-outline-primary me-2\" id=\"prevBtn\">← Précédent</button>
@@ -245,10 +250,12 @@ class __TwigTemplate_473970077b12a9795feed68d13e0e0e4 extends Template
   </div>
 </div>
 
-<!-- Bouton retour en haut -->
+<!-- ✅ Bouton retour en haut -->
 <button onclick=\"scrollToTop()\" id=\"scrollTopBtn\" title=\"Retour en haut\">⬆</button>
 
-<style>
+";
+        // line 100
+        yield "<style>
   .espace-card .item:hover {
     transform: translateY(-5px);
     box-shadow: 0 0 12px rgba(0,0,0,0.15);
@@ -273,9 +280,23 @@ class __TwigTemplate_473970077b12a9795feed68d13e0e0e4 extends Template
   #scrollTopBtn:hover {
     background-color: #0056b3;
   }
+
+  .add-espace-card {
+    background: linear-gradient(135deg, #007bff 0%, #00c6ff 100%);
+    border-radius: 10px;
+    color: white;
+    transition: all 0.3s ease;
+  }
+
+  .add-espace-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 10px 20px rgba(0, 123, 255, 0.3);
+  }
 </style>
 
-<script>
+";
+        // line 140
+        yield "<script>
   const searchInput = document.getElementById('searchEspace');
   const cards = Array.from(document.querySelectorAll('.espace-card'));
   const itemsPerPage = 6;
@@ -284,7 +305,7 @@ class __TwigTemplate_473970077b12a9795feed68d13e0e0e4 extends Template
   function updatePagination() {
     const query = searchInput.value.toLowerCase();
     const filteredCards = cards.filter(card => card.textContent.toLowerCase().includes(query));
-    
+
     filteredCards.forEach((card, index) => {
       const start = (currentPage - 1) * itemsPerPage;
       const end = currentPage * itemsPerPage;
@@ -355,7 +376,7 @@ class __TwigTemplate_473970077b12a9795feed68d13e0e0e4 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  235 => 78,  226 => 74,  224 => 73,  215 => 69,  207 => 64,  203 => 63,  197 => 60,  193 => 59,  186 => 55,  182 => 54,  177 => 52,  173 => 51,  170 => 50,  166 => 48,  164 => 47,  159 => 45,  154 => 43,  149 => 41,  145 => 39,  140 => 38,  122 => 23,  106 => 10,  100 => 6,  87 => 5,  64 => 3,  41 => 1,);
+        return array (  299 => 140,  258 => 100,  240 => 83,  231 => 79,  229 => 78,  220 => 74,  212 => 69,  208 => 68,  202 => 65,  198 => 64,  191 => 60,  187 => 59,  182 => 57,  178 => 56,  175 => 55,  171 => 53,  169 => 52,  164 => 50,  159 => 48,  154 => 46,  150 => 44,  145 => 43,  131 => 32,  106 => 10,  100 => 6,  87 => 5,  64 => 3,  41 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -379,15 +400,6 @@ class __TwigTemplate_473970077b12a9795feed68d13e0e0e4 extends Template
 <div class=\"section properties\">
   <div class=\"container\">
 
-    <!-- Bouton de création -->
-    <div class=\"row mb-4\">
-      <div class=\"col-lg-12 text-center\">
-        <a href=\"{{ path('app_espace_new') }}\" class=\"main-button custom-message-btn\">
-          <i class=\"fa fa-plus-circle\"></i> Créer un nouvel espace
-        </a>
-      </div>
-    </div>
-
     <!-- Barre de recherche -->
     <div class=\"row mb-4\">
       <div class=\"col-lg-12 text-center\">
@@ -397,6 +409,20 @@ class __TwigTemplate_473970077b12a9795feed68d13e0e0e4 extends Template
 
     <!-- Liste des espaces -->
     <div class=\"row properties-box\" id=\"espaceGrid\">
+
+      <!-- ✅ Carte Ajouter un Espace -->
+      <div class=\"col-lg-4 col-md-6 align-self-center mb-30 properties-items espace-card\">
+        <a href=\"{{ path('app_espace_new') }}\" class=\"text-decoration-none\">
+          <div class=\"item position-relative shadow-sm text-center d-flex flex-column justify-content-center align-items-center add-espace-card\"
+               style=\"height: 100%; min-height: 420px;\">
+            <i class=\"fa fa-plus-circle fa-3x text-white mb-3\"></i>
+            <h5 class=\"text-white\">Créer un nouvel espace</h5>
+            <p class=\"text-white\">Cliquez ici pour ajouter un nouvel espace</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- ✅ Cartes des espaces -->
       {% for espace in espaces %}
         <div class=\"col-lg-4 col-md-6 align-self-center mb-30 properties-items espace-card\">
           <div class=\"item position-relative shadow-sm\" style=\"transition: transform 0.3s;\">
@@ -439,7 +465,7 @@ class __TwigTemplate_473970077b12a9795feed68d13e0e0e4 extends Template
       {% endfor %}
     </div>
 
-    <!-- Pagination dynamique JS -->
+    <!-- ✅ Pagination dynamique JS -->
     <div class=\"row mt-4 justify-content-center\">
       <div class=\"col-auto\">
         <button class=\"btn btn-outline-primary me-2\" id=\"prevBtn\">← Précédent</button>
@@ -450,9 +476,10 @@ class __TwigTemplate_473970077b12a9795feed68d13e0e0e4 extends Template
   </div>
 </div>
 
-<!-- Bouton retour en haut -->
+<!-- ✅ Bouton retour en haut -->
 <button onclick=\"scrollToTop()\" id=\"scrollTopBtn\" title=\"Retour en haut\">⬆</button>
 
+{# ✅ STYLES BONUS #}
 <style>
   .espace-card .item:hover {
     transform: translateY(-5px);
@@ -478,8 +505,21 @@ class __TwigTemplate_473970077b12a9795feed68d13e0e0e4 extends Template
   #scrollTopBtn:hover {
     background-color: #0056b3;
   }
+
+  .add-espace-card {
+    background: linear-gradient(135deg, #007bff 0%, #00c6ff 100%);
+    border-radius: 10px;
+    color: white;
+    transition: all 0.3s ease;
+  }
+
+  .add-espace-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 10px 20px rgba(0, 123, 255, 0.3);
+  }
 </style>
 
+{# ✅ SCRIPT JS : filtrage + pagination + retour en haut #}
 <script>
   const searchInput = document.getElementById('searchEspace');
   const cards = Array.from(document.querySelectorAll('.espace-card'));
@@ -489,7 +529,7 @@ class __TwigTemplate_473970077b12a9795feed68d13e0e0e4 extends Template
   function updatePagination() {
     const query = searchInput.value.toLowerCase();
     const filteredCards = cards.filter(card => card.textContent.toLowerCase().includes(query));
-    
+
     filteredCards.forEach((card, index) => {
       const start = (currentPage - 1) * itemsPerPage;
       const end = currentPage * itemsPerPage;
