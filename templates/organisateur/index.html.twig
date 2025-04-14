@@ -17,11 +17,14 @@
         </div>
         <div class="page-title-actions">
           <a href="{{ path('dashboard_organisateur_new_general') }}" class="btn btn-success">
-    <i class="pe-7s-plus mr-2"></i> Ajouter un Organisateur
-</a>
-
+            <i class="pe-7s-plus mr-2"></i> Ajouter un Organisateur
+          </a>
         </div>
       </div>
+    </div>
+
+    <div class="mb-4">
+      <input type="text" id="searchOrganisateur" class="form-control" placeholder="Rechercher un organisateur...">
     </div>
 
     <div class="main-card mb-3 card">
@@ -40,9 +43,9 @@
               <th class="text-center">Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="organisateurTable">
             {% for organisateur in organisateurs %}
-              <tr>
+              <tr class="organisateur-row">
                 <td class="text-center text-muted">#{{ organisateur.idOrg }}</td>
                 <td>{{ organisateur.nomOrg }}</td>
                 <td>{{ organisateur.prenomOrg }}</td>
@@ -64,4 +67,17 @@
     </div>
   </div>
 </div>
+
+<script>
+  const searchInput = document.getElementById('searchOrganisateur');
+  const rows = document.querySelectorAll('.organisateur-row');
+
+  searchInput.addEventListener('input', function () {
+    const query = this.value.toLowerCase();
+    rows.forEach(row => {
+      const content = row.textContent.toLowerCase();
+      row.style.display = content.includes(query) ? '' : 'none';
+    });
+  });
+</script>
 {% endblock %}
