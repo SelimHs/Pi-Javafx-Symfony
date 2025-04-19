@@ -78,9 +78,10 @@
     </parameter>
     <parameter key="kernel.charset">UTF-8</parameter>
     <parameter key="kernel.container_class">App_KernelDevDebugContainer</parameter>
+    <parameter key="uploads_directory">C:\wamp64\gestion_espace_symfony/public/uploads</parameter>
+    <parameter key="image_directory">C:\wamp64\gestion_espace_symfony/public/uploads</parameter>
     <parameter key="event_images_directory">C:\wamp64\gestion_espace_symfony/public/assets/images</parameter>
     <parameter key="espace_images_directory">C:\wamp64\gestion_espace_symfony/public/assets/images</parameter>
-    <parameter key="uploads_directory">C:\wamp64\gestion_espace_symfony/public/uploads</parameter>
     <parameter key="event_dispatcher.event_aliases" type="collection">
       <parameter key="Symfony\Component\Console\Event\ConsoleCommandEvent">console.command</parameter>
       <parameter key="Symfony\Component\Console\Event\ConsoleErrorEvent">console.error</parameter>
@@ -512,7 +513,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag priority="-50" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.ITKkBS4"/>
+      <argument type="service" id=".service_locator.n.FLHnF"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag priority="-100" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">controller.argument_value_resolver</tag>
@@ -3409,7 +3410,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.ITKkBS4"/>
+      <argument type="service" id=".service_locator.n.FLHnF"/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -7812,7 +7813,7 @@
         <argument key="reservation" type="service_closure" id=".errored..service_locator.gBkZnE5.App\Entity\Reservation"/>
       </argument>
     </service>
-    <service id=".service_locator.ITKkBS4" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.n.FLHnF" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Controller\BilletController::delete" type="service_closure" id=".service_locator.1XeBFJ0"/>
@@ -7857,13 +7858,10 @@
         <argument key="App\Controller\OrganisateurController::newBackGeneral" type="service_closure" id=".service_locator.CsMkqUa"/>
         <argument key="App\Controller\OrganisateurController::show" type="service_closure" id=".service_locator.SJ6E3SZ"/>
         <argument key="App\Controller\ProduitController::delete" type="service_closure" id=".service_locator.Gl3nBvd"/>
-        <argument key="App\Controller\ProduitController::deleteBack" type="service_closure" id=".service_locator.Gl3nBvd"/>
         <argument key="App\Controller\ProduitController::edit" type="service_closure" id=".service_locator.Gl3nBvd"/>
-        <argument key="App\Controller\ProduitController::editBack" type="service_closure" id=".service_locator.Gl3nBvd"/>
         <argument key="App\Controller\ProduitController::index" type="service_closure" id=".service_locator.vRUAr7Q"/>
         <argument key="App\Controller\ProduitController::indexback" type="service_closure" id=".service_locator.vRUAr7Q"/>
-        <argument key="App\Controller\ProduitController::new" type="service_closure" id=".service_locator.CsMkqUa"/>
-        <argument key="App\Controller\ProduitController::newBack" type="service_closure" id=".service_locator.CsMkqUa"/>
+        <argument key="App\Controller\ProduitController::newProduit" type="service_closure" id=".service_locator.CsMkqUa"/>
         <argument key="App\Controller\ProduitController::show" type="service_closure" id=".service_locator.ViXcClx"/>
         <argument key="App\Controller\ProduitController::showBack" type="service_closure" id=".service_locator.ViXcClx"/>
         <argument key="App\Controller\RemiseController::delete" type="service_closure" id=".service_locator.AUQJj3O"/>
@@ -7922,13 +7920,10 @@
         <argument key="App\Controller\OrganisateurController:newBackGeneral" type="service_closure" id=".service_locator.CsMkqUa"/>
         <argument key="App\Controller\OrganisateurController:show" type="service_closure" id=".service_locator.SJ6E3SZ"/>
         <argument key="App\Controller\ProduitController:delete" type="service_closure" id=".service_locator.Gl3nBvd"/>
-        <argument key="App\Controller\ProduitController:deleteBack" type="service_closure" id=".service_locator.Gl3nBvd"/>
         <argument key="App\Controller\ProduitController:edit" type="service_closure" id=".service_locator.Gl3nBvd"/>
-        <argument key="App\Controller\ProduitController:editBack" type="service_closure" id=".service_locator.Gl3nBvd"/>
         <argument key="App\Controller\ProduitController:index" type="service_closure" id=".service_locator.vRUAr7Q"/>
         <argument key="App\Controller\ProduitController:indexback" type="service_closure" id=".service_locator.vRUAr7Q"/>
-        <argument key="App\Controller\ProduitController:new" type="service_closure" id=".service_locator.CsMkqUa"/>
-        <argument key="App\Controller\ProduitController:newBack" type="service_closure" id=".service_locator.CsMkqUa"/>
+        <argument key="App\Controller\ProduitController:newProduit" type="service_closure" id=".service_locator.CsMkqUa"/>
         <argument key="App\Controller\ProduitController:show" type="service_closure" id=".service_locator.ViXcClx"/>
         <argument key="App\Controller\ProduitController:showBack" type="service_closure" id=".service_locator.ViXcClx"/>
         <argument key="App\Controller\RemiseController:delete" type="service_closure" id=".service_locator.AUQJj3O"/>
@@ -10243,7 +10238,7 @@
     <service id="Psr\Log\LoggerInterface" alias="monolog.logger"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.w7.f4fT" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.ITKkBS4"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.n.FLHnF"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.KLVvNIq"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="Psr\Log\LoggerInterface $requestLogger" alias="monolog.logger.request"/>
@@ -10276,7 +10271,7 @@
     <service id=".service_locator.f9os5BO" alias=".service_locator.Gl3nBvd"/>
     <service id=".service_locator.nwdTcq8" alias=".service_locator.AUQJj3O"/>
     <service id=".service_locator.yjYmAoZ" alias=".service_locator.gBkZnE5"/>
-    <service id=".service_locator.na6Wv.8" alias=".service_locator.ITKkBS4"/>
+    <service id=".service_locator.DsVTWOG" alias=".service_locator.n.FLHnF"/>
     <service id=".service_locator.BFrsqsn" alias=".service_locator.F9PKc.7"/>
     <service id=".service_locator.fWUMGY4" alias=".service_locator.rOh5ZVg"/>
     <service id=".service_locator.XtmiKbi" alias=".service_locator.MfxSDRP"/>
