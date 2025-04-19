@@ -73,6 +73,10 @@ class __TwigTemplate_e0c6ed56d9ba40a0b6afc4cea9616ce6 extends Template
         // line 16
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_espace_index");
         yield "\">Espaces</a></li>
+                      <li><a href=\"";
+        // line 17
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_produit_index");
+        yield "\">Produits</a></li>
                       <li><a href=\"contact.html\">Contact Us</a></li>
                       <li><a href=\"#\"><i class=\"fa fa-calendar\"></i> Schedule a visit</a></li>
                   </ul>   
@@ -116,7 +120,7 @@ class __TwigTemplate_e0c6ed56d9ba40a0b6afc4cea9616ce6 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  74 => 16,  70 => 15,  66 => 14,  57 => 8,  48 => 1,);
+        return array (  78 => 17,  74 => 16,  70 => 15,  66 => 14,  57 => 8,  48 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -137,6 +141,7 @@ class __TwigTemplate_e0c6ed56d9ba40a0b6afc4cea9616ce6 extends Template
                       <li><a href=\"{{ path('app_home') }}\" class=\"active\">Acceuil</a></li>
                       <li><a href=\"{{ path('app_event_index') }}\">Évènements</a></li>
                       <li><a href=\"{{ path('app_espace_index') }}\">Espaces</a></li>
+                      <li><a href=\"{{ path('app_produit_index') }}\">Produits</a></li>
                       <li><a href=\"contact.html\">Contact Us</a></li>
                       <li><a href=\"#\"><i class=\"fa fa-calendar\"></i> Schedule a visit</a></li>
                   </ul>   

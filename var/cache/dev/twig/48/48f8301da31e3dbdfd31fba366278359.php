@@ -199,6 +199,68 @@ class __TwigTemplate_3cb9f18540e7d8d8e38696f6e430d556 extends Template
         </li>
     </ul>
 </li>
+<li class=\"app-sidebar__heading\">Fournisseurs</li>
+<li>
+    <a href=\"#\">
+        <i class=\"metismenu-icon pe-7s-id\"></i>
+        Gestion Fournisseurs
+        <i class=\"metismenu-state-icon pe-7s-angle-down caret-left\"></i>
+    </a>
+    <ul>
+            <li>
+            <a href=\"";
+        // line 140
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_fournisseur_new");
+        yield "\">
+                <i class=\"metismenu-icon\"></i>
+                Ajouter un Fournisseur
+            </a>
+        </li>
+        <li>
+            <a href=\"";
+        // line 146
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_fournisseur_index");
+        yield "\">
+                <i class=\"metismenu-icon\"></i>
+                Liste des Fournisseurs
+            </a>
+        </li>
+
+    </ul>
+</li>
+
+<li class=\"app-sidebar__heading\">Produits</li>
+<li>
+    <a href=\"#\">
+        <i class=\"metismenu-icon pe-7s-id\"></i>
+        Gestion Produits
+        <i class=\"metismenu-state-icon pe-7s-angle-down caret-left\"></i>
+    </a>
+    <ul>
+            <li>
+            <a href=\"";
+        // line 164
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("dashboard_produit_new");
+        yield "\">
+                <i class=\"metismenu-icon\"></i>
+                Ajouter un Produit
+            </a>
+        </li>
+        <li>
+            <a href=\"";
+        // line 170
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_produit_indexback");
+        yield "\">
+                <i class=\"metismenu-icon\"></i>
+                Liste des Produits
+            </a>
+        </li>
+
+    </ul>
+</li>
+
+
+
 
                 <li class=\"app-sidebar__heading\">PRO Version</li>
                 <li>
@@ -243,7 +305,7 @@ class __TwigTemplate_3cb9f18540e7d8d8e38696f6e430d556 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  194 => 124,  175 => 108,  166 => 102,  147 => 86,  138 => 80,  117 => 62,  108 => 56,  88 => 39,  48 => 1,);
+        return array (  252 => 170,  243 => 164,  222 => 146,  213 => 140,  194 => 124,  175 => 108,  166 => 102,  147 => 86,  138 => 80,  117 => 62,  108 => 56,  88 => 39,  48 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -378,6 +440,56 @@ class __TwigTemplate_3cb9f18540e7d8d8e38696f6e430d556 extends Template
         </li>
     </ul>
 </li>
+<li class=\"app-sidebar__heading\">Fournisseurs</li>
+<li>
+    <a href=\"#\">
+        <i class=\"metismenu-icon pe-7s-id\"></i>
+        Gestion Fournisseurs
+        <i class=\"metismenu-state-icon pe-7s-angle-down caret-left\"></i>
+    </a>
+    <ul>
+            <li>
+            <a href=\"{{ path('app_fournisseur_new') }}\">
+                <i class=\"metismenu-icon\"></i>
+                Ajouter un Fournisseur
+            </a>
+        </li>
+        <li>
+            <a href=\"{{ path('app_fournisseur_index') }}\">
+                <i class=\"metismenu-icon\"></i>
+                Liste des Fournisseurs
+            </a>
+        </li>
+
+    </ul>
+</li>
+
+<li class=\"app-sidebar__heading\">Produits</li>
+<li>
+    <a href=\"#\">
+        <i class=\"metismenu-icon pe-7s-id\"></i>
+        Gestion Produits
+        <i class=\"metismenu-state-icon pe-7s-angle-down caret-left\"></i>
+    </a>
+    <ul>
+            <li>
+            <a href=\"{{ path('dashboard_produit_new') }}\">
+                <i class=\"metismenu-icon\"></i>
+                Ajouter un Produit
+            </a>
+        </li>
+        <li>
+            <a href=\"{{ path('app_produit_indexback') }}\">
+                <i class=\"metismenu-icon\"></i>
+                Liste des Produits
+            </a>
+        </li>
+
+    </ul>
+</li>
+
+
+
 
                 <li class=\"app-sidebar__heading\">PRO Version</li>
                 <li>

@@ -1,0 +1,43 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %}Remise index{% endblock %}
+
+{% block body %}
+    <h1>Remise index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>IdRemise</th>
+                <th>CodePromo</th>
+                <th>Description</th>
+                <th>PourcentageRemise</th>
+                <th>DateExpiration</th>
+                <th>IdReservation</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for remise in remises %}
+            <tr>
+                <td>{{ remise.idRemise }}</td>
+                <td>{{ remise.codePromo }}</td>
+                <td>{{ remise.description }}</td>
+                <td>{{ remise.pourcentageRemise }}</td>
+                <td>{{ remise.dateExpiration }}</td>
+                <td>{{ remise.idReservation }}</td>
+                <td>
+                    <a href="{{ path('app_remise_show', {'idRemise': remise.idRemise}) }}">show</a>
+                    <a href="{{ path('app_remise_edit', {'idRemise': remise.idRemise}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_remise_new') }}">Create new</a>
+{% endblock %}

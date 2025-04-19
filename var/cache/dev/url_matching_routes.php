@@ -24,11 +24,21 @@ return [
         '/event/dashboard' => [[['_route' => 'dashboard_event_index', '_controller' => 'App\\Controller\\EventController::indexDashboard'], null, ['GET' => 0], null, false, false, null]],
         '/event/new' => [[['_route' => 'app_event_new', '_controller' => 'App\\Controller\\EventController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/event/newBack' => [[['_route' => 'dashboard_event_new', '_controller' => 'App\\Controller\\EventController::newDashboard'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        '/fournisseur' => [[['_route' => 'app_fournisseur_index', '_controller' => 'App\\Controller\\FournisseurController::index'], null, ['GET' => 0], null, false, false, null]],
+        '/fournisseur/new' => [[['_route' => 'app_fournisseur_new', '_controller' => 'App\\Controller\\FournisseurController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/home' => [[['_route' => 'app_home', '_controller' => 'App\\Controller\\HomeController::index'], null, null, null, false, false, null]],
         '/dashboard' => [[['_route' => 'app_dashboard', '_controller' => 'App\\Controller\\HomeController::indexDashboard'], null, null, null, false, false, null]],
         '/organisateur' => [[['_route' => 'app_organisateur_index', '_controller' => 'App\\Controller\\OrganisateurController::index'], null, ['GET' => 0], null, false, false, null]],
         '/organisateur/new' => [[['_route' => 'app_organisateur_new', '_controller' => 'App\\Controller\\OrganisateurController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/organisateur/newBack' => [[['_route' => 'dashboard_organisateur_new_general', '_controller' => 'App\\Controller\\OrganisateurController::newBackGeneral'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        '/produit' => [[['_route' => 'app_produit_index', '_controller' => 'App\\Controller\\ProduitController::index'], null, ['GET' => 0], null, false, false, null]],
+        '/produit/back' => [[['_route' => 'app_produit_indexback', '_controller' => 'App\\Controller\\ProduitController::indexback'], null, ['GET' => 0], null, false, false, null]],
+        '/produit/new' => [[['_route' => 'app_produit_new', '_controller' => 'App\\Controller\\ProduitController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        '/produit/dashboard/new' => [[['_route' => 'dashboard_produit_new', '_controller' => 'App\\Controller\\ProduitController::newBack'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        '/remise' => [[['_route' => 'app_remise_index', '_controller' => 'App\\Controller\\RemiseController::index'], null, ['GET' => 0], null, false, false, null]],
+        '/remise/new' => [[['_route' => 'app_remise_new', '_controller' => 'App\\Controller\\RemiseController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        '/reservation' => [[['_route' => 'app_reservation_index', '_controller' => 'App\\Controller\\ReservationController::index'], null, ['GET' => 0], null, false, false, null]],
+        '/reservation/new' => [[['_route' => 'app_reservation_new', '_controller' => 'App\\Controller\\ReservationController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
     ],
     [ // $regexpList
         0 => '{^(?'
@@ -73,15 +83,40 @@ return [
                         .'|([^/]++)/delete(*:509)'
                     .')'
                 .')'
+                .'|/fournisseur/([^/]++)(?'
+                    .'|(*:543)'
+                    .'|/edit(*:556)'
+                    .'|(*:564)'
+                .')'
                 .'|/organisateur/(?'
-                    .'|newBack/([^/]++)(*:552)'
+                    .'|newBack/([^/]++)(*:606)'
                     .'|([^/]++)(?'
-                        .'|(*:571)'
-                        .'|/edit(*:584)'
-                        .'|(*:592)'
+                        .'|(*:625)'
+                        .'|/edit(*:638)'
+                        .'|(*:646)'
                     .')'
-                    .'|deleteBack/([^/]++)(*:620)'
-                    .'|editBack/([^/]++)(*:645)'
+                    .'|deleteBack/([^/]++)(*:674)'
+                    .'|editBack/([^/]++)(*:699)'
+                .')'
+                .'|/produit/(?'
+                    .'|([^/]++)(*:728)'
+                    .'|dashboard/([^/]++)(*:754)'
+                    .'|([^/]++)/edit(*:775)'
+                    .'|dashboard/([^/]++)/edit(*:806)'
+                    .'|([^/]++)(*:822)'
+                    .'|dashboard/([^/]++)(*:848)'
+                .')'
+                .'|/re(?'
+                    .'|mise/([^/]++)(?'
+                        .'|(*:879)'
+                        .'|/edit(*:892)'
+                        .'|(*:900)'
+                    .')'
+                    .'|servation/([^/]++)(?'
+                        .'|(*:930)'
+                        .'|/edit(*:943)'
+                        .'|(*:951)'
+                    .')'
                 .')'
             .')/?$}sDu',
     ],
@@ -109,13 +144,28 @@ return [
         463 => [[['_route' => 'dashboard_event_edit', '_controller' => 'App\\Controller\\EventController::editDasboard'], ['idEvent'], ['GET' => 0, 'POST' => 1], null, false, true, null]],
         486 => [[['_route' => 'app_event_delete', '_controller' => 'App\\Controller\\EventController::delete'], ['idEvent'], ['POST' => 0], null, false, true, null]],
         509 => [[['_route' => 'dashboard_event_delete', '_controller' => 'App\\Controller\\EventController::deleteDashboard'], ['idEvent'], ['POST' => 0], null, false, false, null]],
-        552 => [[['_route' => 'dashboard_organisateur_new', '_controller' => 'App\\Controller\\OrganisateurController::newBack'], ['idEspace'], ['GET' => 0, 'POST' => 1], null, false, true, null]],
-        571 => [[['_route' => 'app_organisateur_show', '_controller' => 'App\\Controller\\OrganisateurController::show'], ['id_org'], ['GET' => 0], null, false, true, null]],
-        584 => [[['_route' => 'app_organisateur_edit', '_controller' => 'App\\Controller\\OrganisateurController::edit'], ['id_org'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        592 => [[['_route' => 'app_organisateur_delete', '_controller' => 'App\\Controller\\OrganisateurController::delete'], ['id_org'], ['POST' => 0], null, false, true, null]],
-        620 => [[['_route' => 'dashboard_organisateur_delete', '_controller' => 'App\\Controller\\OrganisateurController::deleteBack'], ['id_org'], ['POST' => 0], null, false, true, null]],
-        645 => [
-            [['_route' => 'dashboard_organisateur_edit', '_controller' => 'App\\Controller\\OrganisateurController::editBack'], ['id_org'], ['GET' => 0, 'POST' => 1], null, false, true, null],
+        543 => [[['_route' => 'app_fournisseur_show', '_controller' => 'App\\Controller\\FournisseurController::show'], ['idFournisseur'], ['GET' => 0], null, false, true, null]],
+        556 => [[['_route' => 'app_fournisseur_edit', '_controller' => 'App\\Controller\\FournisseurController::edit'], ['idFournisseur'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        564 => [[['_route' => 'app_fournisseur_delete', '_controller' => 'App\\Controller\\FournisseurController::delete'], ['idFournisseur'], ['POST' => 0], null, false, true, null]],
+        606 => [[['_route' => 'dashboard_organisateur_new', '_controller' => 'App\\Controller\\OrganisateurController::newBack'], ['idEspace'], ['GET' => 0, 'POST' => 1], null, false, true, null]],
+        625 => [[['_route' => 'app_organisateur_show', '_controller' => 'App\\Controller\\OrganisateurController::show'], ['id_org'], ['GET' => 0], null, false, true, null]],
+        638 => [[['_route' => 'app_organisateur_edit', '_controller' => 'App\\Controller\\OrganisateurController::edit'], ['id_org'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        646 => [[['_route' => 'app_organisateur_delete', '_controller' => 'App\\Controller\\OrganisateurController::delete'], ['id_org'], ['POST' => 0], null, false, true, null]],
+        674 => [[['_route' => 'dashboard_organisateur_delete', '_controller' => 'App\\Controller\\OrganisateurController::deleteBack'], ['id_org'], ['POST' => 0], null, false, true, null]],
+        699 => [[['_route' => 'dashboard_organisateur_edit', '_controller' => 'App\\Controller\\OrganisateurController::editBack'], ['id_org'], ['GET' => 0, 'POST' => 1], null, false, true, null]],
+        728 => [[['_route' => 'app_produit_show', '_controller' => 'App\\Controller\\ProduitController::show'], ['idProduit'], ['GET' => 0], null, false, true, null]],
+        754 => [[['_route' => 'dashboard_produit_show', '_controller' => 'App\\Controller\\ProduitController::showBack'], ['idProduit'], ['GET' => 0], null, false, true, null]],
+        775 => [[['_route' => 'app_produit_edit', '_controller' => 'App\\Controller\\ProduitController::edit'], ['idProduit'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        806 => [[['_route' => 'dashboard_produit_edit', '_controller' => 'App\\Controller\\ProduitController::editBack'], ['idProduit'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        822 => [[['_route' => 'app_produit_delete', '_controller' => 'App\\Controller\\ProduitController::delete'], ['idProduit'], ['POST' => 0], null, false, true, null]],
+        848 => [[['_route' => 'dashboard_produit_delete', '_controller' => 'App\\Controller\\ProduitController::deleteBack'], ['idProduit'], ['POST' => 0], null, false, true, null]],
+        879 => [[['_route' => 'app_remise_show', '_controller' => 'App\\Controller\\RemiseController::show'], ['idRemise'], ['GET' => 0], null, false, true, null]],
+        892 => [[['_route' => 'app_remise_edit', '_controller' => 'App\\Controller\\RemiseController::edit'], ['idRemise'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        900 => [[['_route' => 'app_remise_delete', '_controller' => 'App\\Controller\\RemiseController::delete'], ['idRemise'], ['POST' => 0], null, false, true, null]],
+        930 => [[['_route' => 'app_reservation_show', '_controller' => 'App\\Controller\\ReservationController::show'], ['idReservation'], ['GET' => 0], null, false, true, null]],
+        943 => [[['_route' => 'app_reservation_edit', '_controller' => 'App\\Controller\\ReservationController::edit'], ['idReservation'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        951 => [
+            [['_route' => 'app_reservation_delete', '_controller' => 'App\\Controller\\ReservationController::delete'], ['idReservation'], ['POST' => 0], null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],
     ],

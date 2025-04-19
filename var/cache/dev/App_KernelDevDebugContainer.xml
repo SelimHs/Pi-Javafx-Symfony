@@ -9,8 +9,8 @@
     <parameter key="kernel.runtime_mode.cli">%env(not:default:kernel.runtime_mode.web:)%</parameter>
     <parameter key="kernel.runtime_mode.worker">%env(bool:default::key:worker:default:kernel.runtime_mode:)%</parameter>
     <parameter key="kernel.debug">true</parameter>
-    <parameter key="kernel.build_dir">C:/wamp64/gestion_espace_symfony/var/cache/dev</parameter>
-    <parameter key="kernel.cache_dir">C:/wamp64/gestion_espace_symfony/var/cache/dev</parameter>
+    <parameter key="kernel.build_dir">C:\wamp64\gestion_espace_symfony\var\cache\dev</parameter>
+    <parameter key="kernel.cache_dir">C:\wamp64\gestion_espace_symfony\var\cache\dev</parameter>
     <parameter key="kernel.logs_dir">C:\wamp64\gestion_espace_symfony\var\log</parameter>
     <parameter key="kernel.bundles" type="collection">
       <parameter key="FrameworkBundle">Symfony\Bundle\FrameworkBundle\FrameworkBundle</parameter>
@@ -118,15 +118,15 @@
     <parameter key="translator.logging">false</parameter>
     <parameter key="translator.default_path">C:\wamp64\gestion_espace_symfony/translations</parameter>
     <parameter key="debug.error_handler.throw_at">-1</parameter>
-    <parameter key="debug.container.dump">C:/wamp64/gestion_espace_symfony/var/cache/dev/App_KernelDevDebugContainer.xml</parameter>
+    <parameter key="debug.container.dump">C:\wamp64\gestion_espace_symfony\var\cache\dev/App_KernelDevDebugContainer.xml</parameter>
     <parameter key="router.request_context.host">localhost</parameter>
     <parameter key="router.request_context.scheme">http</parameter>
     <parameter key="router.request_context.base_url"></parameter>
     <parameter key="router.resource">kernel::loadRoutes</parameter>
-    <parameter key="router.cache_dir">C:/wamp64/gestion_espace_symfony/var/cache/dev</parameter>
+    <parameter key="router.cache_dir">C:\wamp64\gestion_espace_symfony\var\cache\dev</parameter>
     <parameter key="request_listener.http_port">80</parameter>
     <parameter key="request_listener.https_port">443</parameter>
-    <parameter key="serializer.mapping.cache.file">C:/wamp64/gestion_espace_symfony/var/cache/dev/serialization.php</parameter>
+    <parameter key="serializer.mapping.cache.file">C:\wamp64\gestion_espace_symfony\var\cache\dev/serialization.php</parameter>
     <parameter key="cache.prefix.seed">_C:\wamp64\gestion_espace_symfony.App_KernelDevDebugContainer</parameter>
     <parameter key="session.metadata.storage_key">_sf2_meta</parameter>
     <parameter key="session.storage.options" type="collection">
@@ -140,11 +140,11 @@
     <parameter key="session.metadata.update_threshold">0</parameter>
     <parameter key="form.type_extension.csrf.enabled">true</parameter>
     <parameter key="form.type_extension.csrf.field_name">_token</parameter>
-    <parameter key="validator.mapping.cache.file">C:/wamp64/gestion_espace_symfony/var/cache/dev/validation.php</parameter>
+    <parameter key="validator.mapping.cache.file">C:\wamp64\gestion_espace_symfony\var\cache\dev/validation.php</parameter>
     <parameter key="validator.translation_domain">validators</parameter>
     <parameter key="profiler_listener.only_exceptions">false</parameter>
     <parameter key="profiler_listener.only_main_requests">false</parameter>
-    <parameter key="profiler.storage.dsn">file:C:/wamp64/gestion_espace_symfony/var/cache/dev/profiler</parameter>
+    <parameter key="profiler.storage.dsn">file:C:\wamp64\gestion_espace_symfony\var\cache\dev/profiler</parameter>
     <parameter key="doctrine.dbal.configuration.class">Doctrine\DBAL\Configuration</parameter>
     <parameter key="doctrine.data_collector.class">Doctrine\Bundle\DoctrineBundle\DataCollector\DoctrineDataCollector</parameter>
     <parameter key="doctrine.dbal.connection.event_manager.class">Symfony\Bridge\Doctrine\ContainerAwareEventManager</parameter>
@@ -210,7 +210,7 @@
     <parameter key="doctrine.orm.second_level_cache.regions_configuration.class">Doctrine\ORM\Cache\RegionsConfiguration</parameter>
     <parameter key="doctrine.orm.auto_generate_proxy_classes">true</parameter>
     <parameter key="doctrine.orm.enable_lazy_ghost_objects">true</parameter>
-    <parameter key="doctrine.orm.proxy_dir">C:/wamp64/gestion_espace_symfony/var/cache/dev/doctrine/orm/Proxies</parameter>
+    <parameter key="doctrine.orm.proxy_dir">C:\wamp64\gestion_espace_symfony\var\cache\dev/doctrine/orm/Proxies</parameter>
     <parameter key="doctrine.orm.proxy_namespace">Proxies</parameter>
     <parameter key="doctrine.migrations.preferred_em">null</parameter>
     <parameter key="doctrine.migrations.preferred_connection">null</parameter>
@@ -375,6 +375,13 @@
         <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\EventController"/>
       </call>
     </service>
+    <service id="App\Controller\FournisseurController" class="App\Controller\FournisseurController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\FournisseurController"/>
+      </call>
+    </service>
     <service id="App\Controller\HomeController" class="App\Controller\HomeController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
@@ -389,6 +396,27 @@
         <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\OrganisateurController"/>
       </call>
     </service>
+    <service id="App\Controller\ProduitController" class="App\Controller\ProduitController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\ProduitController"/>
+      </call>
+    </service>
+    <service id="App\Controller\RemiseController" class="App\Controller\RemiseController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\RemiseController"/>
+      </call>
+    </service>
+    <service id="App\Controller\ReservationController" class="App\Controller\ReservationController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\ReservationController"/>
+      </call>
+    </service>
     <service id="App\Form\BilletType" class="App\Form\BilletType" autowire="true" autoconfigure="true">
       <tag name="form.type"/>
     </service>
@@ -398,7 +426,19 @@
     <service id="App\Form\EventType" class="App\Form\EventType" autowire="true" autoconfigure="true">
       <tag name="form.type"/>
     </service>
+    <service id="App\Form\FournisseurType" class="App\Form\FournisseurType" autowire="true" autoconfigure="true">
+      <tag name="form.type"/>
+    </service>
     <service id="App\Form\OrganisateurType" class="App\Form\OrganisateurType" autowire="true" autoconfigure="true">
+      <tag name="form.type"/>
+    </service>
+    <service id="App\Form\ProduitType" class="App\Form\ProduitType" autowire="true" autoconfigure="true">
+      <tag name="form.type"/>
+    </service>
+    <service id="App\Form\RemiseType" class="App\Form\RemiseType" autowire="true" autoconfigure="true">
+      <tag name="form.type"/>
+    </service>
+    <service id="App\Form\ReservationType" class="App\Form\ReservationType" autowire="true" autoconfigure="true">
       <tag name="form.type"/>
     </service>
     <service id="App\Repository\BilletRepository" class="App\Repository\BilletRepository" autowire="true" autoconfigure="true">
@@ -472,7 +512,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag priority="-50" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.OoVCQRu"/>
+      <argument type="service" id=".service_locator.BOIz_zD"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag priority="-100" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">controller.argument_value_resolver</tag>
@@ -555,7 +595,7 @@
       </argument>
     </service>
     <service id="http_cache.store" class="Symfony\Component\HttpKernel\HttpCache\Store">
-      <argument>C:/wamp64/gestion_espace_symfony/var/cache/dev/http_cache</argument>
+      <argument>C:\wamp64\gestion_espace_symfony\var\cache\dev/http_cache</argument>
     </service>
     <service id="url_helper" class="Symfony\Component\HttpFoundation\UrlHelper">
       <argument type="service" id="request_stack"/>
@@ -565,7 +605,7 @@
       <tag name="container.no_preload"/>
       <argument type="tagged_iterator" tag="kernel.cache_warmer"/>
       <argument>true</argument>
-      <argument>C:/wamp64/gestion_espace_symfony/var/cache/dev/App_KernelDevDebugContainerDeprecations.log</argument>
+      <argument>C:\wamp64\gestion_espace_symfony\var\cache\dev/App_KernelDevDebugContainerDeprecations.log</argument>
     </service>
     <service id="cache_clearer" class="Symfony\Component\HttpKernel\CacheClearer\ChainCacheClearer">
       <argument type="tagged_iterator" tag="kernel.cache_clearer"/>
@@ -1396,7 +1436,11 @@
         <argument>App\Form\BilletType</argument>
         <argument>App\Form\EspaceType</argument>
         <argument>App\Form\EventType</argument>
+        <argument>App\Form\FournisseurType</argument>
         <argument>App\Form\OrganisateurType</argument>
+        <argument>App\Form\ProduitType</argument>
+        <argument>App\Form\RemiseType</argument>
+        <argument>App\Form\ReservationType</argument>
         <argument>Symfony\Component\Form\Extension\Core\Type\FormType</argument>
         <argument>Symfony\Component\Form\Extension\Core\Type\ChoiceType</argument>
         <argument>Symfony\Component\Form\Extension\Core\Type\FileType</argument>
@@ -1559,7 +1603,7 @@
       <argument></argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:/wamp64/gestion_espace_symfony/var/cache/dev/pools/system</argument>
+      <argument>C:\wamp64\gestion_espace_symfony\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -1578,7 +1622,7 @@
       <tag name="monolog.logger" channel="cache"/>
       <argument></argument>
       <argument>0</argument>
-      <argument>C:/wamp64/gestion_espace_symfony/var/cache/dev/pools/app</argument>
+      <argument>C:\wamp64\gestion_espace_symfony\var\cache\dev/pools/app</argument>
       <argument type="service" id="cache.default_marshaller" on-invalid="ignore"/>
       <call method="setLogger">
         <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
@@ -1747,7 +1791,7 @@
     <service id="asset_mapper.cached_mapped_asset_factory" class="Symfony\Component\AssetMapper\Factory\CachedMappedAssetFactory">
       <tag name="container.decorator" id="asset_mapper.mapped_asset_factory" inner="asset_mapper.cached_mapped_asset_factory.inner"/>
       <argument type="service" id="asset_mapper.cached_mapped_asset_factory.inner"/>
-      <argument>C:/wamp64/gestion_espace_symfony/var/cache/dev/asset_mapper</argument>
+      <argument>C:\wamp64\gestion_espace_symfony\var\cache\dev/asset_mapper</argument>
       <argument>true</argument>
     </service>
     <service id="asset_mapper.repository" class="Symfony\Component\AssetMapper\AssetMapperRepository">
@@ -2111,7 +2155,7 @@
         </argument>
       </argument>
       <argument type="collection">
-        <argument key="cache_dir">C:/wamp64/gestion_espace_symfony/var/cache/dev/translations</argument>
+        <argument key="cache_dir">C:\wamp64\gestion_espace_symfony\var\cache\dev/translations</argument>
         <argument key="debug">true</argument>
         <argument key="resource_files" type="collection">
           <argument key="af" type="collection">
@@ -3365,7 +3409,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.OoVCQRu"/>
+      <argument type="service" id=".service_locator.BOIz_zD"/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -3468,7 +3512,7 @@
       <argument type="service" id=".service_locator.bN.V_Nq.router.default"/>
       <argument>kernel::loadRoutes</argument>
       <argument type="collection">
-        <argument key="cache_dir">C:/wamp64/gestion_espace_symfony/var/cache/dev</argument>
+        <argument key="cache_dir">C:\wamp64\gestion_espace_symfony\var\cache\dev</argument>
         <argument key="debug">true</argument>
         <argument key="generator_class">Symfony\Component\Routing\Generator\CompiledUrlGenerator</argument>
         <argument key="generator_dumper_class">Symfony\Component\Routing\Generator\Dumper\CompiledUrlGeneratorDumper</argument>
@@ -3647,10 +3691,10 @@
           </service>
         </argument>
       </argument>
-      <argument>C:/wamp64/gestion_espace_symfony/var/cache/dev/serialization.php</argument>
+      <argument>C:\wamp64\gestion_espace_symfony\var\cache\dev/serialization.php</argument>
     </service>
     <service id="serializer.mapping.cache.symfony" class="Psr\Cache\CacheItemPoolInterface">
-      <argument>C:/wamp64/gestion_espace_symfony/var/cache/dev/serialization.php</argument>
+      <argument>C:\wamp64\gestion_espace_symfony\var\cache\dev/serialization.php</argument>
       <argument type="service" id="cache.serializer"/>
       <factory class="Symfony\Component\Cache\Adapter\PhpArrayAdapter" method="create"/>
     </service>
@@ -3786,7 +3830,7 @@
       <argument>true</argument>
     </service>
     <service id="session.storage.factory.mock_file" class="Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorageFactory">
-      <argument>C:/wamp64/gestion_espace_symfony/var/cache/dev/sessions</argument>
+      <argument>C:\wamp64\gestion_espace_symfony\var\cache\dev/sessions</argument>
       <argument>MOCKSESSID</argument>
       <argument type="service">
         <service class="Symfony\Component\HttpFoundation\Session\Storage\MetadataBag">
@@ -3854,7 +3898,7 @@
       <argument type="service" id="form.registry"/>
     </service>
     <service id="form.extension" class="Symfony\Component\Form\Extension\DependencyInjection\DependencyInjectionExtension">
-      <argument type="service" id=".service_locator.YFacsJN"/>
+      <argument type="service" id=".service_locator.rOh5ZVg"/>
       <argument type="collection">
         <argument key="Symfony\Component\Form\Extension\Core\Type\FormType" type="iterator">
           <argument type="service" id="form.type_extension.form.transformation_failure_handling"/>
@@ -3991,10 +4035,10 @@
     <service id="validator.mapping.cache_warmer" class="Symfony\Bundle\FrameworkBundle\CacheWarmer\ValidatorCacheWarmer">
       <tag name="kernel.cache_warmer"/>
       <argument type="service" id="validator.builder"/>
-      <argument>C:/wamp64/gestion_espace_symfony/var/cache/dev/validation.php</argument>
+      <argument>C:\wamp64\gestion_espace_symfony\var\cache\dev/validation.php</argument>
     </service>
     <service id="validator.mapping.cache.adapter" class="Symfony\Component\Cache\Adapter\PhpArrayAdapter" constructor="create">
-      <argument>C:/wamp64/gestion_espace_symfony/var/cache/dev/validation.php</argument>
+      <argument>C:\wamp64\gestion_espace_symfony\var\cache\dev/validation.php</argument>
       <argument type="service" id="cache.validator"/>
     </service>
     <service id="validator.validator_factory" class="Symfony\Component\Validator\ContainerConstraintValidatorFactory">
@@ -4654,7 +4698,7 @@
       </call>
     </service>
     <service id="profiler.storage" class="Symfony\Component\HttpKernel\Profiler\FileProfilerStorage">
-      <argument>file:C:/wamp64/gestion_espace_symfony/var/cache/dev/profiler</argument>
+      <argument>file:C:\wamp64\gestion_espace_symfony\var\cache\dev/profiler</argument>
     </service>
     <service id="profiler_listener" class="Symfony\Component\HttpKernel\EventListener\ProfilerListener">
       <tag name="kernel.event_subscriber"/>
@@ -4719,7 +4763,7 @@
       <tag name="monolog.logger" channel="profiler"/>
       <tag name="data_collector" template="@WebProfiler/Collector/logger.html.twig" id="logger" priority="300"/>
       <argument type="service" id="monolog.logger.profiler" on-invalid="ignore"/>
-      <argument>C:/wamp64/gestion_espace_symfony/var/cache/dev/App_KernelDevDebugContainer</argument>
+      <argument>C:\wamp64\gestion_espace_symfony\var\cache\dev/App_KernelDevDebugContainer</argument>
       <argument type="service" id=".virtual_request_stack" on-invalid="ignore"/>
     </service>
     <service id="data_collector.time" class="Symfony\Component\HttpKernel\DataCollector\TimeDataCollector">
@@ -5293,7 +5337,7 @@
         <argument type="service" id=".doctrine.orm.default_metadata_driver"/>
       </call>
       <call method="setProxyDir">
-        <argument>C:/wamp64/gestion_espace_symfony/var/cache/dev/doctrine/orm/Proxies</argument>
+        <argument>C:\wamp64\gestion_espace_symfony\var\cache\dev/doctrine/orm/Proxies</argument>
       </call>
       <call method="setProxyNamespace">
         <argument>Proxies</argument>
@@ -5711,7 +5755,7 @@
       <argument type="service" id="twig.loader.native_filesystem"/>
       <argument type="collection">
         <argument key="autoescape">name</argument>
-        <argument key="cache">C:/wamp64/gestion_espace_symfony/var/cache/dev/twig</argument>
+        <argument key="cache">C:\wamp64\gestion_espace_symfony\var\cache\dev/twig</argument>
         <argument key="charset">UTF-8</argument>
         <argument key="debug">true</argument>
         <argument key="strict_variables">true</argument>
@@ -7115,20 +7159,40 @@
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\EventController" class="App\Controller\EventController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\EventController" class="App\Controller\EventController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\EventController" class="App\Controller\EventController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\FournisseurController" class="App\Controller\FournisseurController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\FournisseurController" class="App\Controller\FournisseurController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\FournisseurController" class="App\Controller\FournisseurController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\HomeController" class="App\Controller\HomeController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\HomeController" class="App\Controller\HomeController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\HomeController" class="App\Controller\HomeController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\OrganisateurController" class="App\Controller\OrganisateurController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\OrganisateurController" class="App\Controller\OrganisateurController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\OrganisateurController" class="App\Controller\OrganisateurController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\ProduitController" class="App\Controller\ProduitController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\ProduitController" class="App\Controller\ProduitController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\ProduitController" class="App\Controller\ProduitController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\RemiseController" class="App\Controller\RemiseController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\RemiseController" class="App\Controller\RemiseController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\RemiseController" class="App\Controller\RemiseController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\ReservationController" class="App\Controller\ReservationController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\ReservationController" class="App\Controller\ReservationController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\ReservationController" class="App\Controller\ReservationController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\BilletType" class="App\Form\BilletType" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\BilletType" class="App\Form\BilletType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\EspaceType" class="App\Form\EspaceType" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\EspaceType" class="App\Form\EspaceType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\EventType" class="App\Form\EventType" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\EventType" class="App\Form\EventType" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\FournisseurType" class="App\Form\FournisseurType" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Form\FournisseurType" class="App\Form\FournisseurType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\OrganisateurType" class="App\Form\OrganisateurType" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\OrganisateurType" class="App\Form\OrganisateurType" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\ProduitType" class="App\Form\ProduitType" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Form\ProduitType" class="App\Form\ProduitType" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\RemiseType" class="App\Form\RemiseType" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Form\RemiseType" class="App\Form\RemiseType" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\ReservationType" class="App\Form\ReservationType" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Form\ReservationType" class="App\Form\ReservationType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\BilletRepository" class="App\Repository\BilletRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\BilletRepository" class="App\Repository\BilletRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\EspaceRepository" class="App\Repository\EspaceRepository" autowire="true" abstract="true"/>
@@ -7637,6 +7701,25 @@
         <argument key="event" type="service_closure" id=".errored..service_locator.dANsewa.App\Entity\Event"/>
       </argument>
     </service>
+    <service id=".service_locator.WZwGqEX" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="fournisseurRepository" type="service_closure" id="App\Repository\FournisseurRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.ZlrNvMC" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="fournisseur" type="service_closure" id=".errored..service_locator.ZlrNvMC.App\Entity\Fournisseur"/>
+      </argument>
+    </service>
+    <service id=".service_locator.RalIsqi" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="entityManager" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+        <argument key="fournisseur" type="service_closure" id=".errored..service_locator.RalIsqi.App\Entity\Fournisseur"/>
+      </argument>
+    </service>
     <service id=".service_locator.IVk_nmN" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -7664,7 +7747,64 @@
         <argument key="organisateur" type="service_closure" id=".errored..service_locator.nCbaiXq.App\Entity\Organisateur"/>
       </argument>
     </service>
-    <service id=".service_locator.OoVCQRu" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.vRUAr7Q" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="produitRepository" type="service_closure" id="App\Repository\ProduitRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.ViXcClx" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="produit" type="service_closure" id=".errored..service_locator.ViXcClx.App\Entity\Produit"/>
+      </argument>
+    </service>
+    <service id=".service_locator.Gl3nBvd" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="entityManager" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+        <argument key="produit" type="service_closure" id=".errored..service_locator.Gl3nBvd.App\Entity\Produit"/>
+      </argument>
+    </service>
+    <service id=".service_locator.oU_JQwA" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="remiseRepository" type="service_closure" id="App\Repository\RemiseRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.7v.r.Jo" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="remise" type="service_closure" id=".errored..service_locator.7v.r.Jo.App\Entity\Remise"/>
+      </argument>
+    </service>
+    <service id=".service_locator.AUQJj3O" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="entityManager" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+        <argument key="remise" type="service_closure" id=".errored..service_locator.AUQJj3O.App\Entity\Remise"/>
+      </argument>
+    </service>
+    <service id=".service_locator.caJHb8S" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="reservationRepository" type="service_closure" id="App\Repository\ReservationRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.h9c0uBq" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="reservation" type="service_closure" id=".errored..service_locator.h9c0uBq.App\Entity\Reservation"/>
+      </argument>
+    </service>
+    <service id=".service_locator.gBkZnE5" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="entityManager" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+        <argument key="reservation" type="service_closure" id=".errored..service_locator.gBkZnE5.App\Entity\Reservation"/>
+      </argument>
+    </service>
+    <service id=".service_locator.BOIz_zD" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Controller\BilletController::delete" type="service_closure" id=".service_locator.1XeBFJ0"/>
@@ -7692,6 +7832,11 @@
         <argument key="App\Controller\EventController::newDashboard" type="service_closure" id=".service_locator.CsMkqUa"/>
         <argument key="App\Controller\EventController::show" type="service_closure" id=".service_locator.Y2F5Zqo"/>
         <argument key="App\Controller\EventController::showDashboard" type="service_closure" id=".service_locator.Y2F5Zqo"/>
+        <argument key="App\Controller\FournisseurController::delete" type="service_closure" id=".service_locator.RalIsqi"/>
+        <argument key="App\Controller\FournisseurController::edit" type="service_closure" id=".service_locator.RalIsqi"/>
+        <argument key="App\Controller\FournisseurController::index" type="service_closure" id=".service_locator.WZwGqEX"/>
+        <argument key="App\Controller\FournisseurController::new" type="service_closure" id=".service_locator.CsMkqUa"/>
+        <argument key="App\Controller\FournisseurController::show" type="service_closure" id=".service_locator.ZlrNvMC"/>
         <argument key="App\Controller\HomeController::indexDashboard" type="service_closure" id=".service_locator.IVk_nmN"/>
         <argument key="App\Controller\OrganisateurController::delete" type="service_closure" id=".service_locator.nCbaiXq"/>
         <argument key="App\Controller\OrganisateurController::deleteBack" type="service_closure" id=".service_locator.nCbaiXq"/>
@@ -7702,6 +7847,26 @@
         <argument key="App\Controller\OrganisateurController::newBack" type="service_closure" id=".service_locator.CsMkqUa"/>
         <argument key="App\Controller\OrganisateurController::newBackGeneral" type="service_closure" id=".service_locator.CsMkqUa"/>
         <argument key="App\Controller\OrganisateurController::show" type="service_closure" id=".service_locator.SJ6E3SZ"/>
+        <argument key="App\Controller\ProduitController::delete" type="service_closure" id=".service_locator.Gl3nBvd"/>
+        <argument key="App\Controller\ProduitController::deleteBack" type="service_closure" id=".service_locator.Gl3nBvd"/>
+        <argument key="App\Controller\ProduitController::edit" type="service_closure" id=".service_locator.Gl3nBvd"/>
+        <argument key="App\Controller\ProduitController::editBack" type="service_closure" id=".service_locator.Gl3nBvd"/>
+        <argument key="App\Controller\ProduitController::index" type="service_closure" id=".service_locator.vRUAr7Q"/>
+        <argument key="App\Controller\ProduitController::indexback" type="service_closure" id=".service_locator.vRUAr7Q"/>
+        <argument key="App\Controller\ProduitController::new" type="service_closure" id=".service_locator.CsMkqUa"/>
+        <argument key="App\Controller\ProduitController::newBack" type="service_closure" id=".service_locator.CsMkqUa"/>
+        <argument key="App\Controller\ProduitController::show" type="service_closure" id=".service_locator.ViXcClx"/>
+        <argument key="App\Controller\ProduitController::showBack" type="service_closure" id=".service_locator.ViXcClx"/>
+        <argument key="App\Controller\RemiseController::delete" type="service_closure" id=".service_locator.AUQJj3O"/>
+        <argument key="App\Controller\RemiseController::edit" type="service_closure" id=".service_locator.AUQJj3O"/>
+        <argument key="App\Controller\RemiseController::index" type="service_closure" id=".service_locator.oU_JQwA"/>
+        <argument key="App\Controller\RemiseController::new" type="service_closure" id=".service_locator.CsMkqUa"/>
+        <argument key="App\Controller\RemiseController::show" type="service_closure" id=".service_locator.7v.r.Jo"/>
+        <argument key="App\Controller\ReservationController::delete" type="service_closure" id=".service_locator.gBkZnE5"/>
+        <argument key="App\Controller\ReservationController::edit" type="service_closure" id=".service_locator.gBkZnE5"/>
+        <argument key="App\Controller\ReservationController::index" type="service_closure" id=".service_locator.caJHb8S"/>
+        <argument key="App\Controller\ReservationController::new" type="service_closure" id=".service_locator.CsMkqUa"/>
+        <argument key="App\Controller\ReservationController::show" type="service_closure" id=".service_locator.h9c0uBq"/>
         <argument key="App\Kernel::loadRoutes" type="service_closure" id=".service_locator.y4_Zrx."/>
         <argument key="App\Kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.y4_Zrx."/>
         <argument key="kernel::loadRoutes" type="service_closure" id=".service_locator.y4_Zrx."/>
@@ -7731,6 +7896,11 @@
         <argument key="App\Controller\EventController:newDashboard" type="service_closure" id=".service_locator.CsMkqUa"/>
         <argument key="App\Controller\EventController:show" type="service_closure" id=".service_locator.Y2F5Zqo"/>
         <argument key="App\Controller\EventController:showDashboard" type="service_closure" id=".service_locator.Y2F5Zqo"/>
+        <argument key="App\Controller\FournisseurController:delete" type="service_closure" id=".service_locator.RalIsqi"/>
+        <argument key="App\Controller\FournisseurController:edit" type="service_closure" id=".service_locator.RalIsqi"/>
+        <argument key="App\Controller\FournisseurController:index" type="service_closure" id=".service_locator.WZwGqEX"/>
+        <argument key="App\Controller\FournisseurController:new" type="service_closure" id=".service_locator.CsMkqUa"/>
+        <argument key="App\Controller\FournisseurController:show" type="service_closure" id=".service_locator.ZlrNvMC"/>
         <argument key="App\Controller\HomeController:indexDashboard" type="service_closure" id=".service_locator.IVk_nmN"/>
         <argument key="App\Controller\OrganisateurController:delete" type="service_closure" id=".service_locator.nCbaiXq"/>
         <argument key="App\Controller\OrganisateurController:deleteBack" type="service_closure" id=".service_locator.nCbaiXq"/>
@@ -7741,6 +7911,26 @@
         <argument key="App\Controller\OrganisateurController:newBack" type="service_closure" id=".service_locator.CsMkqUa"/>
         <argument key="App\Controller\OrganisateurController:newBackGeneral" type="service_closure" id=".service_locator.CsMkqUa"/>
         <argument key="App\Controller\OrganisateurController:show" type="service_closure" id=".service_locator.SJ6E3SZ"/>
+        <argument key="App\Controller\ProduitController:delete" type="service_closure" id=".service_locator.Gl3nBvd"/>
+        <argument key="App\Controller\ProduitController:deleteBack" type="service_closure" id=".service_locator.Gl3nBvd"/>
+        <argument key="App\Controller\ProduitController:edit" type="service_closure" id=".service_locator.Gl3nBvd"/>
+        <argument key="App\Controller\ProduitController:editBack" type="service_closure" id=".service_locator.Gl3nBvd"/>
+        <argument key="App\Controller\ProduitController:index" type="service_closure" id=".service_locator.vRUAr7Q"/>
+        <argument key="App\Controller\ProduitController:indexback" type="service_closure" id=".service_locator.vRUAr7Q"/>
+        <argument key="App\Controller\ProduitController:new" type="service_closure" id=".service_locator.CsMkqUa"/>
+        <argument key="App\Controller\ProduitController:newBack" type="service_closure" id=".service_locator.CsMkqUa"/>
+        <argument key="App\Controller\ProduitController:show" type="service_closure" id=".service_locator.ViXcClx"/>
+        <argument key="App\Controller\ProduitController:showBack" type="service_closure" id=".service_locator.ViXcClx"/>
+        <argument key="App\Controller\RemiseController:delete" type="service_closure" id=".service_locator.AUQJj3O"/>
+        <argument key="App\Controller\RemiseController:edit" type="service_closure" id=".service_locator.AUQJj3O"/>
+        <argument key="App\Controller\RemiseController:index" type="service_closure" id=".service_locator.oU_JQwA"/>
+        <argument key="App\Controller\RemiseController:new" type="service_closure" id=".service_locator.CsMkqUa"/>
+        <argument key="App\Controller\RemiseController:show" type="service_closure" id=".service_locator.7v.r.Jo"/>
+        <argument key="App\Controller\ReservationController:delete" type="service_closure" id=".service_locator.gBkZnE5"/>
+        <argument key="App\Controller\ReservationController:edit" type="service_closure" id=".service_locator.gBkZnE5"/>
+        <argument key="App\Controller\ReservationController:index" type="service_closure" id=".service_locator.caJHb8S"/>
+        <argument key="App\Controller\ReservationController:new" type="service_closure" id=".service_locator.CsMkqUa"/>
+        <argument key="App\Controller\ReservationController:show" type="service_closure" id=".service_locator.h9c0uBq"/>
         <argument key="kernel:loadRoutes" type="service_closure" id=".service_locator.y4_Zrx."/>
         <argument key="kernel:registerContainerConfiguration" type="service_closure" id=".service_locator.y4_Zrx."/>
       </argument>
@@ -7902,13 +8092,17 @@
       <argument type="service" id="argument_resolver.query_parameter_value_resolver"/>
       <argument type="service" id="debug.stopwatch"/>
     </service>
-    <service id=".service_locator.YFacsJN" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.rOh5ZVg" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Form\BilletType" type="service_closure" id="App\Form\BilletType"/>
         <argument key="App\Form\EspaceType" type="service_closure" id="App\Form\EspaceType"/>
         <argument key="App\Form\EventType" type="service_closure" id="App\Form\EventType"/>
+        <argument key="App\Form\FournisseurType" type="service_closure" id="App\Form\FournisseurType"/>
         <argument key="App\Form\OrganisateurType" type="service_closure" id="App\Form\OrganisateurType"/>
+        <argument key="App\Form\ProduitType" type="service_closure" id="App\Form\ProduitType"/>
+        <argument key="App\Form\RemiseType" type="service_closure" id="App\Form\RemiseType"/>
+        <argument key="App\Form\ReservationType" type="service_closure" id="App\Form\ReservationType"/>
         <argument key="Symfony\Bridge\Doctrine\Form\Type\EntityType" type="service_closure" id="form.type.entity"/>
         <argument key="Symfony\Component\Form\Extension\Core\Type\ChoiceType" type="service_closure" id="form.type.choice"/>
         <argument key="Symfony\Component\Form\Extension\Core\Type\ColorType" type="service_closure" id="form.type.color"/>
@@ -8383,6 +8577,12 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.O2p6Lk7" method="withContext"/>
     </service>
+    <service id=".service_locator.O2p6Lk7.App\Controller\FournisseurController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\FournisseurController"/>
+      <argument>App\Controller\FournisseurController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.O2p6Lk7" method="withContext"/>
+    </service>
     <service id=".service_locator.O2p6Lk7.App\Controller\HomeController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\HomeController"/>
       <argument>App\Controller\HomeController</argument>
@@ -8392,6 +8592,24 @@
     <service id=".service_locator.O2p6Lk7.App\Controller\OrganisateurController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\OrganisateurController"/>
       <argument>App\Controller\OrganisateurController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.O2p6Lk7" method="withContext"/>
+    </service>
+    <service id=".service_locator.O2p6Lk7.App\Controller\ProduitController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\ProduitController"/>
+      <argument>App\Controller\ProduitController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.O2p6Lk7" method="withContext"/>
+    </service>
+    <service id=".service_locator.O2p6Lk7.App\Controller\RemiseController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\RemiseController"/>
+      <argument>App\Controller\RemiseController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.O2p6Lk7" method="withContext"/>
+    </service>
+    <service id=".service_locator.O2p6Lk7.App\Controller\ReservationController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\ReservationController"/>
+      <argument>App\Controller\ReservationController</argument>
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.O2p6Lk7" method="withContext"/>
     </service>
@@ -8572,8 +8790,12 @@
           <argument>App\Controller\BilletController</argument>
           <argument>App\Controller\EspaceController</argument>
           <argument>App\Controller\EventController</argument>
+          <argument>App\Controller\FournisseurController</argument>
           <argument>App\Controller\HomeController</argument>
           <argument>App\Controller\OrganisateurController</argument>
+          <argument>App\Controller\ProduitController</argument>
+          <argument>App\Controller\RemiseController</argument>
+          <argument>App\Controller\ReservationController</argument>
           <argument>Doctrine\Bundle\DoctrineBundle\Controller\ProfilerController</argument>
         </argument>
       </call>
@@ -8793,11 +9015,35 @@
     <service id=".errored..service_locator.dANsewa.App\Entity\Event" class="App\Entity\Event">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.dANsewa&quot;: it needs an instance of &quot;App\Entity\Event&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
+    <service id=".errored..service_locator.ZlrNvMC.App\Entity\Fournisseur" class="App\Entity\Fournisseur">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.ZlrNvMC&quot;: it needs an instance of &quot;App\Entity\Fournisseur&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    </service>
+    <service id=".errored..service_locator.RalIsqi.App\Entity\Fournisseur" class="App\Entity\Fournisseur">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.RalIsqi&quot;: it needs an instance of &quot;App\Entity\Fournisseur&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    </service>
     <service id=".errored..service_locator.SJ6E3SZ.App\Entity\Organisateur" class="App\Entity\Organisateur">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.SJ6E3SZ&quot;: it needs an instance of &quot;App\Entity\Organisateur&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
     <service id=".errored..service_locator.nCbaiXq.App\Entity\Organisateur" class="App\Entity\Organisateur">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.nCbaiXq&quot;: it needs an instance of &quot;App\Entity\Organisateur&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    </service>
+    <service id=".errored..service_locator.ViXcClx.App\Entity\Produit" class="App\Entity\Produit">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.ViXcClx&quot;: it needs an instance of &quot;App\Entity\Produit&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    </service>
+    <service id=".errored..service_locator.Gl3nBvd.App\Entity\Produit" class="App\Entity\Produit">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.Gl3nBvd&quot;: it needs an instance of &quot;App\Entity\Produit&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    </service>
+    <service id=".errored..service_locator.7v.r.Jo.App\Entity\Remise" class="App\Entity\Remise">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.7v.r.Jo&quot;: it needs an instance of &quot;App\Entity\Remise&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    </service>
+    <service id=".errored..service_locator.AUQJj3O.App\Entity\Remise" class="App\Entity\Remise">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.AUQJj3O&quot;: it needs an instance of &quot;App\Entity\Remise&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    </service>
+    <service id=".errored..service_locator.h9c0uBq.App\Entity\Reservation" class="App\Entity\Reservation">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.h9c0uBq&quot;: it needs an instance of &quot;App\Entity\Reservation&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    </service>
+    <service id=".errored..service_locator.gBkZnE5.App\Entity\Reservation" class="App\Entity\Reservation">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.gBkZnE5&quot;: it needs an instance of &quot;App\Entity\Reservation&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
     <service id=".console.command.about.lazy" class="Symfony\Component\Console\Command\LazyCommand">
       <argument>about</argument>
@@ -9717,7 +9963,7 @@
     <service id="cache.app.recorder_inner" class="Symfony\Component\Cache\Adapter\FilesystemAdapter">
       <argument>OT4Y-i2yPC</argument>
       <argument>0</argument>
-      <argument>C:/wamp64/gestion_espace_symfony/var/cache/dev/pools/app</argument>
+      <argument>C:\wamp64\gestion_espace_symfony\var\cache\dev/pools/app</argument>
       <argument type="service" id="cache.default_marshaller" on-invalid="ignore"/>
       <call method="setLogger">
         <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
@@ -9727,7 +9973,7 @@
       <argument>K91C1LQbTe</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:/wamp64/gestion_espace_symfony/var/cache/dev/pools/system</argument>
+      <argument>C:\wamp64\gestion_espace_symfony\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -9735,7 +9981,7 @@
       <argument>RusUuAUEbc</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:/wamp64/gestion_espace_symfony/var/cache/dev/pools/system</argument>
+      <argument>C:\wamp64\gestion_espace_symfony\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -9743,7 +9989,7 @@
       <argument>UoICGkT-GS</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:/wamp64/gestion_espace_symfony/var/cache/dev/pools/system</argument>
+      <argument>C:\wamp64\gestion_espace_symfony\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -9751,7 +9997,7 @@
       <argument>jBF-PfMHtp</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:/wamp64/gestion_espace_symfony/var/cache/dev/pools/system</argument>
+      <argument>C:\wamp64\gestion_espace_symfony\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -9759,7 +10005,7 @@
       <argument>5U4-+cuiGB</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:/wamp64/gestion_espace_symfony/var/cache/dev/pools/system</argument>
+      <argument>C:\wamp64\gestion_espace_symfony\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -9767,14 +10013,14 @@
       <argument>zLT7--HMQF</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:/wamp64/gestion_espace_symfony/var/cache/dev/pools/system</argument>
+      <argument>C:\wamp64\gestion_espace_symfony\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
     <service id="cache.messenger.restart_workers_signal.recorder_inner" class="Symfony\Component\Cache\Adapter\FilesystemAdapter">
       <argument>lMsd9Byo0y</argument>
       <argument>0</argument>
-      <argument>C:/wamp64/gestion_espace_symfony/var/cache/dev/pools/app</argument>
+      <argument>C:\wamp64\gestion_espace_symfony\var\cache\dev/pools/app</argument>
       <argument type="service" id="cache.default_marshaller" on-invalid="ignore"/>
       <call method="setLogger">
         <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
@@ -9784,7 +10030,7 @@
       <argument>tg-BvSWeDH</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:/wamp64/gestion_espace_symfony/var/cache/dev/pools/system</argument>
+      <argument>C:\wamp64\gestion_espace_symfony\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -9794,7 +10040,7 @@
       <argument>NMrCcVerRk</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:/wamp64/gestion_espace_symfony/var/cache/dev/pools/system</argument>
+      <argument>C:\wamp64\gestion_espace_symfony\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -9802,7 +10048,7 @@
       <argument>TehQxdG1Gp</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:/wamp64/gestion_espace_symfony/var/cache/dev/pools/system</argument>
+      <argument>C:\wamp64\gestion_espace_symfony\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -9984,7 +10230,7 @@
     <service id="Psr\Log\LoggerInterface" alias="monolog.logger"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.w7.f4fT" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.OoVCQRu"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.BOIz_zD"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.KLVvNIq"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="Psr\Log\LoggerInterface $requestLogger" alias="monolog.logger.request"/>
@@ -10010,11 +10256,15 @@
     <service id=".service_locator.bJ.4HC5" alias=".service_locator.w7.f4fT"/>
     <service id=".service_locator.ygf0HR8" alias=".service_locator.qd7yhpy"/>
     <service id=".service_locator.Tps9Q2I" alias=".service_locator.dANsewa"/>
+    <service id=".service_locator.fnQ8Sk2" alias=".service_locator.RalIsqi"/>
     <service id=".service_locator.l4ypD2L" alias=".service_locator.IVk_nmN"/>
     <service id=".service_locator.wFdJPNn" alias=".service_locator.nCbaiXq"/>
-    <service id=".service_locator.ieZwc6N" alias=".service_locator.OoVCQRu"/>
+    <service id=".service_locator.f9os5BO" alias=".service_locator.Gl3nBvd"/>
+    <service id=".service_locator.nwdTcq8" alias=".service_locator.AUQJj3O"/>
+    <service id=".service_locator.yjYmAoZ" alias=".service_locator.gBkZnE5"/>
+    <service id=".service_locator.Y6GUezc" alias=".service_locator.BOIz_zD"/>
     <service id=".service_locator.BFrsqsn" alias=".service_locator.F9PKc.7"/>
-    <service id=".service_locator.2L_UR5L" alias=".service_locator.YFacsJN"/>
+    <service id=".service_locator.fWUMGY4" alias=".service_locator.rOh5ZVg"/>
     <service id=".service_locator.XtmiKbi" alias=".service_locator.MfxSDRP"/>
     <service id=".service_locator.O24_MAy" alias=".service_locator.yY.p4P7"/>
     <service id=".service_locator.jUv.zyj" alias=".service_locator.O2p6Lk7"/>
@@ -10048,10 +10298,22 @@
     <service id=".service_locator.fDl8v62" alias=".service_locator.qE8Flyf"/>
     <service id=".service_locator.1u2GJBu" alias=".service_locator.Y2F5Zqo"/>
     <service id=".service_locator.6oe8hU3" alias=".service_locator.dANsewa"/>
+    <service id=".service_locator.VG5hlDB" alias=".service_locator.WZwGqEX"/>
+    <service id=".service_locator.pLDvYQP" alias=".service_locator.ZlrNvMC"/>
+    <service id=".service_locator.qeHuYrT" alias=".service_locator.RalIsqi"/>
     <service id=".service_locator.M1HbFLp" alias=".service_locator.IVk_nmN"/>
     <service id=".service_locator.o9bW9Ep" alias=".service_locator.8VN93GC"/>
     <service id=".service_locator.ZaacQAX" alias=".service_locator.SJ6E3SZ"/>
     <service id=".service_locator.FwAok_z" alias=".service_locator.nCbaiXq"/>
+    <service id=".service_locator.6O1FQxc" alias=".service_locator.vRUAr7Q"/>
+    <service id=".service_locator.dMZ2O9f" alias=".service_locator.ViXcClx"/>
+    <service id=".service_locator.6ypCEBT" alias=".service_locator.Gl3nBvd"/>
+    <service id=".service_locator.4vQ42vM" alias=".service_locator.oU_JQwA"/>
+    <service id=".service_locator.pw7pwwi" alias=".service_locator.7v.r.Jo"/>
+    <service id=".service_locator.as12JTe" alias=".service_locator.AUQJj3O"/>
+    <service id=".service_locator.LuS44bc" alias=".service_locator.caJHb8S"/>
+    <service id=".service_locator.bRbdH2p" alias=".service_locator.h9c0uBq"/>
+    <service id=".service_locator.Kcii2X5" alias=".service_locator.gBkZnE5"/>
     <service id=".service_locator.Q1z.f9O" alias=".service_locator.O2p6Lk7"/>
     <service id=".service_locator.dGUCsbe" alias=".service_locator.oR77BOj"/>
     <service id=".service_locator._kIAbz1" alias=".service_locator.TpoC7U9"/>
