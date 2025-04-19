@@ -17,6 +17,11 @@ class BilletType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+        ->add('prix', IntegerType::class, [
+            'label' => 'Prix',
+            'attr' => ['class' => 'form-control']
+        ])
+        
         ->add('proprietaire', TextType::class, [
             'label' => 'Nom complet',
             'attr' => ['class' => 'form-control'],
@@ -43,7 +48,8 @@ class BilletType extends AbstractType
             'required' => false,
             'label' => 'Code Promo',
             'attr' => ['placeholder' => 'Entrez un code promo', 'class' => 'form-control', 'id' => 'codePromo']
-        ])
+        ])->add('reservation')
+
         
         ;
     }

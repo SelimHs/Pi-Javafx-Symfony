@@ -1,13 +1,63 @@
-{% extends 'base.html.twig' %}
+{% extends 'baseBack.html.twig' %}
 
-{% block title %}Edit Fournisseur{% endblock %}
+{% block title %}Modifier Fournisseur{% endblock %}
 
 {% block body %}
-    <h1>Edit Fournisseur</h1>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-5">
+          <h2 class="mb-4 text-center">Modifier le Fournisseur</h2>
 
-    {{ include('fournisseur/_form.html.twig', {'button_label': 'Update'}) }}
+          {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
 
-    <a href="{{ path('app_fournisseur_index') }}">back to list</a>
+          <div class="mb-3">
+            {{ form_label(form.nomFournisseur) }}
+            {{ form_widget(form.nomFournisseur, {'attr': {'class': 'form-control'}}) }}
+            <div class="text-danger small mt-1">{{ form_errors(form.nomFournisseur) }}</div>
+          </div>
 
-    {{ include('fournisseur/_delete_form.html.twig') }}
+          <div class="mb-3">
+            {{ form_label(form.telephone) }}
+            {{ form_widget(form.telephone, {'attr': {'class': 'form-control'}}) }}
+            <div class="text-danger small mt-1">{{ form_errors(form.telephone) }}</div>
+          </div>
+
+          <div class="mb-3">
+            {{ form_label(form.description) }}
+            {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+            <div class="text-danger small mt-1">{{ form_errors(form.description) }}</div>
+          </div>
+
+          <div class="mb-3">
+            {{ form_label(form.type) }}
+            {{ form_widget(form.type, {'attr': {'class': 'form-control'}}) }}
+            <div class="text-danger small mt-1">{{ form_errors(form.type) }}</div>
+          </div>
+
+          <div class="mb-3">
+            {{ form_label(form.imagePath) }}
+            {{ form_widget(form.imagePath, {'attr': {'class': 'form-control'}}) }}
+            <div class="text-danger small mt-1">{{ form_errors(form.imagePath) }}</div>
+          </div>
+
+          <div class="text-center">
+            <button class="btn btn-warning px-4">{{ button_label|default('Mettre à jour') }}</button>
+          </div>
+
+          {{ form_end(form) }}
+
+          <div class="text-center mt-3">
+            <a href="{{ path('app_fournisseur_index') }}" class="btn btn-outline-secondary">← Retour à la liste</a>
+          </div>
+
+          <div class="text-center mt-3">
+            {{ include('fournisseur/_delete_form.html.twig') }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

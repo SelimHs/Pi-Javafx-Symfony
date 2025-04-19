@@ -140,8 +140,7 @@ class Billet
         $this->getPaiements()->removeElement($paiement);
         return $this;
     }
-    #[ORM\ManyToOne(targetEntity: Reservation::class)]
-    #[ORM\JoinColumn(name: 'idReservation', referencedColumnName: 'idReservation', nullable: false)]
+   
     private ?Reservation $reservation = null;
 
     public function getReservation(): ?Reservation
