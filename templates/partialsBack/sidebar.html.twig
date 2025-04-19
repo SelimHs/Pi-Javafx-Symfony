@@ -41,31 +41,18 @@
                         LAMMA
                     </a>
                 </li>
-            
-                
+
                 <li class="app-sidebar__heading">Évènements</li>
                 <li>
-                <a href="#">
-                    <i class="metismenu-icon pe-7s-date"></i>
-                    Gestion Évènements
-                    <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
-                </a>
-                <ul>
-                    
-                    <li>
-                    <a href="{{ path('dashboard_event_new') }}">
-                        <i class="metismenu-icon"></i>
-                        Ajouter un Évènement
+                    <a href="#">
+                        <i class="metismenu-icon pe-7s-date"></i>
+                        Gestion Évènements
+                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                     </a>
-                    </li>
-                    <li>
-                        <a href="{{ path('dashboard_event_index') }}">
-                            <i class="metismenu-icon"></i>
-                            Liste des Évènements
-                        </a>
-                        </li>
-
-                </ul>
+                    <ul>
+                        <li><a href="{{ path('dashboard_event_new') }}"><i class="metismenu-icon"></i>Ajouter un Évènement</a></li>
+                        <li><a href="{{ path('dashboard_event_index') }}"><i class="metismenu-icon"></i>Liste des Évènements</a></li>
+                    </ul>
                 </li>
 
                 <li class="app-sidebar__heading">Billets</li>
@@ -76,115 +63,91 @@
                         <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                     </a>
                     <ul>
-                        <li>
-                            <a href="{{ path('app_billet_new') }}">
-                                <i class="metismenu-icon"></i>
-                                Ajouter un billet
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ path('app_billet_index') }}">
-                                <i class="metismenu-icon"></i>
-                                Liste des billets
-                            </a>
-                        </li>
+                        <li><a href="{{ path('app_billet_new') }}"><i class="metismenu-icon"></i>Ajouter un billet</a></li>
+                        <li><a href="{{ path('app_billet_index') }}"><i class="metismenu-icon"></i>Liste des billets</a></li>
                     </ul>
                 </li>
+
+                <li class="app-sidebar__heading">Réservations</li>
+                <li>
+                    <a href="#">
+                        <i class="metismenu-icon pe-7s-notebook"></i>
+                        Gestion Réservations
+                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                    </a>
+                    <ul>
+                        <li><a href="{{ path('app_reservation_index') }}"><i class="metismenu-icon"></i>Liste des Réservations</a></li>
+                    </ul>
+                </li>
+
+                <li class="app-sidebar__heading">Remises</li>
+                <li>
+                    <a href="#">
+                        <i class="metismenu-icon pe-7s-gift"></i>
+                        Gestion Remises
+                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                    </a>
+                    <ul>
+                        <li><a href="{{ path('app_remise_new') }}"><i class="metismenu-icon"></i>Ajouter une Remise</a></li>
+                        <li><a href="{{ path('app_remise_index') }}"><i class="metismenu-icon"></i>Liste des Remises</a></li>
+                    </ul>
+                </li>
+
                 <li class="app-sidebar__heading">Espaces</li>
-<li>
-    <a href="#">
-        <i class="metismenu-icon pe-7s-map-marker"></i>
-        Gestion Espaces
-        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
-    </a>
-    <ul>
-        <li>
-            <a href="{{ path('dashboard_espace_new') }}">
-                <i class="metismenu-icon"></i>
-                Ajouter un Espace
-            </a>
-        </li>
-        <li>
-            <a href="{{ path('dashboard_espace_index') }}">
-                <i class="metismenu-icon"></i>
-                Liste des Espaces
-            </a>
-        </li>
-    </ul>
-</li>
-<li class="app-sidebar__heading">Organisateurs</li>
-<li>
-    <a href="#">
-        <i class="metismenu-icon pe-7s-id"></i>
-        Gestion Organisateurs
-        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
-    </a>
-    <ul>
-        <li>
-            <a href="{{ path('app_organisateur_index') }}">
-                <i class="metismenu-icon"></i>
-                Liste des organisateurs
-            </a>
-        </li>
-    </ul>
-</li>
-<li class="app-sidebar__heading">Fournisseurs</li>
-<li>
-    <a href="#">
-        <i class="metismenu-icon pe-7s-id"></i>
-        Gestion Fournisseurs
-        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
-    </a>
-    <ul>
-            <li>
-            <a href="{{ path('app_fournisseur_new') }}">
-                <i class="metismenu-icon"></i>
-                Ajouter un Fournisseur
-            </a>
-        </li>
-        <li>
-            <a href="{{ path('app_fournisseur_index') }}">
-                <i class="metismenu-icon"></i>
-                Liste des Fournisseurs
-            </a>
-        </li>
+                <li>
+                    <a href="#">
+                        <i class="metismenu-icon pe-7s-map-marker"></i>
+                        Gestion Espaces
+                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                    </a>
+                    <ul>
+                        <li><a href="{{ path('dashboard_espace_new') }}"><i class="metismenu-icon"></i>Ajouter un Espace</a></li>
+                        <li><a href="{{ path('dashboard_espace_index') }}"><i class="metismenu-icon"></i>Liste des Espaces</a></li>
+                    </ul>
+                </li>
 
-    </ul>
-</li>
+                <li class="app-sidebar__heading">Organisateurs</li>
+                <li>
+                    <a href="#">
+                        <i class="metismenu-icon pe-7s-id"></i>
+                        Gestion Organisateurs
+                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                    </a>
+                    <ul>
+                        <li><a href="{{ path('app_organisateur_index') }}"><i class="metismenu-icon"></i>Liste des organisateurs</a></li>
+                    </ul>
+                </li>
 
-<li class="app-sidebar__heading">Produits</li>
-<li>
-    <a href="#">
-        <i class="metismenu-icon pe-7s-id"></i>
-        Gestion Produits
-        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
-    </a>
-    <ul>
-            <li>
-            <a href="{{ path('dashboard_produit_new') }}">
-                <i class="metismenu-icon"></i>
-                Ajouter un Produit
-            </a>
-        </li>
-        <li>
-            <a href="{{ path('app_produit_indexback') }}">
-                <i class="metismenu-icon"></i>
-                Liste des Produits
-            </a>
-        </li>
+                <li class="app-sidebar__heading">Fournisseurs</li>
+                <li>
+                    <a href="#">
+                        <i class="metismenu-icon pe-7s-id"></i>
+                        Gestion Fournisseurs
+                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                    </a>
+                    <ul>
+                        <li><a href="{{ path('app_fournisseur_new') }}"><i class="metismenu-icon"></i>Ajouter un Fournisseur</a></li>
+                        <li><a href="{{ path('app_fournisseur_index') }}"><i class="metismenu-icon"></i>Liste des Fournisseurs</a></li>
+                    </ul>
+                </li>
 
-    </ul>
-</li>
-
-
-
+                <li class="app-sidebar__heading">Produits</li>
+                <li>
+                    <a href="#">
+                        <i class="metismenu-icon pe-7s-box2"></i>
+                        Gestion Produits
+                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                    </a>
+                    <ul>
+                        <li><a href="{{ path('dashboard_produit_new') }}"><i class="metismenu-icon"></i>Ajouter un Produit</a></li>
+                        <li><a href="{{ path('app_produit_indexback') }}"><i class="metismenu-icon"></i>Liste des Produits</a></li>
+                    </ul>
+                </li>
 
                 <li class="app-sidebar__heading">PRO Version</li>
                 <li>
-                    <a href="https://dashboardpack.com/theme-details/architectui-dashboard-html-pro/"
-                        target="_blank">
-                        <i class="metismenu-icon pe-7s-graph2">
-                        </i>
+                    <a href="https://dashboardpack.com/theme-details/architectui-dashboard-html-pro/" target="_blank">
+                        <i class="metismenu-icon pe-7s-graph2"></i>
                         Buy me a coffee!
                     </a>
                 </li>

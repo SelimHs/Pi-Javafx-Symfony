@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Remise;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class RemiseType extends AbstractType
@@ -15,9 +16,10 @@ class RemiseType extends AbstractType
             ->add('codePromo')
             ->add('description')
             ->add('pourcentageRemise')
-            ->add('dateExpiration')
-            ->add('idReservation')
-        ;
+            ->add('dateExpiration', TextType::class, [
+                'label' => 'Date d\'expiration',
+                'attr' => ['placeholder' => 'ex: 2025-06-30', 'class' => 'form-control']
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

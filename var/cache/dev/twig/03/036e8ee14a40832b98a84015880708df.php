@@ -143,10 +143,8 @@ class __TwigTemplate_638ec197e4132c23f4879a42763ef31d extends Template
         // line 24
         yield "
           <div class=\"text-center\">
-            <button href=\"";
+            <button class=\"btn btn-warning px-4\">";
         // line 26
-        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_organisateur_edit");
-        yield "\"class=\"btn btn-warning px-4\">";
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((array_key_exists("button_label", $context)) ? (Twig\Extension\CoreExtension::default((isset($context["button_label"]) || array_key_exists("button_label", $context) ? $context["button_label"] : (function () { throw new RuntimeError('Variable "button_label" does not exist.', 26, $this->source); })()), "Update")) : ("Update")), "html", null, true);
         yield "</button>
           </div>
@@ -206,7 +204,7 @@ class __TwigTemplate_638ec197e4132c23f4879a42763ef31d extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  169 => 36,  162 => 32,  156 => 29,  148 => 26,  144 => 24,  138 => 23,  132 => 20,  128 => 19,  124 => 18,  121 => 17,  118 => 16,  114 => 15,  109 => 13,  100 => 6,  87 => 5,  64 => 3,  41 => 1,);
+        return array (  167 => 36,  160 => 32,  154 => 29,  148 => 26,  144 => 24,  138 => 23,  132 => 20,  128 => 19,  124 => 18,  121 => 17,  118 => 16,  114 => 15,  109 => 13,  100 => 6,  87 => 5,  64 => 3,  41 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -236,7 +234,7 @@ class __TwigTemplate_638ec197e4132c23f4879a42763ef31d extends Template
           {% endfor %}
 
           <div class=\"text-center\">
-            <button href=\"{{ path('app_organisateur_edit') }}\"class=\"btn btn-warning px-4\">{{ button_label|default('Update') }}</button>
+            <button class=\"btn btn-warning px-4\">{{ button_label|default('Update') }}</button>
           </div>
 
           {{ form_end(form) }}

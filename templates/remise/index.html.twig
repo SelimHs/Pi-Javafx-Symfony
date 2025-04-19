@@ -25,7 +25,7 @@
                 <td>{{ remise.description }}</td>
                 <td>{{ remise.pourcentageRemise }}</td>
                 <td>{{ remise.dateExpiration }}</td>
-                <td>{{ remise.idReservation }}</td>
+                <td>{{ remise.reservations|length }} réservation(s)</td>
                 <td>
                     <a href="{{ path('app_remise_show', {'idRemise': remise.idRemise}) }}">show</a>
                     <a href="{{ path('app_remise_edit', {'idRemise': remise.idRemise}) }}">edit</a>

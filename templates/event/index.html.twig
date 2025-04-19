@@ -58,8 +58,9 @@
               <li>Visiteurs : <span>{{ event.nbrVisiteurs }}</span></li>
               <li>Détails : <span>{{ event.details|length > 40 ? event.details[:40] ~ '...' : event.details }}</span></li>
             </ul>
-            <div class="main-button">
-              <a href="{{ path('app_event_show', {'idEvent': event.idEvent}) }}">Voir Détails</a>
+            <div class="main-button d-flex justify-content-between gap-2">
+              <a href="{{ path('app_event_show', {'idEvent': event.idEvent}) }}" class="btn btn-outline-primary w-50">Voir Détails</a>
+              <a href="{{ path('app_billet_reservation', {'id': event.idEvent}) }}" class="btn btn-success w-50">Réserver</a>
             </div>
           </div>
         </div>
@@ -123,16 +124,20 @@
   }
 
   .main-button a {
-    background-color: #f35525;
-    color: white;
-    padding: 8px 20px;
-    border-radius: 30px;
     font-weight: 600;
+    border-radius: 30px;
+    padding: 8px 16px;
+    text-align: center;
     transition: background 0.3s ease;
   }
 
-  .main-button a:hover {
-    background-color: #d93a11;
+  .main-button a.btn-outline-primary:hover {
+    background-color: #007bff;
+    color: white;
+  }
+
+  .main-button a.btn-success:hover {
+    background-color: #218838;
   }
 </style>
 {% endblock %}

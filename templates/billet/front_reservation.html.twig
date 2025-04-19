@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réserver un Billet{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+  <div class="card p-4 shadow-lg border-0 rounded-4">
+    <h2 class="text-center mb-4">+ Réserver un Billet</h2>
+
+    {{ form_start(form, {'attr': {'class': 'row g-3'}}) }}
+
+      <div class="col-md-6">
+        {{ form_label(form.proprietaire) }}
+        {{ form_widget(form.proprietaire, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.proprietaire) }}
+      </div>
+
+      <div class="col-md-6">
+        <label>💰 Prix du billet</label>
+        <input type="text" id="prixBillet" class="form-control" value="{{ prixFinal }} DT" readonly>
+      </div>
+
+      <div class="col-md-6">
+        {{ form_label(form.type) }}
+        {{ form_widget(form.type, {'attr': {'class': 'form-select'}}) }}
+        {{ form_errors(form.type) }}
+      </div>
+
+      <div class="col-md-6">
+        {{ form_label(form.event) }}
+        {{ form_widget(form.event, {'attr': {'class': 'form-select', 'readonly': 'readonly'}}) }}
+      </div>
+
+      <div class="col-md-8">
+        {{ form_label(form.codePromo) }}
+        <div class="input-group">
+          {{ form_widget(form.codePromo, {'attr': {'class': 'form-control', 'id': 'codePromo'}}) }}
+          <button type="button" id="verifierBtn" class="btn btn-success">✔ Vérifier</button>
+        </div>
+      </div>
+
+      <div class="col-md-4 d-flex align-items-end">
+        <button type="submit" class="btn btn-warning w-100">✔ Confirmer la Réservation</button>
+      </div>
+
+    {{ form_end(form) }}
+  </div>
+</div>
+
+<script>
+  const prixBase = {{ prixFinal }}; // injecté depuis le contrôleur PHP
+  const prixInput = document.getElementById('prixBillet');
+  const typeSelect = document.querySelector('#billet_type');
+  const verifierBtn = document.getElementById('verifierBtn');
+  const codePromoInput = document.getElementById('codePromo');
+
+  function calculerPrix(type, remise = 0) {
+    let prix = prixBase;
+    if (type === 'DUO') prix += prixBase * 0.5;
+    else if (type === 'VIP') prix *= 3;
+    prix -= remise;
+    return Math.max(prix, 0); // éviter valeur négative
+  }
+
+  function updatePrix(remise = 0) {
+    const type = typeSelect.value;
+    const prix = calculerPrix(type, remise);
+    prixInput.value = prix + ' DT';
+  }
+
+  typeSelect.addEventListener('change', () => updatePrix());
+
+  verifierBtn.addEventListener('click', () => {
+    const code = codePromoInput.value.trim().toUpperCase();
+    const remises = {
+      'CODE10': 10,
+      'VIP20': 20
+    };
+
+    if (code in remises) {
+      alert(`✅ Code promo "${code}" appliqué : -${remises[code]} DT`);
+      updatePrix(remises[code]);
+    } else {
+      alert('❌ Code promo invalide');
+      updatePrix();
+    }
+  });
+
+  updatePrix(); // init au chargement
+</script>
+{% endblock %}

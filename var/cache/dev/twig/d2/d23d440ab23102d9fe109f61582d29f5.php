@@ -198,20 +198,24 @@ class __TwigTemplate_44d3a72906849517f5cc99d41f1aea92 extends Template
             yield (((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["event"], "details", [], "any", false, false, false, 59)) > 40)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((Twig\Extension\CoreExtension::slice($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["event"], "details", [], "any", false, false, false, 59), 0, 40) . "..."), "html", null, true)) : ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "details", [], "any", false, false, false, 59), "html", null, true)));
             yield "</span></li>
             </ul>
-            <div class=\"main-button\">
+            <div class=\"main-button d-flex justify-content-between gap-2\">
               <a href=\"";
             // line 62
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_event_show", ["idEvent" => CoreExtension::getAttribute($this->env, $this->source, $context["event"], "idEvent", [], "any", false, false, false, 62)]), "html", null, true);
-            yield "\">Voir Détails</a>
+            yield "\" class=\"btn btn-outline-primary w-50\">Voir Détails</a>
+              <a href=\"";
+            // line 63
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_billet_reservation", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["event"], "idEvent", [], "any", false, false, false, 63)]), "html", null, true);
+            yield "\" class=\"btn btn-success w-50\">Réserver</a>
             </div>
           </div>
         </div>
       ";
             $context['_iterated'] = true;
         }
-        // line 66
+        // line 67
         if (!$context['_iterated']) {
-            // line 67
+            // line 68
             yield "        <div class=\"col-12\">
           <div class=\"alert alert-warning text-center\">Aucun évènement trouvé.</div>
         </div>
@@ -220,7 +224,7 @@ class __TwigTemplate_44d3a72906849517f5cc99d41f1aea92 extends Template
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['event'], $context['_parent'], $context['_iterated']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 71
+        // line 72
         yield "    </div>
   </div>
 </div>
@@ -276,16 +280,20 @@ class __TwigTemplate_44d3a72906849517f5cc99d41f1aea92 extends Template
   }
 
   .main-button a {
-    background-color: #f35525;
-    color: white;
-    padding: 8px 20px;
-    border-radius: 30px;
     font-weight: 600;
+    border-radius: 30px;
+    padding: 8px 16px;
+    text-align: center;
     transition: background 0.3s ease;
   }
 
-  .main-button a:hover {
-    background-color: #d93a11;
+  .main-button a.btn-outline-primary:hover {
+    background-color: #007bff;
+    color: white;
+  }
+
+  .main-button a.btn-success:hover {
+    background-color: #218838;
   }
 </style>
 ";
@@ -319,7 +327,7 @@ class __TwigTemplate_44d3a72906849517f5cc99d41f1aea92 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  224 => 71,  215 => 67,  213 => 66,  204 => 62,  198 => 59,  194 => 58,  190 => 57,  183 => 55,  179 => 54,  175 => 53,  172 => 52,  168 => 50,  166 => 49,  160 => 46,  156 => 45,  151 => 43,  147 => 41,  142 => 40,  130 => 31,  106 => 10,  100 => 6,  87 => 5,  64 => 3,  41 => 1,);
+        return array (  228 => 72,  219 => 68,  217 => 67,  208 => 63,  204 => 62,  198 => 59,  194 => 58,  190 => 57,  183 => 55,  179 => 54,  175 => 53,  172 => 52,  168 => 50,  166 => 49,  160 => 46,  156 => 45,  151 => 43,  147 => 41,  142 => 40,  130 => 31,  106 => 10,  100 => 6,  87 => 5,  64 => 3,  41 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -384,8 +392,9 @@ class __TwigTemplate_44d3a72906849517f5cc99d41f1aea92 extends Template
               <li>Visiteurs : <span>{{ event.nbrVisiteurs }}</span></li>
               <li>Détails : <span>{{ event.details|length > 40 ? event.details[:40] ~ '...' : event.details }}</span></li>
             </ul>
-            <div class=\"main-button\">
-              <a href=\"{{ path('app_event_show', {'idEvent': event.idEvent}) }}\">Voir Détails</a>
+            <div class=\"main-button d-flex justify-content-between gap-2\">
+              <a href=\"{{ path('app_event_show', {'idEvent': event.idEvent}) }}\" class=\"btn btn-outline-primary w-50\">Voir Détails</a>
+              <a href=\"{{ path('app_billet_reservation', {'id': event.idEvent}) }}\" class=\"btn btn-success w-50\">Réserver</a>
             </div>
           </div>
         </div>
@@ -449,16 +458,20 @@ class __TwigTemplate_44d3a72906849517f5cc99d41f1aea92 extends Template
   }
 
   .main-button a {
-    background-color: #f35525;
-    color: white;
-    padding: 8px 20px;
-    border-radius: 30px;
     font-weight: 600;
+    border-radius: 30px;
+    padding: 8px 16px;
+    text-align: center;
     transition: background 0.3s ease;
   }
 
-  .main-button a:hover {
-    background-color: #d93a11;
+  .main-button a.btn-outline-primary:hover {
+    background-color: #007bff;
+    color: white;
+  }
+
+  .main-button a.btn-success:hover {
+    background-color: #218838;
   }
 </style>
 {% endblock %}

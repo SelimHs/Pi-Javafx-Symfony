@@ -91,37 +91,24 @@ class __TwigTemplate_3cb9f18540e7d8d8e38696f6e430d556 extends Template
                         LAMMA
                     </a>
                 </li>
-            
-                
+
                 <li class=\"app-sidebar__heading\">Évènements</li>
                 <li>
-                <a href=\"#\">
-                    <i class=\"metismenu-icon pe-7s-date\"></i>
-                    Gestion Évènements
-                    <i class=\"metismenu-state-icon pe-7s-angle-down caret-left\"></i>
-                </a>
-                <ul>
-                    
-                    <li>
-                    <a href=\"";
-        // line 56
-        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("dashboard_event_new");
-        yield "\">
-                        <i class=\"metismenu-icon\"></i>
-                        Ajouter un Évènement
+                    <a href=\"#\">
+                        <i class=\"metismenu-icon pe-7s-date\"></i>
+                        Gestion Évènements
+                        <i class=\"metismenu-state-icon pe-7s-angle-down caret-left\"></i>
                     </a>
-                    </li>
-                    <li>
-                        <a href=\"";
-        // line 62
+                    <ul>
+                        <li><a href=\"";
+        // line 53
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("dashboard_event_new");
+        yield "\"><i class=\"metismenu-icon\"></i>Ajouter un Évènement</a></li>
+                        <li><a href=\"";
+        // line 54
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("dashboard_event_index");
-        yield "\">
-                            <i class=\"metismenu-icon\"></i>
-                            Liste des Évènements
-                        </a>
-                        </li>
-
-                </ul>
+        yield "\"><i class=\"metismenu-icon\"></i>Liste des Évènements</a></li>
+                    </ul>
                 </li>
 
                 <li class=\"app-sidebar__heading\">Billets</li>
@@ -132,149 +119,135 @@ class __TwigTemplate_3cb9f18540e7d8d8e38696f6e430d556 extends Template
                         <i class=\"metismenu-state-icon pe-7s-angle-down caret-left\"></i>
                     </a>
                     <ul>
-                        <li>
-                            <a href=\"";
-        // line 80
+                        <li><a href=\"";
+        // line 66
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_billet_new");
-        yield "\">
-                                <i class=\"metismenu-icon\"></i>
-                                Ajouter un billet
-                            </a>
-                        </li>
-                        <li>
-                            <a href=\"";
-        // line 86
+        yield "\"><i class=\"metismenu-icon\"></i>Ajouter un billet</a></li>
+                        <li><a href=\"";
+        // line 67
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_billet_index");
-        yield "\">
-                                <i class=\"metismenu-icon\"></i>
-                                Liste des billets
-                            </a>
-                        </li>
+        yield "\"><i class=\"metismenu-icon\"></i>Liste des billets</a></li>
                     </ul>
                 </li>
+
+                <li class=\"app-sidebar__heading\">Réservations</li>
+                <li>
+                    <a href=\"#\">
+                        <i class=\"metismenu-icon pe-7s-notebook\"></i>
+                        Gestion Réservations
+                        <i class=\"metismenu-state-icon pe-7s-angle-down caret-left\"></i>
+                    </a>
+                    <ul>
+                        <li><a href=\"";
+        // line 79
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_reservation_index");
+        yield "\"><i class=\"metismenu-icon\"></i>Liste des Réservations</a></li>
+                    </ul>
+                </li>
+
+                <li class=\"app-sidebar__heading\">Remises</li>
+                <li>
+                    <a href=\"#\">
+                        <i class=\"metismenu-icon pe-7s-gift\"></i>
+                        Gestion Remises
+                        <i class=\"metismenu-state-icon pe-7s-angle-down caret-left\"></i>
+                    </a>
+                    <ul>
+                        <li><a href=\"";
+        // line 91
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_remise_new");
+        yield "\"><i class=\"metismenu-icon\"></i>Ajouter une Remise</a></li>
+                        <li><a href=\"";
+        // line 92
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_remise_index");
+        yield "\"><i class=\"metismenu-icon\"></i>Liste des Remises</a></li>
+                    </ul>
+                </li>
+
                 <li class=\"app-sidebar__heading\">Espaces</li>
-<li>
-    <a href=\"#\">
-        <i class=\"metismenu-icon pe-7s-map-marker\"></i>
-        Gestion Espaces
-        <i class=\"metismenu-state-icon pe-7s-angle-down caret-left\"></i>
-    </a>
-    <ul>
-        <li>
-            <a href=\"";
-        // line 102
+                <li>
+                    <a href=\"#\">
+                        <i class=\"metismenu-icon pe-7s-map-marker\"></i>
+                        Gestion Espaces
+                        <i class=\"metismenu-state-icon pe-7s-angle-down caret-left\"></i>
+                    </a>
+                    <ul>
+                        <li><a href=\"";
+        // line 104
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("dashboard_espace_new");
-        yield "\">
-                <i class=\"metismenu-icon\"></i>
-                Ajouter un Espace
-            </a>
-        </li>
-        <li>
-            <a href=\"";
-        // line 108
+        yield "\"><i class=\"metismenu-icon\"></i>Ajouter un Espace</a></li>
+                        <li><a href=\"";
+        // line 105
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("dashboard_espace_index");
-        yield "\">
-                <i class=\"metismenu-icon\"></i>
-                Liste des Espaces
-            </a>
-        </li>
-    </ul>
-</li>
-<li class=\"app-sidebar__heading\">Organisateurs</li>
-<li>
-    <a href=\"#\">
-        <i class=\"metismenu-icon pe-7s-id\"></i>
-        Gestion Organisateurs
-        <i class=\"metismenu-state-icon pe-7s-angle-down caret-left\"></i>
-    </a>
-    <ul>
-        <li>
-            <a href=\"";
-        // line 124
+        yield "\"><i class=\"metismenu-icon\"></i>Liste des Espaces</a></li>
+                    </ul>
+                </li>
+
+                <li class=\"app-sidebar__heading\">Organisateurs</li>
+                <li>
+                    <a href=\"#\">
+                        <i class=\"metismenu-icon pe-7s-id\"></i>
+                        Gestion Organisateurs
+                        <i class=\"metismenu-state-icon pe-7s-angle-down caret-left\"></i>
+                    </a>
+                    <ul>
+                        <li><a href=\"";
+        // line 117
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_organisateur_index");
-        yield "\">
-                <i class=\"metismenu-icon\"></i>
-                Liste des organisateurs
-            </a>
-        </li>
-    </ul>
-</li>
-<li class=\"app-sidebar__heading\">Fournisseurs</li>
-<li>
-    <a href=\"#\">
-        <i class=\"metismenu-icon pe-7s-id\"></i>
-        Gestion Fournisseurs
-        <i class=\"metismenu-state-icon pe-7s-angle-down caret-left\"></i>
-    </a>
-    <ul>
-            <li>
-            <a href=\"";
-        // line 140
+        yield "\"><i class=\"metismenu-icon\"></i>Liste des organisateurs</a></li>
+                    </ul>
+                </li>
+
+                <li class=\"app-sidebar__heading\">Fournisseurs</li>
+                <li>
+                    <a href=\"#\">
+                        <i class=\"metismenu-icon pe-7s-id\"></i>
+                        Gestion Fournisseurs
+                        <i class=\"metismenu-state-icon pe-7s-angle-down caret-left\"></i>
+                    </a>
+                    <ul>
+                        <li><a href=\"";
+        // line 129
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_fournisseur_new");
-        yield "\">
-                <i class=\"metismenu-icon\"></i>
-                Ajouter un Fournisseur
-            </a>
-        </li>
-        <li>
-            <a href=\"";
-        // line 146
+        yield "\"><i class=\"metismenu-icon\"></i>Ajouter un Fournisseur</a></li>
+                        <li><a href=\"";
+        // line 130
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_fournisseur_index");
-        yield "\">
-                <i class=\"metismenu-icon\"></i>
-                Liste des Fournisseurs
-            </a>
-        </li>
+        yield "\"><i class=\"metismenu-icon\"></i>Liste des Fournisseurs</a></li>
+                    </ul>
+                </li>
 
-    </ul>
-</li>
-
-<li class=\"app-sidebar__heading\">Produits</li>
-<li>
-    <a href=\"#\">
-        <i class=\"metismenu-icon pe-7s-id\"></i>
-        Gestion Produits
-        <i class=\"metismenu-state-icon pe-7s-angle-down caret-left\"></i>
-    </a>
-    <ul>
-            <li>
-            <a href=\"";
-        // line 164
+                <li class=\"app-sidebar__heading\">Produits</li>
+                <li>
+                    <a href=\"#\">
+                        <i class=\"metismenu-icon pe-7s-box2\"></i>
+                        Gestion Produits
+                        <i class=\"metismenu-state-icon pe-7s-angle-down caret-left\"></i>
+                    </a>
+                    <ul>
+                        <li><a href=\"";
+        // line 142
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("dashboard_produit_new");
-        yield "\">
-                <i class=\"metismenu-icon\"></i>
-                Ajouter un Produit
-            </a>
-        </li>
-        <li>
-            <a href=\"";
-        // line 170
+        yield "\"><i class=\"metismenu-icon\"></i>Ajouter un Produit</a></li>
+                        <li><a href=\"";
+        // line 143
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_produit_indexback");
-        yield "\">
-                <i class=\"metismenu-icon\"></i>
-                Liste des Produits
-            </a>
-        </li>
-
-    </ul>
-</li>
-
-
-
+        yield "\"><i class=\"metismenu-icon\"></i>Liste des Produits</a></li>
+                    </ul>
+                </li>
 
                 <li class=\"app-sidebar__heading\">PRO Version</li>
                 <li>
-                    <a href=\"https://dashboardpack.com/theme-details/architectui-dashboard-html-pro/\"
-                        target=\"_blank\">
-                        <i class=\"metismenu-icon pe-7s-graph2\">
-                        </i>
+                    <a href=\"https://dashboardpack.com/theme-details/architectui-dashboard-html-pro/\" target=\"_blank\">
+                        <i class=\"metismenu-icon pe-7s-graph2\"></i>
                         Buy me a coffee!
                     </a>
                 </li>
             </ul>
         </div>
     </div>
-</div>";
+</div>
+";
         
         $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
 
@@ -305,7 +278,7 @@ class __TwigTemplate_3cb9f18540e7d8d8e38696f6e430d556 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  252 => 170,  243 => 164,  222 => 146,  213 => 140,  194 => 124,  175 => 108,  166 => 102,  147 => 86,  138 => 80,  117 => 62,  108 => 56,  88 => 39,  48 => 1,);
+        return array (  234 => 143,  230 => 142,  215 => 130,  211 => 129,  196 => 117,  181 => 105,  177 => 104,  162 => 92,  158 => 91,  143 => 79,  128 => 67,  124 => 66,  109 => 54,  105 => 53,  88 => 39,  48 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -353,31 +326,18 @@ class __TwigTemplate_3cb9f18540e7d8d8e38696f6e430d556 extends Template
                         LAMMA
                     </a>
                 </li>
-            
-                
+
                 <li class=\"app-sidebar__heading\">Évènements</li>
                 <li>
-                <a href=\"#\">
-                    <i class=\"metismenu-icon pe-7s-date\"></i>
-                    Gestion Évènements
-                    <i class=\"metismenu-state-icon pe-7s-angle-down caret-left\"></i>
-                </a>
-                <ul>
-                    
-                    <li>
-                    <a href=\"{{ path('dashboard_event_new') }}\">
-                        <i class=\"metismenu-icon\"></i>
-                        Ajouter un Évènement
+                    <a href=\"#\">
+                        <i class=\"metismenu-icon pe-7s-date\"></i>
+                        Gestion Évènements
+                        <i class=\"metismenu-state-icon pe-7s-angle-down caret-left\"></i>
                     </a>
-                    </li>
-                    <li>
-                        <a href=\"{{ path('dashboard_event_index') }}\">
-                            <i class=\"metismenu-icon\"></i>
-                            Liste des Évènements
-                        </a>
-                        </li>
-
-                </ul>
+                    <ul>
+                        <li><a href=\"{{ path('dashboard_event_new') }}\"><i class=\"metismenu-icon\"></i>Ajouter un Évènement</a></li>
+                        <li><a href=\"{{ path('dashboard_event_index') }}\"><i class=\"metismenu-icon\"></i>Liste des Évènements</a></li>
+                    </ul>
                 </li>
 
                 <li class=\"app-sidebar__heading\">Billets</li>
@@ -388,121 +348,98 @@ class __TwigTemplate_3cb9f18540e7d8d8e38696f6e430d556 extends Template
                         <i class=\"metismenu-state-icon pe-7s-angle-down caret-left\"></i>
                     </a>
                     <ul>
-                        <li>
-                            <a href=\"{{ path('app_billet_new') }}\">
-                                <i class=\"metismenu-icon\"></i>
-                                Ajouter un billet
-                            </a>
-                        </li>
-                        <li>
-                            <a href=\"{{ path('app_billet_index') }}\">
-                                <i class=\"metismenu-icon\"></i>
-                                Liste des billets
-                            </a>
-                        </li>
+                        <li><a href=\"{{ path('app_billet_new') }}\"><i class=\"metismenu-icon\"></i>Ajouter un billet</a></li>
+                        <li><a href=\"{{ path('app_billet_index') }}\"><i class=\"metismenu-icon\"></i>Liste des billets</a></li>
                     </ul>
                 </li>
+
+                <li class=\"app-sidebar__heading\">Réservations</li>
+                <li>
+                    <a href=\"#\">
+                        <i class=\"metismenu-icon pe-7s-notebook\"></i>
+                        Gestion Réservations
+                        <i class=\"metismenu-state-icon pe-7s-angle-down caret-left\"></i>
+                    </a>
+                    <ul>
+                        <li><a href=\"{{ path('app_reservation_index') }}\"><i class=\"metismenu-icon\"></i>Liste des Réservations</a></li>
+                    </ul>
+                </li>
+
+                <li class=\"app-sidebar__heading\">Remises</li>
+                <li>
+                    <a href=\"#\">
+                        <i class=\"metismenu-icon pe-7s-gift\"></i>
+                        Gestion Remises
+                        <i class=\"metismenu-state-icon pe-7s-angle-down caret-left\"></i>
+                    </a>
+                    <ul>
+                        <li><a href=\"{{ path('app_remise_new') }}\"><i class=\"metismenu-icon\"></i>Ajouter une Remise</a></li>
+                        <li><a href=\"{{ path('app_remise_index') }}\"><i class=\"metismenu-icon\"></i>Liste des Remises</a></li>
+                    </ul>
+                </li>
+
                 <li class=\"app-sidebar__heading\">Espaces</li>
-<li>
-    <a href=\"#\">
-        <i class=\"metismenu-icon pe-7s-map-marker\"></i>
-        Gestion Espaces
-        <i class=\"metismenu-state-icon pe-7s-angle-down caret-left\"></i>
-    </a>
-    <ul>
-        <li>
-            <a href=\"{{ path('dashboard_espace_new') }}\">
-                <i class=\"metismenu-icon\"></i>
-                Ajouter un Espace
-            </a>
-        </li>
-        <li>
-            <a href=\"{{ path('dashboard_espace_index') }}\">
-                <i class=\"metismenu-icon\"></i>
-                Liste des Espaces
-            </a>
-        </li>
-    </ul>
-</li>
-<li class=\"app-sidebar__heading\">Organisateurs</li>
-<li>
-    <a href=\"#\">
-        <i class=\"metismenu-icon pe-7s-id\"></i>
-        Gestion Organisateurs
-        <i class=\"metismenu-state-icon pe-7s-angle-down caret-left\"></i>
-    </a>
-    <ul>
-        <li>
-            <a href=\"{{ path('app_organisateur_index') }}\">
-                <i class=\"metismenu-icon\"></i>
-                Liste des organisateurs
-            </a>
-        </li>
-    </ul>
-</li>
-<li class=\"app-sidebar__heading\">Fournisseurs</li>
-<li>
-    <a href=\"#\">
-        <i class=\"metismenu-icon pe-7s-id\"></i>
-        Gestion Fournisseurs
-        <i class=\"metismenu-state-icon pe-7s-angle-down caret-left\"></i>
-    </a>
-    <ul>
-            <li>
-            <a href=\"{{ path('app_fournisseur_new') }}\">
-                <i class=\"metismenu-icon\"></i>
-                Ajouter un Fournisseur
-            </a>
-        </li>
-        <li>
-            <a href=\"{{ path('app_fournisseur_index') }}\">
-                <i class=\"metismenu-icon\"></i>
-                Liste des Fournisseurs
-            </a>
-        </li>
+                <li>
+                    <a href=\"#\">
+                        <i class=\"metismenu-icon pe-7s-map-marker\"></i>
+                        Gestion Espaces
+                        <i class=\"metismenu-state-icon pe-7s-angle-down caret-left\"></i>
+                    </a>
+                    <ul>
+                        <li><a href=\"{{ path('dashboard_espace_new') }}\"><i class=\"metismenu-icon\"></i>Ajouter un Espace</a></li>
+                        <li><a href=\"{{ path('dashboard_espace_index') }}\"><i class=\"metismenu-icon\"></i>Liste des Espaces</a></li>
+                    </ul>
+                </li>
 
-    </ul>
-</li>
+                <li class=\"app-sidebar__heading\">Organisateurs</li>
+                <li>
+                    <a href=\"#\">
+                        <i class=\"metismenu-icon pe-7s-id\"></i>
+                        Gestion Organisateurs
+                        <i class=\"metismenu-state-icon pe-7s-angle-down caret-left\"></i>
+                    </a>
+                    <ul>
+                        <li><a href=\"{{ path('app_organisateur_index') }}\"><i class=\"metismenu-icon\"></i>Liste des organisateurs</a></li>
+                    </ul>
+                </li>
 
-<li class=\"app-sidebar__heading\">Produits</li>
-<li>
-    <a href=\"#\">
-        <i class=\"metismenu-icon pe-7s-id\"></i>
-        Gestion Produits
-        <i class=\"metismenu-state-icon pe-7s-angle-down caret-left\"></i>
-    </a>
-    <ul>
-            <li>
-            <a href=\"{{ path('dashboard_produit_new') }}\">
-                <i class=\"metismenu-icon\"></i>
-                Ajouter un Produit
-            </a>
-        </li>
-        <li>
-            <a href=\"{{ path('app_produit_indexback') }}\">
-                <i class=\"metismenu-icon\"></i>
-                Liste des Produits
-            </a>
-        </li>
+                <li class=\"app-sidebar__heading\">Fournisseurs</li>
+                <li>
+                    <a href=\"#\">
+                        <i class=\"metismenu-icon pe-7s-id\"></i>
+                        Gestion Fournisseurs
+                        <i class=\"metismenu-state-icon pe-7s-angle-down caret-left\"></i>
+                    </a>
+                    <ul>
+                        <li><a href=\"{{ path('app_fournisseur_new') }}\"><i class=\"metismenu-icon\"></i>Ajouter un Fournisseur</a></li>
+                        <li><a href=\"{{ path('app_fournisseur_index') }}\"><i class=\"metismenu-icon\"></i>Liste des Fournisseurs</a></li>
+                    </ul>
+                </li>
 
-    </ul>
-</li>
-
-
-
+                <li class=\"app-sidebar__heading\">Produits</li>
+                <li>
+                    <a href=\"#\">
+                        <i class=\"metismenu-icon pe-7s-box2\"></i>
+                        Gestion Produits
+                        <i class=\"metismenu-state-icon pe-7s-angle-down caret-left\"></i>
+                    </a>
+                    <ul>
+                        <li><a href=\"{{ path('dashboard_produit_new') }}\"><i class=\"metismenu-icon\"></i>Ajouter un Produit</a></li>
+                        <li><a href=\"{{ path('app_produit_indexback') }}\"><i class=\"metismenu-icon\"></i>Liste des Produits</a></li>
+                    </ul>
+                </li>
 
                 <li class=\"app-sidebar__heading\">PRO Version</li>
                 <li>
-                    <a href=\"https://dashboardpack.com/theme-details/architectui-dashboard-html-pro/\"
-                        target=\"_blank\">
-                        <i class=\"metismenu-icon pe-7s-graph2\">
-                        </i>
+                    <a href=\"https://dashboardpack.com/theme-details/architectui-dashboard-html-pro/\" target=\"_blank\">
+                        <i class=\"metismenu-icon pe-7s-graph2\"></i>
                         Buy me a coffee!
                     </a>
                 </li>
             </ul>
         </div>
     </div>
-</div>", "partialsBack/sidebar.html.twig", "C:\\wamp64\\gestion_espace_symfony\\templates\\partialsBack\\sidebar.html.twig");
+</div>
+", "partialsBack/sidebar.html.twig", "C:\\wamp64\\gestion_espace_symfony\\templates\\partialsBack\\sidebar.html.twig");
     }
 }

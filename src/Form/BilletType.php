@@ -18,39 +18,33 @@ class BilletType extends AbstractType
     {
         $builder
         ->add('proprietaire', TextType::class, [
+            'label' => 'Nom complet',
             'attr' => ['class' => 'form-control'],
-            'empty_data' => '',
         ])
-        
-        
-        ->add('prix', IntegerType::class, [
-            'attr' => ['class' => 'form-control'],
-            'empty_data' => '0',
-            'required' => true,
-        ])
-        
-        
         ->add('type', ChoiceType::class, [
             'choices' => [
-                'Simple' => 'SIMPLE',
-                'Duo' => 'DUO',
+                'SIMPLE' => 'SIMPLE',
+                'DUO' => 'DUO',
                 'VIP' => 'VIP',
             ],
-            'placeholder' => 'Choisissez un type de billet',
-            'attr' => ['class' => 'form-control'],
-            'required' => true,
-            'empty_data' => '', // important : envoie une string vide (pas null)
+            'placeholder' => 'Sélectionner le type de billet',
+            'attr' => ['class' => 'form-select'],
+        ])
+        ->add('event', EntityType::class, [
+            'class' => Event::class,
+            'disabled' => true,
+            'choice_label' => 'nomEvent', // ✅ ceci remplace __toString()
+            'attr' => ['class' => 'form-select'],
         ])
         
         
+        ->add('codePromo', TextType::class, [
+            'mapped' => false,
+            'required' => false,
+            'label' => 'Code Promo',
+            'attr' => ['placeholder' => 'Entrez un code promo', 'class' => 'form-control', 'id' => 'codePromo']
+        ])
         
-        
-        
-        ->add('event', EntityType::class, [
-                'class' => Event::class,
-                'choice_label' => 'nomEvent',
-                'placeholder'=> 'Pour quel évènement?',
-            ])
         ;
     }
 
