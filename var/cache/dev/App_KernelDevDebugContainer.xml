@@ -352,6 +352,7 @@
       <tag name="controller.service_arguments"/>
       <tag name="routing.route_loader"/>
     </service>
+    <service id="http_discovery.psr17_factory" class="Http\Discovery\Psr17Factory"/>
     <service id="App\Entity" class="App\Entity" abstract="true">
       <tag name="container.excluded" source="in &quot;config/services.yaml&quot;"/>
     </service>
@@ -2009,6 +2010,16 @@
         <argument type="service" id="monolog.logger.http_client" on-invalid="ignore"/>
       </call>
       <factory class="Symfony\Component\HttpClient\HttpClient" method="create"/>
+    </service>
+    <service id="psr18.http_client" class="Symfony\Component\HttpClient\Psr18Client">
+      <argument type="service" id=".debug.http_client"/>
+      <argument type="service" id="http_discovery.psr17_factory" on-invalid="ignore"/>
+      <argument type="service" id="http_discovery.psr17_factory" on-invalid="ignore"/>
+    </service>
+    <service id="httplug.http_client" class="Symfony\Component\HttpClient\HttplugClient">
+      <argument type="service" id=".debug.http_client"/>
+      <argument type="service" id="http_discovery.psr17_factory" on-invalid="ignore"/>
+      <argument type="service" id="http_discovery.psr17_factory" on-invalid="ignore"/>
     </service>
     <service id="http_client.abstract_retry_strategy" class="Symfony\Component\HttpClient\Retry\GenericRetryStrategy" abstract="true">
       <argument type="abstract">http codes</argument>
@@ -10071,6 +10082,12 @@
         <argument key="Symfony\UX\StimulusBundle\Twig\UxControllersTwigRuntime" type="service_closure" id="stimulus.ux_controllers_twig_runtime"/>
       </argument>
     </service>
+    <service id="Psr\Http\Message\RequestFactoryInterface" alias="http_discovery.psr17_factory"/>
+    <service id="Psr\Http\Message\ResponseFactoryInterface" alias="http_discovery.psr17_factory"/>
+    <service id="Psr\Http\Message\ServerRequestFactoryInterface" alias="http_discovery.psr17_factory"/>
+    <service id="Psr\Http\Message\StreamFactoryInterface" alias="http_discovery.psr17_factory"/>
+    <service id="Psr\Http\Message\UploadedFileFactoryInterface" alias="http_discovery.psr17_factory"/>
+    <service id="Psr\Http\Message\UriFactoryInterface" alias="http_discovery.psr17_factory"/>
     <service id="App\Kernel" alias="kernel" public="true"/>
     <service id="Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface" alias="parameter_bag"/>
     <service id="Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface" alias="parameter_bag"/>
@@ -10107,6 +10124,11 @@
     <service id="asset_mapper.http_client" alias=".debug.http_client"/>
     <service id="Symfony\Component\AssetMapper\ImportMap\ImportMapManager" alias="asset_mapper.importmap.manager"/>
     <service id="Symfony\Contracts\HttpClient\HttpClientInterface" alias=".debug.http_client"/>
+    <service id="Psr\Http\Client\ClientInterface" alias="psr18.http_client"/>
+    <service id="Http\Client\HttpAsyncClient" alias="httplug.http_client"/>
+    <service id="Http\Client\HttpClient" alias="httplug.http_client">
+      <deprecated package="symfony/framework-bundle" version="6.3">The "%alias_id%" service is deprecated, use "Psr\Http\Client\ClientInterface" instead.</deprecated>
+    </service>
     <service id="mailer" alias="mailer.mailer"/>
     <service id="Symfony\Component\Mailer\MailerInterface" alias="mailer.mailer"/>
     <service id="mailer.default_transport" alias="mailer.transports"/>

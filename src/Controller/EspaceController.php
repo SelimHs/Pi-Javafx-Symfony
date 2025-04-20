@@ -12,6 +12,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
+use Geocoder\Query\GeocodeQuery;
+use Http\Adapter\Guzzle7\Client as GuzzleAdapter;
+use Geocoder\Provider\Nominatim\Nominatim;
+use Geocoder\StatefulGeocoder;
+
+
+
 #[Route('/espace')]
 final class EspaceController extends AbstractController
 {
@@ -105,19 +112,25 @@ final class EspaceController extends AbstractController
     #[Route('/{idEspace}', name: 'app_espace_show', methods: ['GET'])]
     public function show(Espace $espace, Request $request): Response
     {
+        // 🔒 Stocker l'ID dans la session (utile pour suivre la navigation)
         $request->getSession()->set('idEspace', $espace->getIdEspace());
 
-        // 🛰️ Génération dynamique de l'URL du flux
-        $ip = "192.168.137.174"; // ⚠️ Remplace par l'IP de ton téléphone
-        $port = $espace->getCapacite(); // 💡 Utilise la capacité comme numéro de port
-        $liveURL = "http://$ip:$port/browserfs.html";
+        // 🎥 Génération du lien de live stream basé sur la capacité
+        $ip = "192.168.137.174"; // Remplace par l’IP de ton téléphone ou serveur caméra
+        $port = $espace->getCapacite();
+        $liveURL = "http://$ip:$port/jsfs.html";
+
+        // Exemple de coordonnées (à remplacer plus tard par geocoding si tu veux)
+        $latitude = 36.8065; // Tunis
+        $longitude = 10.1815;
 
         return $this->render('espace/show.html.twig', [
             'espace' => $espace,
-            'liveURL' => $liveURL, // 🔗 Transmis au template
+            'liveURL' => 'http://192.168.137.174:' . $espace->getCapacite() . '/jsfs.html',
+            'latitude' => $latitude,
+            'longitude' => $longitude,
         ]);
     }
-
     #[Route('/show/{idEspace}', name: 'dashboard_espace_show', methods: ['GET'])]
     public function showDashboard(Espace $espace): Response
     {
