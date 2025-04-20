@@ -140,7 +140,7 @@ class Billet
         $this->getPaiements()->removeElement($paiement);
         return $this;
     }
-   
+    
     private ?Reservation $reservation = null;
 
     public function getReservation(): ?Reservation

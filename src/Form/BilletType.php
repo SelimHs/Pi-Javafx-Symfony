@@ -48,7 +48,7 @@ class BilletType extends AbstractType
             'required' => false,
             'label' => 'Code Promo',
             'attr' => ['placeholder' => 'Entrez un code promo', 'class' => 'form-control', 'id' => 'codePromo']
-        ])->add('reservation')
+        ])
 
         
         ;

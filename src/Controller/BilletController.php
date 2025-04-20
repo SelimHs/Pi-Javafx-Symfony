@@ -59,62 +59,66 @@ final class BilletController extends AbstractController
     }
 
     #[Route('/reservation/{id}', name: 'app_billet_reservation', methods: ['GET', 'POST'])]
-public function newFront(Request $request, Event $event, EntityManagerInterface $em, RemiseRepository $remiseRepo): Response
-{
-    $billet = new Billet();
-    $reservation = new Reservation();
+    public function newFront(Request $request, Event $event, EntityManagerInterface $em, RemiseRepository $remiseRepo): Response
+    {
+        $billet = new Billet();
+        $reservation = new Reservation();
 
-    $form = $this->createForm(BilletType::class, $billet);
-    $form->handleRequest($request);
+        $form = $this->createForm(BilletType::class, $billet);
+        $form->handleRequest($request);
 
-    $eventPrix = $event->getPrix();
-    $prix = $eventPrix;
+        $eventPrix = $event->getPrix();
+        $prix = $eventPrix;
 
-    $reservation->setEvent($event);
-    $reservation->setDateReservation(new \DateTime());
-    $reservation->setStatut('confirmée');
+        $reservation->setEvent($event);
+        $reservation->setDateReservation(new \DateTime());
+        $reservation->setStatut('confirmée');
 
-    if ($form->isSubmitted() && $form->isValid()) {
-        // 🔥 Récupérer type pour ajuster prix selon billet
-        $type = $billet->getType();
-        if ($type === 'DUO') {
-            $prix += $eventPrix * 0.5;
-        } elseif ($type === 'VIP') {
-            $prix = $eventPrix * 3;
-        }
+        // ✅ Utilisation correcte de $em
+        $user = $em->getRepository(\App\Entity\User::class)->find(1); // Assure-toi que l'ID 1 existe
+        $reservation->setUser($user);
 
-        // ✅ Code promo
-        $codePromo = $form->get('codePromo')->getData();
-        if ($codePromo) {
-            $remise = $remiseRepo->findOneBy(['code' => $codePromo]);
-            if ($remise) {
-                $pourcentage = $remise->getValeur(); // ex: 10 = 10%
-                $reduction = $prix * ($pourcentage / 100);
-                $prix -= $reduction;
-
-                $reservation->setRemise($remise);
+        if ($form->isSubmitted() && $form->isValid()) {
+            // 🔥 Ajustement du prix selon le type de billet
+            $type = $billet->getType();
+            if ($type === 'DUO') {
+                $prix += $eventPrix * 0.5;
+            } elseif ($type === 'VIP') {
+                $prix = $eventPrix * 3;
             }
+
+            // ✅ Application du code promo
+            $codePromo = $form->get('codePromo')->getData();
+            if ($codePromo) {
+                $remise = $remiseRepo->findOneBy(['codePromo' => $codePromo]);
+                if ($remise) {
+                    $pourcentage = $remise->getPourcentageRemise(); // ✅ Utilise le vrai getter
+                    $reduction = $prix * ($pourcentage / 100);
+                    $prix -= $reduction;
+
+                    $reservation->setRemise($remise);
+                }
+            }
+
+            // ✅ Finalisation
+            $billet->setDateAchat(new \DateTime());
+            $billet->setEvent($event);
+            $billet->setPrix((int) $prix);
+            $billet->setReservation($reservation);
+
+            $em->persist($reservation);
+            $em->persist($billet);
+            $em->flush();
+
+            return $this->redirectToRoute('app_event_index');
         }
 
-        // ✅ Finaliser
-        $billet->setDateAchat(new \DateTime());
-        $billet->setEvent($event);
-        $billet->setPrix((int) $prix);
-        $billet->setReservation($reservation); // 🧠 Lier réservation au billet
-
-        $em->persist($reservation);
-        $em->persist($billet);
-        $em->flush();
-
-        return $this->redirectToRoute('app_event_index'); // 🔁 retour à liste des événements
+        return $this->render('billet/front_reservation.html.twig', [
+            'form' => $form,
+            'event' => $event,
+            'prixFinal' => $prix,
+        ]);
     }
-
-    return $this->render('billet/front_reservation.html.twig', [
-        'form' => $form,
-        'event' => $event,
-        'prixFinal' => $prix
-    ]);
-}
 
 
 
