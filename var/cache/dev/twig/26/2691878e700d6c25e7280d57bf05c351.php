@@ -124,7 +124,7 @@ class __TwigTemplate_a621034fb1184e4773f837599d5684bc extends Template
                   </li>
                   <li class=\"nav-item\" role=\"presentation\">
                     <button class=\"nav-link animate__animated animate__fadeInUp\" id=\"info-tab\" data-bs-toggle=\"tab\" data-bs-target=\"#info\" type=\"button\" role=\"tab\" aria-controls=\"info\" aria-selected=\"false\">
-                      Infos Supplémentaires
+                     🛑LIVE 🎞️🎥
                     </button>
                   </li>
                   <li class=\"nav-item\" role=\"presentation\">
@@ -208,27 +208,27 @@ class __TwigTemplate_a621034fb1184e4773f837599d5684bc extends Template
                 ";
         // line 81
         yield "                <div class=\"tab-pane fade animate__animated animate__fadeIn\" id=\"info\" role=\"tabpanel\" aria-labelledby=\"info-tab\">
-                  <div class=\"row\">
-                    <div class=\"col-lg-12\">
-                      <div class=\"animate__animated animate__fadeInUp\">
-                        <h4>Informations Supplémentaires</h4>
-                        <p>
-                          Vous pouvez inclure ici une description détaillée, les conditions de réservation ou d'autres informations pertinentes concernant cet espace.
-                        </p>
-                        <div class=\"icon-button mt-3\">
-                          <a href=\"";
-        // line 90
-        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_espace_index");
-        yield "\" class=\"btn btn-secondary\">
-                            <i class=\"fa fa-arrow-left\"></i> Retour à la liste
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+  <div class=\"row\">
+    <div class=\"col-lg-12\">
+      <div class=\"animate__animated animate__fadeInUp\">
+        <h4>🎥 Vue en Direct</h4>
+        <p>Flux en direct depuis l’espace <strong>";
+        // line 86
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["espace"]) || array_key_exists("espace", $context) ? $context["espace"] : (function () { throw new RuntimeError('Variable "espace" does not exist.', 86, $this->source); })()), "nomEspace", [], "any", false, false, false, 86), "html", null, true);
+        yield "</strong> :</p>
+        <div class=\"ratio ratio-16x9\" style=\"border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1);\">
+          <iframe src=\"";
+        // line 88
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["liveURL"]) || array_key_exists("liveURL", $context) ? $context["liveURL"] : (function () { throw new RuntimeError('Variable "liveURL" does not exist.', 88, $this->source); })()), "html", null, true);
+        yield "\" allowfullscreen frameborder=\"0\"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
                 ";
-        // line 99
+        // line 96
         yield "                <div class=\"tab-pane fade animate__animated animate__fadeIn\" id=\"organisateurs\" role=\"tabpanel\" aria-labelledby=\"organisateurs-tab\">
                   <div class=\"row\">
                     <div class=\"col-lg-12\">
@@ -241,11 +241,11 @@ class __TwigTemplate_a621034fb1184e4773f837599d5684bc extends Template
                       </div>
                       <div class=\"row mt-4\">
                         ";
-        // line 111
+        // line 108
         yield "                        <div class=\"col-md-6 mb-4\">
                           <a href=\"";
-        // line 112
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_organisateur_new", ["idEspace" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["espace"]) || array_key_exists("espace", $context) ? $context["espace"] : (function () { throw new RuntimeError('Variable "espace" does not exist.', 112, $this->source); })()), "idEspace", [], "any", false, false, false, 112)]), "html", null, true);
+        // line 109
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_organisateur_new", ["idEspace" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["espace"]) || array_key_exists("espace", $context) ? $context["espace"] : (function () { throw new RuntimeError('Variable "espace" does not exist.', 109, $this->source); })()), "idEspace", [], "any", false, false, false, 109)]), "html", null, true);
         yield "\" class=\"text-decoration-none\">
                             <div class=\"card h-100 border-0 shadow-lg add-organisateur-card animate__animated animate__flipInY\">
                               <div class=\"card-body text-center\">
@@ -256,45 +256,45 @@ class __TwigTemplate_a621034fb1184e4773f837599d5684bc extends Template
                           </a>
                         </div>
                         ";
-        // line 122
+        // line 119
         yield "                        ";
-        if ( !Twig\Extension\CoreExtension::testEmpty(CoreExtension::getAttribute($this->env, $this->source, (isset($context["espace"]) || array_key_exists("espace", $context) ? $context["espace"] : (function () { throw new RuntimeError('Variable "espace" does not exist.', 122, $this->source); })()), "organisateurs", [], "any", false, false, false, 122))) {
-            // line 123
+        if ( !Twig\Extension\CoreExtension::testEmpty(CoreExtension::getAttribute($this->env, $this->source, (isset($context["espace"]) || array_key_exists("espace", $context) ? $context["espace"] : (function () { throw new RuntimeError('Variable "espace" does not exist.', 119, $this->source); })()), "organisateurs", [], "any", false, false, false, 119))) {
+            // line 120
             yield "                          ";
             $context['_parent'] = $context;
-            $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["espace"]) || array_key_exists("espace", $context) ? $context["espace"] : (function () { throw new RuntimeError('Variable "espace" does not exist.', 123, $this->source); })()), "organisateurs", [], "any", false, false, false, 123));
+            $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["espace"]) || array_key_exists("espace", $context) ? $context["espace"] : (function () { throw new RuntimeError('Variable "espace" does not exist.', 120, $this->source); })()), "organisateurs", [], "any", false, false, false, 120));
             foreach ($context['_seq'] as $context["_key"] => $context["organisateur"]) {
-                // line 124
+                // line 121
                 yield "                            <div class=\"col-md-6 mb-4\">
                               <div class=\"card h-100 border-0 shadow-lg animate__animated animate__fadeInUp\">
                                 <div class=\"card-body\">
                                   <h5 class=\"card-title\">";
-                // line 127
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "nom_org", [], "any", false, false, false, 127), "html", null, true);
+                // line 124
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "nom_org", [], "any", false, false, false, 124), "html", null, true);
                 yield " ";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "prenom_org", [], "any", false, false, false, 127), "html", null, true);
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "prenom_org", [], "any", false, false, false, 124), "html", null, true);
                 yield "</h5>
                                   <p class=\"card-text\"><strong>Téléphone :</strong> ";
-                // line 128
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "telef", [], "any", false, false, false, 128), "html", null, true);
+                // line 125
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "telef", [], "any", false, false, false, 125), "html", null, true);
                 yield "</p>
                                   <p class=\"card-text\"><strong>Description :</strong><br>";
-                // line 129
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "description_org", [], "any", false, false, false, 129), "html", null, true);
+                // line 126
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "description_org", [], "any", false, false, false, 126), "html", null, true);
                 yield "</p>
                                 </div>
                                 <div class=\"card-footer bg-transparent border-0 d-flex justify-content-between\">
                                   <a href=\"";
-                // line 132
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_organisateur_edit", ["id_org" => CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "id_org", [], "any", false, false, false, 132)]), "html", null, true);
+                // line 129
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_organisateur_edit", ["id_org" => CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "id_org", [], "any", false, false, false, 129)]), "html", null, true);
                 yield "\" class=\"btn btn-sm btn-outline-primary\">Modifier</a>
                                   <form method=\"post\" action=\"";
-                // line 133
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_organisateur_delete", ["id_org" => CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "id_org", [], "any", false, false, false, 133)]), "html", null, true);
+                // line 130
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_organisateur_delete", ["id_org" => CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "id_org", [], "any", false, false, false, 130)]), "html", null, true);
                 yield "\" onsubmit=\"return confirm('Êtes-vous sûr de vouloir supprimer cet organisateur ?');\">
                                     <input type=\"hidden\" name=\"_token\" value=\"";
-                // line 134
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken(("delete" . CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "id_org", [], "any", false, false, false, 134))), "html", null, true);
+                // line 131
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken(("delete" . CoreExtension::getAttribute($this->env, $this->source, $context["organisateur"], "id_org", [], "any", false, false, false, 131))), "html", null, true);
                 yield "\">
                                     <button class=\"btn btn-sm btn-outline-danger\">Supprimer</button>
                                   </form>
@@ -306,20 +306,20 @@ class __TwigTemplate_a621034fb1184e4773f837599d5684bc extends Template
             $_parent = $context['_parent'];
             unset($context['_seq'], $context['_key'], $context['organisateur'], $context['_parent']);
             $context = array_intersect_key($context, $_parent) + $_parent;
-            // line 141
+            // line 138
             yield "                        ";
         } else {
-            // line 142
+            // line 139
             yield "                          <p class=\"text-muted\">Aucun organisateur assigné à cet espace.</p>
                         ";
         }
-        // line 144
+        // line 141
         yield "                      </div>
                     </div>
                   </div>
                 </div>
                 ";
-        // line 149
+        // line 146
         yield "              </div> <!-- End tab-content -->
             </div> <!-- End row -->
           </div> <!-- End tabs-content -->
@@ -342,7 +342,7 @@ class __TwigTemplate_a621034fb1184e4773f837599d5684bc extends Template
   </footer>
 
   ";
-        // line 171
+        // line 168
         yield "  <style>
     .add-organisateur-card {
       min-height: 220px;
@@ -357,6 +357,22 @@ class __TwigTemplate_a621034fb1184e4773f837599d5684bc extends Template
       transform: translateY(-5px);
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     }
+    <style>
+  .ratio-16x9 {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    height: 0;
+  }
+  .ratio-16x9 iframe {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+  }
+</style>
+
   </style>
 ";
         
@@ -389,7 +405,7 @@ class __TwigTemplate_a621034fb1184e4773f837599d5684bc extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  346 => 171,  323 => 149,  317 => 144,  313 => 142,  310 => 141,  297 => 134,  293 => 133,  289 => 132,  283 => 129,  279 => 128,  273 => 127,  268 => 124,  263 => 123,  260 => 122,  248 => 112,  245 => 111,  232 => 99,  221 => 90,  210 => 81,  199 => 72,  196 => 71,  192 => 69,  186 => 67,  184 => 66,  174 => 59,  164 => 52,  160 => 51,  156 => 50,  152 => 49,  148 => 48,  140 => 42,  110 => 14,  100 => 6,  87 => 5,  64 => 3,  41 => 1,);
+        return array (  346 => 168,  323 => 146,  317 => 141,  313 => 139,  310 => 138,  297 => 131,  293 => 130,  289 => 129,  283 => 126,  279 => 125,  273 => 124,  268 => 121,  263 => 120,  260 => 119,  248 => 109,  245 => 108,  232 => 96,  222 => 88,  217 => 86,  210 => 81,  199 => 72,  196 => 71,  192 => 69,  186 => 67,  184 => 66,  174 => 59,  164 => 52,  160 => 51,  156 => 50,  152 => 49,  148 => 48,  140 => 42,  110 => 14,  100 => 6,  87 => 5,  64 => 3,  41 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -423,7 +439,7 @@ class __TwigTemplate_a621034fb1184e4773f837599d5684bc extends Template
                   </li>
                   <li class=\"nav-item\" role=\"presentation\">
                     <button class=\"nav-link animate__animated animate__fadeInUp\" id=\"info-tab\" data-bs-toggle=\"tab\" data-bs-target=\"#info\" type=\"button\" role=\"tab\" aria-controls=\"info\" aria-selected=\"false\">
-                      Infos Supplémentaires
+                     🛑LIVE 🎞️🎥
                     </button>
                   </li>
                   <li class=\"nav-item\" role=\"presentation\">
@@ -475,22 +491,19 @@ class __TwigTemplate_a621034fb1184e4773f837599d5684bc extends Template
                 </div>
                 {# Onglet Infos Supplémentaires #}
                 <div class=\"tab-pane fade animate__animated animate__fadeIn\" id=\"info\" role=\"tabpanel\" aria-labelledby=\"info-tab\">
-                  <div class=\"row\">
-                    <div class=\"col-lg-12\">
-                      <div class=\"animate__animated animate__fadeInUp\">
-                        <h4>Informations Supplémentaires</h4>
-                        <p>
-                          Vous pouvez inclure ici une description détaillée, les conditions de réservation ou d'autres informations pertinentes concernant cet espace.
-                        </p>
-                        <div class=\"icon-button mt-3\">
-                          <a href=\"{{ path('app_espace_index') }}\" class=\"btn btn-secondary\">
-                            <i class=\"fa fa-arrow-left\"></i> Retour à la liste
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+  <div class=\"row\">
+    <div class=\"col-lg-12\">
+      <div class=\"animate__animated animate__fadeInUp\">
+        <h4>🎥 Vue en Direct</h4>
+        <p>Flux en direct depuis l’espace <strong>{{ espace.nomEspace }}</strong> :</p>
+        <div class=\"ratio ratio-16x9\" style=\"border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1);\">
+          <iframe src=\"{{ liveURL }}\" allowfullscreen frameborder=\"0\"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
                 {# Onglet Organisateurs #}
                 <div class=\"tab-pane fade animate__animated animate__fadeIn\" id=\"organisateurs\" role=\"tabpanel\" aria-labelledby=\"organisateurs-tab\">
                   <div class=\"row\">
@@ -578,6 +591,22 @@ class __TwigTemplate_a621034fb1184e4773f837599d5684bc extends Template
       transform: translateY(-5px);
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     }
+    <style>
+  .ratio-16x9 {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    height: 0;
+  }
+  .ratio-16x9 iframe {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+  }
+</style>
+
   </style>
 {% endblock %}
 ", "espace/show.html.twig", "C:\\wamp64\\gestion_espace_symfony\\templates\\espace\\show.html.twig");

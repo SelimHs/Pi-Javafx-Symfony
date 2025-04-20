@@ -101,13 +101,20 @@ final class EspaceController extends AbstractController
     }
 
 
+
     #[Route('/{idEspace}', name: 'app_espace_show', methods: ['GET'])]
     public function show(Espace $espace, Request $request): Response
     {
         $request->getSession()->set('idEspace', $espace->getIdEspace());
 
+        // 🛰️ Génération dynamique de l'URL du flux
+        $ip = "192.168.137.174"; // ⚠️ Remplace par l'IP de ton téléphone
+        $port = $espace->getCapacite(); // 💡 Utilise la capacité comme numéro de port
+        $liveURL = "http://$ip:$port/browserfs.html";
+
         return $this->render('espace/show.html.twig', [
             'espace' => $espace,
+            'liveURL' => $liveURL, // 🔗 Transmis au template
         ]);
     }
 
