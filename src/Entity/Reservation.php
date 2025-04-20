@@ -14,7 +14,7 @@ class Reservation
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(name: 'idReservation', type: 'integer')]
     private ?int $idReservation = null;
 
     public function getIdReservation(): ?int
@@ -28,19 +28,23 @@ class Reservation
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $dateReservation = null;
+    #[ORM\Column(name: 'dateReservation', type: 'datetime', nullable: false)]
+    private ?\DateTimeInterface $dateReservation = null;
 
-    public function getDateReservation(): ?string
+    public function getDateReservation(): ?\DateTimeInterface
     {
         return $this->dateReservation;
     }
 
-    public function setDateReservation(string $dateReservation): self
+    public function setDateReservation(\DateTimeInterface $dateReservation): self
     {
         $this->dateReservation = $dateReservation;
         return $this;
     }
+
+
+
+
 
     #[ORM\Column(type: 'string', nullable: false)]
     private ?string $statut = null;
@@ -100,5 +104,4 @@ class Reservation
         $this->remise = $remise;
         return $this;
     }
-
 }

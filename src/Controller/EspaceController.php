@@ -12,6 +12,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
+use Geocoder\Query\GeocodeQuery;
+use Http\Adapter\Guzzle7\Client as GuzzleAdapter;
+use Geocoder\Provider\Nominatim\Nominatim;
+use Geocoder\StatefulGeocoder;
+
+
+
 #[Route('/espace')]
 final class EspaceController extends AbstractController
 {
@@ -35,6 +42,16 @@ final class EspaceController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $espace = new Espace();
+        $form = $this->createForm(EspaceType::class, $espace, [
+            'is_edit' => false // champ désactivé
+        ]);
+        $espace = new Espace();
+        $espace->setDisponibilite('Disponible'); // ✅ valeur par défaut
+        $form = $this->createForm(EspaceType::class, $espace, [
+            'is_edit' => false
+        ]);
+
+
         $form = $this->createForm(EspaceType::class, $espace);
         $form->handleRequest($request);
 
@@ -63,7 +80,11 @@ final class EspaceController extends AbstractController
     public function newDashboard(Request $request, EntityManagerInterface $entityManager): Response
     {
         $espace = new Espace();
-        $form = $this->createForm(EspaceType::class, $espace);
+        $espace->setDisponibilite('Disponible'); // Valeur par défaut
+
+        $form = $this->createForm(EspaceType::class, $espace, [
+            'is_edit' => false
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -86,16 +107,30 @@ final class EspaceController extends AbstractController
         ]);
     }
 
+
+
     #[Route('/{idEspace}', name: 'app_espace_show', methods: ['GET'])]
     public function show(Espace $espace, Request $request): Response
     {
+        // 🔒 Stocker l'ID dans la session (utile pour suivre la navigation)
         $request->getSession()->set('idEspace', $espace->getIdEspace());
+
+        // 🎥 Génération du lien de live stream basé sur la capacité
+        $ip = "192.168.137.174"; // Remplace par l’IP de ton téléphone ou serveur caméra
+        $port = $espace->getCapacite();
+        $liveURL = "http://$ip:$port/jsfs.html";
+
+        // Exemple de coordonnées (à remplacer plus tard par geocoding si tu veux)
+        $latitude = 36.8065; // Tunis
+        $longitude = 10.1815;
 
         return $this->render('espace/show.html.twig', [
             'espace' => $espace,
+            'liveURL' => 'http://192.168.137.174:' . $espace->getCapacite() . '/jsfs.html',
+            'latitude' => $latitude,
+            'longitude' => $longitude,
         ]);
     }
-
     #[Route('/show/{idEspace}', name: 'dashboard_espace_show', methods: ['GET'])]
     public function showDashboard(Espace $espace): Response
     {
@@ -107,7 +142,9 @@ final class EspaceController extends AbstractController
     #[Route('/{idEspace}/edit', name: 'app_espace_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Espace $espace, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(EspaceType::class, $espace);
+        $form = $this->createForm(EspaceType::class, $espace, [
+            'is_edit' => true
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -118,11 +155,12 @@ final class EspaceController extends AbstractController
                     $imageFile->move($this->getParameter('uploads_directory'), $newFilename);
                     $espace->setImage($newFilename);
                 } catch (FileException $e) {
-                    // Handle error if needed
+                    // Handle error
                 }
             }
 
             $entityManager->flush();
+
             return $this->redirectToRoute('app_espace_show', ['idEspace' => $espace->getIdEspace()]);
         }
 
@@ -132,11 +170,14 @@ final class EspaceController extends AbstractController
         ]);
     }
 
+
     #[Route('/edit/{idEspace}', name: 'dashboard_espace_edit', methods: ['GET', 'POST'])]
     public function editDashboard(Request $request, Espace $espace, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(EspaceType::class, $espace);
-        $form->handleRequest($request);
+        $form = $this->createForm(EspaceType::class, $espace, [
+            'is_edit' => true // champ activé
+        ]);
+        $form->handleRequest($request); // ✅ maintenant c'est sur le bon form
 
         if ($form->isSubmitted() && $form->isValid()) {
             $imageFile = $form->get('image')->getData();
@@ -146,12 +187,16 @@ final class EspaceController extends AbstractController
                     $imageFile->move($this->getParameter('uploads_directory'), $newFilename);
                     $espace->setImage($newFilename);
                 } catch (FileException $e) {
-                    // Handle error if needed
+                    // Gérer les erreurs si nécessaire
                 }
             }
 
             $entityManager->flush();
-            return $this->redirectToRoute('dashboard_espace_index');
+
+            // ✅ Redirection vers la page de détail après modification
+            return $this->redirectToRoute('dashboard_espace_show', [
+                'idEspace' => $espace->getIdEspace()
+            ]);
         }
 
         return $this->render('espace/editBack.html.twig', [
@@ -159,6 +204,7 @@ final class EspaceController extends AbstractController
             'form' => $form,
         ]);
     }
+
 
     #[Route('/{idEspace}', name: 'app_espace_delete', methods: ['POST'])]
     public function delete(Request $request, Espace $espace, EntityManagerInterface $entityManager): Response

@@ -89,18 +89,12 @@
 
           {# Champ disponibilite : affiché en lecture seule avec valeur par défaut "Disponible" #}
           <div class="mb-3">
-            {{ form_label(form.disponibilite) }}
-            {{ form_widget(form.disponibilite, {
-              'attr': {
-                'class': 'form-control',
-                'readonly': 'readonly'
-              },
-              'value': 'Disponible'
-            }) }}
-            <div class="text-danger mt-1" style="font-size: 0.95rem;">
-              {{ form_errors(form.disponibilite) }}
-            </div>
-          </div>
+  {{ form_label(form.disponibilite) }}
+  {{ form_widget(form.disponibilite, {
+    'attr': {'class': 'form-control'}
+  }) }}
+  <div class="text-danger small mt-1">{{ form_errors(form.disponibilite) }}</div>
+</div>
 
           {# Champ image : obligatoire #}
           <div class="mb-3">

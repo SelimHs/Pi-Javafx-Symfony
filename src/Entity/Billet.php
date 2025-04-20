@@ -16,7 +16,7 @@ class Billet
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(name: 'idBillet',type: 'integer')]
+    #[ORM\Column(name: 'idBillet', type: 'integer')]
     private ?int $idBillet = null;
 
     public function getIdBillet(): ?int
@@ -30,7 +30,7 @@ class Billet
         return $this;
     }
 
-    #[ORM\Column(name: 'proprietaire',type: 'string', nullable: false)]
+    #[ORM\Column(name: 'proprietaire', type: 'string', nullable: false)]
     #[Assert\NotBlank(message: 'Le nom du propriétaire est obligatoire.')]
     #[Assert\Length(min: 3, max: 50, minMessage: 'Le nom du propriétaire doit contenir au moins {{ limit }} caractères.')]
     private ?string $proprietaire = null;
@@ -46,7 +46,7 @@ class Billet
         return $this;
     }
 
-    #[ORM\Column(name: 'prix',type: 'integer', nullable: false)]
+    #[ORM\Column(name: 'prix', type: 'integer', nullable: false)]
     #[Assert\NotBlank(message: 'Le prix est obligatoire.')]
     #[Assert\Positive(message: 'Le prix doit être un entier positif.')]
     private ?int $prix = null;
@@ -62,7 +62,7 @@ class Billet
         return $this;
     }
 
-    #[ORM\Column(name: 'dateAchat',type: 'datetime', nullable: false)]
+    #[ORM\Column(name: 'dateAchat', type: 'datetime', nullable: false)]
     private ?\DateTimeInterface $dateAchat = null;
 
     public function getDateAchat(): ?\DateTimeInterface
@@ -140,5 +140,17 @@ class Billet
         $this->getPaiements()->removeElement($paiement);
         return $this;
     }
+    
+    private ?Reservation $reservation = null;
 
+    public function getReservation(): ?Reservation
+    {
+        return $this->reservation;
+    }
+
+    public function setReservation(?Reservation $reservation): self
+    {
+        $this->reservation = $reservation;
+        return $this;
+    }
 }

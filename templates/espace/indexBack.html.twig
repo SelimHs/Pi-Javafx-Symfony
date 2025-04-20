@@ -5,6 +5,7 @@
 {% block body %}
 <div class="app-main__outer">
   <div class="app-main__inner">
+    <!-- Titre -->
     <div class="app-page-title">
       <div class="page-title-wrapper">
         <div class="page-title-heading">
@@ -23,13 +24,35 @@
       </div>
     </div>
 
-    <div class="mb-4">
-      <input type="text" id="searchEspace" class="form-control" placeholder="Rechercher un espace...">
+    <!-- Filtres -->
+    <div class="row mb-4">
+      <div class="col-md-4">
+        <input type="text" id="searchEspace" class="form-control" placeholder="🔍 Rechercher un espace...">
+      </div>
+      <div class="col-md-4">
+        <select id="filterType" class="form-control">
+          <option value="">-- Tous les types --</option>
+          <option value="culturel">Culturel</option>
+          <option value="familial">Familial</option>
+          <option value="autre">Autre</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <select id="sortPrice" class="form-control">
+          <option value="">-- Tri par prix --</option>
+          <option value="asc">Prix croissant</option>
+          <option value="desc">Prix décroissant</option>
+        </select>
+      </div>
     </div>
 
+    <!-- Liste des cartes -->
     <div class="row" id="espaceCards">
       {% for espace in espaces %}
-        <div class="col-md-6 col-xl-4 espace-card">
+        <div class="col-md-6 col-xl-4 espace-card" 
+             data-nom="{{ espace.nomEspace|lower }}"
+             data-type="{{ espace.Type_espace|lower }}"
+             data-prix="{{ espace.prix }}">
           <div class="card mb-4 shadow-sm">
             <div class="position-relative">
               <img 
@@ -48,9 +71,9 @@
             <div class="card-body">
               <h5 class="card-title text-uppercase">{{ espace.nomEspace }}</h5>
               <p class="card-text text-muted mb-1">
-                <strong>Adresse :</strong> {{ espace.adresse }}<br>
-                <strong>Capacité :</strong> {{ espace.capacite }}<br>
-                <strong>Type :</strong> {{ espace.Type_espace }}
+                📍 <strong>Adresse :</strong> {{ espace.adresse }}<br>
+                👥 <strong>Capacité :</strong> {{ espace.capacite }}<br>
+                🏷️ <strong>Type :</strong> {{ espace.Type_espace }}
               </p>
               <p class="card-text">
                 <strong>Disponibilité :</strong> {{ espace.disponibilite }}
@@ -75,14 +98,45 @@
 
 <script>
   const searchInput = document.getElementById('searchEspace');
-  const cards = document.querySelectorAll('.espace-card');
+  const filterType = document.getElementById('filterType');
+  const sortPrice = document.getElementById('sortPrice');
+  const cardsContainer = document.getElementById('espaceCards');
 
-  searchInput.addEventListener('input', function () {
-    const query = this.value.toLowerCase();
+  function filterAndSortCards() {
+    const query = searchInput.value.toLowerCase();
+    const type = filterType.value.toLowerCase();
+    const sortOrder = sortPrice.value;
+
+    let cards = Array.from(cardsContainer.querySelectorAll('.espace-card'));
+
+    // Filtrage
     cards.forEach(card => {
-      const content = card.textContent.toLowerCase();
-      card.style.display = content.includes(query) ? '' : 'none';
+      const name = card.dataset.nom;
+      const cardType = card.dataset.type;
+
+      const matchSearch = name.includes(query);
+      const matchType = !type || cardType === type;
+
+      card.style.display = (matchSearch && matchType) ? '' : 'none';
     });
-  });
+
+    // Tri
+    cards = cards.filter(card => card.style.display !== 'none');
+
+    if (sortOrder) {
+      cards.sort((a, b) => {
+        const priceA = parseFloat(a.dataset.prix);
+        const priceB = parseFloat(b.dataset.prix);
+        return sortOrder === 'asc' ? priceA - priceB : priceB - priceA;
+      });
+
+      // Réinjection dans le DOM
+      cards.forEach(card => cardsContainer.appendChild(card));
+    }
+  }
+
+  searchInput.addEventListener('input', filterAndSortCards);
+  filterType.addEventListener('change', filterAndSortCards);
+  sortPrice.addEventListener('change', filterAndSortCards);
 </script>
 {% endblock %}

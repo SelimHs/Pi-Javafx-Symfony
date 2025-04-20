@@ -1,0 +1,67 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %}Détails Réservation{% endblock %}
+
+{% block body %}
+<div class="app-main__outer">
+  <div class="app-main__inner">
+
+    <div class="app-page-title">
+      <div class="page-title-wrapper">
+        <div class="page-title-heading">
+          <div class="page-title-icon">
+            <i class="pe-7s-notebook icon-gradient bg-amy-crisp"></i>
+          </div>
+          <div>
+            Détails de la Réservation
+            <div class="page-title-subheading">Informations détaillées sur la réservation sélectionnée.</div>
+          </div>
+        </div>
+        <div class="page-title-actions">
+          <a href="{{ path('app_reservation_index') }}" class="btn btn-outline-secondary">
+            <i class="pe-7s-left-arrow"></i> Retour à la liste
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-card mb-3 card">
+      <div class="card-body">
+        <h5 class="card-title">Informations Générales</h5>
+        <table class="table table-bordered table-striped">
+          <tbody>
+            <tr>
+              <th>ID Réservation</th>
+              <td>#{{ reservation.idReservation }}</td>
+            </tr>
+            <tr>
+              <th>Date de Réservation</th>
+              <td>{{ reservation.dateReservation ? reservation.dateReservation|date('Y-m-d H:i') : '—' }}</td>
+            </tr>
+            <tr>
+              <th>Statut</th>
+              <td>
+                {% if reservation.statut == 'confirmée' %}
+                  <span class="badge badge-success">Confirmée</span>
+                {% elseif reservation.statut == 'annulée' %}
+                  <span class="badge badge-danger">Annulée</span>
+                {% else %}
+                  <span class="badge badge-warning">{{ reservation.statut }}</span>
+                {% endif %}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="mt-4 d-flex justify-content-between">
+          <a href="{{ path('app_reservation_edit', {'idReservation': reservation.idReservation}) }}" class="btn btn-warning">
+            <i class="fas fa-edit"></i> Modifier
+          </a>
+          {{ include('reservation/_delete_form.html.twig') }}
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

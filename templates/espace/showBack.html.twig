@@ -119,7 +119,7 @@
                 <i class="pe-7s-pen"></i>
               </a>
               <form method="post"
-                    action="{{ path('app_organisateur_delete', { 'id_org': organisateur.id_org }) }}"
+                    action="{{ path('dashboard_organisateur_delete', { 'id_org': organisateur.id_org }) }}"
                     onsubmit="return confirm('Voulez-vous supprimer cet organisateur ?');">
                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ organisateur.id_org) }}">
                 <button class="btn btn-sm btn-outline-danger" title="Supprimer">
