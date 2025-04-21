@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+{% block title %}Réservations Cronofy{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+  <h2 class="mb-4 text-center">📅 Liste des réservations Cronofy</h2>
+  {% if reservations is not empty %}
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Résumé</th>
+          <th>Date début</th>
+          <th>Date fin</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for reservation in reservations %}
+          <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ reservation.summary }}</td>
+            <td>{{ reservation.start }}</td>
+            <td>{{ reservation.end }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="alert alert-warning text-center">Aucune réservation trouvée.</div>
+  {% endif %}
+  <div class="text-center mt-3">
+    <a href="{{ path('app_espace_index') }}" class="btn btn-secondary">⬅ Retour aux espaces</a>
+  </div>
+</div>
+{% endblock %}
