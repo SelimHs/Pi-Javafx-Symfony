@@ -59,66 +59,70 @@ final class BilletController extends AbstractController
     }
 
     #[Route('/reservation/{id}', name: 'app_billet_reservation', methods: ['GET', 'POST'])]
-    public function newFront(Request $request, Event $event, EntityManagerInterface $em, RemiseRepository $remiseRepo): Response
-    {
-        $billet = new Billet();
-        $reservation = new Reservation();
+public function newFront(Request $request, Event $event, EntityManagerInterface $em, RemiseRepository $remiseRepo): Response
+{
+    $billet = new Billet();
+    $reservation = new Reservation();
 
-        $form = $this->createForm(BilletType::class, $billet);
-        $form->handleRequest($request);
+    // ✅ Lier l'événement au billet AVANT de construire le formulaire
+    $billet->setEvent($event);
 
-        $eventPrix = $event->getPrix();
-        $prix = $eventPrix;
+    $form = $this->createForm(BilletType::class, $billet);
+    $form->handleRequest($request);
 
-        $reservation->setEvent($event);
-        $reservation->setDateReservation(new \DateTime());
-        $reservation->setStatut('confirmée');
+    $eventPrix = $event->getPrix();
+    $prix = $eventPrix;
 
-        // ✅ Utilisation correcte de $em
-        $user = $em->getRepository(\App\Entity\User::class)->find(1); // Assure-toi que l'ID 1 existe
-        $reservation->setUser($user);
+    $reservation->setEvent($event);
+    $reservation->setDateReservation(new \DateTime());
+    $reservation->setStatut('confirmée');
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            // 🔥 Ajustement du prix selon le type de billet
-            $type = $billet->getType();
-            if ($type === 'DUO') {
-                $prix += $eventPrix * 0.5;
-            } elseif ($type === 'VIP') {
-                $prix = $eventPrix * 3;
-            }
+    $user = $em->getRepository(\App\Entity\User::class)->find(1);
+    $reservation->setUser($user);
 
-            // ✅ Application du code promo
-            $codePromo = $form->get('codePromo')->getData();
-            if ($codePromo) {
-                $remise = $remiseRepo->findOneBy(['codePromo' => $codePromo]);
-                if ($remise) {
-                    $pourcentage = $remise->getPourcentageRemise(); // ✅ Utilise le vrai getter
-                    $reduction = $prix * ($pourcentage / 100);
-                    $prix -= $reduction;
-
-                    $reservation->setRemise($remise);
-                }
-            }
-
-            // ✅ Finalisation
-            $billet->setDateAchat(new \DateTime());
-            $billet->setEvent($event);
-            $billet->setPrix((int) $prix);
-            $billet->setReservation($reservation);
-
-            $em->persist($reservation);
-            $em->persist($billet);
-            $em->flush();
-
-            return $this->redirectToRoute('app_event_index');
+    if ($form->isSubmitted() && $form->isValid()) {
+        $type = $billet->getType();
+        if ($type === 'DUO') {
+            $prix += $eventPrix * 0.5;
+        } elseif ($type === 'VIP') {
+            $prix = $eventPrix * 3;
         }
 
-        return $this->render('billet/front_reservation.html.twig', [
-            'form' => $form,
-            'event' => $event,
-            'prixFinal' => $prix,
-        ]);
+        $codePromo = $form->get('codePromo')->getData();
+        if ($codePromo) {
+            $remise = $remiseRepo->findOneBy(['codePromo' => $codePromo]);
+            if ($remise) {
+                $pourcentage = $remise->getPourcentageRemise();
+                $prix -= $prix * ($pourcentage / 100);
+                $reservation->setRemise($remise);
+            }
+        }
+
+        $billet->setDateAchat(new \DateTime());
+        $billet->setPrix((int) $prix);
+        $billet->setReservation($reservation);
+
+        $em->persist($reservation);
+        $em->persist($billet);
+        $em->flush();
+
+        return $this->redirectToRoute('app_event_index');
     }
+
+    $remises = $remiseRepo->findAll();
+    $promoCodes = [];
+    foreach ($remises as $remise) {
+        $promoCodes[$remise->getCodePromo()] = $remise->getPourcentageRemise();
+    }
+
+    return $this->render('billet/front_reservation.html.twig', [
+        'form' => $form,
+        'event' => $event,
+        'prixFinal' => $prix,
+        'promoCodes' => $promoCodes,
+    ]);
+}
+
 
 
 

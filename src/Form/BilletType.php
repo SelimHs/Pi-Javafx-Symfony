@@ -18,9 +18,14 @@ class BilletType extends AbstractType
     {
         $builder
         ->add('prix', IntegerType::class, [
-            'label' => 'Prix',
-            'attr' => ['class' => 'form-control']
+            'attr' => [
+                'class' => 'form-control',
+                'readonly' => true,
+                'id' => 'prixField'  // used in JS
+            ],
+            'required' => true,
         ])
+        
         
         ->add('proprietaire', TextType::class, [
             'label' => 'Nom complet',
