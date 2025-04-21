@@ -12,9 +12,11 @@ parameters:
     espace_images_directory: '%kernel.project_dir%/public/assets/images'
 
 services:
+
     _defaults:
         autowire: true
         autoconfigure: true
+        
 
     App\:
         resource: '../src/'
