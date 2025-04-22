@@ -16,20 +16,21 @@
 
 <div class="section properties">
   <div class="container">
-    <!-- Barre de recherche -->
     <div class="row mb-4">
       <div class="col-lg-12 text-center">
         <input type="text" id="searchEspace" class="form-control w-50 mx-auto" placeholder="Rechercher un espace...">
       </div>
     </div>
+    <div class="row mb-4">
+      <div class="col-lg-12 text-center">
+        <a href="{{ path('app_reservations_liste') }}" class="btn btn-dark">📋 Voir les réservations</a>
+      </div>
+    </div>
 
-    <!-- Liste des espaces -->
     <div class="row properties-box" id="espaceGrid">
-      <!-- Carte Ajouter un Espace -->
       <div class="col-lg-4 col-md-6 align-self-center mb-30 properties-items espace-card">
         <a href="{{ path('app_espace_new') }}" class="text-decoration-none">
-          <div class="item position-relative shadow-sm text-center d-flex flex-column justify-content-center align-items-center add-espace-card"
-               style="height: 100%; min-height: 420px;">
+          <div class="item position-relative shadow-sm text-center d-flex flex-column justify-content-center align-items-center add-espace-card" style="height: 100%; min-height: 420px;">
             <i class="fa fa-plus-circle fa-3x text-white mb-3"></i>
             <h5 class="text-white">Créer un nouvel espace</h5>
             <p class="text-white">Cliquez ici pour ajouter un nouvel espace</p>
@@ -58,12 +59,10 @@
           </div>
         </div>
 
-        <!-- Modal Réservation -->
         <div class="modal fade" id="reservationModal{{ espace.idEspace }}" tabindex="-1" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
               <form class="reservation-form" data-espace-id="{{ espace.idEspace }}">
-
                 <div class="modal-header">
                   <h5 class="modal-title">Réserver {{ espace.nomEspace }}</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -109,12 +108,8 @@
   </div>
 </div>
 {% endblock %}
-
-
-
 {% block javascripts %}
 {{ parent() }}
-<script>
 <script>
 document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll('.reservation-form').forEach(form => {
@@ -125,15 +120,15 @@ document.addEventListener("DOMContentLoaded", function () {
       const formData = new FormData(this);
 
       const payload = {
-        nom_complet: formData.get('nom_complet')?.trim() || null,
-        date_debut: formData.get('date_debut') || null, // ✅ correction ici
-        date_fin: formData.get('date_fin') || null,     // ✅ correction ici
+        nom_complet: formData.get('nom_complet')?.trim() || '',
+        date_debut: formData.get('date_debut') || '',
+        date_fin: formData.get('date_fin') || '',
         id_espace: idEspace,
         id_organisateur: formData.get('id_organisateur') || ''
       };
 
       try {
-        const response = await fetch('/espace/api/reserver', {
+        const response = await fetch("{{ path('api_reserver_sheetbest') }}", {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
@@ -145,8 +140,7 @@ document.addEventListener("DOMContentLoaded", function () {
           alert("✅ Réservation enregistrée !");
           this.closest('.modal').querySelector('.btn-close').click();
         } else {
-          console.error(result);
-          alert("❌ Erreur : " + JSON.stringify(result));
+          alert("❌ Erreur : " + (result.error || 'Inconnue'));
         }
       } catch (error) {
         alert("❌ Erreur technique : " + error.message);
@@ -156,5 +150,4 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
-</script>
 {% endblock %}

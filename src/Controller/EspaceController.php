@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
+use App\Service\JsonBinService;
+use App\Service\SheetBestService;
 
 #[Route('/espace')]
 final class EspaceController extends AbstractController
@@ -224,53 +226,48 @@ final class EspaceController extends AbstractController
         return $this->redirectToRoute('dashboard_espace_index');
     }
 
-    #[Route('/api/reserver', name: 'api_reserver_sheet', methods: ['POST'])]
-    public function reserverSheet(Request $request, HttpClientInterface $client): JsonResponse
+    #[Route('/api/reserver', name: 'api_reserver_sheetbest', methods: ['POST'])]
+    public function reserverSheetbest(Request $request, HttpClientInterface $client): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
 
-        // 🔍 Sauvegarde les données reçues pour debug
-        if (!is_dir('var/log')) {
-            mkdir('var/log', 0777, true);
+        if (!$data) {
+            return new JsonResponse(['success' => false, 'error' => 'Données JSON invalides ou manquantes'], 400);
         }
-        file_put_contents('var/log/reservation_debug.json', json_encode($data, JSON_PRETTY_PRINT));
-
-        // 🔎 Liste des champs obligatoires
-        $requiredFields = ['nom_complet', 'date_debut', 'date_fin', 'id_espace'];
-        $missing = [];
-
-        foreach ($requiredFields as $field) {
-            if (empty($data[$field])) {
-                $missing[] = $field;
-            }
-        }
-
-        // 🔥 Retour si au moins un champ est manquant
-        if (!empty($missing)) {
-            return new JsonResponse([
-                'error' => 'Champs obligatoires manquants.',
-                'champs_manquants' => $missing,
-                'données_reçues' => $data
-            ], 400);
-        }
-
-        // ✅ URL vers ton Google Sheet
-        $url = 'https://api.sheetbest.com/sheets/4d538bcb-a52a-4dde-84e4-ddb7c9520d8e';
 
         try {
-            $client->request('POST', $url, [
-                'json' => $data
+            $response = $client->request('POST', 'https://api.sheetbest.com/sheets/4d538bcb-a52a-4dde-84e4-ddb7c9520d8e', [
+                'headers' => ['Content-Type' => 'application/json'],
+                'json' => $data,
             ]);
 
             return new JsonResponse([
                 'success' => true,
-                'message' => 'Réservation enregistrée dans le Google Sheet',
-                'envoyé' => $data
+                'message' => 'Réservation envoyée à Sheet.best',
+                'result' => $response->getStatusCode()
             ]);
         } catch (\Exception $e) {
             return new JsonResponse([
+                'success' => false,
                 'error' => $e->getMessage()
             ], 500);
         }
     }
+
+    #[Route('/reservations', name: 'app_reservations_liste', methods: ['GET'])]
+    public function listReservationsSheetbest(HttpClientInterface $client): Response
+    {
+        try {
+            $response = $client->request('GET', 'https://api.sheetbest.com/sheets/4d538bcb-a52a-4dde-84e4-ddb7c9520d8e');
+            $reservations = $response->toArray();
+
+            return $this->render('espace/reservations.html.twig', [
+                'reservations' => $reservations
+            ]);
+        } catch (\Exception $e) {
+            return new Response("Erreur lors du chargement des données : " . $e->getMessage(), 500);
+        }
+    }
+
+    
 }
