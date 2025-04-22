@@ -112,9 +112,33 @@
 {{ parent() }}
 <script>
 document.addEventListener("DOMContentLoaded", function () {
+  const today = new Date();
+  const minStartDate = new Date(today.setDate(today.getDate() + 7)).toISOString().slice(0, 16);
+
   document.querySelectorAll('.reservation-form').forEach(form => {
+    const dateDebutInput = form.querySelector('input[name="date_debut"]');
+    const dateFinInput = form.querySelector('input[name="date_fin"]');
+
+    // 🗓️ Empêcher date début avant aujourd’hui + 7 jours
+    if (dateDebutInput) dateDebutInput.min = minStartDate;
+
+    // 🛡️ Empêcher soumission si dates invalides
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
+
+      const dateDebut = new Date(dateDebutInput.value);
+      const dateFin = new Date(dateFinInput.value);
+
+      // ⛔ Validation côté client
+      if (dateDebut < new Date(minStartDate)) {
+        alert("❌ La date de début doit être au minimum 7 jours après aujourd’hui.");
+        return;
+      }
+
+      if (dateFin <= dateDebut) {
+        alert("❌ La date de fin doit être au moins 1 jour après la date de début.");
+        return;
+      }
 
       const idEspace = this.dataset.espaceId;
       const formData = new FormData(this);
@@ -138,16 +162,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (result.success) {
           alert("✅ Réservation enregistrée !");
-          this.closest('.modal').querySelector('.btn-close').click();
+          const closeBtn = this.closest('.modal').querySelector('.btn-close');
+          if (closeBtn) closeBtn.click();
         } else {
-          alert("❌ Erreur : " + (result.error || 'Inconnue'));
+          alert("❌ Erreur lors de l'enregistrement : " + JSON.stringify(result));
         }
       } catch (error) {
-        alert("❌ Erreur technique : " + error.message);
+        console.error("❌ Erreur technique :", error);
+        alert("❌ Une erreur est survenue : " + error.message);
       }
     });
   });
 });
+
 </script>
 
 {% endblock %}

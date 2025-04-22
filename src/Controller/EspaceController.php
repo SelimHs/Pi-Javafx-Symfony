@@ -227,32 +227,49 @@ final class EspaceController extends AbstractController
     }
 
     #[Route('/api/reserver', name: 'api_reserver_sheetbest', methods: ['POST'])]
-    public function reserverSheetbest(Request $request, HttpClientInterface $client): JsonResponse
+    public function reserverViaSheet(Request $request, HttpClientInterface $client): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
+        $json = $request->getContent();
+        $data = json_decode($json, true);
 
         if (!$data) {
-            return new JsonResponse(['success' => false, 'error' => 'Données JSON invalides ou manquantes'], 400);
+            return new JsonResponse(['success' => false, 'error' => 'Données manquantes'], 400);
         }
+
+        $url = 'https://api.sheetbest.com/sheets/4d538bcb-a52a-4dde-84e4-ddb7c9520d8e';
 
         try {
-            $response = $client->request('POST', 'https://api.sheetbest.com/sheets/4d538bcb-a52a-4dde-84e4-ddb7c9520d8e', [
-                'headers' => ['Content-Type' => 'application/json'],
-                'json' => $data,
+            // 🔍 Vérifier les conflits existants
+            $response = $client->request('GET', $url);
+            $reservations = $response->toArray();
+
+            foreach ($reservations as $res) {
+                if (
+                    $res['id_espace'] == $data['id_espace'] &&
+                    (
+                        ($data['date_debut'] >= $res['date_debut'] && $data['date_debut'] < $res['date_fin']) ||
+                        ($data['date_fin'] > $res['date_debut'] && $data['date_fin'] <= $res['date_fin']) ||
+                        ($data['date_debut'] <= $res['date_debut'] && $data['date_fin'] >= $res['date_fin'])
+                    )
+                ) {
+                    return new JsonResponse([
+                        'success' => false,
+                        'error' => 'Conflit : cet espace est déjà réservé sur cette période.'
+                    ], 409);
+                }
+            }
+
+            // ✅ Si pas de conflit : enregistrer la réservation
+            $client->request('POST', $url, [
+                'json' => $data
             ]);
 
-            return new JsonResponse([
-                'success' => true,
-                'message' => 'Réservation envoyée à Sheet.best',
-                'result' => $response->getStatusCode()
-            ]);
+            return new JsonResponse(['success' => true, 'message' => 'Réservation enregistrée']);
         } catch (\Exception $e) {
-            return new JsonResponse([
-                'success' => false,
-                'error' => $e->getMessage()
-            ], 500);
+            return new JsonResponse(['success' => false, 'error' => 'Erreur API', 'message' => $e->getMessage()], 500);
         }
     }
+
 
     #[Route('/reservations', name: 'app_reservations_liste', methods: ['GET'])]
     public function listReservationsSheetbest(HttpClientInterface $client): Response
@@ -268,6 +285,4 @@ final class EspaceController extends AbstractController
             return new Response("Erreur lors du chargement des données : " . $e->getMessage(), 500);
         }
     }
-
-    
 }
