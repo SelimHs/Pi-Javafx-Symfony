@@ -21,11 +21,44 @@
         <input type="text" id="searchEspace" class="form-control w-50 mx-auto" placeholder="Rechercher un espace...">
       </div>
     </div>
-    <div class="row mb-4">
-      <div class="col-lg-12 text-center">
-        <a href="{{ path('app_reservations_liste') }}" class="btn btn-dark">📋 Voir les réservations</a>
+    <!-- Bouton pour afficher les réservations -->
+<div class="row mb-4">
+  <div class="col-lg-12 text-center">
+    <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#reservationListModal">📋 Liste des réservations</button>
+  </div>
+</div>
+
+<!-- Modale affichage réservations -->
+<div class="modal fade" id="reservationListModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Liste des Réservations</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div id="reservationLoader" class="text-center">Chargement...</div>
+        <div id="reservationContent" style="display: none;">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Nom</th>
+                <th>Date Début</th>
+                <th>Date Fin</th>
+                <th>Espace</th>
+                <th>Organisateur</th>
+                <th>Prix</th>
+              </tr>
+            </thead>
+            <tbody id="reservationTableBody"></tbody>
+          </table>
+        </div>
       </div>
     </div>
+  </div>
+</div>
+
+
 
     <div class="row properties-box" id="espaceGrid">
       <div class="col-lg-4 col-md-6 align-self-center mb-30 properties-items espace-card">
@@ -180,5 +213,58 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 });
+
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const modal = document.getElementById('reservationListModal');
+  const loader = document.getElementById('reservationLoader');
+  const content = document.getElementById('reservationContent');
+  const tbody = document.getElementById('reservationTableBody');
+
+  modal.addEventListener('show.bs.modal', async () => {
+    loader.style.display = 'block';
+    content.style.display = 'none';
+    tbody.innerHTML = '';
+
+    try {
+      const response = await fetch("{{ path('app_reservations_liste') }}");
+      const data = await response.json();
+
+      if (Array.isArray(data)) {
+        data.forEach(res => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${res.nom_complet ?? '-'}</td>
+            <td>${formatDate(res.date_debut)}</td>
+            <td>${formatDate(res.date_fin)}</td>
+            <td>${res.id_espace ?? '-'}</td>
+            <td>${res.id_organisateur || '—'}</td>
+            <td>${res.prix ?? '0'} Dt</td>
+          `;
+          tbody.appendChild(row);
+        });
+
+        loader.style.display = 'none';
+        content.style.display = 'block';
+      } else {
+        loader.innerHTML = '❌ Format de données invalide.';
+      }
+    } catch (e) {
+      loader.innerHTML = '❌ Erreur lors du chargement des données.';
+      console.error(e);
+    }
+  });
+
+  function formatDate(excelDate) {
+    if (!excelDate || isNaN(excelDate)) return '-';
+    // Convertit un timestamp Excel vers un format lisible
+    const baseDate = new Date(Date.UTC(1899, 11, 30));
+    baseDate.setDate(baseDate.getDate() + parseInt(excelDate));
+    return baseDate.toISOString().split('T')[0];
+  }
+});
+
+</script>
+
 {% endblock %}

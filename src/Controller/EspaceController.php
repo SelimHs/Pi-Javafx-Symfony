@@ -17,6 +17,9 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 use App\Service\JsonBinService;
 use App\Service\SheetBestService;
 
+
+
+
 #[Route('/espace')]
 final class EspaceController extends AbstractController
 {
@@ -272,17 +275,16 @@ final class EspaceController extends AbstractController
 
 
     #[Route('/reservations', name: 'app_reservations_liste', methods: ['GET'])]
-    public function listReservationsSheetbest(HttpClientInterface $client): Response
+    public function listReservations(HttpClientInterface $client): JsonResponse
     {
         try {
-            $response = $client->request('GET', 'https://api.sheetbest.com/sheets/4d538bcb-a52a-4dde-84e4-ddb7c9520d8e');
+            $url = 'https://api.sheetbest.com/sheets/4d538bcb-a52a-4dde-84e4-ddb7c9520d8e';
+            $response = $client->request('GET', $url);
             $reservations = $response->toArray();
 
-            return $this->render('espace/reservations.html.twig', [
-                'reservations' => $reservations
-            ]);
+            return new JsonResponse($reservations);
         } catch (\Exception $e) {
-            return new Response("Erreur lors du chargement des données : " . $e->getMessage(), 500);
+            return new JsonResponse(['error' => 'Erreur lors de la récupération des réservations.'], 500);
         }
     }
 }
