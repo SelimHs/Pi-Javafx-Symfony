@@ -51,24 +51,15 @@
               <li>Adresse : <span>{{ espace.adresse }}</span></li>
               <li>Capacité : <span>{{ espace.capacite }}</span></li>
               <li>Disponibilité : <span class="badge {{ espace.disponibilite == 'Disponible' ? 'bg-success' : 'bg-danger' }}">{{ espace.disponibilite }}</span></li>
-
             </ul>
-            <div class="alert alert-secondary text-center mt-2 p-2 small">
-  <i class="bi bi-info-circle"></i> Les réservations sont ouvertes uniquement à partir du <strong>{{ "+7 days"|date("d/m/Y") }}</strong>.  
-  La durée minimale est de 1 jour.
-</div>
-
             <div class="main-button d-flex flex-column gap-2 align-items-center mt-2">
               <a href="{{ path('app_espace_show', {'idEspace': espace.idEspace}) }}" class="btn btn-outline-primary w-75">🔍 Détails</a>
-{% if espace.disponibilite == 'Disponible' %}
-    <button class="btn btn-outline-success w-75" data-bs-toggle="modal" data-bs-target="#reservationModal{{ espace.idEspace }}">
-      📅 Réserver
-    </button>
-  {% else %}
-    <button class="btn btn-outline-secondary w-75" disabled>
-      ⛔ Indisponible
-    </button>
-  {% endif %}            </div>
+              {% if espace.disponibilite == 'Disponible' %}
+                <button class="btn btn-outline-success w-75" data-bs-toggle="modal" data-bs-target="#reservationModal{{ espace.idEspace }}">📅 Réserver</button>
+              {% else %}
+                <button class="btn btn-outline-secondary w-75" disabled>⛔ Indisponible</button>
+              {% endif %}
+            </div>
           </div>
         </div>
 
@@ -87,16 +78,17 @@
                   </div>
                   <div class="mb-3">
                     <label>Date début</label>
-                    <input type="datetime-local" name="date_debut" class="form-control" required>
+                    <input type="date" name="date_debut" class="form-control" required>
                   </div>
                   <div class="mb-3">
                     <label>Date fin</label>
-                    <input type="datetime-local" name="date_fin" class="form-control" required>
+                    <input type="date" name="date_fin" class="form-control" required>
                   </div>
                   {% if espace.organisateurs is not empty %}
                   <div class="mb-3">
                     <label>Organisateur</label>
                     <select name="id_organisateur" class="form-select">
+                      <option value="">-- Aucun organisateur --</option>
                       {% for org in espace.organisateurs %}
                         <option value="{{ org.id_org }}">{{ org.nom_org }} {{ org.prenom_org }}</option>
                       {% endfor %}
@@ -121,34 +113,25 @@
   </div>
 </div>
 {% endblock %}
-
-
-
-
 {% block javascripts %}
 {{ parent() }}
 <script>
 document.addEventListener("DOMContentLoaded", function () {
   const today = new Date();
-  const minStartDate = new Date(today.setDate(today.getDate() + 7)).toISOString().slice(0, 16);
+  const minStartDate = new Date(today.setDate(today.getDate() + 7)).toISOString().split('T')[0];
 
   document.querySelectorAll('.reservation-form').forEach(form => {
     const dateDebutInput = form.querySelector('input[name="date_debut"]');
     const dateFinInput = form.querySelector('input[name="date_fin"]');
 
-    // ⛔ Empêcher date de début avant +7 jours
     if (dateDebutInput) dateDebutInput.min = minStartDate;
 
-    // 🔄 Met à jour le min de la date fin quand on choisit la date début
-    if (dateDebutInput && dateFinInput) {
-      dateDebutInput.addEventListener('change', () => {
-        const selectedStart = new Date(dateDebutInput.value);
-        const minEnd = new Date(selectedStart.getTime() + 24 * 60 * 60 * 1000); // +1 jour
-        dateFinInput.min = minEnd.toISOString().slice(0, 16);
-      });
-    }
+    dateDebutInput?.addEventListener('change', () => {
+      const start = new Date(dateDebutInput.value);
+      const minEnd = new Date(start.getTime() + 24 * 60 * 60 * 1000); // +1 jour
+      dateFinInput.min = minEnd.toISOString().split('T')[0];
+    });
 
-    // 🧪 Validation finale avant soumission
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
 
@@ -156,23 +139,21 @@ document.addEventListener("DOMContentLoaded", function () {
       const dateFin = new Date(dateFinInput.value);
 
       if (dateDebut < new Date(minStartDate)) {
-        alert("❌ La date de début doit être au minimum 7 jours après aujourd’hui.");
+        alert("❌ La réservation ne peut commencer qu’à partir de 7 jours après aujourd’hui.");
         return;
       }
 
-      if (dateFin <= new Date(dateDebut.getTime() + 24 * 60 * 60 * 1000 - 1)) {
+      if (dateFin <= dateDebut) {
         alert("❌ La date de fin doit être au moins 1 jour après la date de début.");
         return;
       }
 
-      const idEspace = this.dataset.espaceId;
       const formData = new FormData(this);
-
       const payload = {
-        nom_complet: formData.get('nom_complet')?.trim() || '',
-        date_debut: formData.get('date_debut') || '',
-        date_fin: formData.get('date_fin') || '',
-        id_espace: idEspace,
+        nom_complet: formData.get('nom_complet')?.trim(),
+        date_debut: formData.get('date_debut'),
+        date_fin: formData.get('date_fin'),
+        id_espace: this.dataset.espaceId,
         id_organisateur: formData.get('id_organisateur') || ''
       };
 
@@ -188,17 +169,16 @@ document.addEventListener("DOMContentLoaded", function () {
         if (result.success) {
           alert("✅ Réservation enregistrée !");
           const closeBtn = this.closest('.modal').querySelector('.btn-close');
-          if (closeBtn) closeBtn.click();
+          closeBtn?.click();
         } else {
-          alert("❌ Erreur lors de l'enregistrement : " + (result.error || "Erreur inconnue"));
+          alert("❌ Erreur : " + (result.error || "Erreur inconnue."));
         }
       } catch (error) {
-        console.error("❌ Erreur technique :", error);
-        alert("❌ Une erreur est survenue : " + error.message);
+        alert("❌ Erreur technique : " + error.message);
+        console.error(error);
       }
     });
   });
 });
 </script>
 {% endblock %}
-
