@@ -1,19 +1,20 @@
 <?php
-// src/Service/OpenAiService.php
-// src/Service/AiPredictiveService.php
 namespace App\Service;
 
 use App\Entity\Produit;
+use App\Repository\EspaceRepository;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class AiPredictiveService
 {
-    private const API_KEY = 'c5EPrfyjkbxQgLU17d3PmALhiDehJPMDBmvq83Rm';
     private HttpClientInterface $client;
+    private EspaceRepository $espaceRepository;
+    private const API_KEY = 'c5EPrfyjkbxQgLU17d3PmALhiDehJPMDBmvq83Rm';
 
-    public function __construct(HttpClientInterface $client)
+    public function __construct(HttpClientInterface $client, EspaceRepository $espaceRepository)
     {
         $this->client = $client;
+        $this->espaceRepository = $espaceRepository;
     }
 
     public function generateIdea(array $produits): string
@@ -22,19 +23,48 @@ class AiPredictiveService
             return "⚠️ Aucun produit sélectionné.";
         }
 
-        $prompt = "Je suis un expert en organisation d'événements. En te basant sur ces produits : ";
+        $espaces = $this->espaceRepository->findAll();
+        $espace = $espaces[array_rand($espaces)];
+
+        $prompt = <<<PROMPT
+Vous êtes un expert reconnu en organisation d'événements innovants.
+
+Voici les produits sélectionnés :
+PROMPT;
+
         foreach ($produits as $produit) {
             $prompt .= sprintf(
-                "Nom: %s, Catégorie: %s, Description: %s, Prix: %d DT, Quantité: %d, Fournisseur: %s | ",
+                "\n- Nom : %s\n  Catégorie : %s\n  Description : %s",
                 $produit->getNomProduit(),
                 $produit->getCategorie(),
-                $produit->getDescription(),
-                $produit->getPrixProduit(),
-                $produit->getQuantite(),
-                $produit->getFournisseur()->getNomFournisseur()
+                $produit->getDescription()
             );
         }
-        $prompt .= "Suggère-moi un événement que je pourrais organiser.";
+
+        $prompt .= <<<CONTEXT
+
+
+À partir de ces produits, proposez une **idée d'événement originale**, bien pensée, utile et engageante.
+
+Voici un espace de notre catalogue que vous pouvez recommander pour accueillir cet événement :
+
+- **Nom de l'espace** : **{$espace->getNomEspace()}**
+- **Adresse** : **{$espace->getAdresse()}**
+- **Type** : **{$espace->getTypeEspace()}**
+- **Capacité** : **{$espace->getCapacite()} personnes**
+
+Veuillez intégrer poliment une proposition de lieu, par exemple :
+"Je vous recommande vivement d'organiser cet événement à **{$espace->getNomEspace()}**, un espace parfaitement adapté à ce type de manifestation."
+
+Merci de structurer votre réponse comme suit :
+- 🎯 **Titre de l’événement**
+- 📝 **Concept**
+- 👥 **Public cible**
+- 🧩 **Utilisation des produits**
+- 📍 **Proposition d’espace**
+
+Utilisez un **langage naturel et professionnel** comme si vous étiez un **vrai conseiller événementiel**, et non une IA.
+CONTEXT;
 
         try {
             $response = $this->client->request('POST', 'https://api.cohere.ai/v1/chat', [
