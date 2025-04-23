@@ -15,7 +15,7 @@ class Remise
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(name: 'idRemise', type: 'integer')]
     private ?int $idRemise = null;
 
     public function getIdRemise(): ?int
@@ -29,7 +29,7 @@ class Remise
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(name: 'codePromo', type: 'string', nullable: false)]
     private ?string $codePromo = null;
 
     public function getCodePromo(): ?string
@@ -57,7 +57,7 @@ class Remise
         return $this;
     }
 
-    #[ORM\Column(type: 'decimal', nullable: false)]
+    #[ORM\Column(name: 'pourcentageRemise', type: 'decimal', nullable: false)]
     private ?float $pourcentageRemise = null;
 
     public function getPourcentageRemise(): ?float
@@ -71,7 +71,7 @@ class Remise
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(name: 'dateExpiration', type: 'string', nullable: false)]
     private ?string $dateExpiration = null;
 
     public function getDateExpiration(): ?string
@@ -85,19 +85,6 @@ class Remise
         return $this;
     }
 
-    #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $idReservation = null;
-
-    public function getIdReservation(): ?int
-    {
-        return $this->idReservation;
-    }
-
-    public function setIdReservation(int $idReservation): self
-    {
-        $this->idReservation = $idReservation;
-        return $this;
-    }
 
     #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'remise')]
     private Collection $reservations;
@@ -131,5 +118,4 @@ class Remise
         $this->getReservations()->removeElement($reservation);
         return $this;
     }
-
 }

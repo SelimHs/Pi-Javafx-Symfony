@@ -1,0 +1,61 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %}Nouvelle Réservation{% endblock %}
+
+{% block body %}
+<div class="app-main__outer">
+  <div class="app-main__inner">
+    <div class="app-page-title">
+      <div class="page-title-wrapper">
+        <div class="page-title-heading">
+          <div class="page-title-icon">
+            <i class="pe-7s-add-user icon-gradient bg-happy-itmeo"></i>
+          </div>
+          <div>Nouvelle Réservation
+            <div class="page-title-subheading">Créer une réservation pour un utilisateur et un évènement.</div>
+          </div>
+        </div>
+        <div class="page-title-actions">
+          <a href="{{ path('app_reservation_index') }}" class="btn btn-outline-secondary">
+            <i class="pe-7s-left-arrow"></i> Retour à la liste
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="card shadow-lg border-0 rounded-4">
+          <div class="card-body p-5">
+            <h4 class="mb-4 text-center">Créer une Réservation</h4>
+
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+            <div class="mb-3">
+              {{ form_label(form.dateReservation) }}
+              {{ form_widget(form.dateReservation, {'attr': {'class': 'form-control'}}) }}
+              <div class="text-danger mt-1" style="font-size: 0.95rem;">
+                {{ form_errors(form.dateReservation) }}
+              </div>
+            </div>
+
+            <div class="mb-3">
+              {{ form_label(form.user) }}
+              {{ form_widget(form.user, {'attr': {'class': 'form-select'}}) }}
+              <div class="text-danger mt-1" style="font-size: 0.95rem;">
+                {{ form_errors(form.user) }}
+              </div>
+            </div>
+
+            <div class="text-center">
+              <button class="btn btn-primary px-4">Enregistrer</button>
+            </div>
+
+            {{ form_end(form) }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

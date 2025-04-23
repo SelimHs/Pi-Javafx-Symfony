@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 use App\Repository\FournisseurRepository;
 
@@ -14,7 +15,7 @@ class Fournisseur
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(name :'idFournisseur',type: 'integer')]
     private ?int $idFournisseur = null;
 
     public function getIdFournisseur(): ?int
@@ -28,7 +29,12 @@ class Fournisseur
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(name: 'nomFournisseur',type: 'string', nullable: false)]
+    #[Assert\NotBlank(message: "Le nom du fournisseur ne peut pas être vide.")]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: "Le nom du fournisseur ne peut pas dépasser {{ limit }} caractères."
+    )]
     private ?string $nomFournisseur = null;
 
     public function getNomFournisseur(): ?string
@@ -43,6 +49,14 @@ class Fournisseur
     }
 
     #[ORM\Column(type: 'string', nullable: false)]
+    #[Assert\NotBlank(message: "La description ne peut pas être vide.")]
+    #[Assert\Length(
+        min: 10,
+        max: 1000,
+        minMessage: "La description doit contenir au moins {{ limit }} caractères.",
+        maxMessage: "La description ne peut pas dépasser {{ limit }} caractères."
+    )]
+
     private ?string $description = null;
 
     public function getDescription(): ?string
@@ -57,6 +71,11 @@ class Fournisseur
     }
 
     #[ORM\Column(type: 'string', nullable: false)]
+    #[Assert\NotBlank(message: "Le type ne peut pas être vide.")]
+    #[Assert\Choice(
+        choices: ['grossiste', 'fabricant', 'distributeur', 'autre'],
+        message: "Le type doit être l'un des suivants : {{ choices }}."
+    )]
     private ?string $type = null;
 
     public function getType(): ?string
@@ -71,6 +90,12 @@ class Fournisseur
     }
 
     #[ORM\Column(type: 'string', nullable: false)]
+    #[Assert\NotBlank(message: "Le numéro de téléphone ne peut pas être vide.")]
+    #[Assert\Regex(
+        pattern: "/^[0-9]{8}$/",
+        message: "Le numéro de téléphone doit contenir 8*********."
+    )]
+
     private ?string $telephone = null;
 
     public function getTelephone(): ?string
@@ -84,7 +109,7 @@ class Fournisseur
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(name: 'imagePath',type: 'string', nullable: false)]
     private ?string $imagePath = null;
 
     public function getImagePath(): ?string

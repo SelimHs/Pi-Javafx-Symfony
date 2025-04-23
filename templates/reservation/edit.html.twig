@@ -1,0 +1,45 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %}Modifier Réservation{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-5">
+          <h2 class="mb-4 text-center">Modifier la Réservation</h2>
+
+          {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+          <div class="mb-3">
+            {{ form_label(form.dateReservation) }}
+            {{ form_widget(form.dateReservation, {'attr': {'class': 'form-control'}}) }}
+            <div class="text-danger small mt-1">{{ form_errors(form.dateReservation) }}</div>
+          </div>
+
+          <div class="mb-3">
+            {{ form_label(form.user) }}
+            {{ form_widget(form.user, {'attr': {'class': 'form-select'}}) }}
+            <div class="text-danger small mt-1">{{ form_errors(form.user) }}</div>
+          </div>
+
+          <div class="text-center">
+            <button class="btn btn-warning px-4">{{ button_label|default('Mettre à jour') }}</button>
+          </div>
+
+          {{ form_end(form) }}
+
+          <div class="text-center mt-3">
+            <a href="{{ path('app_reservation_index') }}" class="btn btn-outline-secondary">← Retour à la liste</a>
+          </div>
+
+          <div class="text-center mt-3">
+            {{ include('reservation/_delete_form.html.twig') }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

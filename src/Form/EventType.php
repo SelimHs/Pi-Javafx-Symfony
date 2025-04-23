@@ -63,11 +63,8 @@ class EventType extends AbstractType
         ->add('image', FileType::class, [
             'label' => 'Upload Image',
             'mapped' => false,
-            'required' => true,
             'constraints' => [
-                new Assert\NotBlank([
-                    'message' => 'Veuillez sélectionner une image.',
-                ]),
+                
                 new Assert\File([
                     'maxSize' => '3M',
                     'mimeTypes' => [

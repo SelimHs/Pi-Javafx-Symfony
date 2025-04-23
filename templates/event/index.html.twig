@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Events{% endblock %}
+{% block title %}Évènements{% endblock %}
 
 {% block body %}
 <div class="page-heading header-text">
@@ -8,7 +8,7 @@
     <div class="row">
       <div class="col-lg-12">
         <span class="breadcrumb"><a href="{{ path('app_home') }}">Accueil</a> / Évènements</span>
-        <h3>Évènements</h3>
+        <h3>Nos Évènements</h3>
       </div>
     </div>
   </div>
@@ -17,46 +17,50 @@
 <div class="section properties">
   <div class="container">
 
-    <!-- Bouton Création -->
+    <!-- Barre de recherche -->
     <div class="row mb-4">
       <div class="col-lg-12 text-center">
-        <a href="{{ path('app_event_new') }}" class="main-button custom-message-btn">
-          <i></i> + Créer un nouvel évènement
-        </a>
+        <input type="text" id="eventSearch" class="form-control w-50 mx-auto" placeholder="🔍 Rechercher un évènement...">
       </div>
     </div>
 
-    <div class="row properties-box">
+    <!-- Grille des évènements -->
+    <div class="row properties-box" id="eventGrid">
+      <!-- Carte d'ajout stylée -->
+      <div class="col-lg-4 col-md-6 align-self-center mb-30 event-card">
+        <a href="{{ path('app_event_new') }}" class="text-decoration-none">
+          <div class="item add-event-card text-center shadow-lg">
+            <h5 class="text-white"><i class="fa fa-plus fa-3x"></i></h5>
+            <p class="text-white mt-2" style="font-size: 1.1rem; font-weight: bold;">Ajouter un évènement</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- Boucle des événements -->
       {% for event in events %}
-        <div class="col-lg-4 col-md-6 align-self-center mb-30 properties-items">
+        <div class="col-lg-4 col-md-6 align-self-center mb-30 event-card">
           <div class="item position-relative">
             <a href="{{ path('app_event_show', {'idEvent': event.idEvent}) }}">
               <img 
-              src="{{ asset('uploads/' ~ (event.image is not empty ? event.image : 'exemple.jpg')) }}" 
-              class="card-img-top" 
-              alt="{{ event.nomEvent }}"
-            >
-            {% if event.image is empty %}
-            <span class="badge badge-secondary position-absolute"
-                  style="top: 10px; left: 10px; background-color: rgba(0,0,0,0.7); font-size: 0.75rem;">
-              Placeholder
-            </span>
-            {% endif %}
+                src="{{ asset('uploads/' ~ (event.image ? event.image : 'exemple.jpg')) }}" 
+                alt="{{ event.nomEvent }}"
+                class="img-fluid"
+              >
+              {% if not event.image %}
+                <span class="badge badge-dark position-absolute" style="top: 10px; left: 10px;">Aucune image</span>
+              {% endif %}
             </a>
             <span class="category">{{ event.nomEspace }}</span>
             <h6>{{ event.prix }} Dt</h6>
-            <h4>
-              <a href="{{ path('app_event_show', {'idEvent': event.idEvent}) }}">
-                {{ event.nomEvent }}
-              </a>
-            </h4>
+            <h4><a href="{{ path('app_event_show', {'idEvent': event.idEvent}) }}">{{ event.nomEvent }}</a></h4>
             <ul>
-              <li>Details: <span>{{ event.details|length > 40 ? event.details[:40] ~ '...' : event.details }}</span></li>
-              <li>Date: <span>{{ event.date }}</span></li>
-              <li>Visitors: <span>{{ event.nbrVisiteurs }}</span></li>
+              <li>Date : <strong>{{ event.date }}</strong></li>
+              <li>Visiteurs : <span>{{ event.nbrVisiteurs }}</span></li>
+              <li>Détails : <span>{{ event.details|length > 40 ? event.details[:40] ~ '...' : event.details }}</span></li>
             </ul>
-            <div class="main-button">
-              <a href="{{ path('app_event_show', {'idEvent': event.idEvent}) }}">Détails</a>
+            <div class="main-button d-flex justify-content-between gap-2">
+              <a href="{{ path('app_event_show', {'idEvent': event.idEvent}) }}" class="btn btn-outline-primary w-50">Voir Détails</a>
+              <a href="{{ path('app_billet_reservation', {'id': event.idEvent}) }}" class="btn btn-success w-50">Réserver</a>
             </div>
           </div>
         </div>
@@ -68,4 +72,72 @@
     </div>
   </div>
 </div>
+
+<!-- JavaScript Filtrage -->
+<script>
+  const searchInput = document.getElementById('eventSearch');
+  const cards = document.querySelectorAll('.event-card');
+
+  searchInput.addEventListener('input', function () {
+    const query = this.value.toLowerCase();
+    cards.forEach(card => {
+      const content = card.textContent.toLowerCase();
+      card.style.display = content.includes(query) ? '' : 'none';
+    });
+  });
+</script>
+
+<!-- CSS Bonus -->
+<style>
+  .add-event-card {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    border-radius: 15px;
+    padding: 50px 20px;
+    color: white;
+    min-height: 370px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .add-event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  }
+
+  .item img {
+    height: 220px;
+    object-fit: cover;
+    width: 100%;
+    border-radius: 8px;
+  }
+
+  .category {
+    display: inline-block;
+    background: #f0f0f0;
+    padding: 5px 10px;
+    font-weight: 600;
+    margin-top: 10px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+  }
+
+  .main-button a {
+    font-weight: 600;
+    border-radius: 30px;
+    padding: 8px 16px;
+    text-align: center;
+    transition: background 0.3s ease;
+  }
+
+  .main-button a.btn-outline-primary:hover {
+    background-color: #007bff;
+    color: white;
+  }
+
+  .main-button a.btn-success:hover {
+    background-color: #218838;
+  }
+</style>
 {% endblock %}
