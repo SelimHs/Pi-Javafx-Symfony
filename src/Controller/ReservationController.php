@@ -7,9 +7,12 @@ use App\Form\ReservationType;
 use App\Repository\ReservationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpClient\HttpClient;
+
 
 #[Route('/reservation')]
 final class ReservationController extends AbstractController
@@ -43,6 +46,58 @@ public function new(Request $request, EntityManagerInterface $entityManager): Re
 }
 
 
+#[Route('/export/reservations', name: 'export_reservations_excel')]
+public function exportReservations(ReservationRepository $repo): Response
+{
+    $reservations = $repo->findAll();
+
+    // 1. Préparer les données
+    $rows = [];
+    foreach ($reservations as $reservation) {
+        $rows[] = [
+            'utilisateur' => $reservation->getUser()?->getNom() ?? '—',
+            'date' => $reservation->getDateReservation() instanceof \DateTimeInterface
+                ? $reservation->getDateReservation()->format('Y-m-d H:i')
+                : $reservation->getDateReservation(),
+            'statut' => $reservation->getStatut(),
+        ];
+    }
+
+    $body = [
+        'filename' => 'reservations',
+        'rows' => $rows,
+        'order' => [
+            'id' => 0,
+            'date' => 1,
+            'statut' => 2,
+        ],
+    ];
+
+    // 2. Appeler l'API
+    $client = HttpClient::create();
+    $response = $client->request('POST', 'https://json-to-excel.p.rapidapi.com/', [
+        'headers' => [
+            'Content-Type' => 'application/json',
+            'x-rapidapi-host' => 'json-to-excel.p.rapidapi.com',
+            'x-rapidapi-key' => '709b7e345fmshd343de8ed8f0f77p14485ajsne28e51f687b5',
+        ],
+        'body' => json_encode($body),
+    ]);
+
+    // 3. Vérification du succès
+    if ($response->getStatusCode() !== 200) {
+        return new Response("❌ Erreur API (code {$response->getStatusCode()})", 500);
+    }
+
+    $result = $response->toArray(false);
+
+    if (!isset($result['url'])) {
+        return new Response('❌ Fichier non reçu depuis l’API.', 500);
+    }
+
+    // ✅ Redirection directe vers l’URL du fichier généré (téléchargement automatique)
+    return new RedirectResponse($result['url']);
+}
 
     #[Route('/{idReservation}', name: 'app_reservation_show', methods: ['GET'])]
     public function show(Reservation $reservation): Response
