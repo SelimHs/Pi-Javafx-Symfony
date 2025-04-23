@@ -11,6 +11,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+use App\Service\OpenAiService;
+
+
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 #[Route('/produit')]
 final class ProduitController extends AbstractController
 {
@@ -134,5 +139,42 @@ final class ProduitController extends AbstractController
             : 'app_produit_index';
 
         return $this->redirectToRoute($redirectRoute);
+    }
+    #[Route('/generate-event-idea', name: 'produit_generate_event_idea', methods: ['GET'])]
+    public function generateEventIdea(
+        Request $request,
+        ProduitRepository $produitRepository,
+        OpenAiService $openAiService
+    ): JsonResponse {
+        try {
+            $idsParam = $request->query->get('ids', '');
+            $ids = array_filter(explode(',', $idsParam));
+
+            if (empty($ids)) {
+                return new JsonResponse(['idea' => "❗ Aucun ID de produit fourni."], 400);
+            }
+
+            // 🔍 Récupération des produits
+            $produits = $produitRepository->findBy(['idProduit' => $ids]);
+
+            if (empty($produits)) {
+                return new JsonResponse(['idea' => "❗ Aucun produit trouvé."], 404);
+            }
+
+            // 🧠 Générer l'idée via OpenAI
+            $idea = $openAiService->generateEventIdea($produits);
+
+            // ✅ Sécurité : forcer string
+            if (!is_string($idea)) {
+                $idea = json_encode($idea);
+            }
+
+            return new JsonResponse(['idea' => $idea]);
+        } catch (\Throwable $e) {
+            // 🛡️ Sécurité totale : toujours retourner un JSON
+            return new JsonResponse([
+                'idea' => "❌ Erreur technique : " . $e->getMessage()
+            ], 500);
+        }
     }
 }

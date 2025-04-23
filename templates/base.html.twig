@@ -3,6 +3,152 @@
     {% include 'partials/head.html.twig' %}
 
     <body>
+      <!-- Bouton flottant -->
+<div id="chatbot-toggle">💬</div>
+
+<!-- Fenêtre de chat -->
+<div id="chatbot-box" class="shadow">
+  <div id="chat-header">🤖 Chatbot Lamma <span id="chat-close">✖</span></div>
+  <div id="chat-messages">
+    <div class="msg bot">👋 Bonjour ! Je suis votre assistant personnalisé pour la plateforme Lamma. 
+      Je peux vous aider à trouver des événements, des espaces disponibles ou des produits en stock.
+    </div>
+  </div>
+  <input type="text" id="chat-input" placeholder="Posez votre question...">
+</div>
+
+<script>
+  const toggleBtn = document.getElementById('chatbot-toggle');
+  const chatBox = document.getElementById('chatbot-box');
+  const closeBtn = document.getElementById('chat-close');
+  const input = document.getElementById('chat-input');
+  const messages = document.getElementById('chat-messages');
+
+  toggleBtn.onclick = () => chatBox.style.display = 'flex';
+  closeBtn.onclick = () => chatBox.style.display = 'none';
+
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && input.value.trim()) {
+      const userMsg = input.value.trim();
+      messages.innerHTML += `<div class="msg user">${userMsg}</div>`;
+      input.value = '';
+
+      // ⏳ Afficher "L'assistant rédige..."
+      const typingIndicator = document.createElement('div');
+      typingIndicator.className = 'msg typing';
+      typingIndicator.textContent = "⏳ L’assistant est en train d’écrire...";
+      messages.appendChild(typingIndicator);
+      messages.scrollTop = messages.scrollHeight;
+
+      fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userMsg })
+      })
+        .then(res => res.json())
+        .then(data => {
+          typingIndicator.remove();
+          messages.innerHTML += `<div class="msg bot">${data.reply}</div>`;
+          messages.scrollTop = messages.scrollHeight;
+        })
+        .catch(() => {
+          typingIndicator.remove();
+          messages.innerHTML += `<div class="msg bot">❌ Une erreur est survenue.</div>`;
+        });
+    }
+  });
+</script>
+
+
+<style>
+  #chatbot-toggle {
+    position: fixed;
+    bottom: 90px; /* ⬆️ remonté */
+    right: 20px;
+    background: #f35525;
+    color: white;
+    padding: 14px;
+    border-radius: 50%;
+    font-size: 22px;
+    cursor: pointer;
+    z-index: 1000;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  #chatbot-box {
+    position: fixed;
+    bottom: 160px;
+    right: 20px;
+    width: 360px; /* 📏 plus large */
+    height: 480px; /* 📏 plus haut */
+    background: white;
+    border-radius: 12px;
+    display: none;
+    flex-direction: column;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+  }
+  
+  #chat-header {
+    background: #f35525;
+    color: white;
+    padding: 12px;
+    font-weight: bold;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  #chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+    font-size: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  #chat-input {
+    border: none;
+    border-top: 1px solid #ccc;
+    padding: 12px;
+    font-size: 0.95rem;
+    box-sizing: border-box;
+    width: 100%;
+  }
+  
+  .msg {
+    padding: 10px 14px;
+    border-radius: 16px;
+    max-width: 85%;
+    line-height: 1.4;
+    word-wrap: break-word;
+  }
+  
+  .msg.user {
+    background: #f0f0f0;
+    align-self: flex-end;
+    text-align: right;
+  }
+  
+  .msg.bot {
+    background: #eaf6ff;
+    align-self: flex-start;
+    text-align: left;
+  }
+  
+  .msg.typing {
+    background: #fff3cd;
+    color: #856404;
+    font-style: italic;
+    align-self: flex-start;
+  }
+  
+</style>
+
         {% include 'partials/header.html.twig' %}
 
 

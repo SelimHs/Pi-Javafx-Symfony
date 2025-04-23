@@ -20,7 +20,12 @@
     <!-- Barre de recherche -->
     <div class="row mb-4">
       <div class="col-lg-12 text-center">
-        <input type="text" id="eventSearch" class="form-control w-50 mx-auto" placeholder="🔍 Rechercher un évènement...">
+        <input type="text" id="eventSearch" class="form-control w-50 mx-auto mb-3" placeholder="🔍 Rechercher un évènement...">
+        
+        <!-- Bouton Compte à rebours -->
+        <a href="{{ path('event_countdown') }}" class="btn-countdown">
+          ⏱️ Voir les évènements à venir
+        </a>
       </div>
     </div>
 
@@ -35,7 +40,7 @@
           </div>
         </a>
       </div>
-
+      
       <!-- Boucle des événements -->
       {% for event in events %}
         <div class="col-lg-4 col-md-6 align-self-center mb-30 event-card">
@@ -138,6 +143,24 @@
 
   .main-button a.btn-success:hover {
     background-color: #218838;
+  }
+
+  /* 🎯 Nouveau bouton "compte à rebours" */
+  .btn-countdown {
+    display: inline-block;
+    background: linear-gradient(135deg, #f35525, #ff7b42);
+    color: white;
+    font-weight: 600;
+    border-radius: 30px;
+    padding: 12px 24px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+  }
+
+  .btn-countdown:hover {
+    background: linear-gradient(135deg, #ff7b42, #f35525);
+    box-shadow: 0 0 10px rgba(243, 85, 37, 0.4);
   }
 </style>
 {% endblock %}
