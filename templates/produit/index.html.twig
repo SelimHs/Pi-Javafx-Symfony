@@ -19,6 +19,12 @@
     <div class="text-center mb-4">
       <button class="btn btn-warning" id="btnGenerateIdea">💡 Générer une idée d’événement</button>
     </div>
+    <div class="row mb-4">
+  <div class="col-lg-12 text-center">
+    <input type="text" id="searchProduit" class="form-control w-50 mx-auto" placeholder="🔍 Rechercher un produit...">
+  </div>
+</div>
+
 
     {% if produits is empty %}
       <div class="alert alert-info text-center">Aucun produit trouvé.</div>
@@ -122,4 +128,20 @@ document.querySelectorAll('.produit-card').forEach(card => {
   cursor: pointer;
 }
 </style>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const searchInput = document.getElementById('searchProduit');
+  const produitCards = document.querySelectorAll('.produit-card');
+
+  searchInput.addEventListener('input', function () {
+    const query = this.value.trim().toLowerCase();
+    produitCards.forEach(card => {
+      const title = card.querySelector('h4 a')?.textContent.toLowerCase() || '';
+      const match = title.includes(query);
+      card.closest('.col-lg-4').style.display = match ? 'block' : 'none';
+    });
+  });
+});
+</script>
+
 {% endblock %}

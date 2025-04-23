@@ -21,6 +21,7 @@
         <input type="text" id="searchEspace" class="form-control w-50 mx-auto" placeholder="Rechercher un espace...">
       </div>
     </div>
+    
     <!-- Bouton pour afficher les réservations -->
 <div class="row mb-4">
   <div class="col-lg-12 text-center">
@@ -63,11 +64,12 @@
     <div class="row properties-box" id="espaceGrid">
       <div class="col-lg-4 col-md-6 align-self-center mb-30 properties-items espace-card">
         <a href="{{ path('app_espace_new') }}" class="text-decoration-none">
-          <div class="item position-relative shadow-sm text-center d-flex flex-column justify-content-center align-items-center add-espace-card" style="height: 100%; min-height: 420px;">
-            <i class="fa fa-plus-circle fa-3x text-white mb-3"></i>
-            <h5 class="text-white">Créer un nouvel espace</h5>
-            <p class="text-white">Cliquez ici pour ajouter un nouvel espace</p>
-          </div>
+          <div class="item position-relative shadow-sm text-center d-flex flex-column justify-content-center align-items-center add-espace-card"
+         style="height: 100%; min-height: 420px; background-color: #007bff; transition: all 0.3s ease;">
+      <i class="fa fa-plus-circle fa-3x text-white mb-3"></i>
+      <h5 class="text-white">Créer un nouvel espace</h5>
+      <p class="text-white">Cliquez ici pour ajouter un nouvel espace</p>
+    </div>
         </a>
       </div>
 
@@ -265,6 +267,23 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const searchInput = document.getElementById('searchEspace');
+  const espaceCards = document.querySelectorAll('#espaceGrid .espace-card');
+
+  searchInput.addEventListener('input', function () {
+    const query = this.value.trim().toLowerCase();
+    espaceCards.forEach(card => {
+      const title = card.querySelector('h4 a')?.textContent.toLowerCase() || '';
+      const match = title.includes(query);
+      if (!card.id.includes("ajouterEspaceCard")) {
+        card.style.display = match ? 'block' : 'none';
+      }
+    });
+  });
+});
 </script>
 
 {% endblock %}
