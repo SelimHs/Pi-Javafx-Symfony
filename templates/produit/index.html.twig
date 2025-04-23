@@ -14,7 +14,7 @@
   </div>
 </div>
 
-<div class="section properties">
+<div class="section properties">  
   <div class="container">
     <div class="text-center mb-4">
       <button class="btn btn-warning" id="btnGenerateIdea">💡 Générer une idée d’événement</button>
@@ -70,11 +70,14 @@
   </div>
 </div>
 {% endblock %}
+
 {% block javascripts %}
 {{ parent() }}
 <script>
 document.getElementById('btnGenerateIdea')?.addEventListener('click', async () => {
   const ids = [...document.querySelectorAll('.produit-select:checked')].map(cb => cb.value);
+  console.log("Produits sélectionnés :", ids);
+
   if (ids.length === 0) {
     alert("❗ Veuillez sélectionner au moins un produit.");
     return;
@@ -82,26 +85,21 @@ document.getElementById('btnGenerateIdea')?.addEventListener('click', async () =
 
   const modalElement = document.getElementById('ideaModal');
   const ideaModal = bootstrap.Modal.getOrCreateInstance(modalElement);
-  document.getElementById('ideaContent').innerText = "⏳ Idée en cours de génération...";
+  document.getElementById('ideaContent').innerHTML = "⏳ Idée en cours de génération...";
   ideaModal.show();
 
   try {
-    const res = await fetch("{{ path('produit_generate_event_idea') }}?ids=" + ids.join(','));
+    const res = await fetch("{{ path('api_generate_idea') }}", {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ ids }) // 🟢 ici on envoie les ids au format JSON
+});
 
-    // 🛡️ NE PAS faire .json() tout de suite !
-    const contentType = res.headers.get("Content-Type");
-    const text = await res.text();
-
-    if (contentType && contentType.includes("application/json")) {
-      const data = JSON.parse(text);
-      document.getElementById('ideaContent').innerText = data.idea ?? "❌ Réponse vide.";
-    } else {
-      // 🛑 Ce n'est pas du JSON → affiche brut (erreur HTML, Twig, etc.)
-      document.getElementById('ideaContent').innerText = "❌ Erreur : réponse non JSON\n\n" + text;
-    }
+const data = await res.json();
+document.getElementById('ideaContent').innerText = data.idea;
 
   } catch (err) {
-    document.getElementById('ideaContent').innerText = "❌ Exception JS : " + err.message;
+    document.getElementById('ideaContent').innerHTML = `<p class="text-danger">❌ Erreur JS : ${err.message}</p>`;
     console.error(err);
   }
 });

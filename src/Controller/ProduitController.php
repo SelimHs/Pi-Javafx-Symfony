@@ -11,7 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-use App\Service\OpenAiService;
+use App\Service\AiPredictiveService;
+
 
 
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -140,41 +141,14 @@ final class ProduitController extends AbstractController
 
         return $this->redirectToRoute($redirectRoute);
     }
-    #[Route('/generate-event-idea', name: 'produit_generate_event_idea', methods: ['GET'])]
-    public function generateEventIdea(
-        Request $request,
-        ProduitRepository $produitRepository,
-        OpenAiService $openAiService
-    ): JsonResponse {
-        try {
-            $idsParam = $request->query->get('ids', '');
-            $ids = array_filter(explode(',', $idsParam));
 
-            if (empty($ids)) {
-                return new JsonResponse(['idea' => "❗ Aucun ID de produit fourni."], 400);
-            }
 
-            // 🔍 Récupération des produits
-            $produits = $produitRepository->findBy(['idProduit' => $ids]);
-
-            if (empty($produits)) {
-                return new JsonResponse(['idea' => "❗ Aucun produit trouvé."], 404);
-            }
-
-            // 🧠 Générer l'idée via OpenAI
-            $idea = $openAiService->generateEventIdea($produits);
-
-            // ✅ Sécurité : forcer string
-            if (!is_string($idea)) {
-                $idea = json_encode($idea);
-            }
-
-            return new JsonResponse(['idea' => $idea]);
-        } catch (\Throwable $e) {
-            // 🛡️ Sécurité totale : toujours retourner un JSON
-            return new JsonResponse([
-                'idea' => "❌ Erreur technique : " . $e->getMessage()
-            ], 500);
-        }
+    #[Route('/api/generate-idea', name: 'api_generate_idea', methods: ['GET', 'POST'])]
+    public function generateIdea(Request $request, ProduitRepository $repo, AiPredictiveService $ai): JsonResponse
+    {
+        $ids = json_decode($request->getContent(), true)['ids'] ?? [];
+        $produits = $repo->findBy(['idProduit' => $ids]);
+        $idea = $ai->generateIdea($produits);
+        return new JsonResponse(['idea' => $idea]);
     }
 }
