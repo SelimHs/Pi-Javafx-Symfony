@@ -1,141 +1,77 @@
-{% extends 'base.html.twig' %}
+{% extends 'baseBack.html.twig' %}
 
-{% block title %}Reservations{% endblock %}
-
-
+{% block title %}Liste des Réservations{% endblock %}
 
 {% block body %}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <style>
-        body {
-            background-color: #f9f9f9;
-        }
+<div class="app-main__outer">
+  <div class="app-main__inner">
 
-        h1 {
-            font-family: 'Lexend', sans-serif;
-            font-size: 36px;
-            font-weight: bold;
-            color: #111;
-        }
-
-        .reservation-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
-            gap: 25px;
-            padding: 30px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .reservation-card {
-            background: white;
-            border-radius: 25px;
-            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
-            padding: 24px 20px;
-            position: relative;
-            transition: 0.3s ease-in-out;
-            border: none;
-        }
-
-        .reservation-card:hover {
-            transform: scale(1.02);
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .reservation-id {
-            font-size: 22px;
-            font-weight: bold;
-            color: #FF6000;
-            margin-bottom: 10px;
-        }
-
-        .reservation-date,
-        .reservation-statut {
-            font-size: 14px;
-            color: #444;
-            margin: 5px 0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .card-actions {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
-
-        .card-actions a {
-            background-color: #000;
-            color: white;
-            padding: 6px 14px;
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card-actions a::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, rgba(255,96,0,0.2), rgba(255,96,0,0.4));
-            transition: all 0.4s ease;
-        }
-
-        .card-actions a:hover::before {
-            left: 0;
-        }
-
-        .card-actions a:hover {
-            background-color: #FF6000;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .card-icon {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 22px;
-            color: #FF6000;
-        }
-    </style>
-    <h1 class="text-center mt-4">📅 Toutes les Réservations</h1>
-
-    <div class="reservation-grid">
-        {% for reservation in reservations %}
-            <div class="reservation-card">
-                <div class="card-icon">
-                    <i class="fas fa-calendar-day"></i>
-                </div>
-                <div class="reservation-id">#{{ reservation.idReservation }}</div>
-                <div class="reservation-date"><i class="fas fa-clock"></i> {{ reservation.dateReservation|date('Y-m-d H:i') }}</div>
-                <div class="reservation-statut"><i class="fas fa-thumbtack"></i> Statut : <strong>{{ reservation.statut }}</strong></div>
-
-                <div class="card-actions">
-                    <a href="{{ path('app_reservation_show', {'idReservation': reservation.idReservation}) }}">
-                        <i class="fas fa-eye"></i> Voir
-                    </a>
-                    <a href="{{ path('app_reservation_edit', {'idReservation': reservation.idReservation}) }}">
-                        <i class="fas fa-pen"></i> Modifier
-                    </a>
-                </div>
-            </div>
-        {% else %}
-            <p class="text-center">Aucune réservation trouvée.</p>
-        {% endfor %}
+    <div class="app-page-title">
+      <div class="page-title-wrapper">
+        <div class="page-title-heading">
+          <div class="page-title-icon">
+            <i class="pe-7s-note2 icon-gradient bg-mean-fruit"></i>
+          </div>
+          <div>
+            Gestion des Réservations
+            <div class="page-title-subheading">Visualisez et gérez les réservations enregistrées.</div>
+          </div>
+        </div>
+        <div class="page-title-actions">
+          <a href="{{ path('app_reservation_new') }}" class="btn btn-success">
+            <i class="pe-7s-plus"></i> Nouvelle Réservation
+          </a>
+        </div>
+      </div>
     </div>
 
+    <div class="main-card mb-3 card">
+      <div class="card-header">
+        Réservations enregistrées
+      </div>
+      <div class="table-responsive">
+        <table class="align-middle mb-0 table table-striped table-hover">
+          <thead>
+            <tr>
+              <th class="text-center">#</th>
+              <th>Date de Réservation</th>
+              <th>Statut</th>
+              <th class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for reservation in reservations %}
+              <tr>
+                <td class="text-center text-muted">#{{ reservation.idReservation }}</td>
+                <td>{{ reservation.dateReservation ? reservation.dateReservation|date('Y-m-d H:i') : '—' }}</td>
+                <td>
+                  {% if reservation.statut == 'confirmée' %}
+                    <span class="badge badge-success">Confirmée</span>
+                  {% elseif reservation.statut == 'annulée' %}
+                    <span class="badge badge-danger">Annulée</span>
+                  {% else %}
+                    <span class="badge badge-warning">{{ reservation.statut }}</span>
+                  {% endif %}
+                </td>
+                <td class="text-center">
+                  <a href="{{ path('app_reservation_show', {'idReservation': reservation.idReservation}) }}" class="btn btn-sm btn-info">
+                    <i class="fas fa-eye"></i> Détails
+                  </a>
+                  <a href="{{ path('app_reservation_edit', {'idReservation': reservation.idReservation}) }}" class="btn btn-sm btn-warning">
+                    <i class="fas fa-edit"></i> Modifier
+                  </a>
+                </td>
+              </tr>
+            {% else %}
+              <tr>
+                <td colspan="4" class="text-center text-muted">Aucune réservation trouvée.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
 
+  </div>
+</div>
 {% endblock %}

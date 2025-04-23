@@ -25,6 +25,7 @@ class ProduitType extends AbstractType
                 'choices' => [
                     'Électronique' => 'Électronique',
                     'Alimentaire' => 'Alimentaire',
+                    'Autres' => 'Autres',
                 ],
                 'placeholder' => 'Sélectionnez une catégorie',
             ])            ->add('quantite')

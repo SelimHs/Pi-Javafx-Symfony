@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Espace{% endblock %}
+{% block title %}Modifier Espace{% endblock %}
 
 {% block body %}
 <div class="container mt-5">
@@ -14,42 +14,66 @@
 
           <div class="mb-3">
             {{ form_label(form.nomEspace) }}
-            {{ form_widget(form.nomEspace, {'attr': {'class': 'form-control'}}) }}
+            {{ form_widget(form.nomEspace, {
+              'attr': {'class': 'form-control', 'required': 'required', 'minlength': '4'}
+            }) }}
             <div class="text-danger small mt-1">{{ form_errors(form.nomEspace) }}</div>
           </div>
 
           <div class="mb-3">
             {{ form_label(form.adresse) }}
-            {{ form_widget(form.adresse, {'attr': {'class': 'form-control'}}) }}
+            {{ form_widget(form.adresse, {
+              'attr': {'class': 'form-control', 'required': 'required', 'minlength': '4'}
+            }) }}
             <div class="text-danger small mt-1">{{ form_errors(form.adresse) }}</div>
           </div>
 
           <div class="mb-3">
             {{ form_label(form.capacite) }}
-            {{ form_widget(form.capacite, {'attr': {'class': 'form-control'}}) }}
+            {{ form_widget(form.capacite, {
+              'attr': {'class': 'form-control', 'required': 'required', 'type': 'number', 'min': '50'}
+            }) }}
             <div class="text-danger small mt-1">{{ form_errors(form.capacite) }}</div>
           </div>
 
           <div class="mb-3">
-            {{ form_label(form.disponibilite) }}
-            {{ form_widget(form.disponibilite, {'attr': {'class': 'form-control'}}) }}
-            <div class="text-danger small mt-1">{{ form_errors(form.disponibilite) }}</div>
-          </div>
+  {{ form_label(form.disponibilite) }}
+  {{ form_widget(form.disponibilite, {
+    'attr': {'class': 'form-control'}
+  }) }}
+  <div class="text-danger small mt-1">{{ form_errors(form.disponibilite) }}</div>
+</div>
+
 
           <div class="mb-3">
             {{ form_label(form.prix) }}
-            {{ form_widget(form.prix, {'attr': {'class': 'form-control'}}) }}
+            {{ form_widget(form.prix, {
+              'attr': {'class': 'form-control', 'required': 'required', 'type': 'number'}
+            }) }}
             <div class="text-danger small mt-1">{{ form_errors(form.prix) }}</div>
           </div>
 
-          {{ form_label(form.Type_espace) }}
-          {{ form_widget(form.Type_espace, {'attr': {'class': 'form-control'}}) }}
-          <div class="text-danger small mt-1">{{ form_errors(form.Type_espace) }}</div>
-          
+          <div class="mb-3">
+            {{ form_label(form.Type_espace) }}
+            {{ form_widget(form.Type_espace, {
+              'attr': {'class': 'form-control', 'required': 'required'}
+            }) }}
+            <div class="text-danger small mt-1">{{ form_errors(form.Type_espace) }}</div>
+          </div>
+
+          {# ✅ Affichage de l’image actuelle #}
+          {% if espace.image %}
+            <div class="mb-3 text-center">
+              <img src="{{ asset('uploads/' ~ espace.image) }}" alt="Image actuelle" class="img-thumbnail" style="max-height: 200px;">
+              <p class="text-muted mt-2">Image actuelle</p>
+            </div>
+          {% endif %}
 
           <div class="mb-3">
             {{ form_label(form.image) }}
-            {{ form_widget(form.image, {'attr': {'class': 'form-control'}}) }}
+            {{ form_widget(form.image, {
+              'attr': {'class': 'form-control'}
+            }) }}
             <div class="text-danger small mt-1">{{ form_errors(form.image) }}</div>
           </div>
 
@@ -60,7 +84,7 @@
           {{ form_end(form) }}
 
           <div class="text-center mt-3">
-            <a href="{{ path('app_espace_index') }}" class="btn btn-outline-secondary">Back to list</a>
+            <a href="{{ path('app_espace_index') }}" class="btn btn-outline-secondary">← Retour à la liste</a>
           </div>
 
           <div class="text-center mt-3">

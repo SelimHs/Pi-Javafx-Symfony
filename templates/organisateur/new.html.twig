@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Organisateur{% endblock %}
+{% block title %}Create Organisateur{% endblock %}
 
 {% block body %}
 <div class="container mt-5">
@@ -12,17 +12,78 @@
 
           {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
 
-          {% for field in form %}
-            {% if field.vars.name != '_token' %}
-              <div class="mb-3">
-                {{ form_label(field, null, {'label_attr': {'class': 'form-label'}}) }}
-                {{ form_widget(field, {'attr': {'class': 'form-control'}}) }}
-                {{ form_errors(field) }}
-              </div>
-            {% endif %}
-          {% endfor %}
+          {# Nom org : requis, min 3 caractères #}
+          <div class="mb-3">
+            {{ form_label(form.nom_org, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.nom_org, {
+              'attr': {
+                'class': 'form-control',
+                'required': 'required',
+                'minlength': '3',
+                'placeholder': 'Nom de l\'organisateur'
+              }
+            }) }}
+            <div class="text-danger mt-1" style="font-size: 0.95rem;">
+              {{ form_errors(form.nom_org) }}
+            </div>
+          </div>
 
-          <div class="text-center">
+          {# Prénom org : requis, min 3 caractères #}
+          <div class="mb-3">
+            {{ form_label(form.prenom_org) }}
+            {{ form_widget(form.prenom_org, {
+              'attr': {
+                'class': 'form-control',
+                'required': 'required',
+                'minlength': '3',
+                'placeholder': 'Prénom de l\'organisateur'
+              }
+            }) }}
+            <div class="text-danger mt-1" style="font-size: 0.95rem;">
+              {{ form_errors(form.prenom_org) }}
+            </div>
+          </div>
+
+          {# Description org : requis, min 5 caractères #}
+          <div class="mb-3">
+            {{ form_label(form.description_org) }}
+            {{ form_widget(form.description_org, {
+              'attr': {
+                'class': 'form-control',
+                'required': 'required',
+                'minlength': '5',
+                'rows': '3',
+                'placeholder': 'Décrivez l\'organisateur...'
+              }
+            }) }}
+            <div class="text-danger mt-1" style="font-size: 0.95rem;">
+              {{ form_errors(form.description_org) }}
+            </div>
+          </div>
+
+          {# Téléphone : requis, 8 chiffres #}
+          <div class="mb-3">
+            {{ form_label(form.telef) }}
+            {{ form_widget(form.telef, {
+              'attr': {
+                'class': 'form-control',
+                'required': 'required',
+                'pattern': '[0-9]{8}',
+                'placeholder': 'Ex : 25123456',
+                'title': 'Le numéro doit contenir 8 chiffres'
+              }
+            }) }}
+            <div class="text-danger mt-1" style="font-size: 0.95rem;">
+              {{ form_errors(form.telef) }}
+            </div>
+          </div>
+
+          {# Espace : requis #}
+                  {{ form_row(form.espace) }}
+
+          </div>
+
+          <div class="text-center mt-4">
             <button class="btn btn-primary px-4">{{ button_label|default('Save') }}</button>
           </div>
 

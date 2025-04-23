@@ -47,6 +47,12 @@
             {{ form_widget(form.nomEspace, {'attr': {'class': 'form-control'}}) }}
             <div class="text-danger small mt-1">{{ form_errors(form.nomEspace) }}</div>
           </div>
+          {% if event.image %}
+        <div class="mb-3 text-center">
+          <label class="form-label d-block">Image actuelle :</label>
+          <img src="{{ asset('uploads/' ~ event.image) }}" alt="Image actuelle" class="img-fluid rounded" style="max-height: 200px;">
+        </div>
+      {% endif %}
 
           <div class="mb-3">
             {{ form_label(form.image) }}

@@ -108,7 +108,7 @@
             <!-- 🖼️ Image -->
             <div class="me-md-4 mb-4 mb-md-0">
                 {% if produit.imagePath %}
-                    <img src="{{ asset('uploads/images/' ~ produit.imagePath) }}"
+                    <img src="{{ asset('uploads/' ~ produit.imagePath) }}"
                          alt="{{ produit.nomProduit }}"
                          class="produit-image">
                 {% else %}
@@ -121,27 +121,20 @@
                 <h3 class="mb-3 text-uppercase">{{ produit.nomProduit }}</h3>
 
                 <p><span class="produit-info-label">💰 Prix :</span> {{ produit.prixProduit }} DT</p>
-                <p><span class="produit-info-label">📦 Quantité :</span> {{ produit.quantite }}</p>
-                <p><span class="produit-info-label">🏷️ Catégorie :</span> {{ produit.categorie }}</p>
-                <p><span class="produit-info-label">📝 Description :</span> {{ produit.description }}</p>
+<p><span class="produit-info-label">📦 Quantité :</span> {{ produit.quantite }}</p>
+<p><span class="produit-info-label">🏷️ Catégorie :</span> {{ produit.categorie }}</p>
+<p><span class="produit-info-label">📝 Description :</span> {{ produit.description }}</p>
+<p><span class="produit-info-label">🏢 Fournisseur :</span> {{ produit.fournisseur.nomFournisseur }}</p>
+<p><span class="produit-info-label">📞 Téléphone :</span> {{ produit.fournisseur.telephone }}</p>
+
+
 
                 <!-- 🔘 Actions -->
                 <div class="action-buttons">
                     <a href="{{ path('app_produit_index') }}" class="btn btn-black">
                         <i class="fas fa-arrow-left"></i> Retour
                     </a>
-                    <a href="{{ path('app_produit_edit', {'idProduit': produit.idProduit}) }}" class="btn btn-orange">
-                        <i class="fas fa-pen"></i> Modifier
-                    </a>
-                    <form method="post"
-                          action="{{ path('app_produit_delete', {'idProduit': produit.idProduit}) }}"
-                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?');"
-                          style="display:inline;">
-                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ produit.idProduit) }}">
-                        <button class="btn btn-delete" type="submit">
-                            <i class="fas fa-trash"></i> Supprimer
-                        </button>
-                    </form>
+
                 </div>
             </div>
         </div>

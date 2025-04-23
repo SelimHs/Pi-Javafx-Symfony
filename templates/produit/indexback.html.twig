@@ -2,123 +2,59 @@
 
 {% block title %}Liste des Produits{% endblock %}
 
-
-
-
 {% block body %}
-    <style>
-        .produit-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 30px;
-            justify-content: center;
-        }
-
-        .produit-card {
-            background: #fff;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            overflow: hidden;
-            transition: transform 0.3s ease;
-            width: 300px;
-        }
-
-        .produit-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .produit-img {
-            width: 150px;
-            height: 160px; /* smaller visible height */
-margin-left: 80px;
-            object-fit: cover;
-            border-bottom: 1px solid #eee;
-            transition: transform 0.4s ease;
-        }
-
-        .produit-card:hover .produit-img {
-            transform: scale(1.1); /* zoom on hover */
-        }
-
-
-
-        .produit-content {
-            padding: 20px;
-        }
-
-        .produit-title {
-            font-size: 1.3rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #333;
-        }
-
-        .produit-info {
-            font-size: 0.95rem;
-            color: #555;
-        }
-
-        .produit-actions {
-            margin-top: 15px;
-            display: flex;
-            gap: 10px;
-            justify-content: space-between;
-        }
-
-        .btn-orange {
-            background-color: #757dea;
-            color: white;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 30px;
-            font-weight: 500;
-            font-size: 0.9rem;
-        }
-
-        .btn-orange:hover {
-            background-color: #757dea;
-        }
-
-        .btn-outline-dark {
-            border-radius: 30px;
-            font-size: 0.9rem;
-        }
-    </style>
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">🛒 Nos Produits</h1>
-
-        <div class="text-center mb-4">
-            <a href="{{ path('app_produit_new') }}" class="btn btn-orange">+ Ajouter un Produit</a>
+<div class="app-main__outer">
+  <div class="app-main__inner">
+    <!-- Titre -->
+    <div class="app-page-title">
+      <div class="page-title-wrapper">
+        <div class="page-title-heading">
+          <div class="page-title-icon">
+            <i class="pe-7s-box2 icon-gradient bg-mean-fruit"></i>
+          </div>
+          <div>Gestion des Produits
+            <div class="page-title-subheading">Liste des produits en stock avec image, prix et quantités.</div>
+          </div>
         </div>
-
-        {% if produits is empty %}
-            <div class="alert alert-info text-center">Aucun produit trouvé.</div>
-        {% else %}
-            <div class="produit-grid">
-                {% for produit in produits %}
-                    <div class="produit-card">
-                        {% if produit.imagePath %}
-                            <img src="{{ asset('uploads/images/' ~ produit.imagePath) }}" class="produit-img" alt="{{ produit.nomProduit }}">
-                        {% else %}
-                            <img src="{{ asset('uploads/placeholder.jpg') }}" class="produit-img" alt="Pas d'image">
-                        {% endif %}
-
-                        <div class="produit-content">
-                            <div class="produit-title">{{ produit.nomProduit }}</div>
-                            <div class="produit-info">
-                                💰 <strong>{{ produit.prixProduit }} DT</strong><br>
-                                📦 Quantité: {{ produit.quantite }}<br>
-                                🏷️ Catégorie: {{ produit.categorie }}
-                            </div>
-
-                            <div class="produit-actions">
-                                <a href="{{ path('app_produit_show', {idProduit: produit.idProduit}) }}" class="btn btn-outline-dark">Voir</a>
-                                <a href="{{ path('app_produit_edit', {idProduit: produit.idProduit}) }}" class="btn btn-orange">Modifier</a>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
+        <div class="page-title-actions">
+          <a href="{{ path('dashboard_produit_new') }}" class="btn btn-success">
+            <i class="pe-7s-plus mr-2"></i> Nouveau Produit
+          </a>
+        </div>
+      </div>
     </div>
+
+    {% if produits is empty %}
+      <div class="alert alert-info text-center">Aucun produit trouvé.</div>
+    {% else %}
+      <div class="row">
+        {% for produit in produits %}
+          <div class="col-md-6 col-xl-4">
+            <div class="card mb-4 shadow-sm">
+              <div class="position-relative">
+                <img src="{{ asset('uploads/' ~ (produit.imagePath ? produit.imagePath : 'placeholder.png')) }}"
+                     class="card-img-top"
+                     alt="{{ produit.nomProduit }}">
+              </div>
+              <div class="card-body">
+                <h5 class="card-title text-uppercase">{{ produit.nomProduit }}</h5>
+                <p class="card-text text-muted mb-1">
+                  💰 <strong>{{ produit.prixProduit }} DT</strong><br>
+                  📦 <strong>Quantité :</strong> {{ produit.quantite }}<br>
+                  🏷️ <strong>Catégorie :</strong> {{ produit.categorie }}
+                </p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <a href="{{ path('dashboard_produit_show', {'idProduit': produit.idProduit}) }}"
+                     class="btn btn-sm btn-outline-primary">
+                    Voir détails
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</div>
 {% endblock %}

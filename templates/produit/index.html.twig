@@ -1,6 +1,8 @@
 {% extends 'base.html.twig' %}
 
+
 {% block title %}Liste des Produits{% endblock %}
+
 
 
 
@@ -96,9 +98,9 @@ margin-left: 80px;
                 {% for produit in produits %}
                     <div class="produit-card">
                         {% if produit.imagePath %}
-                            <img src="{{ asset('uploads/images/' ~ produit.imagePath) }}" class="produit-img" alt="{{ produit.nomProduit }}">
+                            <img src="{{ asset('uploads/' ~ produit.imagePath) }}" class="produit-img" alt="{{ produit.nomProduit }}">
                         {% else %}
-                            <img src="{{ asset('uploads/images/placeholder.png') }}" class="produit-img" alt="Pas d'image">
+                            <img src="{{ asset('uploads/placeholder.png') }}" class="produit-img" alt="Pas d'image">
                         {% endif %}
 
                         <div class="produit-content">

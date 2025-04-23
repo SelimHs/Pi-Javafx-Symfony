@@ -1,51 +1,61 @@
-{% extends 'base.html.twig' %}
+{% extends 'baseBack.html.twig' %}
 
-{% block title %}New Reservation{% endblock %}
+{% block title %}Nouvelle Réservation{% endblock %}
 
 {% block body %}
-
-    {{ include('reservation/_form.html.twig') }}
-<style>.btn-style {
-        background-color: #000;
-        color: white;
-        padding: 6px 14px;
-        border-radius: 10px;
-        font-size: 13px;
-        font-weight: 600;
-        text-decoration: none;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .btn-style::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, rgba(255,96,0,0.2), rgba(255,96,0,0.4));
-        transition: all 0.4s ease;
-    }
-
-    .btn-style:hover::before {
-        left: 0;
-    }
-
-    .btn-style:hover {
-        background-color: #FF6000;
-        color: white;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
-    }
-</style>
-    <div class="d-flex justify-content-between mt-4 px-3">
-        <a href="{{ path('app_reservation_index') }}" class="btn-style">
-            <i class="fas fa-arrow-left"></i> Retour à la liste
-        </a>
+<div class="app-main__outer">
+  <div class="app-main__inner">
+    <div class="app-page-title">
+      <div class="page-title-wrapper">
+        <div class="page-title-heading">
+          <div class="page-title-icon">
+            <i class="pe-7s-add-user icon-gradient bg-happy-itmeo"></i>
+          </div>
+          <div>Nouvelle Réservation
+            <div class="page-title-subheading">Créer une réservation pour un utilisateur et un évènement.</div>
+          </div>
+        </div>
+        <div class="page-title-actions">
+          <a href="{{ path('app_reservation_index') }}" class="btn btn-outline-secondary">
+            <i class="pe-7s-left-arrow"></i> Retour à la liste
+          </a>
+        </div>
+      </div>
     </div>
+
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="card shadow-lg border-0 rounded-4">
+          <div class="card-body p-5">
+            <h4 class="mb-4 text-center">Créer une Réservation</h4>
+
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+            <div class="mb-3">
+              {{ form_label(form.dateReservation) }}
+              {{ form_widget(form.dateReservation, {'attr': {'class': 'form-control'}}) }}
+              <div class="text-danger mt-1" style="font-size: 0.95rem;">
+                {{ form_errors(form.dateReservation) }}
+              </div>
+            </div>
+
+            <div class="mb-3">
+              {{ form_label(form.user) }}
+              {{ form_widget(form.user, {'attr': {'class': 'form-select'}}) }}
+              <div class="text-danger mt-1" style="font-size: 0.95rem;">
+                {{ form_errors(form.user) }}
+              </div>
+            </div>
+
+            <div class="text-center">
+              <button class="btn btn-primary px-4">Enregistrer</button>
+            </div>
+
+            {{ form_end(form) }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

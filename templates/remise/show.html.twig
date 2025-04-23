@@ -1,130 +1,80 @@
-{% extends 'base.html.twig' %}
+{% extends 'baseBack.html.twig' %}
 
-{% block title %}Détail Remise{% endblock %}
-
-
+{% block title %}Détails de la Remise{% endblock %}
 
 {% block body %}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <style>
-        .detail-container {
-            max-width: 800px;
-            margin: 40px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
+<div class="app-main__outer">
+  <div class="app-main__inner">
 
-        .detail-container h1 {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #FF6000;
-        }
-
-        .detail-item {
-            margin-bottom: 20px;
-            font-size: 16px;
-        }
-
-        .detail-item i {
-            margin-right: 10px;
-            color: #FF6000;
-        }
-
-        .detail-actions {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 30px;
-        }
-
-        .detail-actions a, .detail-actions button {
-            background-color: #000;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 10px;
-            text-decoration: none;
-            transition: background-color 0.3s ease;
-            border: none;
-            font-weight: bold;
-        }
-
-        .detail-actions a:hover, .detail-actions button:hover {
-            background-color: #FF6000;
-        }
-
-        .btn-submit {
-            margin-top: 20px;
-            background-color: #FF6000;
-            color: white;
-            font-weight: 600;
-            padding: 10px 24px;
-            border: none;
-            border-radius: 10px;
-            transition: background-color 0.3s ease;
-        }
-
-        .btn-submit:hover {
-            background-color: #e65100;
-        }
-
-        input[type="date"] {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            width: 100%;
-            max-width: 300px;
-        }
-
-        .info-card {
-            background-color: #f9f9f9;
-            border: 2px dashed #FF6000;
-            border-radius: 16px;
-            padding: 20px;
-            margin-top: 20px;
-        }
-
-        .info-card h5 {
-            margin-bottom: 15px;
-            color: #333;
-            font-weight: bold;
-        }
-
-        .info-card p {
-            margin: 4px 0;
-            font-size: 15px;
-        }
-
-        .info-card span {
-            font-weight: 600;
-            color: #222;
-        }
-    </style>
-    <div class="detail-container">
-        <h1><i class="fas fa-ticket-alt"></i> Détail Remise</h1>
-
-        {% if remise is defined and remise.idRemise is not null %}
-            <div class="info-card">
-                <h5><i class="fas fa-info-circle"></i> Informations sur la Remise</h5>
-                <p><i class="fas fa-hashtag"></i> <span>ID :</span> {{ remise.idRemise }}</p>
-                <p><i class="fas fa-barcode"></i> <span>Code Promo :</span> {{ remise.codePromo }}</p>
-                <p><i class="fas fa-align-left"></i> <span>Description :</span> {{ remise.description }}</p>
-                <p><i class="fas fa-percentage"></i> <span>Pourcentage :</span> {{ remise.pourcentageRemise }}%</p>
-                <p><i class="fas fa-calendar-alt"></i> <span>Expiration :</span> {{ remise.dateExpiration|date('Y-m-d') }}</p>
-            </div>
-        {% endif %}
-
-        <div class="detail-actions mt-4">
-            <a href="{{ path('app_remise_index') }}"><i class="fas fa-arrow-left"></i> Retour</a>
-            {% if remise is defined and remise.idRemise is not null %}
-                <a href="{{ path('app_remise_edit', {'idRemise': remise.idRemise}) }}"><i class="fas fa-pen"></i> Modifier</a>
-            {% endif %}
+    <!-- Titre de la page -->
+    <div class="app-page-title">
+      <div class="page-title-wrapper">
+        <div class="page-title-heading">
+          <div class="page-title-icon">
+            <i class="pe-7s-ticket icon-gradient bg-amy-crisp"></i>
+          </div>
+          <div>
+            Détails de la Remise
+            <div class="page-title-subheading">Aperçu complet de la remise sélectionnée.</div>
+          </div>
         </div>
-
-        {% if remise is defined and remise.idRemise is not null %}
-            <div class="text-center mt-3">
-                {{ include('remise/_delete_form.html.twig') }}
-            </div>
-        {% endif %}
+        <div class="page-title-actions">
+          <a href="{{ path('app_remise_index') }}" class="btn btn-outline-secondary mr-2">
+            <i class="pe-7s-back"></i> Retour
+          </a>
+          <a href="{{ path('app_remise_edit', {'idRemise': remise.idRemise}) }}" class="btn btn-warning mr-2">
+            <i class="pe-7s-note"></i>
+          </a>
+          <form method="post" action="{{ path('app_remise_delete', {'idRemise': remise.idRemise}) }}"
+                onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette remise ?');" style="display: inline;">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ remise.idRemise) }}">
+            <button class="btn btn-danger" title="Supprimer">
+              <i class="pe-7s-trash"></i>
+            </button>
+          </form>
+        </div>
+      </div>
     </div>
+
+    <!-- Carte avec infos Remise -->
+    <div class="row justify-content-center mt-4">
+      <div class="col-md-8">
+        <div class="main-card mb-3 card">
+          <div class="card-body">
+            <h5 class="card-title">Informations de la Remise</h5>
+            <table class="mb-0 table table-bordered table-striped">
+              <tbody>
+                <tr>
+                  <th>ID</th>
+                  <td>{{ remise.idRemise }}</td>
+                </tr>
+                <tr>
+                  <th>Code Promo</th>
+                  <td>{{ remise.codePromo }}</td>
+                </tr>
+                <tr>
+                  <th>Description</th>
+                  <td>{{ remise.description }}</td>
+                </tr>
+                <tr>
+                  <th>Pourcentage de Remise</th>
+                  <td>{{ remise.pourcentageRemise }} %</td>
+                </tr>
+                <tr>
+                  <th>Date d'expiration</th>
+                  <td>{{ remise.dateExpiration }}</td>
+                </tr>
+                <tr>
+                  <th>Nombre de réservations liées</th>
+                  <td>{{ remise.reservations|length }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
 {% endblock %}
