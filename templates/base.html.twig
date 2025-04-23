@@ -3,64 +3,12 @@
     {% include 'partials/head.html.twig' %}
 
     <body>
-      <!-- Bouton flottant -->
-<div id="chatbot-toggle">💬</div>
-
-<!-- Fenêtre de chat -->
-<div id="chatbot-box" class="shadow">
-  <div id="chat-header">🤖 Chatbot Lamma <span id="chat-close">✖</span></div>
-  <div id="chat-messages">
-    <div class="msg bot">👋 Bonjour ! Je suis votre assistant personnalisé pour la plateforme Lamma. 
-      Je peux vous aider à trouver des événements, des espaces disponibles ou des produits en stock.
-    </div>
-  </div>
-  <input type="text" id="chat-input" placeholder="Posez votre question...">
-</div>
-
-<script>
-  const toggleBtn = document.getElementById('chatbot-toggle');
-  const chatBox = document.getElementById('chatbot-box');
-  const closeBtn = document.getElementById('chat-close');
-  const input = document.getElementById('chat-input');
-  const messages = document.getElementById('chat-messages');
-
-  toggleBtn.onclick = () => chatBox.style.display = 'flex';
-  closeBtn.onclick = () => chatBox.style.display = 'none';
-
-  input.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && input.value.trim()) {
-      const userMsg = input.value.trim();
-      messages.innerHTML += `<div class="msg user">${userMsg}</div>`;
-      input.value = '';
-
-      // ⏳ Afficher "L'assistant rédige..."
-      const typingIndicator = document.createElement('div');
-      typingIndicator.className = 'msg typing';
-      typingIndicator.textContent = "⏳ L’assistant est en train d’écrire...";
-      messages.appendChild(typingIndicator);
-      messages.scrollTop = messages.scrollHeight;
-
-      fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userMsg })
-      })
-        .then(res => res.json())
-        .then(data => {
-          typingIndicator.remove();
-          messages.innerHTML += `<div class="msg bot">${data.reply}</div>`;
-          messages.scrollTop = messages.scrollHeight;
-        })
-        .catch(() => {
-          typingIndicator.remove();
-          messages.innerHTML += `<div class="msg bot">❌ Une erreur est survenue.</div>`;
-        });
-    }
-  });
-</script>
-
-
+      
 <style>
+  #chatbot-toggle.opened {
+    color: white; /* ❌ en blanc */
+    background: #f35525; /* conserve la couleur orange */
+  }
   #chatbot-toggle {
     position: fixed;
     bottom: 90px; /* ⬆️ remonté */
@@ -146,8 +94,177 @@
     font-style: italic;
     align-self: flex-start;
   }
+
+
+
+
+
+
+  #theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    background-color: #f35525;
+    border: none;
+    color: white;
+    font-size: 18px;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  #theme-toggle:hover {
+    background-color: #d84315;
+  }
+  
+  /* DARK MODE STYLES */
+  body.dark-mode {
+    background-color: #1a1a1a;
+    color: #f1f1f1;
+  }
+  
+  body.dark-mode .section,
+  body.dark-mode .container,
+  body.dark-mode .video-content,
+  body.dark-mode .contact-content,
+  body.dark-mode .featured,
+  body.dark-mode .properties,
+  body.dark-mode .fun-facts {
+    background-color: #222;
+  }
+  
+  body.dark-mode .section-heading h2,
+  body.dark-mode h4,
+  body.dark-mode h6,
+  body.dark-mode p,
+  body.dark-mode span,
+  body.dark-mode li {
+    color: #f1f1f1 !important;
+  }
+  
+  body.dark-mode .category,
+  body.dark-mode .main-button a,
+  body.dark-mode input,
+  body.dark-mode textarea {
+    background-color: #333 !important;
+    color: #f1f1f1 !important;
+    border: 1px solid #444 !important;
+  }
+  /* 🌙 NAVBAR en DARK MODE */
+body.dark-mode .header-area {
+  background-color: #1a1a1a !important;
+  border-bottom: 1px solid #333;
+}
+
+body.dark-mode .main-nav .nav a {
+  color: #f1f1f1 !important; /* texte clair */
+  transition: color 0.3s ease;
+}
+
+body.dark-mode .main-nav .nav a:hover,
+body.dark-mode .main-nav .nav a.active {
+  color: #f35525 !important; /* orange vif pour hover/active */
+}
+
+body.dark-mode .main-nav .logo h1 {
+  color: #ffffff !important;
+}
+
+body.dark-mode .menu-trigger span {
+  color: #f1f1f1 !important;
+}
+body.dark-mode #chatbot-box {
+  background-color: #1e1e2a !important;
+  color: #f1f1f1;
+}
+
+body.dark-mode #chat-header {
+  background-color: #2c2c3e !important;
+  color: #f39c12;
+}
+
+body.dark-mode .msg.bot {
+  background: rgba(243, 85, 37, 0.85);
+  color: white;
+}
+
+body.dark-mode .msg.user {
+  background: #ccc;
+  color: black;
+}
+
+body.dark-mode #chat-input {
+  background-color: #2c2c3e;
+  color: white;
+  border-top: 1px solid #444;
+}
   
 </style>
+
+      <!-- Bouton flottant -->
+<div id="chatbot-toggle">💬</div>
+
+<!-- Fenêtre de chat -->
+<div id="chatbot-box" class="shadow">
+  <div id="chat-header">🤖 Chatbot Lamma <span id="chat-close">✖</span></div>
+  <div id="chat-messages">
+    <div class="msg bot">👋 Bonjour ! Je suis votre assistant personnalisé pour la plateforme Lamma. 
+      Je peux vous aider à trouver des événements, des espaces disponibles ou des produits en stock.
+    </div>
+  </div>
+  <input type="text" id="chat-input" placeholder="Posez votre question...">
+</div>
+
+<script>
+  const toggleBtn = document.getElementById('chatbot-toggle');
+  const chatBox = document.getElementById('chatbot-box');
+  const closeBtn = document.getElementById('chat-close');
+  const input = document.getElementById('chat-input');
+  const messages = document.getElementById('chat-messages');
+
+  toggleBtn.onclick = () => {
+    const isVisible = chatBox.style.display === 'flex';
+  
+    chatBox.style.display = isVisible ? 'none' : 'flex';
+    toggleBtn.textContent = isVisible ? '💬' : '❌';
+    toggleBtn.classList.toggle('opened', !isVisible);
+  };
+  closeBtn.onclick = () => chatBox.style.display = 'none';
+
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && input.value.trim()) {
+      const userMsg = input.value.trim();
+      messages.innerHTML += `<div class="msg user">${userMsg}</div>`;
+      input.value = '';
+
+      // ⏳ Afficher "L'assistant rédige..."
+      const typingIndicator = document.createElement('div');
+      typingIndicator.className = 'msg typing';
+      typingIndicator.textContent = "⏳ L’assistant est en train d’écrire...";
+      messages.appendChild(typingIndicator);
+      messages.scrollTop = messages.scrollHeight;
+
+      fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userMsg })
+      })
+        .then(res => res.json())
+        .then(data => {
+          typingIndicator.remove();
+          messages.innerHTML += `<div class="msg bot">${data.reply}</div>`;
+          messages.scrollTop = messages.scrollHeight;
+        })
+        .catch(() => {
+          typingIndicator.remove();
+          messages.innerHTML += `<div class="msg bot">❌ Une erreur est survenue.</div>`;
+        });
+    }
+  });
+</script>
+
+
 
         {% include 'partials/header.html.twig' %}
 
@@ -169,6 +286,26 @@
         {% endblock %}
         {% include 'partials/footer.html.twig' %}
     </body>
+    <button id="theme-toggle" title="Basculer le thème">🌓</button>
+    <script>
+      const themeToggle = document.getElementById('theme-toggle');
+      const body = document.body;
+    
+      // Set theme on load based on saved preference
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        body.classList.add('dark-mode');
+      } else {
+        body.classList.remove('dark-mode');
+      }
+    
+      // Toggle dark/light mode
+      themeToggle.addEventListener('click', () => {
+        const isDark = body.classList.toggle('dark-mode');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      });
+    </script>
+    
 </html>
 {% block javascripts %}
 <script>

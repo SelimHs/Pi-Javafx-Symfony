@@ -3,6 +3,75 @@
 {% block title %}Espaces{% endblock %}
 
 {% block body %}
+<style>
+  body.dark-mode .item {
+    background-color: #1e1e2a !important;
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+  }
+  
+  body.dark-mode .item h4 a,
+  body.dark-mode .item h6,
+  body.dark-mode .item ul li,
+  body.dark-mode .item .category {
+    color: #ffffff;
+  }
+  
+  body.dark-mode .item ul li span {
+    color: #cccccc;
+  }
+  
+  body.dark-mode .add-espace-card {
+    background: linear-gradient(135deg, #f35525, #ff7b42);
+    color: #fff;
+    border-radius: 12px;
+  }
+  
+  body.dark-mode .modal-content {
+    background-color: #2c2c3e;
+    color: #ffffff;
+  }
+  
+  body.dark-mode .form-control,
+  body.dark-mode .form-select {
+    background-color: #1e1e2a;
+    color: #ffffff;
+    border: 1px solid #444;
+  }
+  
+  body.dark-mode .btn-outline-primary {
+    border-color: #f35525;
+    color: #f35525;
+  }
+  
+  body.dark-mode .btn-outline-primary:hover {
+    background-color: #f35525;
+    color: white;
+  }
+  
+  body.dark-mode .btn-outline-success {
+    border-color: #28a745;
+    color: #28a745;
+  }
+  
+  body.dark-mode .btn-outline-success:hover {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  body.dark-mode .btn-outline-secondary {
+    color: #999;
+    border-color: #999;
+  }
+  body.dark-mode input,
+  body.dark-mode textarea,
+  body.dark-mode select {
+    background-color: #fff !important;
+    color: #000 !important;
+    border: 1px solid #ccc !important;
+  }  
+</style>
 <div class="page-heading header-text">
   <div class="container">
     <div class="row">

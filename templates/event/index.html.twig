@@ -3,6 +3,87 @@
 {% block title %}Évènements{% endblock %}
 
 {% block body %}
+<style>
+  /* ✅ Keep input fields styled normally in dark mode */
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select {
+  background-color: #fff !important;
+  color: #000 !important;
+  border: 1px solid #ccc !important;
+}
+
+/* ✅ Prevent image darkening */
+body.dark-mode .item img {
+  filter: none !important;
+}
+
+/* ✅ Fix unreadable text in event cards */
+body.dark-mode .item h4 a,
+body.dark-mode .item h6,
+body.dark-mode .item li,
+body.dark-mode .item p,
+body.dark-mode .item span,
+body.dark-mode .item strong {
+  color: #f1f1f1 !important;
+}
+
+/* ✅ Lighten category background */
+body.dark-mode .category {
+  background-color: #333 !important;
+  color: #f1f1f1 !important;
+}
+
+/* ✅ Maintain readable buttons */
+body.dark-mode .main-button a {
+  background-color: transparent;
+  color: #f1f1f1 !important;
+  border: 1px solid #ccc;
+}
+
+body.dark-mode .main-button a:hover {
+  background-color: #f35525;
+  color: #fff !important;
+  border-color: #f35525;
+}
+
+/* ✅ Make the "add event" card always visible */
+body.dark-mode .add-event-card {
+  background: linear-gradient(135deg, #6a11cb, #2575fc) !important;
+  color: white !important;
+}
+
+
+
+
+/* ✅ Force inside of event cards to use light text */
+body.dark-mode .event-card .item {
+  background-color: #2a2a2a !important; /* optional: add dark bg if too white */
+  color: #f1f1f1 !important;
+}
+
+body.dark-mode .event-card .item h4,
+body.dark-mode .event-card .item h6,
+body.dark-mode .event-card .item ul li,
+body.dark-mode .event-card .item span,
+body.dark-mode .event-card .item strong,
+body.dark-mode .event-card .item a {
+  color: #f1f1f1 !important;
+}
+
+/* ✅ Make sure links inside are clearly visible */
+body.dark-mode .event-card .item h4 a {
+  color: #ffffff !important;
+}
+
+body.dark-mode .event-card .item h4 a:hover {
+  color: #f35525 !important;
+}
+
+
+
+
+</style>
 <div class="page-heading header-text">
   <div class="container">
     <div class="row">
