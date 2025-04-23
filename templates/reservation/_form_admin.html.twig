@@ -1,0 +1,88 @@
+<div class="container mt-5" style="margin-left: 350px; max-width: 700px;">
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+    <div class="p-4 shadow rounded bg-light">
+        {% if form_errors(form) %}
+            <div class="alert alert-danger">
+                <strong>⚠️ Veuillez corriger les erreurs suivantes :</strong>
+                {{ form_errors(form) }}
+            </div>
+        {% endif %}
+
+        <!-- ✅ Date de Réservation -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">📆 Date de Réservation</label>
+            {{ form_widget(form.dateReservation, {
+                'attr': {
+                    'class': 'form-control custom-date-picker'
+                }
+            }) }}
+            {% if form_errors(form.dateReservation) %}
+                <div class="text-danger small">{{ form_errors(form.dateReservation) }}</div>
+            {% else %}
+                <div class="text-muted small">Sélectionnez une date (format : YYYY-MM-DD).</div>
+                {% if form.dateReservation.vars.data is not null %}
+                    <div class="text-info small">
+                        Date sélectionnée : {{ form.dateReservation.vars.data|date('Y-m-d H:i') }}
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+
+        <!-- ✅ Statut -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">📌 Statut</label>
+            {{ form_widget(form.statut, {'attr': {'class': 'form-select'}}) }}
+            {% if form_errors(form.statut) %}
+                <div class="text-danger small">{{ form_errors(form.statut) }}</div>
+            {% else %}
+                <div class="text-muted small">Choisissez un statut : Confirmée ou En attente.</div>
+            {% endif %}
+        </div>
+
+        <!-- ✅ Utilisateur -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">👤 Utilisateur</label>
+            {{ form_widget(form.user, {'attr': {'class': 'form-select'}}) }}
+            {% if form_errors(form.user) %}
+                <div class="text-danger small">{{ form_errors(form.user) }}</div>
+            {% else %}
+                <div class="text-muted small">Sélectionnez un utilisateur existant.</div>
+            {% endif %}
+        </div>
+
+        <!-- ✅ Boutons -->
+        <div class="text-end mt-4">
+            <button type="submit" class="btn btn-success">
+                ✅ {{ button_label|default('Enregistrer la Réservation') }}
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.querySelector('form');
+            const dateInput = document.querySelector('input[name$="[dateReservation]"]');
+
+            form.addEventListener('submit', function (event) {
+                const errorDiv = document.getElementById('date-error');
+
+                if (errorDiv) errorDiv.remove();
+
+                if (!dateInput.value) {
+                    event.preventDefault();
+                    const errorMessage = document.createElement('div');
+                    errorMessage.className = 'text-danger small mt-1';
+                    errorMessage.id = 'date-error';
+                    errorMessage.innerText = "⚠️ Veuillez sélectionner une date de réservation.";
+                    dateInput.parentNode.appendChild(errorMessage);
+                    dateInput.classList.add('is-invalid');
+                } else {
+                    dateInput.classList.remove('is-invalid');
+                }
+            });
+        });
+    </script>
+
+    {{ form_end(form) }}
+</div>

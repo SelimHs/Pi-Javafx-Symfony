@@ -1,0 +1,126 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %}Reservations{% endblock %}
+
+{% block body %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f1f3f9;
+            font-family: 'Lexend', sans-serif;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: bold;
+            color: #1f2937;
+        }
+
+        .reservation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .reservation-card {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            position: relative;
+            transition: 0.2s ease-in-out;
+            border: 1px solid #e2e8f0;
+        }
+
+        .reservation-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .reservation-id {
+            font-size: 18px;
+            font-weight: 600;
+            color: #757dea;
+            margin-bottom: 8px;
+        }
+
+        .reservation-date,
+        .reservation-statut {
+            font-size: 14px;
+            color: #374151;
+            margin: 4px 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .card-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 20px;
+            color: #757dea;
+        }
+
+        .card-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 16px;
+        }
+
+        .card-actions a {
+            background-color: #1f2937;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: background 0.3s ease;
+        }
+
+        .card-actions a:hover {
+            background-color: #ff6000;
+            color: white;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+    </style>
+
+    <h1 class="text-center mt-4">📅 Liste des </h1>
+
+    <div class="reservation-grid">
+        {% for reservation in reservations %}
+            <div class="reservation-card">
+                <div class="card-icon">
+                    <i class="fas fa-calendar-day"></i>
+                </div>
+                <div class="reservation-id">#{{ reservation.idReservation }}</div>
+                <div class="reservation-date">
+                    <i class="fas fa-clock"></i> {{ reservation.dateReservation|date('Y-m-d H:i') }}
+                </div>
+                <div class="reservation-statut">
+                    <i class="fas fa-thumbtack"></i> Statut : <strong>{{ reservation.statut }}</strong>
+                </div>
+                <div class="card-actions">
+                    <a href="{{ path('app_reservation_show', {'idReservation': reservation.idReservation}) }}">
+                        <i class="fas fa-eye"></i> Voir
+                    </a>
+                    <a href="{{ path('app_reservation_accept', {'idReservation': reservation.idReservation}) }}">
+                        <i class="fas fa-pen"></i> Modifier
+                    </a>
+                </div>
+            </div>
+        {% else %}
+            <p class="text-center">Aucune réservation trouvée.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

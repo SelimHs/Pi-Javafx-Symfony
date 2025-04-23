@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Remise{% endblock %}
+
+{% block body %}
+
+    {{ include('remise/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_remise_index') }}">back to list</a>
+
+    {{ include('remise/_delete_form.html.twig') }}
+{% endblock %}

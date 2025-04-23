@@ -30,6 +30,17 @@ final class FournisseurController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $file = $form->get('imagePath')->getData();
+
+            if ($file) {
+                $fileName = uniqid().'.'.$file->guessExtension();
+                $file->move(
+                    $this->getParameter('image_directory'),
+                    $fileName
+                );
+                $fournisseur->setImagePath($fileName);
+            } // No else needed; imagePath is nullable
+
             $entityManager->persist($fournisseur);
             $entityManager->flush();
 
@@ -38,10 +49,9 @@ final class FournisseurController extends AbstractController
 
         return $this->render('fournisseur/new.html.twig', [
             'fournisseur' => $fournisseur,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
-
     #[Route('/{idFournisseur}', name: 'app_fournisseur_show', methods: ['GET'])]
     public function show(Fournisseur $fournisseur): Response
     {
@@ -57,6 +67,17 @@ final class FournisseurController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $file = $form->get('imagePath')->getData();
+
+            if ($file) {
+                $fileName = uniqid() . '.' . $file->guessExtension();
+                $file->move(
+                    $this->getParameter('image_directory'),
+                    $fileName
+                );
+                $fournisseur->setImagePath($fileName);
+            }
+
             $entityManager->flush();
 
             return $this->redirectToRoute('app_fournisseur_index', [], Response::HTTP_SEE_OTHER);
@@ -64,9 +85,10 @@ final class FournisseurController extends AbstractController
 
         return $this->render('fournisseur/edit.html.twig', [
             'fournisseur' => $fournisseur,
-            'form' => $form,
+            'form' => $form->createView(), // ⚠️ fix here: createView()
         ]);
     }
+
 
     #[Route('/{idFournisseur}', name: 'app_fournisseur_delete', methods: ['POST'])]
     public function delete(Request $request, Fournisseur $fournisseur, EntityManagerInterface $entityManager): Response

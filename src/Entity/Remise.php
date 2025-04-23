@@ -4,8 +4,7 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 use App\Repository\RemiseRepository;
 
@@ -15,8 +14,47 @@ class Remise
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'integer', name: 'idRemise')]
     private ?int $idRemise = null;
+
+    #[ORM\Column(type: 'string', name: 'codePromo', nullable: false)]
+    #[Assert\NotBlank(message: "Le code promo ne peut pas être vide.")]
+    #[Assert\Length(
+        min: 3,
+        max: 20,
+        minMessage: "Le code promo doit contenir au moins {{ limit }} caractères.",
+        maxMessage: "Le code promo ne peut pas dépasser {{ limit }} caractères."
+    )]
+    private ?string $codePromo = null;
+
+    #[ORM\Column(type: 'string', name: 'description', nullable: false)]
+    #[Assert\NotBlank(message: "La description ne peut pas être vide.")]
+    #[Assert\Length(
+        min: 5,
+        max: 255,
+        minMessage: "La description doit contenir au moins {{ limit }} caractères.",
+        maxMessage: "La description ne peut pas dépasser {{ limit }} caractères."
+    )]
+    private ?string $description = null;
+
+    #[ORM\Column(type: 'decimal', name: 'pourcentageRemise', nullable: false)]
+    #[Assert\NotBlank(message: "Le pourcentage de remise ne peut pas être vide.")]
+    #[Assert\Range(
+        min: 0,
+        max: 100,
+        notInRangeMessage: "Le pourcentage de remise doit être compris entre {{ min }} et {{ max }}."
+    )]
+    private ?float $pourcentageRemise = null;
+
+    #[ORM\Column(type: 'date', name: 'dateExpiration', nullable: false)]
+    #[Assert\NotBlank(message: "La date d'expiration ne peut pas être vide.")]
+    #[Assert\GreaterThanOrEqual("today", message: "La date d'expiration ne peut pas être dans le passé.")]
+    private ?\DateTimeInterface $dateExpiration = null;
+
+
+    #[ORM\ManyToOne(targetEntity: Reservation::class, inversedBy: 'remises')]
+    #[ORM\JoinColumn(name: 'idReservation', referencedColumnName: 'idReservation', nullable: true)]
+    private ?Reservation $reservation = null;
 
     public function getIdRemise(): ?int
     {
@@ -29,9 +67,6 @@ class Remise
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $codePromo = null;
-
     public function getCodePromo(): ?string
     {
         return $this->codePromo;
@@ -42,9 +77,6 @@ class Remise
         $this->codePromo = $codePromo;
         return $this;
     }
-
-    #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $description = null;
 
     public function getDescription(): ?string
     {
@@ -57,9 +89,6 @@ class Remise
         return $this;
     }
 
-    #[ORM\Column(type: 'decimal', nullable: false)]
-    private ?float $pourcentageRemise = null;
-
     public function getPourcentageRemise(): ?float
     {
         return $this->pourcentageRemise;
@@ -71,65 +100,26 @@ class Remise
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $dateExpiration = null;
-
-    public function getDateExpiration(): ?string
+    public function getDateExpiration(): ?\DateTimeInterface
     {
         return $this->dateExpiration;
     }
 
-    public function setDateExpiration(string $dateExpiration): self
+    public function setDateExpiration(\DateTimeInterface $dateExpiration): self
     {
         $this->dateExpiration = $dateExpiration;
         return $this;
     }
 
-    #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $idReservation = null;
 
-    public function getIdReservation(): ?int
+    public function getReservation(): ?Reservation
     {
-        return $this->idReservation;
+        return $this->reservation;
     }
 
-    public function setIdReservation(int $idReservation): self
+    public function setReservation(?Reservation $reservation): self
     {
-        $this->idReservation = $idReservation;
+        $this->reservation = $reservation;
         return $this;
     }
-
-    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'remise')]
-    private Collection $reservations;
-
-    public function __construct()
-    {
-        $this->reservations = new ArrayCollection();
-    }
-
-    /**
-     * @return Collection<int, Reservation>
-     */
-    public function getReservations(): Collection
-    {
-        if (!$this->reservations instanceof Collection) {
-            $this->reservations = new ArrayCollection();
-        }
-        return $this->reservations;
-    }
-
-    public function addReservation(Reservation $reservation): self
-    {
-        if (!$this->getReservations()->contains($reservation)) {
-            $this->getReservations()->add($reservation);
-        }
-        return $this;
-    }
-
-    public function removeReservation(Reservation $reservation): self
-    {
-        $this->getReservations()->removeElement($reservation);
-        return $this;
-    }
-
 }

@@ -21,7 +21,13 @@ final class ProduitController extends AbstractController
             'produits' => $produitRepository->findAll(),
         ]);
     }
-
+    #[Route('/back',name: 'app_produit_indexback', methods: ['GET'])]
+    public function indexback(ProduitRepository $produitRepository): Response
+    {
+        return $this->render('produit/indexback.html.twig', [
+            'produits' => $produitRepository->findAll(),
+        ]);
+    }
     #[Route('/new', name: 'app_produit_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -30,11 +36,23 @@ final class ProduitController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $file = $form->get('imagePath')->getData();
+
+            if ($file) {
+                $fileName = uniqid() . '.' . $file->guessExtension();
+                $file->move(
+                    $this->getParameter('image_directory'), // defined in services.yaml or config
+                    $fileName
+                );
+                $produit->setImagePath($fileName);
+            }
+
             $entityManager->persist($produit);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_produit_index', [], Response::HTTP_SEE_OTHER);
         }
+
 
         return $this->render('produit/new.html.twig', [
             'produit' => $produit,
@@ -46,8 +64,8 @@ final class ProduitController extends AbstractController
     public function show(Produit $produit): Response
     {
         return $this->render('produit/show.html.twig', [
-            'produit' => $produit,
-        ]);
+            'produit' => $produit,]);
+
     }
 
     #[Route('/{idProduit}/edit', name: 'app_produit_edit', methods: ['GET', 'POST'])]
@@ -57,10 +75,22 @@ final class ProduitController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $file = $form->get('imagePath')->getData();
+
+            if ($file) {
+                $fileName = uniqid() . '.' . $file->guessExtension();
+                $file->move(
+                    $this->getParameter('image_directory'),
+                    $fileName
+                );
+                $produit->setImagePath($fileName);
+            }
+
             $entityManager->flush();
 
             return $this->redirectToRoute('app_produit_index', [], Response::HTTP_SEE_OTHER);
         }
+
 
         return $this->render('produit/edit.html.twig', [
             'produit' => $produit,

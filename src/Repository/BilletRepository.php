@@ -16,6 +16,22 @@ class BilletRepository extends ServiceEntityRepository
         parent::__construct($registry, Billet::class);
     }
 
+    // In BilletRepository
+public function getBilletsCountByEvent(): array
+{
+    $conn = $this->getEntityManager()->getConnection();
+    $sql = '
+        SELECT e.nomEvent as nomEvent, COUNT(b.idBillet) as count
+        FROM billet b
+        JOIN event e ON b.idEvent = e.idEvent
+        GROUP BY e.nomEvent
+    ';
+
+    return $conn->executeQuery($sql)->fetchAllAssociative();
+}
+
+
+
     //    /**
     //     * @return Billet[] Returns an array of Billet objects
     //     */

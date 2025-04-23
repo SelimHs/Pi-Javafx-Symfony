@@ -1,4 +1,103 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+<div class="container mt-5">
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'enctype': 'multipart/form-data'}}) }}
+
+    <div class="p-4 shadow rounded bg-light">
+
+        {% if form_errors(form) %}
+            <div class="alert alert-danger">
+                <strong>⚠️ Erreurs détectées :</strong>
+                {{ form_errors(form) }}
+            </div>
+        {% endif %}
+
+        <!-- Nom du Fournisseur -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">Nom du Fournisseur</label>
+            {{ form_widget(form.nomFournisseur, {
+                'attr': {
+                    'class': 'form-control' ~ (form.nomFournisseur.vars.errors ? ' is-invalid' : '')
+                }
+            }) }}
+            {% for error in form.nomFournisseur.vars.errors %}
+                <div class="invalid-feedback d-block">{{ error.message }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Description -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">Description</label>
+            {{ form_widget(form.description, {
+                'attr': {
+                    'class': 'form-control' ~ (form.description.vars.errors ? ' is-invalid' : '')
+                }
+            }) }}
+            {% for error in form.description.vars.errors %}
+                <div class="invalid-feedback d-block">{{ error.message }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Type -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">Type</label>
+            {{ form_widget(form.type, {
+                'attr': {
+                    'class': 'form-control' ~ (form.type.vars.errors ? ' is-invalid' : '')
+                }
+            }) }}
+            {% for error in form.type.vars.errors %}
+                <div class="invalid-feedback d-block">{{ error.message }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Téléphone -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">Téléphone</label>
+            {{ form_widget(form.telephone, {
+                'attr': {
+                    'class': 'form-control' ~ (form.telephone.vars.errors ? ' is-invalid' : '')
+                }
+            }) }}
+            {% for error in form.telephone.vars.errors %}
+                <div class="invalid-feedback d-block">{{ error.message }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Image actuelle -->
+        {% if fournisseur.imagePath %}
+            <div class="mb-3 text-center">
+                <label class="form-label fw-bold">Image actuelle</label><br>
+                <img src="{{ asset('uploads/images/' ~ fournisseur.imagePath) }}"
+                     alt="Image actuelle"
+                     class="img-thumbnail rounded"
+                     style="max-width: 80px; max-height: 80px; object-fit: cover;">
+                <p class="mt-2 text-muted">{{ fournisseur.imagePath }}</p>
+            </div>
+        {% endif %}
+
+        <!-- Image Upload -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">Image (Optionnelle)</label>
+            <small class="text-muted d-block mb-2">Formats acceptés : JPG, JPEG, PNG — Max 2 Mo</small>
+            {{ form_widget(form.imagePath, {
+                'attr': {
+                    'class': 'form-control' ~ (form.imagePath.vars.errors ? ' is-invalid' : '')
+                }
+            }) }}
+            {% for error in form.imagePath.vars.errors %}
+                <div class="invalid-feedback d-block">{{ error.message }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Buttons -->
+        <div class="text-end mt-4">
+            <button type="submit" class="btn btn-success">
+                ✅ {{ button_label|default('Enregistrer le Fournisseur') }}
+            </button>
+            <a href="{{ path('app_fournisseur_index') }}" class="btn btn-secondary">
+                ⬅️ Retour à la liste
+            </a>
+        </div>
+    </div>
+
+    {{ form_end(form) }}
+</div>

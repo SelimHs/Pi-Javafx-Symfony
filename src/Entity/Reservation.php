@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 use App\Repository\ReservationRepository;
 
@@ -14,8 +15,53 @@ class Reservation
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'integer', name: 'idReservation')]
     private ?int $idReservation = null;
+
+    #[ORM\OneToMany(targetEntity: Remise::class, mappedBy: 'reservation')]
+    private Collection $remises;
+
+
+    #[ORM\Column(type: 'datetime', name: 'dateReservation', nullable: false)]
+    #[Assert\NotBlank(message: "La date de réservation ne peut pas être vide.")]
+    #[Assert\GreaterThanOrEqual(
+        value: "today",
+        message: "La date de réservation ne peut pas être dans le passé."
+    )]
+    private ?\DateTimeInterface $dateReservation = null;
+
+    public function getDateReservation(): ?\DateTimeInterface
+    {
+        return $this->dateReservation;
+    }
+
+    public function setDateReservation(\DateTimeInterface $dateReservation): self
+    {
+        $this->dateReservation = $dateReservation;
+        return $this;
+    }
+    #[ORM\Column(type: 'string', name: 'statut', nullable: false)]
+    #[Assert\NotBlank(message: "Le statut ne peut pas être vide.")]
+    #[Assert\Choice(
+        choices: ['Confirmée', 'En attente'],
+        message: "Le statut doit être 'Confirmée' ou 'En attente'."
+    )]
+    private ?string $statut = null;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'reservations')]
+    #[ORM\JoinColumn(name: 'idUser', referencedColumnName: 'idUser')]
+    #[Assert\NotNull(message: "L'utilisateur ne peut pas être vide.")]
+    private ?User $user = null;
+
+    #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'reservations')]
+    #[ORM\JoinColumn(name: 'idEvent', referencedColumnName: 'idEvent')]
+    #[Assert\NotNull(message: "L'événement ne peut pas être vide.")]
+    private ?Event $event = null;
+
+    public function __construct()
+    {
+        $this->remises = new ArrayCollection();
+    }
 
     public function getIdReservation(): ?int
     {
@@ -28,23 +74,6 @@ class Reservation
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $dateReservation = null;
-
-    public function getDateReservation(): ?string
-    {
-        return $this->dateReservation;
-    }
-
-    public function setDateReservation(string $dateReservation): self
-    {
-        $this->dateReservation = $dateReservation;
-        return $this;
-    }
-
-    #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $statut = null;
-
     public function getStatut(): ?string
     {
         return $this->statut;
@@ -55,10 +84,6 @@ class Reservation
         $this->statut = $statut;
         return $this;
     }
-
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'reservations')]
-    #[ORM\JoinColumn(name: 'idUser', referencedColumnName: 'idUser')]
-    private ?User $user = null;
 
     public function getUser(): ?User
     {
@@ -71,10 +96,6 @@ class Reservation
         return $this;
     }
 
-    #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'reservations')]
-    #[ORM\JoinColumn(name: 'idEvent', referencedColumnName: 'idEvent')]
-    private ?Event $event = null;
-
     public function getEvent(): ?Event
     {
         return $this->event;
@@ -86,19 +107,33 @@ class Reservation
         return $this;
     }
 
-    #[ORM\ManyToOne(targetEntity: Remise::class, inversedBy: 'reservations')]
-    #[ORM\JoinColumn(name: 'idRemise', referencedColumnName: 'idRemise')]
-    private ?Remise $remise = null;
-
-    public function getRemise(): ?Remise
+    /**
+     * @return Collection<int, Remise>
+     */
+    public function getRemises(): Collection
     {
-        return $this->remise;
+        if (!$this->remises instanceof Collection) {
+            $this->remises = new ArrayCollection();
+        }
+        return $this->remises;
     }
 
-    public function setRemise(?Remise $remise): self
+    public function addRemise(Remise $remise): self
     {
-        $this->remise = $remise;
+        if (!$this->getRemises()->contains($remise)) {
+            $this->getRemises()->add($remise);
+            $remise->setReservation($this);
+        }
         return $this;
     }
 
+    public function removeRemise(Remise $remise): self
+    {
+        if ($this->getRemises()->removeElement($remise)) {
+            if ($remise->getReservation() === $this) {
+                $remise->setReservation(null);
+            }
+        }
+        return $this;
+    }
 }

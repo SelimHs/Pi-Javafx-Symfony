@@ -1,0 +1,107 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %}Remises{% endblock %}
+
+
+
+{% block body %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        .remise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            padding: 30px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .remise-card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .remise-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .remise-id {
+            font-size: 20px;
+            font-weight: 700;
+            color: #FF6000;
+            margin-bottom: 10px;
+        }
+
+        .remise-info {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .remise-info strong {
+            color: #222;
+        }
+
+        .remise-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .remise-actions a {
+            background-color: #000;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .remise-actions a:hover {
+            background-color: #FF6000;
+        }
+
+        .remise-icon {
+            font-size: 28px;
+            color: #FF6000;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+    </style>
+    <h1 class="text-center mt-4">🎟️ Remises Disponibles</h1>
+
+    <div class="remise-grid">
+        {% for remise in remises %}
+            <div class="remise-card">
+                <div class="remise-icon"><i class="fas fa-percent"></i></div>
+                <div class="remise-id">#{{ remise.idRemise }} - {{ remise.codePromo }}</div>
+                <div class="remise-info"><i class="fas fa-info-circle"></i> <strong>Description :</strong> {{ remise.description }}</div>
+                <div class="remise-info"><i class="fas fa-tag"></i> <strong>Remise :</strong> {{ remise.pourcentageRemise }}%</div>
+                <div class="remise-info"><i class="fas fa-calendar-times"></i> <strong>Expire le :</strong> {{ remise.dateExpiration|date('Y-m-d') }}</div>
+                <div class="remise-actions">
+                    <a href="{{ path('app_remise_show', {'idRemise': remise.idRemise}) }}">
+                        <i class="fas fa-eye"></i> Voir
+                    </a>
+                    <a href="{{ path('app_remise_edit', {'idRemise': remise.idRemise}) }}">
+                        <i class="fas fa-pen"></i> Modifier
+                    </a>
+                </div>
+            </div>
+        {% else %}
+            <p class="text-center">Aucune remise trouvée.</p>
+        {% endfor %}
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{{ path('app_remise_new') }}" class="btn btn-dark">
+            ➕ Ajouter une Remise
+        </a>
+    </div>
+{% endblock %}

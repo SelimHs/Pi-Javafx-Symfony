@@ -1,45 +1,121 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Produit index{% endblock %}
+{% block title %}Liste des Produits{% endblock %}
+
+
+
 
 {% block body %}
-    <h1>Produit index</h1>
+    <style>
+        .produit-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+        }
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>IdProduit</th>
-                <th>NomProduit</th>
-                <th>PrixProduit</th>
-                <th>Description</th>
-                <th>Categorie</th>
-                <th>Quantite</th>
-                <th>ImagePath</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for produit in produits %}
-            <tr>
-                <td>{{ produit.idProduit }}</td>
-                <td>{{ produit.nomProduit }}</td>
-                <td>{{ produit.prixProduit }}</td>
-                <td>{{ produit.description }}</td>
-                <td>{{ produit.categorie }}</td>
-                <td>{{ produit.quantite }}</td>
-                <td>{{ produit.imagePath }}</td>
-                <td>
-                    <a href="{{ path('app_produit_show', {'idProduit': produit.idProduit}) }}">show</a>
-                    <a href="{{ path('app_produit_edit', {'idProduit': produit.idProduit}) }}">edit</a>
-                </td>
-            </tr>
+        .produit-card {
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            width: 300px;
+        }
+
+        .produit-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .produit-img {
+            width: 150px;
+            height: 160px; /* smaller visible height */
+margin-left: 80px;
+            object-fit: cover;
+            border-bottom: 1px solid #eee;
+            transition: transform 0.4s ease;
+        }
+
+        .produit-card:hover .produit-img {
+            transform: scale(1.1); /* zoom on hover */
+        }
+
+
+
+        .produit-content {
+            padding: 20px;
+        }
+
+        .produit-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .produit-info {
+            font-size: 0.95rem;
+            color: #555;
+        }
+
+        .produit-actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+        }
+
+        .btn-orange {
+            background-color: #ff6600;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .btn-orange:hover {
+            background-color: #e25500;
+        }
+
+        .btn-outline-dark {
+            border-radius: 30px;
+            font-size: 0.9rem;
+        }
+    </style>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">🛒 Nos Produits</h1>
+
+
+
+        {% if produits is empty %}
+            <div class="alert alert-info text-center">Aucun produit trouvé.</div>
         {% else %}
-            <tr>
-                <td colspan="8">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            <div class="produit-grid">
+                {% for produit in produits %}
+                    <div class="produit-card">
+                        {% if produit.imagePath %}
+                            <img src="{{ asset('uploads/images/' ~ produit.imagePath) }}" class="produit-img" alt="{{ produit.nomProduit }}">
+                        {% else %}
+                            <img src="{{ asset('uploads/images/placeholder.png') }}" class="produit-img" alt="Pas d'image">
+                        {% endif %}
 
-    <a href="{{ path('app_produit_new') }}">Create new</a>
+                        <div class="produit-content">
+                            <div class="produit-title">{{ produit.nomProduit }}</div>
+                            <div class="produit-info">
+                                💰 <strong>{{ produit.prixProduit }} DT</strong><br>
+                                📦 Quantité: {{ produit.quantite }}<br>
+                                🏷️ Catégorie: {{ produit.categorie }}
+                            </div>
+
+                            <div class="produit-actions">
+                                <a href="{{ path('app_produit_show', {idProduit: produit.idProduit}) }}" class="btn btn-outline-dark">Voir</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}

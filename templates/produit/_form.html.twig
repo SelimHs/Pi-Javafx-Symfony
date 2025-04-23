@@ -1,4 +1,100 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+<div class="container mt-5" style="max-width: 700px;">
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'enctype': 'multipart/form-data'}}) }}
+
+    <div class="p-4 shadow rounded bg-light">
+        {% if app.request.method == 'POST' and form_errors(form) %}
+            <div class="alert alert-danger">
+                <strong>Erreurs détectées :</strong>
+                {{ form_errors(form) }}
+            </div>
+        {% endif %}
+
+        <!-- Nom -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">Nom du Produit</label>
+            {{ form_widget(form.nomProduit, {'attr': {'class': 'form-control'}}) }}
+            {% if app.request.method == 'POST' and form_errors(form.nomProduit) %}
+                <div class="text-danger small">{{ form_errors(form.nomProduit) }}</div>
+            {% endif %}
+        </div>
+
+        <!-- Prix -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">Prix</label>
+            {{ form_widget(form.prixProduit, {'attr': {'class': 'form-control'}}) }}
+            {% if app.request.method == 'POST' and form_errors(form.prixProduit) %}
+                <div class="text-danger small">{{ form_errors(form.prixProduit) }}</div>
+            {% endif %}
+        </div>
+
+        <!-- Description -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">Description</label>
+            {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+            {% if app.request.method == 'POST' and form_errors(form.description) %}
+                <div class="text-danger small">{{ form_errors(form.description) }}</div>
+            {% endif %}
+        </div>
+
+        <!-- Catégorie -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">Catégorie</label>
+            {{ form_widget(form.categorie, {'attr': {'class': 'form-control'}}) }}
+            {% if app.request.method == 'POST' and form_errors(form.categorie) %}
+                <div class="text-danger small">{{ form_errors(form.categorie) }}</div>
+            {% endif %}
+        </div>
+
+        <!-- Quantité -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">Quantité</label>
+            {{ form_widget(form.quantite, {'attr': {'class': 'form-control'}}) }}
+            {% if app.request.method == 'POST' and form_errors(form.quantite) %}
+                <div class="text-danger small">{{ form_errors(form.quantite) }}</div>
+            {% endif %}
+        </div>
+
+        <!-- Fournisseur -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">Fournisseur</label>
+            {{ form_widget(form.fournisseur, {'attr': {'class': 'form-control'}}) }}
+            {% if app.request.method == 'POST' and form_errors(form.fournisseur) %}
+                <div class="text-danger small">{{ form_errors(form.fournisseur) }}</div>
+            {% endif %}
+        </div>
+
+        <!-- Image actuelle -->
+        {% if produit is defined and produit.imagePath %}
+            <div class="mb-3 text-center">
+                <label class="form-label fw-bold">Image actuelle</label><br>
+                <img src="{{ asset('uploads/images/' ~ produit.imagePath) }}"
+                     alt="Image actuelle"
+                     class="img-thumbnail rounded"
+                     style="max-width: 80px; max-height: 80px; object-fit: cover;">
+                <p class="mt-2 text-muted">{{ produit.imagePath }}</p>
+            </div>
+        {% endif %}
+
+        <!-- Image Upload -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">Image</label>
+            <small class="text-muted d-block mb-2">Formats acceptés : JPG, JPEG, PNG — Max 2 Mo</small>
+            {{ form_widget(form.imagePath, {'attr': {'class': 'form-control'}}) }}
+            {% if app.request.method == 'POST' and form_errors(form.imagePath) %}
+                <div class="text-danger small">{{ form_errors(form.imagePath) }}</div>
+            {% endif %}
+        </div>
+
+        <!-- Buttons -->
+        <div class="text-end mt-4">
+            <button type="submit" class="btn btn-success">
+                ✅ {{ button_label|default('Enregistrer le Produit') }}
+            </button>
+            <a href="{{ path('app_produit_index') }}" class="btn btn-secondary">
+                ⬅️ Retour à la liste
+            </a>
+        </div>
+    </div>
+
+    {{ form_end(form) }}
+</div>

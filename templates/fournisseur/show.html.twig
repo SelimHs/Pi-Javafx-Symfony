@@ -1,42 +1,152 @@
-{% extends 'base.html.twig' %}
+{% extends 'baseBack.html.twig' %}
 
-{% block title %}Fournisseur{% endblock %}
+{% block title %}Détails Fournisseur{% endblock %}
+
+
 
 {% block body %}
-    <h1>Fournisseur</h1>
+    <style>
+        .fournisseur-card {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            transition: transform 0.3s ease;
+        }
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>IdFournisseur</th>
-                <td>{{ fournisseur.idFournisseur }}</td>
-            </tr>
-            <tr>
-                <th>NomFournisseur</th>
-                <td>{{ fournisseur.nomFournisseur }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ fournisseur.description }}</td>
-            </tr>
-            <tr>
-                <th>Type</th>
-                <td>{{ fournisseur.type }}</td>
-            </tr>
-            <tr>
-                <th>Telephone</th>
-                <td>{{ fournisseur.telephone }}</td>
-            </tr>
-            <tr>
-                <th>ImagePath</th>
-                <td>{{ fournisseur.imagePath }}</td>
-            </tr>
-        </tbody>
-    </table>
+        .fournisseur-card:hover {
+            transform: translateY(-5px);
+        }
 
-    <a href="{{ path('app_fournisseur_index') }}">back to list</a>
+        .fournisseur-image {
+            max-width: 160px;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 3px solid #FF6B00;
+        }
 
-    <a href="{{ path('app_fournisseur_edit', {'idFournisseur': fournisseur.idFournisseur}) }}">edit</a>
+        .fournisseur-info-label {
+            font-weight: bold;
+            color: #444;
+        }
 
-    {{ include('fournisseur/_delete_form.html.twig') }}
+        .btn-orange,
+        .btn-black,
+        .btn-delete {
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 500;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-orange {
+            background-color: #FF6B00;
+            color: white;
+        }
+
+        .btn-orange:hover {
+            background-color: #e55c00;
+        }
+
+        .btn-black {
+            background-color: #000;
+            color: white;
+        }
+
+        .btn-black:hover {
+            background-color: #222;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .btn-delete:hover {
+            background-color: #b02a37;
+        }
+
+        .btn-orange:hover i,
+        .btn-black:hover i,
+        .btn-delete:hover i {
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+
+        @media (max-width: 768px) {
+            .flex-md-row {
+                flex-direction: column !important;
+                align-items: center;
+                text-align: center;
+            }
+
+            .text-md-start {
+                text-align: center !important;
+            }
+
+            .action-buttons {
+                justify-content: center;
+            }
+        }
+    </style>
+
+    <div class="container mt-5 animate__animated animate__fadeIn">
+        <div class="fournisseur-card d-flex flex-md-row align-items-center">
+
+            <!-- Image -->
+            <div class="me-md-4 mb-4 mb-md-0">
+                {% if fournisseur.imagePath %}
+                    <img src="{{ asset('uploads/images/' ~ fournisseur.imagePath) }}"
+                         alt="{{ fournisseur.nomFournisseur }}"
+                         class="fournisseur-image">
+                {% else %}
+                    <div class="text-muted">Aucune image</div>
+                {% endif %}
+            </div>
+
+            <!-- Infos -->
+            <div class="flex-grow-1 text-md-start">
+                <h3 class="mb-3 text-uppercase">{{ fournisseur.nomFournisseur }}</h3>
+
+                <p><span class="fournisseur-info-label">Description :</span> {{ fournisseur.description }}</p>
+                <p><span class="fournisseur-info-label">Type :</span> {{ fournisseur.type }}</p>
+                <p><span class="fournisseur-info-label">Téléphone :</span> {{ fournisseur.telephone }}</p>
+
+                <!-- Buttons -->
+                <div class="action-buttons">
+                    <a href="{{ path('app_fournisseur_index') }}" class="btn btn-black">
+                        <i class="fas fa-arrow-left"></i> Retour
+                    </a>
+                    <a href="{{ path('app_fournisseur_edit', {'idFournisseur': fournisseur.idFournisseur}) }}" class="btn btn-orange">
+                        <i class="fas fa-pen"></i> Modifier
+                    </a>
+                    <form method="post" action="{{ path('app_fournisseur_delete', {'idFournisseur': fournisseur.idFournisseur}) }}"
+                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce fournisseur ?');" style="display:inline;">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ fournisseur.idFournisseur) }}">
+                        <button class="btn btn-delete" type="submit">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

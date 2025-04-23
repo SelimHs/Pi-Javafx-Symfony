@@ -1,0 +1,130 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détail Remise{% endblock %}
+
+
+
+{% block body %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        .detail-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .detail-container h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #FF6000;
+        }
+
+        .detail-item {
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .detail-item i {
+            margin-right: 10px;
+            color: #FF6000;
+        }
+
+        .detail-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .detail-actions a, .detail-actions button {
+            background-color: #000;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            border: none;
+            font-weight: bold;
+        }
+
+        .detail-actions a:hover, .detail-actions button:hover {
+            background-color: #FF6000;
+        }
+
+        .btn-submit {
+            margin-top: 20px;
+            background-color: #FF6000;
+            color: white;
+            font-weight: 600;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background-color: #e65100;
+        }
+
+        input[type="date"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .info-card {
+            background-color: #f9f9f9;
+            border: 2px dashed #FF6000;
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .info-card h5 {
+            margin-bottom: 15px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .info-card p {
+            margin: 4px 0;
+            font-size: 15px;
+        }
+
+        .info-card span {
+            font-weight: 600;
+            color: #222;
+        }
+    </style>
+    <div class="detail-container">
+        <h1><i class="fas fa-ticket-alt"></i> Détail Remise</h1>
+
+        {% if remise is defined and remise.idRemise is not null %}
+            <div class="info-card">
+                <h5><i class="fas fa-info-circle"></i> Informations sur la Remise</h5>
+                <p><i class="fas fa-hashtag"></i> <span>ID :</span> {{ remise.idRemise }}</p>
+                <p><i class="fas fa-barcode"></i> <span>Code Promo :</span> {{ remise.codePromo }}</p>
+                <p><i class="fas fa-align-left"></i> <span>Description :</span> {{ remise.description }}</p>
+                <p><i class="fas fa-percentage"></i> <span>Pourcentage :</span> {{ remise.pourcentageRemise }}%</p>
+                <p><i class="fas fa-calendar-alt"></i> <span>Expiration :</span> {{ remise.dateExpiration|date('Y-m-d') }}</p>
+            </div>
+        {% endif %}
+
+        <div class="detail-actions mt-4">
+            <a href="{{ path('app_remise_index') }}"><i class="fas fa-arrow-left"></i> Retour</a>
+            {% if remise is defined and remise.idRemise is not null %}
+                <a href="{{ path('app_remise_edit', {'idRemise': remise.idRemise}) }}"><i class="fas fa-pen"></i> Modifier</a>
+            {% endif %}
+        </div>
+
+        {% if remise is defined and remise.idRemise is not null %}
+            <div class="text-center mt-3">
+                {{ include('remise/_delete_form.html.twig') }}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
