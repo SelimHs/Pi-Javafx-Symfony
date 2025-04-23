@@ -16,22 +16,54 @@
 
 <div class="section properties">
   <div class="container">
-
-    <!-- Barre de recherche -->
     <div class="row mb-4">
       <div class="col-lg-12 text-center">
         <input type="text" id="searchEspace" class="form-control w-50 mx-auto" placeholder="Rechercher un espace...">
       </div>
     </div>
+    <!-- Bouton pour afficher les réservations -->
+<div class="row mb-4">
+  <div class="col-lg-12 text-center">
+    <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#reservationListModal">📋 Liste des réservations</button>
+  </div>
+</div>
 
-    <!-- Liste des espaces -->
+<!-- Modale affichage réservations -->
+<div class="modal fade" id="reservationListModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Liste des Réservations</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div id="reservationLoader" class="text-center">Chargement...</div>
+        <div id="reservationContent" style="display: none;">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Nom</th>
+                <th>Date Début</th>
+                <th>Date Fin</th>
+                <th>Espace</th>
+                <th>Organisateur</th>
+                <th>Prix</th>
+              </tr>
+            </thead>
+            <tbody id="reservationTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
     <div class="row properties-box" id="espaceGrid">
-
-      <!-- ✅ Carte Ajouter un Espace -->
       <div class="col-lg-4 col-md-6 align-self-center mb-30 properties-items espace-card">
         <a href="{{ path('app_espace_new') }}" class="text-decoration-none">
-          <div class="item position-relative shadow-sm text-center d-flex flex-column justify-content-center align-items-center add-espace-card"
-               style="height: 100%; min-height: 420px;">
+          <div class="item position-relative shadow-sm text-center d-flex flex-column justify-content-center align-items-center add-espace-card" style="height: 100%; min-height: 420px;">
             <i class="fa fa-plus-circle fa-3x text-white mb-3"></i>
             <h5 class="text-white">Créer un nouvel espace</h5>
             <p class="text-white">Cliquez ici pour ajouter un nouvel espace</p>
@@ -39,39 +71,69 @@
         </a>
       </div>
 
-      <!-- ✅ Cartes des espaces -->
       {% for espace in espaces %}
         <div class="col-lg-4 col-md-6 align-self-center mb-30 properties-items espace-card">
-          <div class="item position-relative shadow-sm" style="transition: transform 0.3s;">
+          <div class="item position-relative shadow-sm">
             <a href="{{ path('app_espace_show', {'idEspace': espace.idEspace}) }}">
-              <img 
-                src="{{ asset('uploads/' ~ (espace.image is not empty ? espace.image : 'exemple.jpg')) }}" 
-                class="card-img-top" 
-                alt="{{ espace.nomEspace }}"
-              >
-              {% if espace.image is empty %}
-                <span class="badge badge-secondary position-absolute" style="top: 10px; left: 10px;">Placeholder</span>
-              {% endif %}
+              <img src="{{ asset('uploads/' ~ (espace.image is not empty ? espace.image : 'exemple.jpg')) }}" class="card-img-top" alt="{{ espace.nomEspace }}">
             </a>
             <span class="category">{{ espace.TypeEspace }}</span>
             <h6>{{ espace.prix }} Dt</h6>
-            <h4>
-              <a href="{{ path('app_espace_show', {'idEspace': espace.idEspace}) }}">
-                {{ espace.nomEspace }}
-              </a>
-            </h4>
+            <h4><a href="{{ path('app_espace_show', {'idEspace': espace.idEspace}) }}">{{ espace.nomEspace }}</a></h4>
             <ul>
               <li>Adresse : <span>{{ espace.adresse }}</span></li>
               <li>Capacité : <span>{{ espace.capacite }}</span></li>
-              <li>
-                Disponibilité :
-                <span class="badge {{ espace.disponibilite == 'Disponible' ? 'bg-success' : 'bg-danger' }}">
-                  {{ espace.disponibilite }}
-                </span>
-              </li>
+              <li>Disponibilité : <span class="badge {{ espace.disponibilite == 'Disponible' ? 'bg-success' : 'bg-danger' }}">{{ espace.disponibilite }}</span></li>
             </ul>
-            <div class="main-button d-flex justify-content-center mt-2">
-              <a href="{{ path('app_espace_show', {'idEspace': espace.idEspace}) }}">Détails</a>
+            <div class="main-button d-flex flex-column gap-2 align-items-center mt-2">
+              <a href="{{ path('app_espace_show', {'idEspace': espace.idEspace}) }}" class="btn btn-outline-primary w-75">🔍 Détails</a>
+              {% if espace.disponibilite == 'Disponible' %}
+                <button class="btn btn-outline-success w-75" data-bs-toggle="modal" data-bs-target="#reservationModal{{ espace.idEspace }}">📅 Réserver</button>
+              {% else %}
+                <button class="btn btn-outline-secondary w-75" disabled>⛔ Indisponible</button>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <div class="modal fade" id="reservationModal{{ espace.idEspace }}" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <form class="reservation-form" data-espace-id="{{ espace.idEspace }}">
+                <div class="modal-header">
+                  <h5 class="modal-title">Réserver {{ espace.nomEspace }}</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="mb-3">
+                    <label>Nom complet</label>
+                    <input type="text" name="nom_complet" class="form-control" required>
+                  </div>
+                  <div class="mb-3">
+                    <label>Date début</label>
+                    <input type="date" name="date_debut" class="form-control" required>
+                  </div>
+                  <div class="mb-3">
+                    <label>Date fin</label>
+                    <input type="date" name="date_fin" class="form-control" required>
+                  </div>
+                  {% if espace.organisateurs is not empty %}
+                  <div class="mb-3">
+                    <label>Organisateur</label>
+                    <select name="id_organisateur" class="form-select">
+                      <option value="">-- Aucun organisateur --</option>
+                      {% for org in espace.organisateurs %}
+                        <option value="{{ org.id_org }}">{{ org.nom_org }} {{ org.prenom_org }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                  {% endif %}
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">Valider</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
@@ -81,109 +143,128 @@
         </div>
       {% endfor %}
     </div>
-
-    <!-- ✅ Pagination dynamique JS -->
-    <div class="row mt-4 justify-content-center">
-      <div class="col-auto">
-        <button class="btn btn-outline-primary me-2" id="prevBtn">← Précédent</button>
-        <span id="pageInfo" class="align-middle"></span>
-        <button class="btn btn-outline-primary ms-2" id="nextBtn">Suivant →</button>
-      </div>
-    </div>
   </div>
 </div>
-
-<!-- ✅ Bouton retour en haut -->
-<button onclick="scrollToTop()" id="scrollTopBtn" title="Retour en haut">⬆</button>
-
-{# ✅ STYLES BONUS #}
-<style>
-  .espace-card .item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0 12px rgba(0,0,0,0.15);
-  }
-
-  #scrollTopBtn {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    display: none;
-    z-index: 999;
-    background-color: #007bff;
-    color: white;
-    padding: 12px 15px;
-    border: none;
-    border-radius: 50%;
-    font-size: 20px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-
-  #scrollTopBtn:hover {
-    background-color: #0056b3;
-  }
-
-  .add-espace-card {
-    background: linear-gradient(135deg, #007bff 0%, #00c6ff 100%);
-    border-radius: 10px;
-    color: white;
-    transition: all 0.3s ease;
-  }
-
-  .add-espace-card:hover {
-    transform: scale(1.03);
-    box-shadow: 0 10px 20px rgba(0, 123, 255, 0.3);
-  }
-</style>
-
-{# ✅ SCRIPT JS : filtrage + pagination + retour en haut #}
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
 <script>
-  const searchInput = document.getElementById('searchEspace');
-  const cards = Array.from(document.querySelectorAll('.espace-card'));
-  const itemsPerPage = 6;
-  let currentPage = 1;
+document.addEventListener("DOMContentLoaded", function () {
+  const today = new Date();
+  const minStartDate = new Date(today.setDate(today.getDate() + 7)).toISOString().split('T')[0];
 
-  function updatePagination() {
-    const query = searchInput.value.toLowerCase();
-    const filteredCards = cards.filter(card => card.textContent.toLowerCase().includes(query));
+  document.querySelectorAll('.reservation-form').forEach(form => {
+    const dateDebutInput = form.querySelector('input[name="date_debut"]');
+    const dateFinInput = form.querySelector('input[name="date_fin"]');
 
-    filteredCards.forEach((card, index) => {
-      const start = (currentPage - 1) * itemsPerPage;
-      const end = currentPage * itemsPerPage;
-      card.style.display = index >= start && index < end ? '' : 'none';
+    if (dateDebutInput) dateDebutInput.min = minStartDate;
+
+    dateDebutInput?.addEventListener('change', () => {
+      const start = new Date(dateDebutInput.value);
+      const minEnd = new Date(start.getTime() + 24 * 60 * 60 * 1000); // +1 jour
+      dateFinInput.min = minEnd.toISOString().split('T')[0];
     });
 
-    const totalPages = Math.ceil(filteredCards.length / itemsPerPage);
-    document.getElementById('pageInfo').textContent = `Page ${currentPage} / ${totalPages || 1}`;
-    document.getElementById('prevBtn').disabled = currentPage === 1;
-    document.getElementById('nextBtn').disabled = currentPage === totalPages;
-  }
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
 
-  searchInput.addEventListener('input', () => {
-    currentPage = 1;
-    updatePagination();
+      const dateDebut = new Date(dateDebutInput.value);
+      const dateFin = new Date(dateFinInput.value);
+
+      if (dateDebut < new Date(minStartDate)) {
+        alert("❌ La réservation ne peut commencer qu’à partir de 7 jours après aujourd’hui.");
+        return;
+      }
+
+      if (dateFin <= dateDebut) {
+        alert("❌ La date de fin doit être au moins 1 jour après la date de début.");
+        return;
+      }
+
+      const formData = new FormData(this);
+      const payload = {
+        nom_complet: formData.get('nom_complet')?.trim(),
+        date_debut: formData.get('date_debut'),
+        date_fin: formData.get('date_fin'),
+        id_espace: this.dataset.espaceId,
+        id_organisateur: formData.get('id_organisateur') || ''
+      };
+
+      try {
+        const response = await fetch("{{ path('api_reserver_sheetbest') }}", {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          alert("✅ Réservation enregistrée !");
+          const closeBtn = this.closest('.modal').querySelector('.btn-close');
+          closeBtn?.click();
+        } else {
+          alert("❌ Erreur : " + (result.error || "Erreur inconnue."));
+        }
+      } catch (error) {
+        alert("❌ Erreur technique : " + error.message);
+        console.error(error);
+      }
+    });
   });
+});
 
-  document.getElementById('prevBtn').addEventListener('click', () => {
-    currentPage--;
-    updatePagination();
-  });
-
-  document.getElementById('nextBtn').addEventListener('click', () => {
-    currentPage++;
-    updatePagination();
-  });
-
-  // Scroll to top button
-  const scrollBtn = document.getElementById("scrollTopBtn");
-  window.onscroll = () => {
-    scrollBtn.style.display = (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) ? "block" : "none";
-  };
-
-  function scrollToTop() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  updatePagination();
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const modal = document.getElementById('reservationListModal');
+  const loader = document.getElementById('reservationLoader');
+  const content = document.getElementById('reservationContent');
+  const tbody = document.getElementById('reservationTableBody');
+
+  modal.addEventListener('show.bs.modal', async () => {
+    loader.style.display = 'block';
+    content.style.display = 'none';
+    tbody.innerHTML = '';
+
+    try {
+      const response = await fetch("{{ path('app_reservations_liste') }}");
+      const data = await response.json();
+
+      if (Array.isArray(data)) {
+        data.forEach(res => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${res.nom_complet ?? '-'}</td>
+            <td>${formatDate(res.date_debut)}</td>
+            <td>${formatDate(res.date_fin)}</td>
+            <td>${res.id_espace ?? '-'}</td>
+            <td>${res.id_organisateur || '—'}</td>
+            <td>${res.prix ?? '0'} Dt</td>
+          `;
+          tbody.appendChild(row);
+        });
+
+        loader.style.display = 'none';
+        content.style.display = 'block';
+      } else {
+        loader.innerHTML = '❌ Format de données invalide.';
+      }
+    } catch (e) {
+      loader.innerHTML = '❌ Erreur lors du chargement des données.';
+      console.error(e);
+    }
+  });
+
+  function formatDate(excelDate) {
+    if (!excelDate || isNaN(excelDate)) return '-';
+    // Convertit un timestamp Excel vers un format lisible
+    const baseDate = new Date(Date.UTC(1899, 11, 30));
+    baseDate.setDate(baseDate.getDate() + parseInt(excelDate));
+    return baseDate.toISOString().split('T')[0];
+  }
+});
+
+</script>
+
 {% endblock %}
