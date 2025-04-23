@@ -25,12 +25,11 @@
     {% else %}
       <div class="row properties-box">
         {% for produit in produits %}
-          <div class="col-lg-4 col-md-6 align-self-center mb-30 properties-items espace-card">
-            <div class="item position-relative shadow-sm">
+          <div class="col-lg-4 col-md-6 align-self-center mb-30 properties-items">
+            <div class="item position-relative shadow-sm produit-card" data-id="{{ produit.idProduit }}">
 
-              <div class="form-check position-absolute" style="top: 10px; left: 10px;">
-                <input type="checkbox" class="form-check-input produit-select" value="{{ produit.idProduit }}">
-              </div>
+              <!-- Checkbox cachée -->
+              <input type="checkbox" class="form-check-input produit-select d-none" value="{{ produit.idProduit }}">
 
               {% if produit.imagePath %}
                 <img src="{{ asset('uploads/' ~ produit.imagePath) }}" class="card-img-top" alt="{{ produit.nomProduit }}">
@@ -76,8 +75,6 @@
 <script>
 document.getElementById('btnGenerateIdea')?.addEventListener('click', async () => {
   const ids = [...document.querySelectorAll('.produit-select:checked')].map(cb => cb.value);
-  console.log("Produits sélectionnés :", ids);
-
   if (ids.length === 0) {
     alert("❗ Veuillez sélectionner au moins un produit.");
     return;
@@ -90,19 +87,39 @@ document.getElementById('btnGenerateIdea')?.addEventListener('click', async () =
 
   try {
     const res = await fetch("{{ path('api_generate_idea') }}", {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ ids }) // 🟢 ici on envoie les ids au format JSON
-});
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ids })
+    });
 
-const data = await res.json();
-document.getElementById('ideaContent').innerText = data.idea;
-
+    const data = await res.json();
+    document.getElementById('ideaContent').innerText = data.idea;
   } catch (err) {
     document.getElementById('ideaContent').innerHTML = `<p class="text-danger">❌ Erreur JS : ${err.message}</p>`;
     console.error(err);
   }
 });
 
+// 👉 Sélection en cliquant sur toute la carte
+document.querySelectorAll('.produit-card').forEach(card => {
+  card.addEventListener('click', e => {
+    if (e.target.closest('a, button')) return; // ne pas déclencher sur les liens/boutons
+    const checkbox = card.querySelector('.produit-select');
+    checkbox.checked = !checkbox.checked;
+    card.classList.toggle('selected', checkbox.checked);
+  });
+});
 </script>
+
+<style>
+.produit-card.selected {
+  border: 2px solid #f39c12 !important;
+  box-shadow: 0 0 10px rgba(243, 156, 18, 0.4) !important;
+  transition: border 0.3s ease;
+  cursor: pointer;
+}
+.produit-card {
+  cursor: pointer;
+}
+</style>
 {% endblock %}
