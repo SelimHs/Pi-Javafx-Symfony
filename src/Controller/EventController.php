@@ -14,6 +14,21 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/event')]
 final class EventController extends AbstractController
 {
+    #[Route('/countdown', name: 'event_countdown')]
+public function countdown(EventRepository $eventRepo): Response
+{
+    $now = new \DateTime();
+    $events = $eventRepo->createQueryBuilder('e')
+        ->where('e.date > :now')
+        ->orderBy('e.date', 'ASC')
+        ->setParameter('now', $now->format('Y-m-d'))
+        ->getQuery()
+        ->getResult();
+
+    return $this->render('event/countdown.html.twig', [
+        'events' => $events,
+    ]);
+}
     #[Route(name: 'app_event_index', methods: ['GET'])]
     public function index(EventRepository $eventRepository): Response
     {
@@ -219,4 +234,5 @@ public function editDasboard(Request $request, Event $event, EntityManagerInterf
 
         return $this->redirectToRoute('dashboard_event_index', [], Response::HTTP_SEE_OTHER);
     }
+    
 }

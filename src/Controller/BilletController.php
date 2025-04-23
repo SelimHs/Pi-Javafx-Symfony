@@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Service\PdfGeneratorService;
+use App\Service\BilletMailerService;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 #[Route('/billet')]
 final class BilletController extends AbstractController
@@ -60,8 +62,14 @@ final class BilletController extends AbstractController
     }
 
     #[Route('/reservation/{id}', name: 'app_billet_reservation', methods: ['GET', 'POST'])]
-    public function newFront(Request $request, Event $event, EntityManagerInterface $em, RemiseRepository $remiseRepo, PdfGeneratorService $pdfGenerator): Response
-    {
+    public function newFront(
+        Request $request,
+        Event $event,
+        EntityManagerInterface $em,
+        RemiseRepository $remiseRepo,
+        PdfGeneratorService $pdfGenerator,
+        BilletMailerService $mailer
+    ): Response {
         $billet = new Billet();
         $reservation = new Reservation();
         $billet->setEvent($event);
@@ -76,9 +84,14 @@ final class BilletController extends AbstractController
         $reservation->setUser($em->getRepository(\App\Entity\User::class)->find(1));
     
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($billet->getType() === 'DUO') $prix += $event->getPrix() * 0.5;
-            elseif ($billet->getType() === 'VIP') $prix = $event->getPrix() * 3;
+            // 💰 Adjust price based on type
+            if ($billet->getType() === 'DUO') {
+                $prix += $event->getPrix() * 0.5;
+            } elseif ($billet->getType() === 'VIP') {
+                $prix = $event->getPrix() * 3;
+            }
     
+            // 🔖 Apply promo
             $codePromo = $form->get('codePromo')->getData();
             if ($codePromo) {
                 $remise = $remiseRepo->findOneBy(['codePromo' => $codePromo]);
@@ -96,25 +109,44 @@ final class BilletController extends AbstractController
             $em->persist($billet);
             $em->flush();
     
+            // 📄 Generate PDF
             $pdfUrl = $pdfGenerator->generateBilletPdf($billet);
-            if ($pdfUrl) {
-                return $this->redirect($pdfUrl);
+    
+            // ✅ Optional: Log for debugging
+            file_put_contents('var/log/billet_debug.log', "PDF Generated: $pdfUrl\n", FILE_APPEND);
+    
+            // 📧 Send email
+            try {
+                $mailer->sendBilletEmail(
+                    'dark_soul@hotmail.fr',
+                    $billet->getProprietaire() ?? 'Client'
+                );
+                file_put_contents('var/log/billet_debug.log', "Mail sent successfully.\n", FILE_APPEND);
+            } catch (\Exception $e) {
+                file_put_contents('var/log/billet_debug.log', "Mail error: " . $e->getMessage() . "\n", FILE_APPEND);
             }
     
-            return $this->redirectToRoute('app_event_index');
+            // 🔁 Use RedirectResponse for external URLs
+            return new RedirectResponse($pdfUrl);
         }
     
         return $this->render('billet/front_reservation.html.twig', [
             'form' => $form,
             'event' => $event,
             'prixFinal' => $prix,
-            'promoCodes' => [], // Replace if needed
+            'promoCodes' => [],
         ]);
     }
 
 
 
 
+    #[Route('/test-mail', name: 'test_mail')]
+    public function testMail(BilletMailerService $mailer): Response
+    {
+        $mailer->sendBilletEmail('dark_soul@hotmail.fr', 'TestUser');
+        return new Response('Email sent');
+    }
     #[Route('/{idBillet}', name: 'app_billet_show', methods: ['GET'])]
     public function show(Billet $billet): Response
     {
