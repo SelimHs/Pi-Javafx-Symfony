@@ -14,7 +14,7 @@ class Organisateur
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(name:'id_org',type: 'integer')]
     private ?int $id_org = null;
 
     public function getId_org(): ?int
@@ -28,7 +28,7 @@ class Organisateur
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(name:'nom_org',type: 'string', nullable: false)]
     private ?string $nom_org = null;
 
     public function getNom_org(): ?string
@@ -42,7 +42,7 @@ class Organisateur
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(name:'prenom_org',type: 'string', nullable: false)]
     private ?string $prenom_org = null;
 
     public function getPrenom_org(): ?string
@@ -56,7 +56,7 @@ class Organisateur
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(name:'description_org',type: 'string', nullable: false)]
     private ?string $description_org = null;
 
     public function getDescription_org(): ?string

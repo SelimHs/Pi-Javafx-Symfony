@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 use App\Repository\EspaceRepository;
 
@@ -14,7 +15,7 @@ class Espace
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(name: "idEspace", type: 'integer')]
     private ?int $idEspace = null;
 
     public function getIdEspace(): ?int
@@ -28,8 +29,11 @@ class Espace
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(name: "nomEspace", type: 'string', nullable: false)]
+    #[Assert\NotBlank(message: "Le nom de l'espace est requis.")]
+    #[Assert\Length(min: 3, minMessage: "Le nom doit contenir au moins 3 caractères.")]
     private ?string $nomEspace = null;
+
 
     public function getNomEspace(): ?string
     {
@@ -42,7 +46,8 @@ class Espace
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(name: "adresse", type: 'string', nullable: false)]
+    #[Assert\NotBlank(message: "L'adresse est requise.")]
     private ?string $adresse = null;
 
     public function getAdresse(): ?string
@@ -56,7 +61,9 @@ class Espace
         return $this;
     }
 
-    #[ORM\Column(type: 'integer', nullable: false)]
+    #[ORM\Column(name: "capacite", type: 'integer', nullable: false)]
+    #[Assert\NotBlank(message: "La capacité est requise.")]
+    #[Assert\Positive(message: "La capacité doit être un nombre positif.")]
     private ?int $capacite = null;
 
     public function getCapacite(): ?int
@@ -70,7 +77,7 @@ class Espace
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(name: "disponibilite", type: 'string', nullable: false)]
     private ?string $disponibilite = null;
 
     public function getDisponibilite(): ?string
@@ -84,7 +91,9 @@ class Espace
         return $this;
     }
 
-    #[ORM\Column(type: 'float', nullable: false)]
+    #[ORM\Column(name: "prix", type: 'float', nullable: false)]
+    #[Assert\NotBlank(message: "Le prix est requis.")]
+    #[Assert\PositiveOrZero(message: "Le prix ne peut pas être négatif.")]
     private ?float $prix = null;
 
     public function getPrix(): ?float
@@ -102,6 +111,7 @@ class Espace
     #[ORM\JoinColumn(name: 'idUser', referencedColumnName: 'idUser')]
     private ?User $user = null;
 
+
     public function getUser(): ?User
     {
         return $this->user;
@@ -113,7 +123,7 @@ class Espace
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(name: "Type_espace", type: 'string', nullable: false)]
     private ?string $Type_espace = null;
 
     public function getType_espace(): ?string
@@ -127,7 +137,7 @@ class Espace
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(name: "image", type: 'string', nullable: false)]
     private ?string $image = null;
 
     public function getImage(): ?string
@@ -185,5 +195,4 @@ class Espace
 
         return $this;
     }
-
-}
+}   

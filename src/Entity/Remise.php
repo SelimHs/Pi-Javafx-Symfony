@@ -15,7 +15,7 @@ class Remise
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(name:'idRemise',type: 'integer')]
+    #[ORM\Column(type: 'integer')]
     private ?int $idRemise = null;
 
     public function getIdRemise(): ?int
@@ -29,7 +29,7 @@ class Remise
         return $this;
     }
 
-    #[ORM\Column(name:'codePromo',type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string', nullable: false)]
     private ?string $codePromo = null;
 
     public function getCodePromo(): ?string
@@ -43,7 +43,7 @@ class Remise
         return $this;
     }
 
-    #[ORM\Column(name:'description',type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string', nullable: false)]
     private ?string $description = null;
 
     public function getDescription(): ?string
@@ -57,7 +57,7 @@ class Remise
         return $this;
     }
 
-    #[ORM\Column(name:'pourcentageRemise',type: 'decimal', nullable: false)]
+    #[ORM\Column(type: 'decimal', nullable: false)]
     private ?float $pourcentageRemise = null;
 
     public function getPourcentageRemise(): ?float
@@ -71,7 +71,7 @@ class Remise
         return $this;
     }
 
-    #[ORM\Column(name:'dateExpiration',type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string', nullable: false)]
     private ?string $dateExpiration = null;
 
     public function getDateExpiration(): ?string
@@ -85,7 +85,7 @@ class Remise
         return $this;
     }
 
-    #[ORM\Column(name:'idReservation',type: 'integer', nullable: false)]
+    #[ORM\Column(type: 'integer', nullable: false)]
     private ?int $idReservation = null;
 
     public function getIdReservation(): ?int

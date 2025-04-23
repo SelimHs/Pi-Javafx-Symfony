@@ -14,7 +14,7 @@ class Reservation
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(name:'idReservation',type: 'integer')]
+    #[ORM\Column(type: 'integer')]
     private ?int $idReservation = null;
 
     public function getIdReservation(): ?int
@@ -28,7 +28,7 @@ class Reservation
         return $this;
     }
 
-    #[ORM\Column(name:'dateReservation',type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string', nullable: false)]
     private ?string $dateReservation = null;
 
     public function getDateReservation(): ?string
@@ -42,7 +42,7 @@ class Reservation
         return $this;
     }
 
-    #[ORM\Column(name:'statut',type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string', nullable: false)]
     private ?string $statut = null;
 
     public function getStatut(): ?string

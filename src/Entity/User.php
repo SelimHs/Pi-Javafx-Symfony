@@ -14,19 +14,21 @@ class User
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(name: 'idUser', type: 'integer')]
-    private ?int $idUser = null;
+    #[ORM\Column(name: "idUser",type: 'integer')] // Retirez name: "idUser" si possible
+    private ?int $id = null;
 
-    public function getIdUser(): ?int
+    public function getId(): ?int
     {
-        return $this->idUser;
+        return $this->id;
     }
 
-    public function setIdUser(int $idUser): self
+    public function setId(int $id): self
     {
-        $this->idUser = $idUser;
+        $this->id = $id;
         return $this;
     }
+
+
 
     #[ORM\Column(type: 'string', nullable: false)]
     private ?string $nom = null;
@@ -84,7 +86,7 @@ class User
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(name: 'numeroTelephone', type: 'string', nullable: false)]
     private ?string $numeroTelephone = null;
 
     public function getNumeroTelephone(): ?string
@@ -244,5 +246,4 @@ class User
         $this->getReservations()->removeElement($reservation);
         return $this;
     }
-
 }
