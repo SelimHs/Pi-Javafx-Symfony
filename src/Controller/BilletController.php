@@ -112,22 +112,14 @@ final class BilletController extends AbstractController
             // 📄 Generate PDF
             $pdfUrl = $pdfGenerator->generateBilletPdf($billet);
     
-            // ✅ Optional: Log for debugging
-            file_put_contents('var/log/billet_debug.log', "PDF Generated: $pdfUrl\n", FILE_APPEND);
-    
-            // 📧 Send email
-            try {
-                $mailer->sendBilletEmail(
-                    'dark_soul@hotmail.fr',
-                    $billet->getProprietaire() ?? 'Client'
-                );
-                file_put_contents('var/log/billet_debug.log', "Mail sent successfully.\n", FILE_APPEND);
-            } catch (\Exception $e) {
-                file_put_contents('var/log/billet_debug.log', "Mail error: " . $e->getMessage() . "\n", FILE_APPEND);
-            }
     
             // 🔁 Use RedirectResponse for external URLs
-            return new RedirectResponse($pdfUrl);
+           if ($pdfUrl) {
+                 return $this->redirect($pdfUrl);
+             }
+     
+             return $this->redirectToRoute('app_event_index');
+         
         }
     
         return $this->render('billet/front_reservation.html.twig', [

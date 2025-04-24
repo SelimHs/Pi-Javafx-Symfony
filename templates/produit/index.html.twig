@@ -3,71 +3,6 @@
 {% block title %}Nos Produits{% endblock %}
 
 {% block body %}
-<style>
-  body.dark-mode .item {
-    background-color: #1e1e2a !important;
-    color: #ffffff;
-    border-radius: 12px;
-    padding: 20px;
-  }
-  
-  body.dark-mode .item h4 a,
-  body.dark-mode .item h6,
-  body.dark-mode .item ul li,
-  body.dark-mode .item .category {
-    color: #ffffff;
-  }
-  
-  body.dark-mode .item ul li span {
-    color: #cccccc;
-  }
-  
-  body.dark-mode .card-img-top {
-    filter: none !important;
-    opacity: 1 !important;
-  }
-  
-  body.dark-mode .modal-content {
-    background-color: #2c2c3e;
-    color: #ffffff;
-  }
-  
-  body.dark-mode .form-control,
-  body.dark-mode .form-select {
-    background-color: #1e1e2a;
-    color: #ffffff;
-    border: 1px solid #444;
-  }
-  
-  body.dark-mode .btn-outline-dark {
-    border-color: #f35525;
-    color: #f35525;
-  }
-  
-  body.dark-mode .btn-outline-dark:hover {
-    background-color: #f35525;
-    color: white;
-  }
-  
-  body.dark-mode .btn-warning {
-    background-color: #f39c12;
-    border-color: #f39c12;
-    color: white;
-  }
-  
-  body.dark-mode .btn-warning:hover {
-    background-color: #e67e22;
-    border-color: #e67e22;
-  }
-
-  body.dark-mode input,
-body.dark-mode textarea,
-body.dark-mode select {
-  background-color: #fff !important;
-  color: #000 !important;
-  border: 1px solid #ccc !important;
-}
-</style>
 <div class="page-heading header-text">
   <div class="container">
     <div class="row">
@@ -79,23 +14,28 @@ body.dark-mode select {
   </div>
 </div>
 
-<div class="section properties">
+<div class="section properties">  
   <div class="container">
     <div class="text-center mb-4">
       <button class="btn btn-warning" id="btnGenerateIdea">💡 Générer une idée d’événement</button>
     </div>
+    <div class="row mb-4">
+  <div class="col-lg-12 text-center">
+    <input type="text" id="searchProduit" class="form-control w-50 mx-auto" placeholder="🔍 Rechercher un produit...">
+  </div>
+</div>
+
 
     {% if produits is empty %}
       <div class="alert alert-info text-center">Aucun produit trouvé.</div>
     {% else %}
       <div class="row properties-box">
         {% for produit in produits %}
-          <div class="col-lg-4 col-md-6 align-self-center mb-30 properties-items espace-card">
-            <div class="item position-relative shadow-sm">
+          <div class="col-lg-4 col-md-6 align-self-center mb-30 properties-items">
+            <div class="item position-relative shadow-sm produit-card" data-id="{{ produit.idProduit }}">
 
-              <div class="form-check position-absolute" style="top: 10px; left: 10px;">
-                <input type="checkbox" class="form-check-input produit-select" value="{{ produit.idProduit }}">
-              </div>
+              <!-- Checkbox cachée -->
+              <input type="checkbox" class="form-check-input produit-select d-none" value="{{ produit.idProduit }}">
 
               {% if produit.imagePath %}
                 <img src="{{ asset('uploads/' ~ produit.imagePath) }}" class="card-img-top" alt="{{ produit.nomProduit }}">
@@ -135,6 +75,7 @@ body.dark-mode select {
   </div>
 </div>
 {% endblock %}
+
 {% block javascripts %}
 {{ parent() }}
 <script>
@@ -147,29 +88,60 @@ document.getElementById('btnGenerateIdea')?.addEventListener('click', async () =
 
   const modalElement = document.getElementById('ideaModal');
   const ideaModal = bootstrap.Modal.getOrCreateInstance(modalElement);
-  document.getElementById('ideaContent').innerText = "⏳ Idée en cours de génération...";
+  document.getElementById('ideaContent').innerHTML = "⏳ Idée en cours de génération...";
   ideaModal.show();
 
   try {
-    const res = await fetch("{{ path('produit_generate_event_idea') }}?ids=" + ids.join(','));
+    const res = await fetch("{{ path('api_generate_idea') }}", {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ids })
+    });
 
-    // 🛡️ NE PAS faire .json() tout de suite !
-    const contentType = res.headers.get("Content-Type");
-    const text = await res.text();
-
-    if (contentType && contentType.includes("application/json")) {
-      const data = JSON.parse(text);
-      document.getElementById('ideaContent').innerText = data.idea ?? "❌ Réponse vide.";
-    } else {
-      // 🛑 Ce n'est pas du JSON → affiche brut (erreur HTML, Twig, etc.)
-      document.getElementById('ideaContent').innerText = "❌ Erreur : réponse non JSON\n\n" + text;
-    }
-
+    const data = await res.json();
+    document.getElementById('ideaContent').innerText = data.idea;
   } catch (err) {
-    document.getElementById('ideaContent').innerText = "❌ Exception JS : " + err.message;
+    document.getElementById('ideaContent').innerHTML = `<p class="text-danger">❌ Erreur JS : ${err.message}</p>`;
     console.error(err);
   }
 });
 
+// 👉 Sélection en cliquant sur toute la carte
+document.querySelectorAll('.produit-card').forEach(card => {
+  card.addEventListener('click', e => {
+    if (e.target.closest('a, button')) return; // ne pas déclencher sur les liens/boutons
+    const checkbox = card.querySelector('.produit-select');
+    checkbox.checked = !checkbox.checked;
+    card.classList.toggle('selected', checkbox.checked);
+  });
+});
 </script>
+
+<style>
+.produit-card.selected {
+  border: 2px solid #f39c12 !important;
+  box-shadow: 0 0 10px rgba(243, 156, 18, 0.4) !important;
+  transition: border 0.3s ease;
+  cursor: pointer;
+}
+.produit-card {
+  cursor: pointer;
+}
+</style>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const searchInput = document.getElementById('searchProduit');
+  const produitCards = document.querySelectorAll('.produit-card');
+
+  searchInput.addEventListener('input', function () {
+    const query = this.value.trim().toLowerCase();
+    produitCards.forEach(card => {
+      const title = card.querySelector('h4 a')?.textContent.toLowerCase() || '';
+      const match = title.includes(query);
+      card.closest('.col-lg-4').style.display = match ? 'block' : 'none';
+    });
+  });
+});
+</script>
+
 {% endblock %}
