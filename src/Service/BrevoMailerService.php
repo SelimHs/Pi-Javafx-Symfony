@@ -2,6 +2,7 @@
 namespace App\Service;
 
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+
 use Twig\Environment;
 
 class BrevoMailerService
