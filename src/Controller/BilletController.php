@@ -20,6 +20,10 @@ use App\Service\BilletMailerService;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Mailer\MailerInterface;
 use App\Service\BrevoMailerService;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 
 
 #[Route('/billet')]
@@ -39,6 +43,14 @@ final class BilletController extends AbstractController
             'totalBillets' => $totalBillets,
             'totalVip' => $totalVip,
             'totalDuo' => $totalDuo,
+        ]);
+    }
+
+    #[Route('/{idBillet}', name: 'app_billet_show', methods: ['GET'])]
+    public function show(Billet $billet): Response
+    {
+        return $this->render('billet/show.html.twig', [
+            'billet' => $billet,
         ]);
     }
 
@@ -63,6 +75,86 @@ final class BilletController extends AbstractController
             'form' => $form,
         ]);
     }
+
+
+
+    #[Route('/export/billets', name: 'export_billets_excel')]
+    public function exportBillets(BilletRepository $repo): StreamedResponse
+    {
+        $billets = $repo->findAll();
+    
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Billets');
+    
+        // Header row values
+        $headers = ['Propriétaire', 'Prix (DT)', 'Date d\'achat', 'Type'];
+        $sheet->fromArray($headers, null, 'A1');
+    
+        // 🔹 Header Style
+        $headerStyle = [
+            'font' => ['bold' => true, 'color' => ['argb' => 'FFFFFFFF'], 'size' => 13],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'startColor' => ['argb' => 'FF34495E'], // dark blue/gray
+            ],
+            'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER],
+            'borders' => ['allBorders' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM]],
+        ];
+        $sheet->getStyle('A1:D1')->applyFromArray($headerStyle);
+    
+        // 🔹 Data Rows
+        $row = 2;
+        foreach ($billets as $billet) {
+            $sheet->setCellValue("A{$row}", $billet->getProprietaire());
+            $sheet->setCellValue("B{$row}", $billet->getPrix());
+            $sheet->setCellValue("C{$row}", $billet->getDateAchat()?->format('Y-m-d H:i') ?? '—');
+            $sheet->setCellValue("D{$row}", $billet->getType());
+    
+            // Alternate row color
+            $fillColor = ($row % 2 === 0) ? 'FFF9F9F9' : 'FFFFFFFF';
+            $sheet->getStyle("A{$row}:D{$row}")->applyFromArray([
+                'fill' => [
+                    'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                    'startColor' => ['argb' => $fillColor],
+                ],
+                'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER],
+                'borders' => ['allBorders' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN]],
+                'font' => ['size' => 11],
+            ]);
+    
+            $row++;
+        }
+    
+        // 🔹 Auto-size columns
+        foreach (range('A', 'D') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+    
+        // 🔹 Freeze top row
+        $sheet->freezePane('A2');
+    
+        // 🔹 Enable filter
+        $sheet->setAutoFilter($sheet->calculateWorksheetDimension());
+    
+        // Output
+        $response = new StreamedResponse(function () use ($spreadsheet) {
+            $writer = new Xlsx($spreadsheet);
+            $writer->save('php://output');
+        });
+    
+        $filename = 'billets_export_' . date('Ymd_His') . '.xlsx';
+        $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        $response->headers->set('Content-Disposition', "attachment;filename=\"{$filename}\"");
+        $response->headers->set('Cache-Control', 'max-age=0');
+    
+        return $response;
+    }
+    
+    
+
+
+
 
     #[Route('/reservation/{id}', name: 'app_billet_reservation', methods: ['GET', 'POST'])]
     public function newFront(

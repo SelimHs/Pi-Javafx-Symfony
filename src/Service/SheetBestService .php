@@ -22,12 +22,6 @@ class SheetBestService
     public function getAll(): array
     {
         $response = $this->client->request('GET', $this->sheetUrl);
-
-        // 🔍 DEBUG TEMPORAIRE
-        if ($response->getStatusCode() !== 200) {
-            throw new \Exception('Erreur API Sheet.best: ' . $response->getStatusCode());
-        }
-
         return $response->toArray();
     }
 }

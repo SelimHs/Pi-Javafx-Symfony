@@ -16,11 +16,11 @@ class GeminiService
 {
     $userInput = strtolower($prompt);
 
-    if ($this->containsAny($userInput, ['événement', 'événements', 'event', 'disponible', 'quels événements', 'liste des événements'])) {
+    if ($this->containsAny($userInput, ['événement', 'événements', 'event', 'quels événements', 'liste des événements'])) {
         return $this->getEvents();
     }
 
-    if ($this->containsAny($userInput, ['espace', 'espaces', 'lieux', 'salles', 'disponibles', 'réserver un espace'])) {
+    if ($this->containsAny($userInput, ['espace', 'espaces', 'lieux', 'salles', 'réserver un espace'])) {
         return $this->getEspaces();
     }
 

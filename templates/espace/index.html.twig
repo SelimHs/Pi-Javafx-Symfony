@@ -262,54 +262,54 @@ document.addEventListener("DOMContentLoaded", function() {
     const loader = document.getElementById('reservationLoader');
     const content = document.getElementById('reservationContent');
     const tbody = document.getElementById('reservationTableBody');
-    let modalInitialized = false; // Variable pour suivre l'initialisation
+    let modalInitialized = false;
 
     if (reservationModal) {
         reservationModal.addEventListener('show.bs.modal', async () => {
-            // Ne charge les données qu'une seule fois
             if (modalInitialized) return;
             modalInitialized = true;
-            
+
             loader.style.display = 'block';
             content.style.display = 'none';
             tbody.innerHTML = '';
 
             try {
-                const response = await fetch('https://api.sheetbest.com/sheets/4d538bcb-a52a-4dde-84e4-ddb7c9520d8e');
-                
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                
-                const data = await response.json();
-                
-                if (Array.isArray(data)) {
-                    // Vider le tableau avant d'ajouter de nouvelles lignes
-                    tbody.innerHTML = '';
-                    
-                    data.forEach(res => {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td>${res.nom_complet || '-'}</td>
-                            <td>${res.date_debut || '-'}</td>
-                            <td>${res.date_fin || '-'}</td>
-                            <td>${res.id_espace || '-'}</td>
-                            <td>${res.id_organisateur || '-'}</td>
-                            <td>${res.prix ? res.prix + ' Dt' : '-'}</td>
-                        `;
-                        tbody.appendChild(row);
-                    });
+                // Appels SheetBest et noms Symfony
+                const [resData, nomsData] = await Promise.all([
+                    fetch('https://api.sheetbest.com/sheets/4d538bcb-a52a-4dde-84e4-ddb7c9520d8e').then(r => r.json()),
+                    fetch('/api/noms').then(r => r.json())
+                ]);
 
-                    loader.style.display = 'none';
-                    content.style.display = 'block';
-                } else {
-                    loader.innerHTML = '✕ Format de données inattendu';
+                if (!Array.isArray(resData)) {
+                    throw new Error('Format de données invalide.');
                 }
+
+                tbody.innerHTML = '';
+
+                resData.forEach(res => {
+                    const nomEspace = nomsData.espaces?.[res.id_espace] ?? `#${res.id_espace}`;
+                    const nomOrga = nomsData.organisateurs?.[res.id_organisateur] ?? '—';
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${res.nom_complet || '-'}</td>
+                        <td>${res.date_debut || '-'}</td>
+                        <td>${res.date_fin || '-'}</td>
+                        <td>${nomEspace}</td>
+                        <td>${nomOrga}</td>
+                        <td>${res.prix ? res.prix + ' Dt' : '-'}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+
+                loader.style.display = 'none';
+                content.style.display = 'block';
             } catch (e) {
                 loader.innerHTML = `✕ Erreur : ${e.message}`;
-                console.error("Erreur SheetBest:", e);
+                console.error("Erreur affichage réservations :", e);
             }
         });
 
-        // Réinitialiser quand la modale est fermée
         reservationModal.addEventListener('hidden.bs.modal', () => {
             modalInitialized = false;
         });
