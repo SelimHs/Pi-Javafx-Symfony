@@ -16,8 +16,8 @@
           </div>
         </div>
         <div class="page-title-actions">
-          <a href="{{ path('app_billet_new') }}" class="btn btn-success">
-            <i class="pe-7s-plus mr-2"></i> Nouveau Billet
+          <a href="{{ path('export_billets_excel') }}" class="btn btn-outline-success">
+            📥 Export Excel
           </a>
         </div>
       </div>
@@ -72,9 +72,7 @@
         Billets enregistrés
         <input type="text" id="billetSearch" class="form-control w-25" placeholder="Rechercher un billet...">
       </div>
-      <a href="{{ path('export_billets_excel') }}" class="btn btn-outline-success">
-        📥 Export Excel
-      </a>
+      
       <div class="table-responsive">
         <table class="align-middle mb-0 table table-striped table-hover">
           <thead>
