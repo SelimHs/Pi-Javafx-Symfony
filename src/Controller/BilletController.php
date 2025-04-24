@@ -20,6 +20,10 @@ use App\Service\BilletMailerService;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Mailer\MailerInterface;
 use App\Service\BrevoMailerService;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 
 
 #[Route('/billet')]
@@ -49,7 +53,7 @@ final class BilletController extends AbstractController
             'billet' => $billet,
         ]);
     }
-    
+
     // Création de billet depuis le back
     #[Route('/new', name: 'app_billet_new', methods: ['GET', 'POST'])]
     public function newBack(Request $request, EntityManagerInterface $entityManager): Response
@@ -71,6 +75,45 @@ final class BilletController extends AbstractController
             'form' => $form,
         ]);
     }
+
+
+
+    #[Route('/export/billets', name: 'export_billets_excel')]
+public function exportBillets(BilletRepository $repo): StreamedResponse
+{
+    $billets = $repo->findAll();
+
+    $spreadsheet = new Spreadsheet();
+    $sheet = $spreadsheet->getActiveSheet();
+    $sheet->setTitle('Billets');
+
+    // En-têtes
+    $sheet->fromArray(['Propriétaire', 'Prix (DT)', 'Date d\'achat', 'Type'], NULL, 'A1');
+
+    $row = 2;
+    foreach ($billets as $billet) {
+        $sheet->setCellValue("A{$row}", $billet->getProprietaire());
+        $sheet->setCellValue("B{$row}", $billet->getPrix());
+        $sheet->setCellValue("C{$row}", $billet->getDateAchat()?->format('Y-m-d H:i') ?? '—');
+        $sheet->setCellValue("D{$row}", $billet->getType());
+        $row++;
+    }
+
+    $response = new StreamedResponse(function () use ($spreadsheet) {
+        $writer = new Xlsx($spreadsheet);
+        $writer->save('php://output');
+    });
+
+    $filename = 'billets_export.xlsx';
+    $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    $response->headers->set('Content-Disposition', "attachment;filename=\"{$filename}\"");
+    $response->headers->set('Cache-Control', 'max-age=0');
+
+    return $response;
+}
+
+
+
 
     #[Route('/reservation/{id}', name: 'app_billet_reservation', methods: ['GET', 'POST'])]
     public function newFront(
