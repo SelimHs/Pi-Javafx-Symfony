@@ -207,7 +207,7 @@ final class BilletController extends AbstractController
     
             // ✅ Send confirmation email with PDF attachment
             $brevoMailer->sendConfirmation(
-                'Karouiyahya71@gmail.com',
+                'dark_soul@hotmail.fr',
                 $event->getNomEvent(),
                 $billet->getProprietaire(),
                 $event->getNomEspace(),
