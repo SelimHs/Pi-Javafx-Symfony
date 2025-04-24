@@ -87,14 +87,14 @@ final class BilletController extends AbstractController
         $reservation->setUser($em->getRepository(\App\Entity\User::class)->find(1));
     
         if ($form->isSubmitted() && $form->isValid()) {
-            // 💰 Adjust price based on type
+            // dynamic billet price adjustment
             if ($billet->getType() === 'DUO') {
                 $prix += $event->getPrix() * 0.5;
             } elseif ($billet->getType() === 'VIP') {
                 $prix = $event->getPrix() * 3;
             }
     
-            // 🔖 Apply promo
+            // remise application
             $codePromo = $form->get('codePromo')->getData();
             if ($codePromo) {
                 $remise = $remiseRepo->findOneBy(['codePromo' => $codePromo]);
@@ -116,11 +116,18 @@ final class BilletController extends AbstractController
             $pdfUrl = $pdfGenerator->generateBilletPdf($billet);
 
             // 📧 Send confirmation email
-            $brevoMailer->sendConfirmation('dark_soul@hotmail.fr', $event->getNomEvent());
+            $brevoMailer->sendConfirmation(
+                'dark_soul@hotmail.fr',
+                $event->getNomEvent(),
+                'Yahya Karoui',                      // user name
+                $event->getNomEspace(),           // location                 
+                new \DateTime($event->getDate()),   // event date
+                $pdfUrl
+            );
 
     
     
-            // 🔁 Use RedirectResponse for external URLs
+            // redirect to pdf url to download
            if ($pdfUrl) {
                  return $this->redirect($pdfUrl);
              }
@@ -141,7 +148,7 @@ final class BilletController extends AbstractController
     #[Route('/test-brevo-mail', name: 'test_brevo_mail')]
     public function testBrevo(BrevoMailerService $mailer): Response
     {
-        $mailer->sendConfirmation('haythem.hassani.93@gmail.com', 'Festival de Musique');
+        $mailer->sendConfirmation('dark_soul@hotmail.fr', 'Festival de Musique');
         return new Response('✅ Email envoyé via Brevo !');
     }
 

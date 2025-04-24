@@ -14,3 +14,7 @@ Status: 201
 Response:
 {"messageId":"<202504241656.66876238210@smtp-relay.mailin.fr>"}
 
+Status: 201
+Response:
+{"messageId":"<202504241701.62273191098@smtp-relay.mailin.fr>"}
+
