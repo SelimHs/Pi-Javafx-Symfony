@@ -18,6 +18,9 @@ use Symfony\Component\Routing\Attribute\Route;
 use App\Service\PdfGeneratorService;
 use App\Service\BilletMailerService;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Mailer\MailerInterface;
+use App\Service\BrevoMailerService;
+
 
 #[Route('/billet')]
 final class BilletController extends AbstractController
@@ -68,7 +71,7 @@ final class BilletController extends AbstractController
         EntityManagerInterface $em,
         RemiseRepository $remiseRepo,
         PdfGeneratorService $pdfGenerator,
-        BilletMailerService $mailer
+        BrevoMailerService $brevoMailer
     ): Response {
         $billet = new Billet();
         $reservation = new Reservation();
@@ -111,6 +114,10 @@ final class BilletController extends AbstractController
     
             // 📄 Generate PDF
             $pdfUrl = $pdfGenerator->generateBilletPdf($billet);
+
+            // 📧 Send confirmation email
+            $brevoMailer->sendConfirmation('dark_soul@hotmail.fr', $event->getNomEvent());
+
     
     
             // 🔁 Use RedirectResponse for external URLs
@@ -131,20 +138,11 @@ final class BilletController extends AbstractController
     }
 
 
-
-
-    #[Route('/test-mail', name: 'test_mail')]
-    public function testMail(BilletMailerService $mailer): Response
+    #[Route('/test-brevo-mail', name: 'test_brevo_mail')]
+    public function testBrevo(BrevoMailerService $mailer): Response
     {
-        $mailer->sendBilletEmail('dark_soul@hotmail.fr', 'TestUser');
-        return new Response('Email sent');
-    }
-    #[Route('/{idBillet}', name: 'app_billet_show', methods: ['GET'])]
-    public function show(Billet $billet): Response
-    {
-        return $this->render('billet/show.html.twig', [
-            'billet' => $billet,
-        ]);
+        $mailer->sendConfirmation('haythem.hassani.93@gmail.com', 'Festival de Musique');
+        return new Response('✅ Email envoyé via Brevo !');
     }
 
     #[Route('/{idBillet}/edit', name: 'app_billet_edit', methods: ['GET', 'POST'])]

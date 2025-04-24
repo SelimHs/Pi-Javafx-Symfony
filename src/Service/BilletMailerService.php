@@ -13,15 +13,24 @@ class BilletMailerService
         $this->mailer = $mailer;
     }
 
-    public function sendBilletEmail(string $toEmail, string $proprietaire): void
+    public function sendConfirmation(string $to, string $eventName): void
     {
+        try {
         $email = (new Email())
             ->from('emailsender.lamma@gmail.com')
-            ->to($toEmail)
-            ->subject("Votre billet pour $proprietaire")
-            ->text("Bonjour $proprietaire,\n\nMerci pour votre réservation. Ceci est un test d'envoi sans pièce jointe.");
+            ->to($to)
+            ->subject('🎫 Confirmation de votre billet')
+            ->html("
+                <h2>Merci pour votre réservation !</h2>
+                <p>Votre billet pour <strong>{$eventName}</strong> a bien été confirmé.</p>
+                <p>À bientôt !</p>
+            ");
 
         $this->mailer->send($email);
+    } catch (\Exception $e) {
+        // Save the error to a log file
+        file_put_contents('mailer_error.log', $e->getMessage());
+    }
     }
 }
 ?>
