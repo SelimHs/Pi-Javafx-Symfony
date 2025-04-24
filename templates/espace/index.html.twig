@@ -3,6 +3,51 @@
 {% block title %}Espaces{% endblock %}
 
 {% block body %}
+<style>
+  body.dark-mode input.form-control {
+    background-color: #fff !important;
+    color: #000 !important;
+    border: 1px solid #ccc;
+  }
+  body.dark-mode .item {
+    background-color: #1e1e1e;
+    color: #f1f1f1;
+    border: 1px solid #333;
+  }
+  body.dark-mode .btn-outline-primary {
+    color: #90caf9;
+    border-color: #90caf9;
+  }
+  body.dark-mode .btn-outline-primary:hover {
+    background-color: #90caf9;
+    color: #000;
+  }
+  body.dark-mode .btn-outline-success {
+    color: #a5d6a7;
+    border-color: #a5d6a7;
+  }
+  body.dark-mode .btn-outline-success:hover {
+    background-color: #a5d6a7;
+    color: #000;
+  }
+  body.dark-mode .modal-content {
+    background-color: #2c2c2c;
+    color: #f1f1f1;
+  }
+  body.dark-mode .table {
+    color: #f1f1f1;
+  }
+  body.dark-mode .table-bordered th,
+  body.dark-mode .table-bordered td {
+    border-color: #444;
+  }
+  body.dark-mode .form-select {
+    background-color: #fff !important;
+    color: #000 !important;
+    border: 1px solid #ccc;
+  }
+</style>
+
 <div class="page-heading header-text">
   <div class="container">
     <div class="row">
@@ -21,58 +66,43 @@
         <input type="text" id="searchEspace" class="form-control w-50 mx-auto" placeholder="Rechercher un espace...">
       </div>
     </div>
-    
-    <!-- Bouton pour afficher les réservations -->
-<div class="row mb-4">
-  <div class="col-lg-12 text-center">
-    <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#reservationListModal">📋 Liste des réservations</button>
-  </div>
-</div>
 
-<!-- Modale affichage réservations -->
-<div class="modal fade" id="reservationListModal" tabindex="-1">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Liste des Réservations</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <div class="row mb-4">
+      <div class="col-lg-12 text-center">
+        <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#reservationListModal">📋 Liste des réservations</button>
       </div>
-      <div class="modal-body">
-        <div id="reservationLoader" class="text-center">Chargement...</div>
-        <div id="reservationContent" style="display: none;">
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th>Nom</th>
-                <th>Date Début</th>
-                <th>Date Fin</th>
-                <th>Espace</th>
-                <th>Organisateur</th>
-                <th>Prix</th>
-              </tr>
-            </thead>
-            <tbody id="reservationTableBody"></tbody>
-          </table>
+    </div>
+
+    <div class="modal fade" id="reservationListModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Liste des Réservations</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div id="reservationLoader" class="text-center">Chargement...</div>
+            <div id="reservationContent" style="display: none;">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Nom</th>
+                    <th>Date Début</th>
+                    <th>Date Fin</th>
+                    <th>Espace</th>
+                    <th>Organisateur</th>
+                    <th>Prix</th>
+                  </tr>
+                </thead>
+                <tbody id="reservationTableBody"></tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
-
-
 
     <div class="row properties-box" id="espaceGrid">
-      <div class="col-lg-4 col-md-6 align-self-center mb-30 properties-items espace-card">
-        <a href="{{ path('app_espace_new') }}" class="text-decoration-none">
-          <div class="item position-relative shadow-sm text-center d-flex flex-column justify-content-center align-items-center add-espace-card"
-         style="height: 100%; min-height: 420px; background-color: #007bff; transition: all 0.3s ease;">
-      <i class="fa fa-plus-circle fa-3x text-white mb-3"></i>
-      <h5 class="text-white">Créer un nouvel espace</h5>
-      <p class="text-white">Cliquez ici pour ajouter un nouvel espace</p>
-    </div>
-        </a>
-      </div>
-
       {% for espace in espaces %}
         <div class="col-lg-4 col-md-6 align-self-center mb-30 properties-items espace-card">
           <div class="item position-relative shadow-sm">
@@ -97,48 +127,6 @@
             </div>
           </div>
         </div>
-
-        <div class="modal fade" id="reservationModal{{ espace.idEspace }}" tabindex="-1" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <form class="reservation-form" id="form-espace-{{ espace.idEspace }}" data-espace-id="{{ espace.idEspace }}">
-                <div class="modal-header">
-                  <h5 class="modal-title">Réserver {{ espace.nomEspace }}</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                  <div class="mb-3">
-                    <label>Nom complet</label>
-                    <input type="text" name="nom_complet" class="form-control" required>
-                  </div>
-                  <div class="mb-3">
-                    <label>Date début</label>
-                    <input type="date" name="date_debut" class="form-control date-debut" required>
-                  </div>
-                  <div class="mb-3">
-                    <label>Date fin</label>
-<input type="date" name="date_fin" class="form-control date-fin" required>
-                  </div>
-                  {% if espace.organisateurs is not empty %}
-                  <div class="mb-3">
-                    <label>Organisateur</label>
-                    <select name="id_organisateur" class="form-select">
-                      <option value="">-- Aucun organisateur --</option>
-                      {% for org in espace.organisateurs %}
-                        <option value="{{ org.id_org }}">{{ org.nom_org }} {{ org.prenom_org }}</option>
-                      {% endfor %}
-                    </select>
-                  </div>
-                  {% endif %}
-                </div>
-                <div class="modal-footer">
-                  <button type="submit" class="btn btn-primary">Valider</button>
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
       {% else %}
         <div class="col-12 text-center">
           <div class="alert alert-warning">Aucun espace trouvé.</div>
@@ -148,6 +136,7 @@
   </div>
 </div>
 {% endblock %}
+
 {% block javascripts %}
 {{ parent() }}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
