@@ -3,114 +3,138 @@
 {% block title %}Réserver un Billet{% endblock %}
 
 {% block body %}
-<div class="container mt-5">
-  <div class="card p-4 shadow-lg border-0 rounded-4">
-    <h2 class="text-center mb-4">+ Réserver un Billet</h2>
+<div style="display: flex; flex-direction: column; min-height: 60vh;">
+  <main style="flex: 1;">
+    <style>
+      body.dark-mode .card {
+        background-color: #1a1a1a !important;
+        color: #f1f1f1 !important;
+      }
+      body.dark-mode label,
+      body.dark-mode .btn,
+      body.dark-mode .input-group {
+        color: #ffffff !important;
+      }
+      body.dark-mode .form-control,
+      body.dark-mode .form-select {
+        background-color: #ffffff !important;
+        color: #000 !important;
+        border-color: #ccc !important;
+      }
+      body.dark-mode .form-control[readonly] {
+        background-color: #f0f0f0 !important;
+        color: #555 !important;
+        border: 1px solid #ccc !important;
+      }
+    </style>
 
-    {{ form_start(form, {'attr': {'class': 'row g-3','novalidate': 'novalidate'}}) }}
+    <div class="container mt-5">
+      <div class="card p-4 shadow-lg border-0 rounded-4">
+        <h2 class="text-center mb-4 text-white">+ Réserver un Billet</h2>
 
-      <div class="col-md-6">
-        {{ form_label(form.proprietaire) }}
-        {{ form_widget(form.proprietaire, {'attr': {'class': 'form-control'}}) }}
-        {{ form_errors(form.proprietaire) }}
+        {{ form_start(form, {'attr': {'class': 'row g-3','novalidate': 'novalidate'}}) }}
+
+          <div class="col-md-6">
+            {{ form_label(form.proprietaire) }}
+            {{ form_widget(form.proprietaire, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.proprietaire) }}
+          </div>
+
+          <div class="col-md-6">
+            <label for="billet_prix" class="text-white">💰 Prix du billet</label>
+            {{ form_widget(form.prix, {
+              'attr': {
+                'readonly': 'readonly',
+                'id': 'billet_prix',
+                'class': 'form-control'
+              }
+            }) }}
+            {{ form_errors(form.prix) }}
+          </div>
+
+          <div class="col-md-6">
+            {{ form_label(form.type) }}
+            {{ form_widget(form.type, {'attr': {'class': 'form-select', 'id': 'billet_type'}}) }}
+            {{ form_errors(form.type) }}
+          </div>
+
+          <div class="col-md-6">
+            {{ form_label(form.event) }}
+            {{ form_widget(form.event, {
+              'attr': {
+                'class': 'form-select',
+                'readonly': 'readonly'
+              }
+            }) }}
+          </div>
+
+          <div class="col-md-8">
+            {{ form_label(form.codePromo) }}
+            <div class="input-group">
+              {{ form_widget(form.codePromo, {
+                'attr': {
+                  'class': 'form-control',
+                  'id': 'codePromo'
+                }
+              }) }}
+              <button type="button" id="verifierBtn" class="btn btn-success">✔ Vérifier</button>
+            </div>
+          </div>
+
+          <div class="col-md-4 d-flex align-items-end">
+            <button type="submit" class="btn btn-warning w-100">✔ Confirmer la Réservation</button>
+          </div>
+
+        {{ form_end(form) }}
       </div>
+    </div>
 
-      <div class="col-md-6">
-        <label for="billet_prix">💰 Prix du billet</label>
-        {{ form_widget(form.prix, {
-          'attr': {
-            'readonly': true,
-            'id': 'billet_prix',
-            'class': 'form-control'
-          }
-        }) }}
-        {{ form_errors(form.prix) }}
-      </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const prixBase = {{ prixFinal }};
+        const prixInput = document.getElementById('billet_prix');
+        const typeSelect = document.getElementById('billet_type');
+        const codePromoInput = document.getElementById('codePromo');
+        const verifierBtn = document.getElementById('verifierBtn');
 
-      <div class="col-md-6">
-        {{ form_label(form.type) }}
-        {{ form_widget(form.type, {'attr': {'class': 'form-select', 'id': 'billet_type'}}) }}
-        {{ form_errors(form.type) }}
-      </div>
+        const remises = {{ promoCodes|json_encode|raw }};
+        let remiseActuelle = 0;
 
-      <div class="col-md-6">
-        {{ form_label(form.event) }}
-        {{ form_widget(form.event, {
-          'attr': {
-            'class': 'form-select',
-            'readonly': 'readonly'
-          }
-        }) }}
-      </div>
-
-      <div class="col-md-8">
-        {{ form_label(form.codePromo) }}
-        <div class="input-group">
-          {{ form_widget(form.codePromo, {
-            'attr': {
-              'class': 'form-control',
-              'id': 'codePromo'
-            }
-          }) }}
-          <button type="button" id="verifierBtn" class="btn btn-success">✔ Vérifier</button>
-        </div>
-      </div>
-
-      <div class="col-md-4 d-flex align-items-end">
-        <button type="submit" class="btn btn-warning w-100">✔ Confirmer la Réservation</button>
-      </div>
-
-
-    {{ form_end(form) }}
-  </div>
-</div>
-
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const prixBase = {{ prixFinal }};
-    const prixInput = document.getElementById('billet_prix');
-    const typeSelect = document.getElementById('billet_type');
-    const codePromoInput = document.getElementById('codePromo');
-    const verifierBtn = document.getElementById('verifierBtn');
-  
-    const remises = {{ promoCodes|json_encode|raw }};
-    let remiseActuelle = 0;
-  
-    function calculerPrix(type, remisePourcent = 0) {
-      let prix = prixBase;
-      if (type === 'DUO') prix += prixBase * 0.5;
-      else if (type === 'VIP') prix = prixBase * 3;
-      prix -= prix * (remisePourcent / 100);
-      return Math.round(Math.max(prix, 0));
-    }
-  
-    function updatePrix() {
-      const type = typeSelect.value;
-      const prix = calculerPrix(type, remiseActuelle);
-      prixInput.value = prix;
-    }
-  
-    if (verifierBtn) {
-      verifierBtn.addEventListener('click', () => {
-        const code = codePromoInput.value.trim().toUpperCase();
-        if (remises.hasOwnProperty(code)) {
-          remiseActuelle = remises[code];
-          alert(`✅ Code promo "${code}" appliqué : -${remiseActuelle}%`);
-        } else {
-          remiseActuelle = 0;
-          alert('❌ Code promo invalide');
+        function calculerPrix(type, remisePourcent = 0) {
+          let prix = prixBase;
+          if (type === 'DUO') prix += prixBase * 0.5;
+          else if (type === 'VIP') prix = prixBase * 3;
+          prix -= prix * (remisePourcent / 100);
+          return Math.round(Math.max(prix, 0));
         }
+
+        function updatePrix() {
+          const type = typeSelect.value;
+          const prix = calculerPrix(type, remiseActuelle);
+          prixInput.value = prix;
+        }
+
+        if (verifierBtn) {
+          verifierBtn.addEventListener('click', () => {
+            const code = codePromoInput.value.trim().toUpperCase();
+            if (remises.hasOwnProperty(code)) {
+              remiseActuelle = remises[code];
+              alert(`✅ Code promo "${code}" appliqué : -${remiseActuelle}%`);
+            } else {
+              remiseActuelle = 0;
+              alert('❌ Code promo invalide');
+            }
+            updatePrix();
+          });
+        }
+
+        if (typeSelect) {
+          typeSelect.addEventListener('change', updatePrix);
+        }
+
         updatePrix();
       });
-    }
-  
-    if (typeSelect) {
-      typeSelect.addEventListener('change', updatePrix);
-    }
-  
-    updatePrix();
-  });
-  </script>
-  
-
+    </script>
+  </main>
+</div>
 {% endblock %}

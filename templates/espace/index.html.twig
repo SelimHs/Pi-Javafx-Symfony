@@ -257,53 +257,65 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-  const modal = document.getElementById('reservationListModal');
-  const loader = document.getElementById('reservationLoader');
-  const content = document.getElementById('reservationContent');
-  const tbody = document.getElementById('reservationTableBody');
+document.addEventListener("DOMContentLoaded", function() {
+    const reservationModal = document.getElementById('reservationListModal');
+    const loader = document.getElementById('reservationLoader');
+    const content = document.getElementById('reservationContent');
+    const tbody = document.getElementById('reservationTableBody');
+    let modalInitialized = false; // Variable pour suivre l'initialisation
 
-  modal.addEventListener('show.bs.modal', async () => {
-    loader.style.display = 'block';
-    content.style.display = 'none';
-    tbody.innerHTML = '';
+    if (reservationModal) {
+        reservationModal.addEventListener('show.bs.modal', async () => {
+            // Ne charge les données qu'une seule fois
+            if (modalInitialized) return;
+            modalInitialized = true;
+            
+            loader.style.display = 'block';
+            content.style.display = 'none';
+            tbody.innerHTML = '';
 
-    try {
-      const response = await fetch("{{ path('app_reservations_liste') }}");
-      const data = await response.json();
+            try {
+                const response = await fetch('https://api.sheetbest.com/sheets/4d538bcb-a52a-4dde-84e4-ddb7c9520d8e');
+                
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                
+                const data = await response.json();
+                
+                if (Array.isArray(data)) {
+                    // Vider le tableau avant d'ajouter de nouvelles lignes
+                    tbody.innerHTML = '';
+                    
+                    data.forEach(res => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${res.nom_complet || '-'}</td>
+                            <td>${res.date_debut || '-'}</td>
+                            <td>${res.date_fin || '-'}</td>
+                            <td>${res.id_espace || '-'}</td>
+                            <td>${res.id_organisateur || '-'}</td>
+                            <td>${res.prix ? res.prix + ' Dt' : '-'}</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
 
-      if (Array.isArray(data)) {
-        data.forEach(res => {
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td>${res.nom_complet ?? '-'}</td>
-            <td>${formatDate(res.date_debut)}</td>
-            <td>${formatDate(res.date_fin)}</td>
-            <td>${res.id_espace ?? '-'}</td>
-            <td>${res.id_organisateur || '—'}</td>
-            <td>${res.prix ?? '0'} Dt</td>
-          `;
-          tbody.appendChild(row);
+                    loader.style.display = 'none';
+                    content.style.display = 'block';
+                } else {
+                    loader.innerHTML = '✕ Format de données inattendu';
+                }
+            } catch (e) {
+                loader.innerHTML = `✕ Erreur : ${e.message}`;
+                console.error("Erreur SheetBest:", e);
+            }
         });
 
-        loader.style.display = 'none';
-        content.style.display = 'block';
-      } else {
-        loader.innerHTML = '❌ Format de données invalide.';
-      }
-    } catch (e) {
-      loader.innerHTML = '❌ Erreur lors du chargement des données.';
-      console.error(e);
+        // Réinitialiser quand la modale est fermée
+        reservationModal.addEventListener('hidden.bs.modal', () => {
+            modalInitialized = false;
+        });
     }
-  });
-
-  function formatDate(excelDate) {
-    if (!excelDate || isNaN(excelDate)) return '-';
-    const baseDate = new Date(Date.UTC(1899, 11, 30));
-    baseDate.setDate(baseDate.getDate() + parseInt(excelDate));
-    return baseDate.toISOString().split('T')[0];
-  }
 });
+
 </script>
 
 <script>
@@ -349,17 +361,29 @@ document.addEventListener("DOMContentLoaded", function () {
           }
         });
 
-        flatpickr(form.querySelector('.date-debut'), {
-          minDate: new Date(new Date().setDate(new Date().getDate() + 7)),
-          disable: disableDates,
-          dateFormat: "Y-m-d"
-        });
+        const dateDebutPicker = flatpickr(form.querySelector('.date-debut'), {
+  minDate: new Date(new Date().setDate(new Date().getDate() + 7)),
+  disable: disableDates,
+  dateFormat: "Y-m-d",
+  onChange: function (selectedDates) {
+    if (selectedDates.length > 0) {
+      const selectedStartDate = selectedDates[0];
 
-        flatpickr(form.querySelector('.date-fin'), {
-          minDate: new Date(new Date().setDate(new Date().getDate() + 7)),
-          disable: disableDates,
-          dateFormat: "Y-m-d"
-        });
+      // Mettre à jour le minDate de la date de fin
+      dateFinPicker.set('minDate', selectedStartDate);
+
+      // Supprimer et recharger le picker pour appliquer la nouvelle minDate
+      dateFinPicker.setDate(null);
+    }
+  }
+});
+
+const dateFinPicker = flatpickr(form.querySelector('.date-fin'), {
+  minDate: new Date(new Date().setDate(new Date().getDate() + 7)),
+  disable: disableDates,
+  dateFormat: "Y-m-d"
+});
+
 
       } catch (err) {
         console.error("❌ Erreur lors de la récupération des réservations :", err);
@@ -369,4 +393,3 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 {% endblock %}
-

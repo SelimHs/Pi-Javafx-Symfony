@@ -18,6 +18,9 @@ use Symfony\Component\Routing\Attribute\Route;
 use App\Service\PdfGeneratorService;
 use App\Service\BilletMailerService;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Mailer\MailerInterface;
+use App\Service\BrevoMailerService;
+
 
 #[Route('/billet')]
 final class BilletController extends AbstractController
@@ -68,7 +71,7 @@ final class BilletController extends AbstractController
         EntityManagerInterface $em,
         RemiseRepository $remiseRepo,
         PdfGeneratorService $pdfGenerator,
-        BilletMailerService $mailer
+        BrevoMailerService $brevoMailer
     ): Response {
         $billet = new Billet();
         $reservation = new Reservation();
@@ -84,14 +87,12 @@ final class BilletController extends AbstractController
         $reservation->setUser($em->getRepository(\App\Entity\User::class)->find(1));
     
         if ($form->isSubmitted() && $form->isValid()) {
-            // 💰 Adjust price based on type
             if ($billet->getType() === 'DUO') {
                 $prix += $event->getPrix() * 0.5;
             } elseif ($billet->getType() === 'VIP') {
                 $prix = $event->getPrix() * 3;
             }
     
-            // 🔖 Apply promo
             $codePromo = $form->get('codePromo')->getData();
             if ($codePromo) {
                 $remise = $remiseRepo->findOneBy(['codePromo' => $codePromo]);
@@ -109,25 +110,21 @@ final class BilletController extends AbstractController
             $em->persist($billet);
             $em->flush();
     
-            // 📄 Generate PDF
-            $pdfUrl = $pdfGenerator->generateBilletPdf($billet);
+            // ✅ Generate local PDF file
+            $pdfPath = $pdfGenerator->generateBilletPdf($billet);
     
-            // ✅ Optional: Log for debugging
-            file_put_contents('var/log/billet_debug.log', "PDF Generated: $pdfUrl\n", FILE_APPEND);
+            // ✅ Send confirmation email with PDF attachment
+            $brevoMailer->sendConfirmation(
+                'Karouiyahya71@gmail.com',
+                $event->getNomEvent(),
+                $billet->getProprietaire(),
+                $event->getNomEspace(),
+                $event->getDate(),
+                $pdfPath
+            );
     
-            // 📧 Send email
-            try {
-                $mailer->sendBilletEmail(
-                    'dark_soul@hotmail.fr',
-                    $billet->getProprietaire() ?? 'Client'
-                );
-                file_put_contents('var/log/billet_debug.log', "Mail sent successfully.\n", FILE_APPEND);
-            } catch (\Exception $e) {
-                file_put_contents('var/log/billet_debug.log', "Mail error: " . $e->getMessage() . "\n", FILE_APPEND);
-            }
-    
-            // 🔁 Use RedirectResponse for external URLs
-            return new RedirectResponse($pdfUrl);
+            // ✅ Redirect always to home page
+            return $this->redirectToRoute('app_event_index');
         }
     
         return $this->render('billet/front_reservation.html.twig', [
@@ -137,22 +134,13 @@ final class BilletController extends AbstractController
             'promoCodes' => [],
         ]);
     }
+    
 
-
-
-
-    #[Route('/test-mail', name: 'test_mail')]
-    public function testMail(BilletMailerService $mailer): Response
+    #[Route('/test-brevo-mail', name: 'test_brevo_mail')]
+    public function testBrevo(BrevoMailerService $mailer): Response
     {
-        $mailer->sendBilletEmail('dark_soul@hotmail.fr', 'TestUser');
-        return new Response('Email sent');
-    }
-    #[Route('/{idBillet}', name: 'app_billet_show', methods: ['GET'])]
-    public function show(Billet $billet): Response
-    {
-        return $this->render('billet/show.html.twig', [
-            'billet' => $billet,
-        ]);
+        $mailer->sendConfirmation('dark_soul@hotmail.fr', 'Festival de Musique');
+        return new Response('✅ Email envoyé via Brevo !');
     }
 
     #[Route('/{idBillet}/edit', name: 'app_billet_edit', methods: ['GET', 'POST'])]
