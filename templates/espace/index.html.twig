@@ -101,12 +101,16 @@
         <div class="modal fade" id="reservationModal{{ espace.idEspace }}" tabindex="-1" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
-              <form class="reservation-form" id="form-espace-{{ espace.idEspace }}" data-espace-id="{{ espace.idEspace }}">
+<form class="reservation-form" id="form-espace-{{ espace.idEspace }}" data-espace-id="{{ espace.idEspace }}" data-prix-espace="{{ espace.prix }}">
                 <div class="modal-header">
                   <h5 class="modal-title">Réserver {{ espace.nomEspace }}</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
+                <div class="text-center mb-3">
+  <strong class="prix-estime text-primary fs-5">💰 Prix estimé : {{ espace.prix }} Dt</strong>
+</div>
+
                   <div class="mb-3">
                     <label>Nom complet</label>
                     <input type="text" name="nom_complet" class="form-control" required>
@@ -161,18 +165,47 @@ document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll('.reservation-form').forEach(form => {
     const dateDebutInput = form.querySelector('input[name="date_debut"]');
     const dateFinInput = form.querySelector('input[name="date_fin"]');
+    const organisateurSelect = form.querySelector('select[name="id_organisateur"]');
+    const prixEstimeEl = form.querySelector('.prix-estime');
+    const prixEspace = parseFloat(form.dataset.prixEspace);
 
+    // 🧮 Calcul prix affiché
+    function calculerPrix() {
+      if (!dateDebutInput.value || !dateFinInput.value) return;
+      const debut = new Date(dateDebutInput.value);
+      const fin = new Date(dateFinInput.value);
+      let jours = Math.floor((fin - debut) / (1000 * 60 * 60 * 24)) + 1;
+      if (jours <= 0) jours = 1;
+
+      let total = prixEspace * jours;
+      if (organisateurSelect && organisateurSelect.value) {
+        total += 200;
+      }
+
+      if (prixEstimeEl) {
+        prixEstimeEl.textContent = `💰 Prix estimé : ${total} Dt`;
+      }
+
+      return total;
+    }
+
+    // ⏱ Dates autorisées
     if (dateDebutInput) dateDebutInput.min = minStartDate;
-
     dateDebutInput?.addEventListener('change', () => {
       const start = new Date(dateDebutInput.value);
-      const minEnd = new Date(start); // autorise un seul jour
+      const minEnd = new Date(start);
       dateFinInput.min = minEnd.toISOString().split('T')[0];
     });
 
+    dateDebutInput?.addEventListener('change', calculerPrix);
+    dateFinInput?.addEventListener('change', calculerPrix);
+    organisateurSelect?.addEventListener('change', calculerPrix);
+
+    // 🚀 Envoi du formulaire
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
 
+      const formData = new FormData(this);
       const dateDebut = new Date(dateDebutInput.value);
       const dateFin = new Date(dateFinInput.value);
 
@@ -186,13 +219,15 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-      const formData = new FormData(this);
+      const prixTotal = calculerPrix(); // 👈 récupère le total
+
       const payload = {
         nom_complet: formData.get('nom_complet')?.trim(),
         date_debut: formData.get('date_debut'),
         date_fin: formData.get('date_fin'),
         id_espace: this.dataset.espaceId,
-        id_organisateur: formData.get('id_organisateur') || ''
+        id_organisateur: formData.get('id_organisateur') || '',
+        prix: prixTotal
       };
 
       try {
@@ -203,10 +238,11 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         const result = await response.json();
+        console.log(result);
 
         if (result.success) {
-          alert("✅ Réservation enregistrée !");
-          const closeBtn = this.closest('.modal').querySelector('.btn-close');
+          alert("✅ Réservation enregistrée !\n💰 Prix : " + result.prix + " Dt");
+          const closeBtn = this.closest('.modal')?.querySelector('.btn-close');
           closeBtn?.click();
         } else {
           alert("❌ Erreur : " + (result.error || "Erreur inconnue."));
@@ -301,7 +337,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const disableDates = [];
 
         reservations.forEach(res => {
-          if (res.id_espace === espaceId) {
+          if (res.id_espace == espaceId) {
             const startDate = new Date(res.date_debut);
             const endDate = new Date(res.date_fin);
 
@@ -320,7 +356,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         flatpickr(form.querySelector('.date-fin'), {
-          minDate: new Date(new Date().setDate(new Date().getDate() + 7)), // même min que début
+          minDate: new Date(new Date().setDate(new Date().getDate() + 7)),
           disable: disableDates,
           dateFormat: "Y-m-d"
         });
@@ -333,3 +369,4 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 {% endblock %}
+
