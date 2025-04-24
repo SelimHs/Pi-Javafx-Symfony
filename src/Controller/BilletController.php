@@ -119,7 +119,7 @@ final class BilletController extends AbstractController
                 $event->getNomEvent(),
                 $billet->getProprietaire(),
                 $event->getNomEspace(),
-                new \DateTime($event->getDate()),
+                $event->getDate(),
                 $pdfPath
             );
     

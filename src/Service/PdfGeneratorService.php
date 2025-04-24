@@ -96,7 +96,7 @@ HTML;
 
         if ($remotePdfUrl) {
             $pdfContent = file_get_contents($remotePdfUrl);
-            $fileName = 'billet_' . $billet->getIdBillet() . '_' . time() . '.pdf';
+            $fileName = 'billet_' . $billet->getProprietaire() . '_' . time() . '.pdf';
             $localPath = __DIR__ . '/../../public/uploads/billets/' . $fileName;
 
             file_put_contents($localPath, $pdfContent);

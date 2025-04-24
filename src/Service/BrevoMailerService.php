@@ -21,14 +21,17 @@ class BrevoMailerService
         string $eventName,
         string $user = 'Cher(e) participant(e)',
         string $location = 'Lieu inconnu',
-        \DateTimeInterface $date = null,
+        string $rawDate = '0000-00-00', // ✅ keep it as string
         ?string $pdfPath = null
     ): void {
+        // Convert string date to DateTime only for rendering
+        $dateObj = \DateTime::createFromFormat('Y-m-d', $rawDate) ?: new \DateTime();
+    
         $html = $this->twig->render('emails/confirmation.html.twig', [
             'user' => $user,
             'event' => $eventName,
             'location' => $location,
-            'date' => $date ?? new \DateTime(),
+            'date' => $dateObj,
         ]);
     
         $jsonBody = [
@@ -43,15 +46,13 @@ class BrevoMailerService
             'htmlContent' => $html,
         ];
     
-        // ✅ Attach PDF correctly
         if ($pdfPath && file_exists($pdfPath)) {
-            $pdfContent = base64_encode(file_get_contents($pdfPath));
             $jsonBody['attachment'] = [[
-                'content' => $pdfContent,
-                'name' => basename($pdfPath)
+                'content' => base64_encode(file_get_contents($pdfPath)),
+                'name' => basename($pdfPath),
             ]];
     
-            file_put_contents('brevo_mail_log.log', "✅ Attachment added: " . basename($pdfPath) . "\n", FILE_APPEND);
+            file_put_contents('brevo_mail_log.log', "✅ PDF attached: " . basename($pdfPath) . "\n", FILE_APPEND);
         } else {
             file_put_contents('brevo_mail_log.log', "❌ PDF missing: $pdfPath\n", FILE_APPEND);
         }
@@ -65,6 +66,7 @@ class BrevoMailerService
             'json' => $jsonBody,
         ]);
     }
+    
     
 }
 ?>
