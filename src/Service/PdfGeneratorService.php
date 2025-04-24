@@ -20,19 +20,20 @@ class PdfGeneratorService
     }
 
     public function generateBilletPdf(Billet $billet): ?string
-    {
-        $proprietaire = $billet->getProprietaire();
-        $event = $billet->getEvent();
+{
+    $proprietaire = $billet->getProprietaire();
+    $event = $billet->getEvent();
 
-        // ✅ Safely parse date string to DateTime
-        $dateObj = \DateTime::createFromFormat('Y-m-d', $event->getDate());
-        $formattedDate = $dateObj ? $dateObj->format('Y-m-d') : '0000-00-00';
+    // Format the event date if it's valid
+    $dateObj = \DateTime::createFromFormat('Y-m-d', $event->getDate());
+    $formattedDate = $dateObj ? $dateObj->format('Y-m-d') : 'Date inconnue';
 
-        // ✅ Generate Google Maps search URL
-        $mapsUrl = 'https://www.google.com/maps/search/?api=1&query=' . urlencode($event->getNomEspace());
-        $qrCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" . urlencode($mapsUrl);
+    // Generate QR Code with Google Maps location
+    $mapsUrl = 'https://www.google.com/maps/search/?api=1&query=' . urlencode($event->getNomEspace());
+    $qrCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" . urlencode($mapsUrl);
 
-        $html = <<<HTML
+    // HTML for the PDF
+    $html = <<<HTML
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -41,7 +42,7 @@ class PdfGeneratorService
     <style>
         body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; text-align: center; }
         .ticket { background: white; width: 420px; margin: auto; padding: 20px;
-                  border-radius: 15px; box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.2);
+                  border-radius: 15px; box-shadow: 0px 5px 20px rgba(0,0,0,0.2);
                   border: 3px solid #2c3e50; position: relative; overflow: hidden; }
         .header { background: #2c3e50; color: white; padding: 12px; text-transform: uppercase;
                   font-size: 20px; font-weight: bold; letter-spacing: 2px; }
@@ -62,6 +63,7 @@ class PdfGeneratorService
         <div class="content">
             <p><span>Nom :</span> {$proprietaire}</p>
             <p><span>Événement :</span> {$event->getNomEvent()}</p>
+            <p><span>Date :</span> {$formattedDate}</p>
             <p><span>Prix :</span> {$billet->getPrix()} DT</p>
             <p class="badge">Valide uniquement pour cet événement</p>
         </div>
@@ -75,24 +77,34 @@ class PdfGeneratorService
 </html>
 HTML;
 
+    // Step 1: Generate PDF with PDF.co
+    $response = $this->client->request('POST', 'https://api.pdf.co/v1/pdf/convert/from/html', [
+        'headers' => [
+            'Content-Type' => 'application/json',
+            'x-api-key' => self::API_KEY,
+        ],
+        'json' => [
+            'html' => $html,
+            'name' => 'billet_' . $proprietaire . '.pdf',
+        ],
+    ]);
 
-        // ✅ Send to PDF.co to convert HTML to PDF
-        $response = $this->client->request('POST', 'https://api.pdf.co/v1/pdf/convert/from/html', [
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'x-api-key' => self::API_KEY,
-            ],
-            'json' => [
-                'html' => $html,
-                'name' => 'billet_' . $proprietaire . '.pdf',
-            ],
-        ]);
+    // Step 2: Check response and download the PDF
+    if ($response->getStatusCode() === 200) {
+        $result = $response->toArray(false);
+        $remotePdfUrl = $result['url'] ?? null;
 
-        if ($response->getStatusCode() === 200) {
-            $result = $response->toArray(false);
-            return $result['url'] ?? null;
+        if ($remotePdfUrl) {
+            $pdfContent = file_get_contents($remotePdfUrl);
+            $fileName = 'billet_' . $billet->getIdBillet() . '_' . time() . '.pdf';
+            $localPath = __DIR__ . '/../../public/uploads/billets/' . $fileName;
+
+            file_put_contents($localPath, $pdfContent);
+            return realpath($localPath);
         }
-
-        return null;
     }
+
+    return null;
+}
+
 }

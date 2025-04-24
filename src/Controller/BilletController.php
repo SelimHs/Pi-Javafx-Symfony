@@ -87,14 +87,12 @@ final class BilletController extends AbstractController
         $reservation->setUser($em->getRepository(\App\Entity\User::class)->find(1));
     
         if ($form->isSubmitted() && $form->isValid()) {
-            // dynamic billet price adjustment
             if ($billet->getType() === 'DUO') {
                 $prix += $event->getPrix() * 0.5;
             } elseif ($billet->getType() === 'VIP') {
                 $prix = $event->getPrix() * 3;
             }
     
-            // remise application
             $codePromo = $form->get('codePromo')->getData();
             if ($codePromo) {
                 $remise = $remiseRepo->findOneBy(['codePromo' => $codePromo]);
@@ -112,28 +110,21 @@ final class BilletController extends AbstractController
             $em->persist($billet);
             $em->flush();
     
-            // 📄 Generate PDF
-            $pdfUrl = $pdfGenerator->generateBilletPdf($billet);
-
-            // 📧 Send confirmation email
+            // ✅ Generate local PDF file
+            $pdfPath = $pdfGenerator->generateBilletPdf($billet);
+    
+            // ✅ Send confirmation email with PDF attachment
             $brevoMailer->sendConfirmation(
-                'dark_soul@hotmail.fr',
+                'Karouiyahya71@gmail.com',
                 $event->getNomEvent(),
-                'Yahya Karoui',                      // user name
-                $event->getNomEspace(),           // location                 
-                new \DateTime($event->getDate()),   // event date
-                $pdfUrl
+                $billet->getProprietaire(),
+                $event->getNomEspace(),
+                new \DateTime($event->getDate()),
+                $pdfPath
             );
-
     
-    
-            // redirect to pdf url to download
-           if ($pdfUrl) {
-                 return $this->redirect($pdfUrl);
-             }
-     
-             return $this->redirectToRoute('app_event_index');
-         
+            // ✅ Redirect always to home page
+            return $this->redirectToRoute('app_event_index');
         }
     
         return $this->render('billet/front_reservation.html.twig', [
@@ -143,7 +134,7 @@ final class BilletController extends AbstractController
             'promoCodes' => [],
         ]);
     }
-
+    
 
     #[Route('/test-brevo-mail', name: 'test_brevo_mail')]
     public function testBrevo(BrevoMailerService $mailer): Response
