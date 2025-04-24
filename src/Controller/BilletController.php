@@ -42,6 +42,14 @@ final class BilletController extends AbstractController
         ]);
     }
 
+    #[Route('/{idBillet}', name: 'app_billet_show', methods: ['GET'])]
+    public function show(Billet $billet): Response
+    {
+        return $this->render('billet/show.html.twig', [
+            'billet' => $billet,
+        ]);
+    }
+    
     // Création de billet depuis le back
     #[Route('/new', name: 'app_billet_new', methods: ['GET', 'POST'])]
     public function newBack(Request $request, EntityManagerInterface $entityManager): Response
