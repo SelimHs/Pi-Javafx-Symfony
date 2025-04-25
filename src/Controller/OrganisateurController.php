@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Controller;
+
 use App\Entity\Espace;
 use App\Form\EspaceType;
+use App\Repository\EspaceRepository;
 
 use App\Entity\Organisateur;
 use App\Form\OrganisateurType;
@@ -113,62 +115,68 @@ final class OrganisateurController extends AbstractController
             ]);
         }
     }
-
+    #[Route(name: 'app_espace_index', methods: ['GET'])]
+    public function indexx(EspaceRepository $espaceRepository): Response
+    {
+        return $this->render('espace/index.html.twig', [
+            'espaces' => $espaceRepository->findAll(),
+        ]);
+    }
     #[Route('/verify-code', name: 'app_verify_code', methods: ['POST'])]
-public function verifyCode(Request $request, SessionInterface $session, EntityManagerInterface $em): JsonResponse
-{
-    $data = $request->toArray();
-    $code = $data['code'] ?? null;
-    $storedCode = $session->get('otp_code');
+    public function verifyCode(Request $request, SessionInterface $session, EntityManagerInterface $em): JsonResponse
+    {
+        $data = $request->toArray();
+        $code = $data['code'] ?? null;
+        $storedCode = $session->get('otp_code');
 
-    if ($storedCode && $code === (string)$storedCode) {
-        /** @var Organisateur $organisateur */
-        $organisateur = $session->get('pending_organisateur');
-        
-        if ($organisateur) {
-            try {
-                // Gestion spéciale de l'espace sans cascade persist
-                if ($organisateur->getEspace()) {
-                    // Si l'espace existe déjà en base (a un ID)
-                    if ($organisateur->getEspace()->getIdEspace()) {
-                        $espace = $em->find(Espace::class, $organisateur->getEspace()->getIdEspace());
-                        if ($espace) {
-                            $organisateur->setEspace($espace);
-                        } else {
-                            throw new \Exception("L'espace associé n'existe pas en base");
+        if ($storedCode && $code === (string)$storedCode) {
+            /** @var Organisateur $organisateur */
+            $organisateur = $session->get('pending_organisateur');
+
+            if ($organisateur) {
+                try {
+                    // Gestion spéciale de l'espace sans cascade persist
+                    if ($organisateur->getEspace()) {
+                        // Si l'espace existe déjà en base (a un ID)
+                        if ($organisateur->getEspace()->getIdEspace()) {
+                            $espace = $em->find(Espace::class, $organisateur->getEspace()->getIdEspace());
+                            if ($espace) {
+                                $organisateur->setEspace($espace);
+                            } else {
+                                throw new \Exception("L'espace associé n'existe pas en base");
+                            }
+                        }
+                        // Si c'est un nouvel espace (n'a pas d'ID)
+                        else {
+                            $em->persist($organisateur->getEspace());
+                            $em->flush(); // Flush pour obtenir l'ID
                         }
                     }
-                    // Si c'est un nouvel espace (n'a pas d'ID)
-                    else {
-                        $em->persist($organisateur->getEspace());
-                        $em->flush(); // Flush pour obtenir l'ID
-                    }
+
+                    $em->persist($organisateur);
+                    $em->flush();
+
+                    $session->remove('otp_code');
+                    $session->remove('pending_organisateur');
+
+                    return $this->json([
+                        'success' => true,
+                        'redirect' => $this->generateUrl('app_espace_index')
+                    ]);
+                } catch (\Exception $e) {
+                    return $this->json([
+                        'success' => false,
+                        'error' => 'Erreur lors de l\'enregistrement: ' . $e->getMessage()
+                    ]);
                 }
-
-                $em->persist($organisateur);
-                $em->flush();
-
-                $session->remove('otp_code');
-                $session->remove('pending_organisateur');
-
-                return $this->json([
-                    'success' => true,
-                    'redirect' => $this->generateUrl('app_organisateur_index')
-                ]);
-            } catch (\Exception $e) {
-                return $this->json([
-                    'success' => false,
-                    'error' => 'Erreur lors de l\'enregistrement: ' . $e->getMessage()
-                ]);
             }
         }
-    }
 
-    return $this->json([
-        'success' => false,
-        'error' => 'Code invalide ou session expirée'
-    ]);
-}
+        return $this->json([
+            'success' => false,
+            'error' => 'Code invalide ou session expirée'
+        ]);
+    }
 
 
     // Route ajout général depuis la liste des organisateurs

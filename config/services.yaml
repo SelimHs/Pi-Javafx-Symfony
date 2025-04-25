@@ -4,7 +4,7 @@ parameters:
     image_directory: '%kernel.project_dir%/public/uploads'
     event_images_directory: '%kernel.project_dir%/public/assets/images'
     espace_images_directory: '%kernel.project_dir%/public/assets/images'
-   
+    vonage_from_number: 'VOTRE_NUMERO_VONAGE' # Ex: '33612345678'
 services:
     _defaults:
         autowire: true
