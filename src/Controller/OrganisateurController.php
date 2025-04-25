@@ -10,10 +10,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use App\Service\MessageBirdVerifyService;
+use App\Service\MessageBirdService;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
+use MessageBird\Client;
+use MessageBird\Objects\Verify;
 #[Route('/organisateur')]
 final class OrganisateurController extends AbstractController
 {
+    private string $termiiApiKey = 'TLKUesZWcUwRXgHgzORLRAJlsdROGflsyDoExNDJnOVxYlAKhluwtSOSCFZxNA';
+    private HttpClientInterface $client;
+
+
     #[Route(name: 'app_organisateur_index', methods: ['GET'])]
     public function index(OrganisateurRepository $organisateurRepository): Response
     {
@@ -22,63 +33,109 @@ final class OrganisateurController extends AbstractController
         ]);
     }
 
+
+
+    public function __construct(HttpClientInterface $client)
+    {
+        $this->client = $client;
+    }
+   
     #[Route('/new', name: 'app_organisateur_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $em): Response
     {
         $organisateur = new Organisateur();
         $form = $this->createForm(OrganisateurType::class, $organisateur);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($organisateur);
-            $entityManager->flush();
-
-            // 🔁 Rediriger vers la page de détails de l'espace
-            $espaceId = $organisateur->getEspace()?->getIdEspace(); // méthode safe pour éviter une erreur si null
-
-            if ($espaceId) {
-                return $this->redirectToRoute('app_espace_show', ['idEspace' => $espaceId]);
-            }
-
-            // Si pas d'espace, revenir à la liste générale
-            return $this->redirectToRoute('app_organisateur_index');
+            $request->getSession()->set('pending_organisateur', $organisateur);
+            return new JsonResponse(['status' => 'verification_required']);
         }
 
         return $this->render('organisateur/new.html.twig', [
-            'organisateur' => $organisateur,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
-    // Route ajout depuis le détail d’un espace
-    #[Route('/newBack/{idEspace}', name: 'dashboard_organisateur_new', methods: ['GET', 'POST'])]
-    public function newBack(Request $request, int $idEspace, EntityManagerInterface $entityManager): Response
+
+    #[Route('/send-verification', name: 'app_send_verification', methods: ['POST'])]
+    public function sendVerification(Request $request, SessionInterface $session): JsonResponse
     {
-        $organisateur = new Organisateur();
+        $data = json_decode($request->getContent(), true);
+        $phone = $data['phone'] ?? null;
 
-        // Lier à l'espace
-        $espace = $entityManager->getRepository(\App\Entity\Espace::class)->find($idEspace);
-        if (!$espace) {
-            throw $this->createNotFoundException('Espace non trouvé');
+        if (!$phone) {
+            return $this->json(['success' => false, 'error' => 'Numéro manquant']);
         }
 
-        $organisateur->setEspace($espace);
+        try {
+            $response = $this->client->request('POST', 'https://api.ng.termii.com/api/sms/otp/send', [
+                'json' => [
+                    'api_key' => $this->termiiApiKey,
+                    'message_type' => 'NUMERIC',
+                    'to' => '+216' . ltrim($phone, '0'),
+                    'from' => 'LammaApp',
+                    'channel' => 'generic',
+                    'pin_attempts' => 5,
+                    'pin_time_to_live' => 300,
+                    'pin_length' => 6,
+                    'pin_placeholder' => '<123456>',
+                    'message_text' => 'Votre code de vérification est <123456>',
+                ]
+            ]);
 
-        $form = $this->createForm(OrganisateurType::class, $organisateur);
-        $form->handleRequest($request);
+            $responseData = $response->toArray();
+            $session->set('termii_pin_id', $responseData['pin_id'] ?? null);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($organisateur);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('dashboard_espace_show', ['idEspace' => $idEspace]);
+            return $this->json(['success' => true]);
+        } catch (\Exception $e) {
+            return $this->json(['success' => false, 'error' => 'Erreur : ' . $e->getMessage()]);
         }
-
-        return $this->render('organisateur/newBack.html.twig', [
-            'organisateur' => $organisateur,
-            'form' => $form,
-        ]);
     }
 
+    #[Route('/verify-code', name: 'app_verify_code', methods: ['POST'])]
+    public function verifyCode(Request $request, SessionInterface $session, EntityManagerInterface $em): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $code = $data['code'] ?? null;
+        $pinId = $session->get('termii_pin_id');
+
+        if (!$code || !$pinId) {
+            return $this->json(['success' => false, 'error' => 'Code ou session manquante']);
+        }
+
+        try {
+            $response = $this->client->request('POST', 'https://api.ng.termii.com/api/sms/otp/verify', [
+                'json' => [
+                    'api_key' => $this->termiiApiKey,
+                    'pin_id' => $pinId,
+                    'pin' => $code
+                ]
+            ]);
+
+            $result = $response->toArray();
+
+            if ($result['verified'] ?? false) {
+                $organisateur = $session->get('pending_organisateur');
+                if ($organisateur) {
+                    $em->persist($organisateur);
+                    $em->flush();
+                }
+
+                $session->remove('pending_organisateur');
+                $session->remove('termii_pin_id');
+
+                return $this->json(['success' => true]);
+            } else {
+                return $this->json(['success' => false, 'error' => 'Code invalide']);
+            }
+
+        } catch (\Exception $e) {
+            return $this->json(['success' => false, 'error' => 'Erreur de vérification']);
+        }
+    }
+
+
+    
     // Route ajout général depuis la liste des organisateurs
     #[Route('/newBack', name: 'dashboard_organisateur_new_general', methods: ['GET', 'POST'])]
     public function newBackGeneral(Request $request, EntityManagerInterface $entityManager): Response
@@ -196,4 +253,6 @@ final class OrganisateurController extends AbstractController
             'form' => $form,
         ]);
     }
+
+    
 }

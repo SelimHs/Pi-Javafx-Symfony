@@ -17,12 +17,21 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 use App\Service\JsonBinService;
 use App\Service\SheetBestService;
 
+use App\Entity\Organisateur;
+use App\Repository\OrganisateurRepository;
 
 
 
 #[Route('/espace')]
 final class EspaceController extends AbstractController
 {
+    private $client;
+
+    public function __construct(HttpClientInterface $client)
+    {
+        $this->client = $client;
+    }
+
     #[Route(name: 'app_espace_index', methods: ['GET'])]
     public function index(EspaceRepository $espaceRepository): Response
     {
@@ -235,8 +244,8 @@ final class EspaceController extends AbstractController
         $json = $request->getContent();
         $data = json_decode($json, true);
 
-        if (!$data) {
-            return new JsonResponse(['success' => false, 'error' => 'Données manquantes'], 400);
+        if (!$data || !isset($data['prix'])) {
+            return new JsonResponse(['success' => false, 'error' => 'Données incomplètes ou champ prix manquant.'], 400);
         }
 
         $url = 'https://api.sheetbest.com/sheets/4d538bcb-a52a-4dde-84e4-ddb7c9520d8e';
@@ -262,29 +271,38 @@ final class EspaceController extends AbstractController
                 }
             }
 
-            // ✅ Si pas de conflit : enregistrer la réservation
+            // ✅ Si pas de conflit : enregistrer les données (y compris le prix)
             $client->request('POST', $url, [
                 'json' => $data
             ]);
 
-            return new JsonResponse(['success' => true, 'message' => 'Réservation enregistrée']);
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Réservation enregistrée avec succès.',
+                'prix' => $data['prix'] // 👈 facultatif pour l'afficher côté JS
+            ]);
         } catch (\Exception $e) {
-            return new JsonResponse(['success' => false, 'error' => 'Erreur API', 'message' => $e->getMessage()], 500);
+            return new JsonResponse([
+                'success' => false,
+                'error' => 'Erreur API',
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
 
 
     #[Route('/reservations', name: 'app_reservations_liste', methods: ['GET'])]
-    public function listReservations(HttpClientInterface $client): JsonResponse
+    public function listReservations(SheetBestService $sheetBest): JsonResponse
     {
         try {
-            $url = 'https://api.sheetbest.com/sheets/4d538bcb-a52a-4dde-84e4-ddb7c9520d8e';
-            $response = $client->request('GET', $url);
-            $reservations = $response->toArray();
-
+            $reservations = $sheetBest->getAll();
             return new JsonResponse($reservations);
         } catch (\Exception $e) {
-            return new JsonResponse(['error' => 'Erreur lors de la récupération des réservations.'], 500);
+            return new JsonResponse([
+                'error' => 'Erreur lors de la récupération des réservations.',
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
+    
 }
