@@ -12,6 +12,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.4",
         "doctrine/orm": "^3.3",
         "geocoder-php/nominatim-provider": "5.8",
+        "messagebird/php-rest-api": "^3.1",
         "php-http/guzzle7-adapter": "*",
         "phpdocumentor/reflection-docblock": "^5.6",
         "phpoffice/phpspreadsheet": "^4.2",
@@ -48,6 +49,7 @@
         "symfony/yaml": "6.4.*",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0",
+        "twilio/sdk": "^8.5",
         "willdurand/geocoder": "4.6"
     },
     "config": {
