@@ -11,6 +11,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+use App\Service\AiPredictiveService;
+
+
+
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 #[Route('/produit')]
 final class ProduitController extends AbstractController
 {
@@ -134,5 +140,15 @@ final class ProduitController extends AbstractController
             : 'app_produit_index';
 
         return $this->redirectToRoute($redirectRoute);
+    }
+
+
+    #[Route('/api/generate-idea', name: 'api_generate_idea', methods: ['GET', 'POST'])]
+    public function generateIdea(Request $request, ProduitRepository $repo, AiPredictiveService $ai): JsonResponse
+    {
+        $ids = json_decode($request->getContent(), true)['ids'] ?? [];
+        $produits = $repo->findBy(['idProduit' => $ids]);
+        $idea = $ai->generateIdea($produits);
+        return new JsonResponse(['idea' => $idea]);
     }
 }
