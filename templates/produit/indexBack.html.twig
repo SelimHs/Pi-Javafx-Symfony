@@ -24,12 +24,25 @@
       </div>
     </div>
 
+    <!-- Barre de filtre -->
+    <div class="row mb-4">
+      <div class="col-md-4 offset-md-8 text-end">
+        <select id="filterCategorie" class="form-select form-select-sm w-100">
+          <option value="">-- Toutes les catégories --</option>
+          <option value="ALIMENTAIRE">ALIMENTAIRE</option>
+          <option value="Électronique">Électronique</option>
+          <option value="AUTRES">Autres</option>
+        </select>
+      </div>
+    </div>
+
     {% if produits is empty %}
       <div class="alert alert-info text-center">Aucun produit trouvé.</div>
     {% else %}
-      <div class="row">
+      <div class="row" id="produitCards">
         {% for produit in produits %}
-          <div class="col-md-6 col-xl-4">
+          <div class="col-md-6 col-xl-4 produit-card"
+               data-categorie="{{ produit.categorie }}">
             <div class="card mb-4 shadow-sm">
               <div class="position-relative">
                 <img src="{{ asset('uploads/' ~ (produit.imagePath ? produit.imagePath : 'placeholder.png')) }}"
@@ -57,4 +70,22 @@
     {% endif %}
   </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const filter = document.getElementById('filterCategorie');
+    const cards = document.querySelectorAll('.produit-card');
+
+    filter.addEventListener('change', function () {
+      const selected = this.value.toLowerCase().trim();
+
+      cards.forEach(card => {
+        const categorie = card.dataset.categorie.toLowerCase().trim();
+        const show = !selected || categorie === selected;
+        card.style.display = show ? '' : 'none';
+      });
+    });
+  });
+</script>
+
 {% endblock %}
