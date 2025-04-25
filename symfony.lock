@@ -189,6 +189,15 @@
             "./config/packages/notifier.yaml"
         ]
     },
+    "symfony/octopush-notifier": {
+        "version": "6.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "5.3",
+            "ref": "cb40d646f74a3fd254325003511f8e8b0462af7f"
+        }
+    },
     "symfony/phpunit-bridge": {
         "version": "7.2",
         "recipe": {
@@ -290,6 +299,15 @@
         "files": [
             "./config/packages/validator.yaml"
         ]
+    },
+    "symfony/vonage-notifier": {
+        "version": "6.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "5.4",
+            "ref": "deadcbe9c9ac02cc681ef4b152619699d445c2c7"
+        }
     },
     "symfony/web-profiler-bundle": {
         "version": "6.4",
