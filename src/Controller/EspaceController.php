@@ -316,6 +316,13 @@ final class EspaceController extends AbstractController
                     ], 409);
                 }
             }
+            $user = $this->getUser();
+if ($user) {
+    $data['id_user'] = $user->getId(); // 🔥 Injecte id_user dans $data
+} else {
+    $data['id_user'] = ''; // ou -1, ou "Anonyme" si tu préfères
+}
+
 
             // ✅ Si pas de conflit : enregistrer les données (y compris le prix)
             $client->request('POST', $url, [
