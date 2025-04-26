@@ -52,17 +52,21 @@ final class EspaceController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $espace = new Espace();
-        $form = $this->createForm(EspaceType::class, $espace, [
-            'is_edit' => false // champ désactivé
-        ]);
-        $espace = new Espace();
-        $espace->setDisponibilite('Disponible'); // ✅ valeur par défaut
+        $espace->setDisponibilite('Disponible'); // Valeur par défaut
+        
+        // Récupérer l'utilisateur connecté
+        $user = $this->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour créer un espace.');
+            return $this->redirectToRoute('app_login');
+        }
+        
+        // Associer l'utilisateur à l'espace
+        $espace->setUser($user);
+        
         $form = $this->createForm(EspaceType::class, $espace, [
             'is_edit' => false
         ]);
-
-
-        $form = $this->createForm(EspaceType::class, $espace);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -77,6 +81,7 @@ final class EspaceController extends AbstractController
             $entityManager->persist($espace);
             $entityManager->flush();
 
+            $this->addFlash('success', 'Espace créé avec succès !');
             return $this->redirectToRoute('app_espace_index');
         }
 
@@ -91,6 +96,16 @@ final class EspaceController extends AbstractController
     {
         $espace = new Espace();
         $espace->setDisponibilite('Disponible'); // Valeur par défaut
+
+        // Récupérer l'utilisateur connecté
+        $user = $this->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour créer un espace.');
+            return $this->redirectToRoute('app_login');
+        }
+        
+        // Associer l'utilisateur à l'espace
+        $espace->setUser($user);
 
         $form = $this->createForm(EspaceType::class, $espace, [
             'is_edit' => false
@@ -108,6 +123,7 @@ final class EspaceController extends AbstractController
             $entityManager->persist($espace);
             $entityManager->flush();
 
+            $this->addFlash('success', 'Espace créé avec succès !');
             return $this->redirectToRoute('dashboard_espace_index');
         }
 
@@ -126,7 +142,7 @@ final class EspaceController extends AbstractController
         $request->getSession()->set('idEspace', $espace->getIdEspace());
 
         // 🎥 Génération du lien de live stream basé sur la capacité
-        $ip = "192.168.137.174"; // Remplace par l’IP de ton téléphone ou serveur caméra
+        $ip = "192.168.137.174"; // Remplace par l'IP de ton téléphone ou serveur caméra
         $port = $espace->getCapacite();
         $liveURL = "http://$ip:$port/jsfs.html";
 
@@ -152,6 +168,19 @@ final class EspaceController extends AbstractController
     #[Route('/{idEspace}/edit', name: 'app_espace_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Espace $espace, EntityManagerInterface $entityManager): Response
     {
+        // Vérifier si l'utilisateur est connecté
+        $user = $this->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour modifier un espace.');
+            return $this->redirectToRoute('app_login');
+        }
+
+        // Vérifier si l'utilisateur est le propriétaire de l'espace
+        if ($espace->getUser() !== $user) {
+            $this->addFlash('error', 'Vous n\'êtes pas autorisé à modifier cet espace.');
+            return $this->redirectToRoute('app_espace_index');
+        }
+
         $form = $this->createForm(EspaceType::class, $espace, [
             'is_edit' => true
         ]);
@@ -165,12 +194,12 @@ final class EspaceController extends AbstractController
                     $imageFile->move($this->getParameter('uploads_directory'), $newFilename);
                     $espace->setImage($newFilename);
                 } catch (FileException $e) {
-                    // Handle error
+                    $this->addFlash('error', 'Erreur lors du téléchargement de l\'image.');
                 }
             }
 
             $entityManager->flush();
-
+            $this->addFlash('success', 'Espace modifié avec succès !');
             return $this->redirectToRoute('app_espace_show', ['idEspace' => $espace->getIdEspace()]);
         }
 
