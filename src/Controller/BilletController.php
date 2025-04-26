@@ -23,6 +23,7 @@ use App\Service\BrevoMailerService;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Symfony\Component\Security\Http\SecurityRequestAttributes;
 
 
 
@@ -204,10 +205,11 @@ final class BilletController extends AbstractController
     
             // ✅ Generate local PDF file
             $pdfPath = $pdfGenerator->generateBilletPdf($billet);
-    
+            $email = $request->getSession()->get(SecurityRequestAttributes::LAST_USERNAME);
+
             // ✅ Send confirmation email with PDF attachment
             $brevoMailer->sendConfirmation(
-                'Karouiyahya71@gmail.com',
+                $email,
                 $event->getNomEvent(),
                 $billet->getProprietaire(),
                 $event->getNomEspace(),

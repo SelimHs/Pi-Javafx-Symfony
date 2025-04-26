@@ -115,13 +115,7 @@ final class OrganisateurController extends AbstractController
             ]);
         }
     }
-    #[Route(name: 'app_espace_index', methods: ['GET'])]
-    public function indexx(EspaceRepository $espaceRepository): Response
-    {
-        return $this->render('espace/index.html.twig', [
-            'espaces' => $espaceRepository->findAll(),
-        ]);
-    }
+    
     #[Route('/verify-code', name: 'app_verify_code', methods: ['POST'])]
     public function verifyCode(Request $request, SessionInterface $session, EntityManagerInterface $em): JsonResponse
     {
