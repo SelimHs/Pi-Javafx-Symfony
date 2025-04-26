@@ -42,6 +42,7 @@ class RegistrationController extends AbstractController
                 ->context([
                     'token' => $verificationToken,
                 ]);
+
             $mailer->send($email);
             $this->addFlash('success', 'Registration successful! Please check your email to confirm your account.');
             return $this->redirectToRoute('app_login');

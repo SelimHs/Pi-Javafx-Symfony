@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Enter Verification Code{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1>Enter the Code you received by SMS</h1>
+
+    {% for flash_error in app.flashes('error') %}
+        <div class="alert alert-danger">{{ flash_error }}</div>
+    {% endfor %}
+
+    <form method="post" action="{{ path('app_verify_code') }}">
+        <div class="form-group mb-3">
+            <label for="code">Verification Code</label>
+            <input type="text" name="code" id="code" class="form-control" required>
+
+            <!-- Here we store the real code hidden -->
+            <input type="hidden" name="real_code" value="{{ real_code }}">
+            <input type="hidden" name="email" value="{{ email }}">
+        </div>
+
+        <button class="btn btn-primary" type="submit">Verify Code</button>
+    </form>
+</div>
+{% endblock %}

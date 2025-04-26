@@ -50,6 +50,7 @@
         "symfonycasts/verify-email-bundle": "^1.17",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0",
+        "twilio/sdk": "^8.5",
         "willdurand/geocoder": "4.6"
     },
     "config": {
