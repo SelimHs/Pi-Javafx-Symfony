@@ -1,9 +1,15 @@
 <?php
+
 namespace App\Security;
 
+use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
@@ -13,6 +19,8 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 class Authenticator extends AbstractLoginFormAuthenticator
@@ -21,15 +29,53 @@ class Authenticator extends AbstractLoginFormAuthenticator
 
     public const LOGIN_ROUTE = 'app_login';
 
-    public function __construct(private UrlGeneratorInterface $urlGenerator)
+    private EntityManagerInterface $entityManager;
+    private MailerInterface $mailer;
+    private UrlGeneratorInterface $urlGenerator;
+
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        MailerInterface $mailer,
+        UrlGeneratorInterface $urlGenerator
+    )
     {
+        $this->entityManager = $entityManager;
+        $this->mailer = $mailer;
+        $this->urlGenerator = $urlGenerator;
     }
 
     public function authenticate(Request $request): Passport
     {
-        $email = $request->get('email');  // Retrieve email from request
-
+        $email = $request->get('email');
         $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
+
+        // 🔥 Manual verification check
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
+
+        if ($user) {
+            if (!$user->isVerified()) {
+                // Generate a new token
+                $user->setVerificationToken(Uuid::v4()->toRfc4122());
+                $user->setTokenExpiresAt((new \DateTime())->modify('+1 hour'));
+
+                $this->entityManager->persist($user);
+                $this->entityManager->flush();
+
+                // Send a new confirmation email
+                $emailMessage = (new TemplatedEmail())
+                    ->from(new Address('lamma.eventgroups@gmail.com', 'Lamma'))
+                    ->to($user->getEmail())
+                    ->subject('Please Confirm your Email')
+                    ->htmlTemplate('registration/confirmation_email.html.twig')
+                    ->context([
+                        'token' => $user->getVerificationToken(),
+                    ]);
+
+                $this->mailer->send($emailMessage);
+
+                throw new CustomUserMessageAuthenticationException('Your email is not verified. A new confirmation email has been sent.');
+            }
+        }
 
         return new Passport(
             new UserBadge($email),
@@ -43,7 +89,7 @@ class Authenticator extends AbstractLoginFormAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        $role = $token->getUser()->getRoles()[0];  // Check roles
+        $role = $token->getUser()->getRoles()[0];
         if ($role === 'ROLE_ADMIN') {
             return new RedirectResponse($this->urlGenerator->generate('app_dashboard'));
         }

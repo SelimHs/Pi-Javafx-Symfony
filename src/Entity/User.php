@@ -53,6 +53,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private bool $isVerified = false;
 
+    #[ORM\Column(type: 'string', nullable: true)]
+    private ?string $verificationToken = null;
+    
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $tokenExpiresAt = null;
+
     public function __construct()
     {
         $this->espaces = new ArrayCollection();
@@ -207,4 +213,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+    public function getVerificationToken(): ?string
+   {
+    return $this->verificationToken;
+   }
+
+public function setVerificationToken(?string $verificationToken): self
+   {
+    $this->verificationToken = $verificationToken;
+    return $this;
+  }
+
+public function getTokenExpiresAt(): ?\DateTimeInterface
+{
+    return $this->tokenExpiresAt;
+}
+
+public function setTokenExpiresAt(?\DateTimeInterface $tokenExpiresAt): self
+{
+    $this->tokenExpiresAt = $tokenExpiresAt;
+    return $this;
+}
+
 }
