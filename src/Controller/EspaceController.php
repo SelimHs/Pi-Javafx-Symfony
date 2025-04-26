@@ -35,8 +35,11 @@ final class EspaceController extends AbstractController
     #[Route(name: 'app_espace_index', methods: ['GET'])]
     public function index(EspaceRepository $espaceRepository): Response
     {
+        // Afficher tous les espaces
+        $espaces = $espaceRepository->findAll();
+
         return $this->render('espace/index.html.twig', [
-            'espaces' => $espaceRepository->findAll(),
+            'espaces' => $espaces,
         ]);
     }
 
@@ -51,15 +54,15 @@ final class EspaceController extends AbstractController
     #[Route('/new', name: 'app_espace_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $espace = new Espace();
-        $espace->setDisponibilite('Disponible'); // Valeur par défaut
-        
-        // Récupérer l'utilisateur connecté
+        // Vérifier si l'utilisateur est connecté
         $user = $this->getUser();
         if (!$user) {
             $this->addFlash('error', 'Vous devez être connecté pour créer un espace.');
             return $this->redirectToRoute('app_login');
         }
+
+        $espace = new Espace();
+        $espace->setDisponibilite('Disponible'); // Valeur par défaut
         
         // Associer l'utilisateur à l'espace
         $espace->setUser($user);
@@ -248,9 +251,23 @@ final class EspaceController extends AbstractController
     #[Route('/{idEspace}', name: 'app_espace_delete', methods: ['POST'])]
     public function delete(Request $request, Espace $espace, EntityManagerInterface $entityManager): Response
     {
+        // Vérifier si l'utilisateur est connecté
+        $user = $this->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour supprimer un espace.');
+            return $this->redirectToRoute('app_login');
+        }
+
+        // Vérifier si l'utilisateur est le propriétaire de l'espace
+        if ($espace->getUser() !== $user) {
+            $this->addFlash('error', 'Vous n\'êtes pas autorisé à supprimer cet espace.');
+            return $this->redirectToRoute('app_espace_index');
+        }
+
         if ($this->isCsrfTokenValid('delete' . $espace->getIdEspace(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($espace);
             $entityManager->flush();
+            $this->addFlash('success', 'Espace supprimé avec succès !');
         }
 
         return $this->redirectToRoute('app_espace_index');
