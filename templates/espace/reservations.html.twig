@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Réservations{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+  <h2 class="mb-4">📋 Toutes les Réservations</h2>
+
+  {% if reservations is not empty %}
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Nom Complet</th>
+          <th>Date Début</th>
+          <th>Date Fin</th>
+          <th>ID Espace</th>
+          <th>Organisateur</th>
+          <th>Prix</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for res in reservations %}
+          <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ res.nom_complet }}</td>
+            <td>{{ res.date_debut|date('d/m/Y') }}</td>
+            <td>{{ res.date_fin|date('d/m/Y') }}</td>
+            <td>{{ res.id_espace }}</td>
+            <td>
+              {% if res.id_organisateur %}
+                {{ res.id_organisateur }}
+              {% else %}
+                Aucun
+              {% endif %}
+            </td>
+            <td>{{ res.prix }} Dt</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="alert alert-info">Aucune réservation enregistrée pour le moment.</div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %}Détails de l'Organisateur{% endblock %}
+
+{% block body %}
+<div class="app-main__outer">
+  <div class="app-main__inner">
+    <div class="app-page-title">
+      <div class="page-title-wrapper">
+        <div class="page-title-heading">
+          <div class="page-title-icon">
+            <i class="pe-7s-id icon-gradient bg-amy-crisp"></i>
+          </div>
+          <div>
+            Détails de l'Organisateur
+            <div class="page-title-subheading">Toutes les informations liées à cet organisateur.</div>
+          </div>
+        </div>
+        <div class="page-title-actions">
+          <a href="{{ path('app_organisateur_index') }}" class="btn btn-outline-secondary mr-2">← Retour</a>
+          <a href="{{ path('app_organisateur_edit', {'id_org': organisateur.idOrg}) }}" class="btn btn-warning">Modifier</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-card mb-3 card">
+      <div class="card-body">
+        <h5 class="card-title">Informations Générales</h5>
+        <table class="table table-bordered table-striped">
+          <tbody>
+            <tr>
+              <th>ID</th>
+              <td>{{ organisateur.idOrg }}</td>
+            </tr>
+            <tr>
+              <th>Nom</th>
+              <td>{{ organisateur.nomOrg }}</td>
+            </tr>
+            <tr>
+              <th>Prénom</th>
+              <td>{{ organisateur.prenomOrg }}</td>
+            </tr>
+            <tr>
+              <th>Description</th>
+              <td>{{ organisateur.descriptionOrg }}</td>
+            </tr>
+            <tr>
+              <th>Téléphone</th>
+              <td>{{ organisateur.telef }}</td>
+            </tr>
+            <tr>
+              <th>Espace associé</th>
+              <td>{{ organisateur.espace.nomEspace }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %}Liste des Organisateurs{% endblock %}
+
+{% block body %}
+<div class="app-main__outer">
+  <div class="app-main__inner">
+    <div class="app-page-title">
+      <div class="page-title-wrapper">
+        <div class="page-title-heading">
+          <div class="page-title-icon">
+            <i class="pe-7s-id icon-gradient bg-sunny-morning"></i>
+          </div>
+          <div>Gestion des Organisateurs
+            <div class="page-title-subheading">Liste des organisateurs et leurs informations.</div>
+          </div>
+        </div>
+        <div class="page-title-actions">
+          <a href="{{ path('dashboard_organisateur_new_general') }}" class="btn btn-success">
+            <i class="pe-7s-plus mr-2"></i> Ajouter un Organisateur
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <input type="text" id="searchOrganisateur" class="form-control" placeholder="Rechercher un organisateur...">
+    </div>
+
+    <div class="main-card mb-3 card">
+      <div class="card-header">
+        Organisateurs enregistrés
+      </div>
+      <div class="table-responsive">
+        <table class="align-middle mb-0 table table-striped table-hover">
+          <thead>
+            <tr>
+              <th class="text-center">#</th>
+              <th>Nom</th>
+              <th>Prénom</th>
+              <th>Description</th>
+              <th class="text-center">Téléphone</th>
+              <th class="text-center">Espace Associé</th>
+              <th class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="organisateurTable">
+            {% for organisateur in organisateurs %}
+              <tr class="organisateur-row">
+                <td class="text-center text-muted">#{{ organisateur.idOrg }}</td>
+                <td>{{ organisateur.nomOrg }}</td>
+                <td>{{ organisateur.prenomOrg }}</td>
+                <td>{{ organisateur.descriptionOrg }}</td>
+                <td class="text-center">{{ organisateur.telef }}</td>
+                <td class="text-center">
+                  {{ organisateur.espace ? organisateur.espace.nomEspace : '—' }}
+                </td>
+                <td class="text-center">
+                  <a href="{{ path('app_organisateur_show', {'id_org': organisateur.idOrg}) }}" class="btn btn-sm btn-info">Détails</a>
+                  <a href="{{ path('dashboard_organisateur_edit', {'id_org': organisateur.idOrg}) }}" class="btn btn-sm btn-warning">Modifier</a>
+<form method="post"
+      action="{{ path('dashboard_organisateur_delete', {'id_org': organisateur.idOrg}) }}"
+      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet organisateur ?');"
+      style="display:inline;">
+  <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ organisateur.idOrg) }}">
+  <input type="hidden" name="_from" value="liste">
+  <button class="btn btn-sm btn-danger">Supprimer</button>
+</form>
+
+                </td>
+              </tr>
+            {% else %}
+              <tr>
+                <td colspan="7" class="text-center text-muted">Aucun organisateur trouvé.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const searchInput = document.getElementById('searchOrganisateur');
+  const rows = document.querySelectorAll('.organisateur-row');
+
+  searchInput.addEventListener('input', function () {
+    const query = this.value.toLowerCase();
+    rows.forEach(row => {
+      const content = row.textContent.toLowerCase();
+      row.style.display = content.includes(query) ? '' : 'none';
+    });
+  });
+</script>
+{% endblock %}

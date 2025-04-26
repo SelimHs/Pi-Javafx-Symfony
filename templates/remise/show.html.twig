@@ -1,0 +1,80 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %}Détails de la Remise{% endblock %}
+
+{% block body %}
+<div class="app-main__outer">
+  <div class="app-main__inner">
+
+    <!-- Titre de la page -->
+    <div class="app-page-title">
+      <div class="page-title-wrapper">
+        <div class="page-title-heading">
+          <div class="page-title-icon">
+            <i class="pe-7s-ticket icon-gradient bg-amy-crisp"></i>
+          </div>
+          <div>
+            Détails de la Remise
+            <div class="page-title-subheading">Aperçu complet de la remise sélectionnée.</div>
+          </div>
+        </div>
+        <div class="page-title-actions">
+          <a href="{{ path('app_remise_index') }}" class="btn btn-outline-secondary mr-2">
+            <i class="pe-7s-back"></i> Retour
+          </a>
+          <a href="{{ path('app_remise_edit', {'idRemise': remise.idRemise}) }}" class="btn btn-warning mr-2">
+            <i class="pe-7s-note"></i>
+          </a>
+          <form method="post" action="{{ path('app_remise_delete', {'idRemise': remise.idRemise}) }}"
+                onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette remise ?');" style="display: inline;">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ remise.idRemise) }}">
+            <button class="btn btn-danger" title="Supprimer">
+              <i class="pe-7s-trash"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carte avec infos Remise -->
+    <div class="row justify-content-center mt-4">
+      <div class="col-md-8">
+        <div class="main-card mb-3 card">
+          <div class="card-body">
+            <h5 class="card-title">Informations de la Remise</h5>
+            <table class="mb-0 table table-bordered table-striped">
+              <tbody>
+                <tr>
+                  <th>ID</th>
+                  <td>{{ remise.idRemise }}</td>
+                </tr>
+                <tr>
+                  <th>Code Promo</th>
+                  <td>{{ remise.codePromo }}</td>
+                </tr>
+                <tr>
+                  <th>Description</th>
+                  <td>{{ remise.description }}</td>
+                </tr>
+                <tr>
+                  <th>Pourcentage de Remise</th>
+                  <td>{{ remise.pourcentageRemise }} %</td>
+                </tr>
+                <tr>
+                  <th>Date d'expiration</th>
+                  <td>{{ remise.dateExpiration }}</td>
+                </tr>
+                <tr>
+                  <th>Nombre de réservations liées</th>
+                  <td>{{ remise.reservations|length }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

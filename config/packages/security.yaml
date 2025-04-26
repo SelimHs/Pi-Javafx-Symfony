@@ -1,0 +1,35 @@
+security:
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+
+    # Where Symfony finds users
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+
+    firewalls:
+        # Ignore dev routes (profiler, assets)
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        # Main firewall
+        main:
+            lazy: true
+            provider: app_user_provider
+            custom_authenticator: App\Security\Authenticator
+            logout:
+                path: app_logout
+                target: app_login
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800 # 7 days
+                path: /
+
+    # Access control (who can access what)
+    access_control:
+      # - { path: ^/admin, roles: ROLE_ADMIN }      # Only admin can access URLs starting with /admin
+       # - { path: ^/dashboard, roles: ROLE_ADMIN }   # Only admin can access dashboard
+        #- { path: ^/home, roles: ROLE_USER }         # Normal users can access /home

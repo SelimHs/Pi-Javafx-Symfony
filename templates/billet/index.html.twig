@@ -1,0 +1,138 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %}Liste des Billets{% endblock %}
+
+{% block body %}
+<div class="app-main__outer">
+  <div class="app-main__inner">
+    <div class="app-page-title">
+      <div class="page-title-wrapper">
+        <div class="page-title-heading">
+          <div class="page-title-icon">
+            <i class="pe-7s-ticket icon-gradient bg-happy-itmeo"></i>
+          </div>
+          <div>Gestion des Billets
+            <div class="page-title-subheading">Liste des billets achetés et leurs informations.</div>
+          </div>
+        </div>
+        <div class="page-title-actions">
+          <a href="{{ path('export_billets_excel') }}" class="btn btn-outline-success">
+            📥 Export Excel
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 col-xl-4">
+        <div class="card mb-3 widget-content bg-midnight-bloom">
+          <div class="widget-content-wrapper text-white">
+            <div class="widget-content-left">
+              <div class="widget-heading">Billets Totaux</div>
+              <div class="widget-subheading">Nombre de billets vendus</div>
+            </div>
+            <div class="widget-content-right">
+              <div class="widget-numbers text-white"><span>{{ totalBillets }}</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-xl-4">
+        <div class="card mb-3 widget-content bg-arielle-smile">
+          <div class="widget-content-wrapper text-white">
+            <div class="widget-content-left">
+              <div class="widget-heading">Billets VIP</div>
+              <div class="widget-subheading">Nombre de billets VIP</div>
+            </div>
+            <div class="widget-content-right">
+              <div class="widget-numbers text-white"><span>{{ totalVip }}</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-xl-4">
+        <div class="card mb-3 widget-content bg-grow-early">
+          <div class="widget-content-wrapper text-white">
+            <div class="widget-content-left">
+              <div class="widget-heading">Billets Duo</div>
+              <div class="widget-subheading">Nombre de billets DUO</div>
+            </div>
+            <div class="widget-content-right">
+              <div class="widget-numbers text-white"><span>{{ totalDuo }}</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-card mb-3 card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        Billets enregistrés
+        <input type="text" id="billetSearch" class="form-control w-25" placeholder="Rechercher un billet...">
+      </div>
+      
+      <div class="table-responsive">
+        <table class="align-middle mb-0 table table-striped table-hover">
+          <thead>
+            <tr>
+              <th class="text-center">#</th>
+              <th>Propriétaire</th>
+              <th class="text-center">Prix</th>
+              <th class="text-center">Date d'achat</th>
+              <th class="text-center">Type</th>
+              <th class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="billetTableBody">
+            {% for billet in billets %}
+              <tr class="billet-row">
+                <td class="text-center text-muted">#{{ billet.idBillet }}</td>
+                <td>
+                  <div class="widget-content p-0">
+                    <div class="widget-content-wrapper">
+                      <div class="widget-content-left flex2">
+                        <div class="widget-heading">{{ billet.proprietaire }}</div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="text-center">{{ billet.prix }} DT</td>
+                <td class="text-center">{{ billet.dateAchat ? billet.dateAchat|date('Y-m-d H:i') : '—' }}</td>
+                <td class="text-center">
+                  <div class="badge badge-pill 
+                    {% if billet.type == 'VIP' %}badge-danger
+                    {% elseif billet.type == 'DUO' %}badge-warning
+                    {% else %}badge-info{% endif %}">
+                    {{ billet.type }}
+                  </div>
+                </td>
+                <td class="text-center">
+                  <a href="{{ path('app_billet_show', {'idBillet': billet.idBillet}) }}" class="btn btn-sm btn-info">Détails</a>
+                </td>
+              </tr>
+            {% else %}
+              <tr>
+                <td colspan="6" class="text-center text-muted">Aucun billet trouvé.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('billetSearch').addEventListener('input', function () {
+    const query = this.value.toLowerCase();
+    const rows = document.querySelectorAll('#billetTableBody .billet-row');
+
+    rows.forEach(row => {
+      const text = row.textContent.toLowerCase();
+      row.style.display = text.includes(query) ? '' : 'none';
+    });
+  });
+</script>
+{% endblock %}

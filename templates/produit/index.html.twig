@@ -1,0 +1,162 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nos Produits{% endblock %}
+
+{% block body %}
+<div class="page-heading header-text">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <span class="breadcrumb"><a href="{{ path('app_home') }}">Accueil</a> / Produits</span>
+        <h3>Nos Produits</h3>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section properties">  
+  <div class="container">
+    <div class="text-center mb-4">
+      <button class="btn btn-warning" id="btnGenerateIdea">💡 Générer une idée d’événement</button>
+    </div>
+    <div class="row mb-4">
+      <div class="col-lg-12 text-center">
+        <input type="text" id="searchProduit" class="form-control w-50 mx-auto search-light-dark bg-white text-dark" placeholder="🔍 Rechercher un produit...">
+      </div>
+    </div>
+
+    {% if produits is empty %}
+      <div class="alert alert-info text-center">Aucun produit trouvé.</div>
+    {% else %}
+      <div class="row properties-box">
+        {% for produit in produits %}
+          <div class="col-lg-4 col-md-6 align-self-center mb-30 properties-items">
+            <div class="item position-relative shadow-sm produit-card bg-white text-dark dark-mode-card" data-id="{{ produit.idProduit }}">
+
+              <!-- Checkbox cachée -->
+              <input type="checkbox" class="form-check-input produit-select d-none" value="{{ produit.idProduit }}">
+
+              {% if produit.imagePath %}
+                <img src="{{ asset('uploads/' ~ produit.imagePath) }}" class="card-img-top" alt="{{ produit.nomProduit }}">
+              {% else %}
+                <img src="{{ asset('uploads/placeholder.png') }}" class="card-img-top" alt="Pas d'image">
+              {% endif %}
+              <span class="category">{{ produit.categorie }}</span>
+              <h6 class="fw-bold">{{ produit.prixProduit }} Dt</h6>
+              <h4><a href="{{ path('app_produit_show', {'idProduit': produit.idProduit}) }}">{{ produit.nomProduit }}</a></h4>
+              <ul>
+                <li>Quantité : <span>{{ produit.quantite }}</span></li>
+              </ul>
+              <div class="main-button d-flex justify-content-center mt-2">
+                <a href="{{ path('app_produit_show', {'idProduit': produit.idProduit}) }}" class="btn btn-outline-dark">🔍 Détails</a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Popup IA -->
+<div class="modal fade" id="ideaModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Idée d'Événement</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="ideaContent">Chargement...</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+document.getElementById('btnGenerateIdea')?.addEventListener('click', async () => {
+  const ids = [...document.querySelectorAll('.produit-select:checked')].map(cb => cb.value);
+  if (ids.length === 0) {
+    alert("❗ Veuillez sélectionner au moins un produit.");
+    return;
+  }
+
+  const modalElement = document.getElementById('ideaModal');
+  const ideaModal = bootstrap.Modal.getOrCreateInstance(modalElement);
+  document.getElementById('ideaContent').innerHTML = "⏳ Idée en cours de génération...";
+  ideaModal.show();
+
+  try {
+    const res = await fetch("{{ path('api_generate_idea') }}", {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ids })
+    });
+
+    const data = await res.json();
+    document.getElementById('ideaContent').innerText = data.idea;
+  } catch (err) {
+    document.getElementById('ideaContent').innerHTML = `<p class="text-danger">❌ Erreur JS : ${err.message}</p>`;
+    console.error(err);
+  }
+});
+
+// 👉 Sélection en cliquant sur toute la carte
+document.querySelectorAll('.produit-card').forEach(card => {
+  card.addEventListener('click', e => {
+    if (e.target.closest('a, button')) return;
+    const checkbox = card.querySelector('.produit-select');
+    checkbox.checked = !checkbox.checked;
+    card.classList.toggle('selected', checkbox.checked);
+  });
+});
+</script>
+
+<style>
+body.dark-mode .produit-card.dark-mode-card {
+  background-color: #1e1e1e !important;
+  color: #f1f1f1;
+  border: 1px solid #333;
+}
+
+body.dark-mode .produit-card.dark-mode-card a {
+  color: #ffd700;
+}
+
+body.dark-mode .search-light-dark {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: 1px solid #ccc;
+}
+
+.produit-card.selected {
+  border: 2px solid #f39c12 !important;
+  box-shadow: 0 0 10px rgba(243, 156, 18, 0.4) !important;
+  transition: border 0.3s ease;
+  cursor: pointer;
+}
+.produit-card {
+  cursor: pointer;
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const searchInput = document.getElementById('searchProduit');
+  const produitCards = document.querySelectorAll('.produit-card');
+
+  searchInput.addEventListener('input', function () {
+    const query = this.value.trim().toLowerCase();
+    produitCards.forEach(card => {
+      const title = card.querySelector('h4 a')?.textContent.toLowerCase() || '';
+      const match = title.includes(query);
+      card.closest('.col-lg-4').style.display = match ? 'block' : 'none';
+    });
+  });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %}Liste des Produits{% endblock %}
+
+{% block body %}
+<div class="app-main__outer">
+  <div class="app-main__inner">
+    <!-- Titre -->
+    <div class="app-page-title">
+      <div class="page-title-wrapper">
+        <div class="page-title-heading">
+          <div class="page-title-icon">
+            <i class="pe-7s-box2 icon-gradient bg-mean-fruit"></i>
+          </div>
+          <div>Gestion des Produits
+            <div class="page-title-subheading">Liste des produits en stock avec image, prix et quantités.</div>
+          </div>
+        </div>
+        <div class="page-title-actions">
+          <a href="{{ path('dashboard_produit_new') }}" class="btn btn-success">
+            <i class="pe-7s-plus mr-2"></i> Nouveau Produit
+          </a>
+        </div>
+      </div>
+    </div>
+
+    {% if produits is empty %}
+      <div class="alert alert-info text-center">Aucun produit trouvé.</div>
+    {% else %}
+      <div class="row">
+        {% for produit in produits %}
+          <div class="col-md-6 col-xl-4">
+            <div class="card mb-4 shadow-sm">
+              <div class="position-relative">
+                <img src="{{ asset('uploads/' ~ (produit.imagePath ? produit.imagePath : 'placeholder.png')) }}"
+                     class="card-img-top"
+                     alt="{{ produit.nomProduit }}">
+              </div>
+              <div class="card-body">
+                <h5 class="card-title text-uppercase">{{ produit.nomProduit }}</h5>
+                <p class="card-text text-muted mb-1">
+                  💰 <strong>{{ produit.prixProduit }} DT</strong><br>
+                  📦 <strong>Quantité :</strong> {{ produit.quantite }}<br>
+                  🏷️ <strong>Catégorie :</strong> {{ produit.categorie }}
+                </p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <a href="{{ path('dashboard_produit_show', {'idProduit': produit.idProduit}) }}"
+                     class="btn btn-sm btn-outline-primary">
+                    Voir détails
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

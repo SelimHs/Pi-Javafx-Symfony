@@ -1,0 +1,73 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %}Ajouter un Organisateur{% endblock %}
+
+{% block body %}
+<div class="app-main__outer">
+  <div class="app-main__inner">
+
+    <div class="app-page-title">
+      <div class="page-title-wrapper">
+        <div class="page-title-heading">
+          <div class="page-title-icon">
+            <i class="pe-7s-add-user icon-gradient bg-mean-fruit"></i>
+          </div>
+          <div>
+            Ajouter un Organisateur
+            <div class="page-title-subheading">Remplissez les champs pour enregistrer un nouvel organisateur.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-card mb-3 card">
+      <div class="card-body">
+        <h5 class="card-title text-center">Formulaire Organisateur</h5>
+
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+        <div class="mb-3">
+          {{ form_label(form.nom_org) }}
+          {{ form_widget(form.nom_org, {'attr': {'class': 'form-control', 'required': true, 'minlength': '3'}}) }}
+          <div class="text-danger small mt-1">{{ form_errors(form.nom_org) }}</div>
+        </div>
+
+        <div class="mb-3">
+          {{ form_label(form.prenom_org) }}
+          {{ form_widget(form.prenom_org, {'attr': {'class': 'form-control', 'required': true, 'minlength': '3'}}) }}
+          <div class="text-danger small mt-1">{{ form_errors(form.prenom_org) }}</div>
+        </div>
+
+        <div class="mb-3">
+          {{ form_label(form.description_org) }}
+          {{ form_widget(form.description_org, {'attr': {'class': 'form-control', 'rows': '3', 'required': true}}) }}
+          <div class="text-danger small mt-1">{{ form_errors(form.description_org) }}</div>
+        </div>
+
+        <div class="mb-3">
+          {{ form_label(form.telef) }}
+          {{ form_widget(form.telef, {'attr': {'class': 'form-control', 'required': true, 'pattern': '[0-9]{8}'}}) }}
+          <div class="text-danger small mt-1">{{ form_errors(form.telef) }}</div>
+        </div>
+
+        <div class="mb-3">
+          {{ form_label(form.espace, 'Espace associé') }}
+          {{ form_widget(form.espace, {'attr': {'class': 'form-control'}}) }}
+          <div class="text-danger small mt-1">{{ form_errors(form.espace) }}</div>
+        </div>
+
+        <div class="text-center mt-4">
+          <button class="btn btn-success px-4">Créer</button>
+        </div>
+
+        {{ form_end(form) }}
+      </div>
+    </div>
+
+    <div class="text-center mt-3">
+      <a href="{{ path('app_organisateur_index') }}" class="btn btn-outline-secondary">← Retour à la liste</a>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
