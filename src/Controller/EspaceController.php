@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\User; // 🔥 Très important : importer ta vraie entité User
+
 use App\Entity\Espace;
 use App\Form\EspaceType;
 use App\Repository\EspaceRepository;
@@ -35,13 +37,20 @@ final class EspaceController extends AbstractController
     #[Route(name: 'app_espace_index', methods: ['GET'])]
     public function index(EspaceRepository $espaceRepository): Response
     {
-        // Afficher tous les espaces
         $espaces = $espaceRepository->findAll();
+        $user = $this->getUser();
+
+        $idUser = null;
+        if ($user instanceof User) { // ✅ Vérifie vraiment que c'est TON User
+            $idUser = $user->getId();
+        }
 
         return $this->render('espace/index.html.twig', [
             'espaces' => $espaces,
+            'idUser' => $idUser, // 👈 injecte id user dans twig
         ]);
     }
+
 
     #[Route('/dashboard', name: 'dashboard_espace_index', methods: ['GET'])]
     public function indexBack(EspaceRepository $espaceRepository): Response
@@ -63,10 +72,10 @@ final class EspaceController extends AbstractController
 
         $espace = new Espace();
         $espace->setDisponibilite('Disponible'); // Valeur par défaut
-        
+
         // Associer l'utilisateur à l'espace
         $espace->setUser($user);
-        
+
         $form = $this->createForm(EspaceType::class, $espace, [
             'is_edit' => false
         ]);
@@ -106,7 +115,7 @@ final class EspaceController extends AbstractController
             $this->addFlash('error', 'Vous devez être connecté pour créer un espace.');
             return $this->redirectToRoute('app_login');
         }
-        
+
         // Associer l'utilisateur à l'espace
         $espace->setUser($user);
 
@@ -297,7 +306,6 @@ final class EspaceController extends AbstractController
         $url = 'https://api.sheetbest.com/sheets/4d538bcb-a52a-4dde-84e4-ddb7c9520d8e';
 
         try {
-            // 🔍 Vérifier les conflits existants
             $response = $client->request('GET', $url);
             $reservations = $response->toArray();
 
@@ -316,15 +324,14 @@ final class EspaceController extends AbstractController
                     ], 409);
                 }
             }
+
             $user = $this->getUser();
-if ($user) {
-    $data['id_user'] = $user->getId(); // 🔥 Injecte id_user dans $data
-} else {
-    $data['id_user'] = ''; // ou -1, ou "Anonyme" si tu préfères
-}
+            if ($user instanceof User) { // ✅ Vérifie que c'est ton entité User
+                $data['id_user'] = $user->getId();
+            } else {
+                $data['id_user'] = ''; // ou -1 ou "Anonyme"
+            }
 
-
-            // ✅ Si pas de conflit : enregistrer les données (y compris le prix)
             $client->request('POST', $url, [
                 'json' => $data
             ]);
@@ -332,7 +339,7 @@ if ($user) {
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Réservation enregistrée avec succès.',
-                'prix' => $data['prix'] // 👈 facultatif pour l'afficher côté JS
+                'prix' => $data['prix']
             ]);
         } catch (\Exception $e) {
             return new JsonResponse([
@@ -342,7 +349,6 @@ if ($user) {
             ], 500);
         }
     }
-
 
     #[Route('/reservations', name: 'app_reservations_liste', methods: ['GET'])]
     public function listReservations(SheetBestService $sheetBest): JsonResponse
@@ -357,5 +363,4 @@ if ($user) {
             ], 500);
         }
     }
-    
 }

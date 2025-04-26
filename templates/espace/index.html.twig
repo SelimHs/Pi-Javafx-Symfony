@@ -154,10 +154,16 @@
 {% endblock %}
 {% block javascripts %}
 {{ parent() }}
+
+<script>
+  window.idUser = {{ idUser is not null ? idUser : 'null' }};
+</script>
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 <script>
+// Formulaires de réservation
 document.addEventListener("DOMContentLoaded", function () {
   const today = new Date();
   const minStartDate = new Date(today.setDate(today.getDate() + 7)).toISOString().split('T')[0];
@@ -169,7 +175,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const prixEstimeEl = form.querySelector('.prix-estime');
     const prixEspace = parseFloat(form.dataset.prixEspace);
 
-    // 🧮 Calcul prix affiché
     function calculerPrix() {
       if (!dateDebutInput.value || !dateFinInput.value) return;
       const debut = new Date(dateDebutInput.value);
@@ -185,11 +190,9 @@ document.addEventListener("DOMContentLoaded", function () {
       if (prixEstimeEl) {
         prixEstimeEl.textContent = `💰 Prix estimé : ${total} Dt`;
       }
-
       return total;
     }
 
-    // ⏱ Dates autorisées
     if (dateDebutInput) dateDebutInput.min = minStartDate;
     dateDebutInput?.addEventListener('change', () => {
       const start = new Date(dateDebutInput.value);
@@ -201,7 +204,6 @@ document.addEventListener("DOMContentLoaded", function () {
     dateFinInput?.addEventListener('change', calculerPrix);
     organisateurSelect?.addEventListener('change', calculerPrix);
 
-    // 🚀 Envoi du formulaire
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
 
@@ -210,16 +212,15 @@ document.addEventListener("DOMContentLoaded", function () {
       const dateFin = new Date(dateFinInput.value);
 
       if (dateDebut < new Date(minStartDate)) {
-        alert("❌ La réservation ne peut commencer qu'à partir de 7 jours après aujourd'hui.");
+        alert("❌ La réservation doit commencer au moins 7 jours après aujourd'hui.");
         return;
       }
-
       if (dateFin < dateDebut) {
-        alert("❌ La date de fin ne peut pas être avant la date de début.");
+        alert("❌ La date de fin doit être après la date de début.");
         return;
       }
 
-      const prixTotal = calculerPrix(); // 👈 récupère le total
+      const prixTotal = calculerPrix();
 
       const payload = {
         nom_complet: formData.get('nom_complet')?.trim(),
@@ -227,7 +228,8 @@ document.addEventListener("DOMContentLoaded", function () {
         date_fin: formData.get('date_fin'),
         id_espace: this.dataset.espaceId,
         id_organisateur: formData.get('id_organisateur') || '',
-        prix: prixTotal
+        prix: prixTotal,
+        id_user: window.idUser // Injecte id_user ici ✅
       };
 
       try {
@@ -238,10 +240,8 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         const result = await response.json();
-        console.log(result);
-
         if (result.success) {
-          alert("✅ Réservation enregistrée !\n💰 Prix : " + result.prix + " Dt");
+          alert("✅ Réservation réussie ! Prix : " + result.prix + " Dt");
           const closeBtn = this.closest('.modal')?.querySelector('.btn-close');
           closeBtn?.click();
         } else {
@@ -249,76 +249,81 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       } catch (error) {
         alert("❌ Erreur technique : " + error.message);
-        console.error(error);
       }
     });
   });
 });
-</script>
 
-<script>
+// Liste des réservations
 document.addEventListener("DOMContentLoaded", function() {
-    const reservationModal = document.getElementById('reservationListModal');
-    const loader = document.getElementById('reservationLoader');
-    const content = document.getElementById('reservationContent');
-    const tbody = document.getElementById('reservationTableBody');
-    let modalInitialized = false;
+  const reservationModal = document.getElementById('reservationListModal');
+  const loader = document.getElementById('reservationLoader');
+  const content = document.getElementById('reservationContent');
+  const tbody = document.getElementById('reservationTableBody');
+  let modalInitialized = false;
 
-    if (reservationModal) {
-        reservationModal.addEventListener('show.bs.modal', async () => {
-            if (modalInitialized) return;
-            modalInitialized = true;
+  if (reservationModal) {
+    reservationModal.addEventListener('show.bs.modal', async () => {
+      if (modalInitialized) return;
+      modalInitialized = true;
 
-            loader.style.display = 'block';
-            content.style.display = 'none';
-            tbody.innerHTML = '';
+      loader.style.display = 'block';
+      content.style.display = 'none';
+      tbody.innerHTML = '';
 
-            try {
-                // Appels SheetBest et noms Symfony
-                const [resData, nomsData] = await Promise.all([
-                    fetch('https://api.sheetbest.com/sheets/4d538bcb-a52a-4dde-84e4-ddb7c9520d8e').then(r => r.json()),
-                    fetch('/api/noms').then(r => r.json())
-                ]);
+      try {
+        // ✅ Appel direct SheetBest + api/noms
+        const [resData, nomsData] = await Promise.all([
+          fetch('https://api.sheetbest.com/sheets/4d538bcb-a52a-4dde-84e4-ddb7c9520d8e').then(r => r.json()),
+          fetch('/api/noms').then(r => r.json())
+        ]);
 
-                if (!Array.isArray(resData)) {
-                    throw new Error('Format de données invalide.');
-                }
+        if (!Array.isArray(resData)) {
+          throw new Error('Format de données invalide.');
+        }
 
-                tbody.innerHTML = '';
+        // 🧠 Filtrer les réservations du user connecté
+        const idUser = window.idUser;
+        const reservationsUser = resData.filter(res => String(res.id_user) === String(idUser));
 
-                resData.forEach(res => {
-                    const nomEspace = nomsData.espaces?.[res.id_espace] ?? `#${res.id_espace}`;
-                    const nomOrga = nomsData.organisateurs?.[res.id_organisateur] ?? '—';
+        if (reservationsUser.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6" class="text-center">Aucune réservation trouvée.</td></tr>`;
+        } else {
+          reservationsUser.forEach(res => {
+            const nomEspace = nomsData.espaces?.[res.id_espace] ?? `#${res.id_espace}`;
+            const nomOrga = nomsData.organisateurs?.[res.id_organisateur] ?? '—';
 
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${res.nom_complet || '-'}</td>
-                        <td>${res.date_debut || '-'}</td>
-                        <td>${res.date_fin || '-'}</td>
-                        <td>${nomEspace}</td>
-                        <td>${nomOrga}</td>
-                        <td>${res.prix ? res.prix + ' Dt' : '-'}</td>
-                    `;
-                    tbody.appendChild(row);
-                });
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${res.nom_complet || '-'}</td>
+              <td>${res.date_debut || '-'}</td>
+              <td>${res.date_fin || '-'}</td>
+              <td>${nomEspace}</td>
+              <td>${nomOrga}</td>
+              <td>${res.prix ? res.prix + ' Dt' : '-'}</td>
+            `;
+            tbody.appendChild(row);
+          });
+        }
 
-                loader.style.display = 'none';
-                content.style.display = 'block';
-            } catch (e) {
-                loader.innerHTML = `✕ Erreur : ${e.message}`;
-                console.error("Erreur affichage réservations :", e);
-            }
-        });
+        loader.style.display = 'none';
+        content.style.display = 'block';
+      } catch (e) {
+        loader.innerHTML = `✕ Erreur : ${e.message}`;
+        console.error("Erreur affichage réservations :", e);
+      }
+    });
 
-        reservationModal.addEventListener('hidden.bs.modal', () => {
-            modalInitialized = false;
-        });
-    }
+    reservationModal.addEventListener('hidden.bs.modal', () => {
+      modalInitialized = false;
+    });
+  }
 });
 
-</script>
 
-<script>
+
+
+// Recherche instantanée sur les espaces
 document.addEventListener("DOMContentLoaded", function () {
   const searchInput = document.getElementById('searchEspace');
   const espaceCards = document.querySelectorAll('#espaceGrid .espace-card');
@@ -327,16 +332,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const query = this.value.trim().toLowerCase();
     espaceCards.forEach(card => {
       const title = card.querySelector('h4 a')?.textContent.toLowerCase() || '';
-      const match = title.includes(query);
-      if (!card.id.includes("ajouterEspaceCard")) {
-        card.style.display = match ? 'block' : 'none';
-      }
+      card.style.display = title.includes(query) ? 'block' : 'none';
     });
   });
 });
-</script>
 
-<script>
+// Gestion des dates disponibles
 document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll('.reservation-form').forEach(form => {
     const espaceId = form.dataset.espaceId;
@@ -362,34 +363,30 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         const dateDebutPicker = flatpickr(form.querySelector('.date-debut'), {
-  minDate: new Date(new Date().setDate(new Date().getDate() + 7)),
-  disable: disableDates,
-  dateFormat: "Y-m-d",
-  onChange: function (selectedDates) {
-    if (selectedDates.length > 0) {
-      const selectedStartDate = selectedDates[0];
+          minDate: new Date(new Date().setDate(new Date().getDate() + 7)),
+          disable: disableDates,
+          dateFormat: "Y-m-d",
+          onChange: function (selectedDates) {
+            if (selectedDates.length > 0) {
+              const selectedStartDate = selectedDates[0];
+              dateFinPicker.set('minDate', selectedStartDate);
+              dateFinPicker.setDate(null);
+            }
+          }
+        });
 
-      // Mettre à jour le minDate de la date de fin
-      dateFinPicker.set('minDate', selectedStartDate);
-
-      // Supprimer et recharger le picker pour appliquer la nouvelle minDate
-      dateFinPicker.setDate(null);
-    }
-  }
-});
-
-const dateFinPicker = flatpickr(form.querySelector('.date-fin'), {
-  minDate: new Date(new Date().setDate(new Date().getDate() + 7)),
-  disable: disableDates,
-  dateFormat: "Y-m-d"
-});
-
+        const dateFinPicker = flatpickr(form.querySelector('.date-fin'), {
+          minDate: new Date(new Date().setDate(new Date().getDate() + 7)),
+          disable: disableDates,
+          dateFormat: "Y-m-d"
+        });
 
       } catch (err) {
-        console.error("❌ Erreur lors de la récupération des réservations :", err);
+        console.error("❌ Erreur chargement des dates :", err);
       }
     });
   });
 });
 </script>
+
 {% endblock %}

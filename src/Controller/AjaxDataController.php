@@ -1,9 +1,8 @@
 <?php
 
-
-// src/Controller/AjaxDataController.php
 namespace App\Controller;
 
+use App\Entity\User; // ✅ Très important pour vérifier correctement
 use App\Repository\EspaceRepository;
 use App\Repository\OrganisateurRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,9 +17,16 @@ class AjaxDataController extends AbstractController
         $espaces = $espaceRepo->findAll();
         $organisateurs = $orgaRepo->findAll();
 
+        $user = $this->getUser();
+        $idUser = null;
+        if ($user instanceof User) {
+            $idUser = $user->getId(); // ✅ on récupère l'id
+        }
+
         $data = [
             'espaces' => [],
             'organisateurs' => [],
+            'id_user' => $idUser, // ✅ On l'ajoute proprement ici !
         ];
 
         foreach ($espaces as $e) {
