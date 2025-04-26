@@ -5,21 +5,24 @@
 {% block body %}
     <h1>User index</h1>
 
-    <table class="table">
+    <!-- 🛠️ Search input -->
+    <input type="text" id="searchInput" placeholder="Search by name, prenom, email, phone or address..." class="form-control mb-3" style="max-width: 400px;">
+
+    <table class="table" id="userTable">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Nom</th>
-                <th>Prenom</th>
+                <th onclick="sortTable(0)">Id</th>
+                <th onclick="sortTable(1)">Nom</th>
+                <th onclick="sortTable(2)">Prenom</th>
                 <th>Password</th>
-                <th>Email</th>
-                <th>NumeroTelephone</th>
-                <th>Addresse</th>
+                <th onclick="sortTable(4)">Email</th>
+                <th onclick="sortTable(5)">NumeroTelephone</th>
+                <th onclick="sortTable(6)">Addresse</th>
                 <th>Roles</th>
-                <th>Type</th>
+                <th onclick="sortTable(8)">Type</th>
                 <th>Genre</th>
                 <th>Enregistrer</th>
-                <th>actions</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -43,11 +46,84 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="12">no records found</td>
+                <td colspan="12">No records found</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_user_new') }}">Create new</a>
+    <a href="{{ path('app_user_new') }}" class="btn btn-success">Create new</a>
+
+    <!-- 🧠 JavaScript for search -->
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const table = document.getElementById('userTable').getElementsByTagName('tbody')[0];
+
+        searchInput.addEventListener('keyup', function() {
+            const filter = searchInput.value.toLowerCase();
+            const rows = table.getElementsByTagName('tr');
+
+            for (let i = 0; i < rows.length; i++) {
+                const nomCell = rows[i].getElementsByTagName('td')[1];
+                const prenomCell = rows[i].getElementsByTagName('td')[2];
+                const emailCell = rows[i].getElementsByTagName('td')[4];
+                const phoneCell = rows[i].getElementsByTagName('td')[5];
+                const adresseCell = rows[i].getElementsByTagName('td')[6];
+
+                const textContent = (
+                    (nomCell?.textContent || '') + " " +
+                    (prenomCell?.textContent || '') + " " +
+                    (emailCell?.textContent || '') + " " +
+                    (phoneCell?.textContent || '') + " " +
+                    (adresseCell?.textContent || '')
+                ).toLowerCase();
+
+                if (textContent.includes(filter)) {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+        });
+    </script>
+
+   <script>
+    let currentSortedColumn = -1;
+    let sortDirection = true; // true = ascending, false = descending
+
+    function sortTable(columnIndex) {
+        const table = document.getElementById("userTable");
+        const thead = table.tHead;
+        const tbody = table.tBodies[0];
+        const rows = Array.from(tbody.querySelectorAll("tr"));
+
+        // Reset all arrows first
+        Array.from(thead.querySelectorAll("th")).forEach(th => {
+            th.textContent = th.textContent.replace(' ▲', '').replace(' ▼', '');
+        });
+
+        // Sort rows
+        rows.sort((a, b) => {
+            const aText = a.children[columnIndex].textContent.trim();
+            const bText = b.children[columnIndex].textContent.trim();
+
+            return sortDirection
+                ? aText.localeCompare(bText, undefined, {numeric: true})
+                : bText.localeCompare(aText, undefined, {numeric: true});
+        });
+
+        // Append sorted rows
+        rows.forEach(row => tbody.appendChild(row));
+
+        // Add the arrow after sorting
+        const th = thead.querySelectorAll("th")[columnIndex];
+        th.textContent += sortDirection ? ' ▲' : ' ▼';
+
+        // Toggle direction next click
+        sortDirection = (currentSortedColumn === columnIndex) ? !sortDirection : true;
+        currentSortedColumn = columnIndex;
+    }
+</script>
+
+
 {% endblock %}
