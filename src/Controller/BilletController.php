@@ -264,6 +264,7 @@ final class BilletController extends AbstractController
 
         // 🔵 Générer PDF
         $pdfPath = $pdfGenerator->generateBilletPdf($billet);
+        $eventB= $billet->getEvent();
 
         // 🔵 Envoyer email
         $email = $this->getUser()?->getUserIdentifier() ?? 'client@example.com'; // Remplace par ton vrai user connecté
@@ -272,10 +273,10 @@ final class BilletController extends AbstractController
             $billet->getEvent()->getNomEvent(),
             $billet->getProprietaire(),
             $billet->getEvent()->getNomEspace(),
-            $billet->getEvent()->getDate(),
+            $eventB->getDate(),
             $pdfPath
         );
-
+        dd($eventB);
         return new JsonResponse(['status' => 'success', 'redirectUrl' => $this->generateUrl('app_event_index')]);
     }
 
