@@ -24,10 +24,20 @@
     </div>
 
     <div class="main-card mb-3 card">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        Remises enregistrées
-        <input type="text" id="remiseSearch" class="form-control w-25" placeholder="Rechercher une remise...">
+      <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div class="d-flex align-items-center gap-2">
+          <input type="text" id="remiseSearch" class="form-control form-control-sm" placeholder="🔍 Rechercher une remise..." style="width: 200px;">
+          <div class="d-flex align-items-center gap-2">
+            <label for="sortPourcentage" class="mb-0">Trier par :</label>
+            <select id="sortPourcentage" class="form-select form-select-sm rounded-pill" style="width: 180px;">
+              <option value="">-- % Remise --</option>
+              <option value="asc">🔼 % Croissant</option>
+              <option value="desc">🔽 % Décroissant</option>
+            </select>
+          </div>
+        </div>
       </div>
+
       <div class="table-responsive">
         <table class="align-middle mb-0 table table-striped table-hover">
           <thead>
@@ -47,7 +57,7 @@
                 <td class="text-center text-muted">#{{ remise.idRemise }}</td>
                 <td><strong>{{ remise.codePromo }}</strong></td>
                 <td>{{ remise.description }}</td>
-                <td class="text-center">{{ remise.pourcentageRemise }}%</td>
+                <td class="text-center pourcentage-value">{{ remise.pourcentageRemise }}</td>
                 <td class="text-center">{{ remise.dateExpiration }}</td>
                 <td class="text-center">{{ remise.reservations|length }}</td>
                 <td class="text-center">
@@ -68,14 +78,43 @@
 </div>
 
 <script>
-  document.getElementById('remiseSearch').addEventListener('input', function () {
-    const query = this.value.toLowerCase();
+document.addEventListener('DOMContentLoaded', function () {
+  const searchInput = document.getElementById('remiseSearch');
+  const sortSelect = document.getElementById('sortPourcentage');
+  const tbody = document.getElementById('remiseTableBody');
+
+  function filterRows() {
+    const query = searchInput.value.toLowerCase();
     const rows = document.querySelectorAll('#remiseTableBody .remise-row');
 
     rows.forEach(row => {
       const text = row.textContent.toLowerCase();
       row.style.display = text.includes(query) ? '' : 'none';
     });
-  });
+  }
+
+  function sortRows() {
+    const rows = Array.from(document.querySelectorAll('#remiseTableBody .remise-row'));
+    const sortOrder = sortSelect.value;
+
+    rows.sort((a, b) => {
+      const aPourcentage = parseInt(a.querySelector('.pourcentage-value').textContent);
+      const bPourcentage = parseInt(b.querySelector('.pourcentage-value').textContent);
+
+      if (sortOrder === 'asc') {
+        return aPourcentage - bPourcentage;
+      } else if (sortOrder === 'desc') {
+        return bPourcentage - aPourcentage;
+      }
+      return 0;
+    });
+
+    tbody.innerHTML = '';
+    rows.forEach(row => tbody.appendChild(row));
+  }
+
+  searchInput.addEventListener('input', filterRows);
+  sortSelect.addEventListener('change', sortRows);
+});
 </script>
 {% endblock %}
