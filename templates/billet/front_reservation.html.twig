@@ -191,34 +191,42 @@
 
 
       paymentForm.addEventListener('submit', async function (e) {
-  e.preventDefault();
-  payButton.disabled = true;
-  paymentMessage.innerHTML = "<div class='spinner-border text-primary' role='status'></div> ⏳ Traitement...";
+        e.preventDefault();
+        payButton.disabled = true;
+        paymentMessage.innerHTML = "<div class='spinner-border text-primary' role='status'></div> ⏳ Traitement...";
 
-  const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
-    payment_method: { card: card }
-  });
+        const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+          payment_method: { card: card }
+        });
 
-  if (error) {
-    paymentMessage.innerHTML = `<div style="color:red;">❌ Paiement échoué : ${error.message}</div>`;
-    payButton.disabled = false;
-  } else if (paymentIntent.status === 'succeeded') {
-    paymentMessage.innerHTML = `
-      <div style="color:green; font-size: 22px;">
-        ✅ Paiement Réussi !
-      </div>
-      <div style="font-size: 16px; color: gray;">Enregistrement de votre réservation...</div>
-    `;
+        if (error) {
+          paymentMessage.innerHTML = `<div style="color:red;">❌ Paiement échoué : ${error.message}</div>`;
+          payButton.disabled = false;
+        } else if (paymentIntent.status === 'succeeded') {
+          paymentMessage.innerHTML = `
+            <div style="color:green; font-size: 22px;">
+              ✅ Paiement Réussi !
+            </div>
+            <div style="font-size: 16px; color: gray;">Enregistrement de votre réservation...</div>
+          `;
 
-    try {
-      reservationForm.submit(); // ✅ Soumettre directement tout le formulaire (avec payment_success = 1)
-    } catch (error) {
-      console.error('Erreur lors de la soumission:', error);
-      paymentMessage.innerHTML = `<div style="color:red;">❌ Erreur lors de l'enregistrement</div>`;
-    }
-  }
-});
-
+          // Soumettre le formulaire après paiement réussi
+          try {
+            // Ajouter un champ caché pour indiquer que le paiement est réussi
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'payment_success';
+            hiddenInput.value = '1';
+            reservationForm.appendChild(hiddenInput);
+            
+            // Soumettre le formulaire
+            reservationForm.submit();
+          } catch (error) {
+            console.error('Error:', error);
+            paymentMessage.innerHTML = `<div style="color:red;">❌ Erreur lors de l'enregistrement</div>`;
+          }
+        }
+      });
     });
     </script>
   </main>
