@@ -26,6 +26,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
 use App\Service\StripeService;
 
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 
 #[Route('/billet')]
@@ -179,17 +180,17 @@ final class BilletController extends AbstractController
         $reservation->setEvent($event);
         $reservation->setDateReservation(new \DateTime());
         $reservation->setStatut('confirmée');
-        $reservation->setUser($em->getRepository(\App\Entity\User::class)->find(1));
+        $reservation->setUser($em->getRepository(\App\Entity\User::class)->find(1)); // tu peux changer le user plus tard
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // 🟰 Calcul prix billet
+            // 🔵 Calculer le prix selon type de billet
             if ($billet->getType() === 'DUO') {
                 $prix += $event->getPrix() * 0.5;
             } elseif ($billet->getType() === 'VIP') {
                 $prix = $event->getPrix() * 3;
             }
 
-            // 🟰 Application de remise
+            // 🔵 Appliquer remise si code promo
             $codePromo = $form->get('codePromo')->getData();
             if ($codePromo) {
                 $remise = $remiseRepo->findOneBy(['codePromo' => $codePromo]);
@@ -199,21 +200,21 @@ final class BilletController extends AbstractController
                 }
             }
 
-            // 🟰 Remplissage billet
+            // 🔵 Remplir billet
             $billet->setPrix((int)$prix);
             $billet->setDateAchat(new \DateTime());
             $billet->setReservation($reservation);
 
-            // 🟰 Persistance
+            // 🔵 Persister en base
             $em->persist($reservation);
             $em->persist($billet);
-            $em->flush();
+            $em->flush(); // 🔥 Reservation et Billet créés
 
-            // ✅ Génération PDF
+            // 🔵 Générer PDF
             $pdfPath = $pdfGenerator->generateBilletPdf($billet);
 
-            // ✅ Envoi Email
-            $email = $request->getSession()->get(SecurityRequestAttributes::LAST_USERNAME);
+            // 🔵 Envoyer Email de confirmation
+            $email = $this->getUser()?->getUserIdentifier();
             $brevoMailer->sendConfirmation(
                 $email,
                 $event->getNomEvent(),
@@ -223,18 +224,23 @@ final class BilletController extends AbstractController
                 $pdfPath
             );
 
-            // ✅ Création PaymentIntent Stripe
+            // 🔵 Générer PaymentIntent Stripe
             $paymentIntent = $stripeService->createPaymentIntent($prix, 'usd');
-            if ($paymentIntent) {
-                // Stocker ID Stripe PaymentIntent dans la session pour récupérer plus tard
-                $request->getSession()->set('stripe_payment_intent_id', $paymentIntent->id);
+            if (!$paymentIntent) {
+                throw new \Exception('Erreur lors de la création du PaymentIntent Stripe.');
             }
 
-            // ✅ Fin du flow ➔ Retour à l'accueil
-            return $this->redirectToRoute('app_event_index');
+            return $this->render('billet/front_reservation.html.twig', [
+                'form' => $form, // 🛠 OBLIGATOIRE
+                'clientSecret' => $paymentIntent->client_secret,
+                'prixFinal' => $prix,
+                'event' => $event,
+                'promoCodes' => [], // tu peux mettre tes remises
+            ]);
+            
         }
 
-        // Formulaire initial d'affichage
+        // 🔵 Afficher le formulaire de réservation (page initiale)
         return $this->render('billet/front_reservation.html.twig', [
             'form' => $form,
             'event' => $event,
@@ -242,6 +248,56 @@ final class BilletController extends AbstractController
             'promoCodes' => [],
         ]);
     }
+    #[Route('/create-payment-intent', name: 'app_create_payment_intent', methods: ['POST'])]
+public function createPaymentIntent(Request $request, StripeService $stripeService): JsonResponse
+{
+    $data = json_decode($request->getContent(), true);
+    $prix = $data['prix'] ?? 0;
+
+    $paymentIntent = $stripeService->createPaymentIntent($prix, 'usd');
+
+    return new JsonResponse([
+        'clientSecret' => $paymentIntent->client_secret,
+    ]);
+}
+
+    #[Route('/payment-success', name: 'payment_success', methods: ['POST'])]
+public function paymentSuccess(
+    Request $request,
+    EntityManagerInterface $em,
+    PdfGeneratorService $pdfGenerator,
+    BrevoMailerService $brevoMailer
+): JsonResponse {
+    $data = json_decode($request->getContent(), true);
+    $billetId = $data['billetId'] ?? null;
+
+    if (!$billetId) {
+        return new JsonResponse(['status' => 'error', 'message' => 'Aucun billet trouvé'], 400);
+    }
+
+    $billet = $em->getRepository(Billet::class)->find($billetId);
+
+    if (!$billet) {
+        return new JsonResponse(['status' => 'error', 'message' => 'Billet introuvable'], 404);
+    }
+
+    // 🔵 Générer PDF
+    $pdfPath = $pdfGenerator->generateBilletPdf($billet);
+
+    // 🔵 Envoyer email
+    $email = $this->getUser()?->getUserIdentifier() ?? 'client@example.com'; // Remplace par ton vrai user connecté
+    $brevoMailer->sendConfirmation(
+        $email,
+        $billet->getEvent()->getNomEvent(),
+        $billet->getProprietaire(),
+        $billet->getEvent()->getNomEspace(),
+        $billet->getEvent()->getDate(),
+        $pdfPath
+    );
+
+    return new JsonResponse(['status' => 'success', 'redirectUrl' => $this->generateUrl('app_event_index')]);
+}
+
     
 
     #[Route('/test-brevo-mail', name: 'test_brevo_mail')]
