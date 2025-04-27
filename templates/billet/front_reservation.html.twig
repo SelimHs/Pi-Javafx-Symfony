@@ -100,7 +100,6 @@
 
     <!-- Scripts Stripe & Logic -->
     <script src="https://js.stripe.com/v3/"></script>
-
     <script>
     document.addEventListener('DOMContentLoaded', function () {
       const prixBase = {{ prixFinal }};
@@ -108,9 +107,15 @@
       const typeSelect = document.getElementById('billet_type');
       const codePromoInput = document.getElementById('codePromo');
       const verifierBtn = document.getElementById('verifierBtn');
+      const reservationForm = document.getElementById('reservation-form');
+      const openPaymentModal = document.getElementById('openPaymentModal');
+      const paymentForm = document.getElementById('payment-form');
+      const payButton = document.getElementById('payButton');
+      const paymentMessage = document.getElementById('payment-message');
 
       let remiseActuelle = 0;
       const remises = {{ promoCodes|json_encode|raw }};
+      let clientSecret = '';
 
       function calculerPrix(type, remisePourcent = 0) {
         let prix = prixBase;
@@ -144,7 +149,7 @@
       updatePrix();
 
       // 🔵 Stripe
-      const stripe = Stripe('pk_test_XXXXXXXXXXXXXXX'); // ← Mets ta clé publique ici
+      const stripe = Stripe('pk_test_51QzP2uPFHNYg7RkV82G27X88hJoMnK5XAY0R7Z46fmAIy5cpKCUgLD4uvC0mWh5IP4poVsrVrDWzHsrtryAoXkcv007AF6F4hh'); // ← Mets ta clé publique ici
       const elements = stripe.elements();
       const card = elements.create('card', {
         style: {
@@ -158,61 +163,74 @@
       });
       card.mount('#card-element');
 
-      const openPaymentModal = document.getElementById('openPaymentModal');
       openPaymentModal.addEventListener('click', async function (e) {
         e.preventDefault();
+        
+        // Valider le formulaire avant d'ouvrir le modal
+        if (!reservationForm.checkValidity()) {
+          reservationForm.reportValidity();
+          return;
+        }
 
-        // Valide le formulaire Symfony normalement
-        document.getElementById('reservation-form').submit();
-
-        // Quand submit OK, ouvrir Stripe modal
-        const paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
-        paymentModal.show();
+        // Récupérer le clientSecret avant d'ouvrir le modal
+        try {
+          const response = await fetch('{{ path("app_create_payment_intent") }}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prix: prixInput.value })
+          });
+          
+          const data = await response.json();
+          clientSecret = data.clientSecret;
+          
+          // Ouvrir le modal seulement après avoir obtenu le clientSecret
+          const paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
+          paymentModal.show();
+        } catch (error) {
+          console.error('Error:', error);
+          paymentMessage.innerHTML = `<div style="color:red;">❌ Erreur lors de la préparation du paiement</div>`;
+        }
       });
 
-      const paymentForm = document.getElementById('payment-form');
       paymentForm.addEventListener('submit', async function (e) {
         e.preventDefault();
-
-        document.getElementById('payButton').disabled = true;
-        document.getElementById('payment-message').textContent = "⏳ Traitement...";
-
-        const clientSecret = await fetchClientSecret();
+        payButton.disabled = true;
+        paymentMessage.innerHTML = "<div class='spinner-border text-primary' role='status'></div> ⏳ Traitement...";
 
         const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
           payment_method: { card: card }
         });
 
         if (error) {
-          document.getElementById('payment-message').textContent = "❌ Paiement échoué : " + error.message;
-          document.getElementById('payButton').disabled = false;
+          paymentMessage.innerHTML = `<div style="color:red;">❌ Paiement échoué : ${error.message}</div>`;
+          payButton.disabled = false;
         } else if (paymentIntent.status === 'succeeded') {
-          document.getElementById('payment-message').textContent = "✅ Paiement réussi ! Redirection...";
+          paymentMessage.innerHTML = `
+            <div style="color:green; font-size: 22px;">
+              ✅ Paiement Réussi !
+            </div>
+            <div style="font-size: 16px; color: gray;">Enregistrement de votre réservation...</div>
+          `;
 
-          setTimeout(() => {
-            window.location.href = "{{ path('app_event_index') }}";
-          }, 2000);
+          // Soumettre le formulaire après paiement réussi
+          try {
+            // Ajouter un champ caché pour indiquer que le paiement est réussi
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'payment_success';
+            hiddenInput.value = '1';
+            reservationForm.appendChild(hiddenInput);
+            
+            // Soumettre le formulaire
+            reservationForm.submit();
+          } catch (error) {
+            console.error('Error:', error);
+            paymentMessage.innerHTML = `<div style="color:red;">❌ Erreur lors de l'enregistrement</div>`;
+          }
         }
       });
-
-      async function fetchClientSecret() {
-    if (clientSecret !== '') {
-        return clientSecret;
-    }
-
-    const response = await fetch('/create-payment-intent', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prix: prixInput.value })
-    });
-
-    const data = await response.json();
-    return data.clientSecret;
-}
-
     });
     </script>
-
   </main>
 </div>
 {% endblock %}

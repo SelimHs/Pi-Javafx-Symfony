@@ -85,15 +85,15 @@ final class BilletController extends AbstractController
     public function exportBillets(BilletRepository $repo): StreamedResponse
     {
         $billets = $repo->findAll();
-    
+
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setTitle('Billets');
-    
+
         // Header row values
         $headers = ['Propriétaire', 'Prix (DT)', 'Date d\'achat', 'Type'];
         $sheet->fromArray($headers, null, 'A1');
-    
+
         // 🔹 Header Style
         $headerStyle = [
             'font' => ['bold' => true, 'color' => ['argb' => 'FFFFFFFF'], 'size' => 13],
@@ -105,7 +105,7 @@ final class BilletController extends AbstractController
             'borders' => ['allBorders' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM]],
         ];
         $sheet->getStyle('A1:D1')->applyFromArray($headerStyle);
-    
+
         // 🔹 Data Rows
         $row = 2;
         foreach ($billets as $billet) {
@@ -113,7 +113,7 @@ final class BilletController extends AbstractController
             $sheet->setCellValue("B{$row}", $billet->getPrix());
             $sheet->setCellValue("C{$row}", $billet->getDateAchat()?->format('Y-m-d H:i') ?? '—');
             $sheet->setCellValue("D{$row}", $billet->getType());
-    
+
             // Alternate row color
             $fillColor = ($row % 2 === 0) ? 'FFF9F9F9' : 'FFFFFFFF';
             $sheet->getStyle("A{$row}:D{$row}")->applyFromArray([
@@ -125,36 +125,36 @@ final class BilletController extends AbstractController
                 'borders' => ['allBorders' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN]],
                 'font' => ['size' => 11],
             ]);
-    
+
             $row++;
         }
-    
+
         // 🔹 Auto-size columns
         foreach (range('A', 'D') as $col) {
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
-    
+
         // 🔹 Freeze top row
         $sheet->freezePane('A2');
-    
+
         // 🔹 Enable filter
         $sheet->setAutoFilter($sheet->calculateWorksheetDimension());
-    
+
         // Output
         $response = new StreamedResponse(function () use ($spreadsheet) {
             $writer = new Xlsx($spreadsheet);
             $writer->save('php://output');
         });
-    
+
         $filename = 'billets_export_' . date('Ymd_His') . '.xlsx';
         $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         $response->headers->set('Content-Disposition', "attachment;filename=\"{$filename}\"");
         $response->headers->set('Cache-Control', 'max-age=0');
-    
+
         return $response;
     }
-    
-    
+
+
 
 
 
@@ -237,7 +237,6 @@ final class BilletController extends AbstractController
                 'event' => $event,
                 'promoCodes' => [], // tu peux mettre tes remises
             ]);
-            
         }
 
         // 🔵 Afficher le formulaire de réservation (page initiale)
@@ -248,57 +247,58 @@ final class BilletController extends AbstractController
             'promoCodes' => [],
         ]);
     }
+    
     #[Route('/create-payment-intent', name: 'app_create_payment_intent', methods: ['POST'])]
-public function createPaymentIntent(Request $request, StripeService $stripeService): JsonResponse
-{
-    $data = json_decode($request->getContent(), true);
-    $prix = $data['prix'] ?? 0;
+    public function createPaymentIntent(Request $request, StripeService $stripeService): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $prix = $data['prix'] ?? 0;
 
-    $paymentIntent = $stripeService->createPaymentIntent($prix, 'usd');
+        $paymentIntent = $stripeService->createPaymentIntent($prix, 'usd');
 
-    return new JsonResponse([
-        'clientSecret' => $paymentIntent->client_secret,
-    ]);
-}
+        return new JsonResponse([
+            'clientSecret' => $paymentIntent->client_secret,
+        ]);
+    }
 
     #[Route('/payment-success', name: 'payment_success', methods: ['POST'])]
-public function paymentSuccess(
-    Request $request,
-    EntityManagerInterface $em,
-    PdfGeneratorService $pdfGenerator,
-    BrevoMailerService $brevoMailer
-): JsonResponse {
-    $data = json_decode($request->getContent(), true);
-    $billetId = $data['billetId'] ?? null;
+    public function paymentSuccess(
+        Request $request,
+        EntityManagerInterface $em,
+        PdfGeneratorService $pdfGenerator,
+        BrevoMailerService $brevoMailer
+    ): JsonResponse {
+        $data = json_decode($request->getContent(), true);
+        $billetId = $data['billetId'] ?? null;
 
-    if (!$billetId) {
-        return new JsonResponse(['status' => 'error', 'message' => 'Aucun billet trouvé'], 400);
+        if (!$billetId) {
+            return new JsonResponse(['status' => 'error', 'message' => 'Aucun billet trouvé'], 400);
+        }
+
+        $billet = $em->getRepository(Billet::class)->find($billetId);
+
+        if (!$billet) {
+            return new JsonResponse(['status' => 'error', 'message' => 'Billet introuvable'], 404);
+        }
+
+        // 🔵 Générer PDF
+        $pdfPath = $pdfGenerator->generateBilletPdf($billet);
+
+        // 🔵 Envoyer email
+        $email = $this->getUser()?->getUserIdentifier() ?? 'client@example.com'; // Remplace par ton vrai user connecté
+        $brevoMailer->sendConfirmation(
+            $email,
+            $billet->getEvent()->getNomEvent(),
+            $billet->getProprietaire(),
+            $billet->getEvent()->getNomEspace(),
+            $billet->getEvent()->getDate(),
+            $pdfPath
+        );
+
+        return new JsonResponse(['status' => 'success', 'redirectUrl' => $this->generateUrl('app_event_index')]);
     }
 
-    $billet = $em->getRepository(Billet::class)->find($billetId);
 
-    if (!$billet) {
-        return new JsonResponse(['status' => 'error', 'message' => 'Billet introuvable'], 404);
-    }
-
-    // 🔵 Générer PDF
-    $pdfPath = $pdfGenerator->generateBilletPdf($billet);
-
-    // 🔵 Envoyer email
-    $email = $this->getUser()?->getUserIdentifier() ?? 'client@example.com'; // Remplace par ton vrai user connecté
-    $brevoMailer->sendConfirmation(
-        $email,
-        $billet->getEvent()->getNomEvent(),
-        $billet->getProprietaire(),
-        $billet->getEvent()->getNomEspace(),
-        $billet->getEvent()->getDate(),
-        $pdfPath
-    );
-
-    return new JsonResponse(['status' => 'success', 'redirectUrl' => $this->generateUrl('app_event_index')]);
-}
-
-    
 
     #[Route('/test-brevo-mail', name: 'test_brevo_mail')]
     public function testBrevo(BrevoMailerService $mailer): Response
