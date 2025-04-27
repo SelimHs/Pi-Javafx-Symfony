@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Create Organisateur{% endblock %}
+{% block title %}Créer un Organisateur{% endblock %}
 
 {% block body %}
 <div class="container mt-5">
@@ -8,85 +8,30 @@
     <div class="col-lg-8">
       <div class="card shadow-lg border-0 rounded-4">
         <div class="card-body p-5">
-          <h2 class="mb-4 text-center">Create a New Organisateur</h2>
+          <h2 class="mb-4 text-center">Nouveau Organisateur</h2>
 
-          {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+          {{ form_start(form, {'attr': {'id': 'organisateurForm', 'novalidate': 'novalidate'}}) }}
+            {{ form_row(form.nom_org) }}
+            {{ form_row(form.prenom_org) }}
+            {{ form_row(form.description_org) }}
 
-          {# Nom org : requis, min 3 caractères #}
-          <div class="mb-3">
-            {{ form_label(form.nom_org, null, {'label_attr': {'class': 'form-label'}}) }}
-            {{ form_widget(form.nom_org, {
-              'attr': {
-                'class': 'form-control',
-                'required': 'required',
-                'minlength': '3',
-                'placeholder': 'Nom de l\'organisateur'
-              }
-            }) }}
-            <div class="text-danger mt-1" style="font-size: 0.95rem;">
-              {{ form_errors(form.nom_org) }}
+            <div class="mb-3">
+              {{ form_label(form.telef) }}
+              <small class="text-muted d-block mb-1">Un code SMS vous sera envoyé</small>
+              {{ form_widget(form.telef, {
+                'attr': {
+                  'class': 'form-control',
+                  'pattern': '[0-9]{8}',
+                  'title': 'Ex : 25123456'
+                }
+              }) }}
             </div>
-          </div>
 
-          {# Prénom org : requis, min 3 caractères #}
-          <div class="mb-3">
-            {{ form_label(form.prenom_org) }}
-            {{ form_widget(form.prenom_org, {
-              'attr': {
-                'class': 'form-control',
-                'required': 'required',
-                'minlength': '3',
-                'placeholder': 'Prénom de l\'organisateur'
-              }
-            }) }}
-            <div class="text-danger mt-1" style="font-size: 0.95rem;">
-              {{ form_errors(form.prenom_org) }}
+            {{ form_row(form.espace) }}
+
+            <div class="text-center mt-4">
+              <button type="submit" class="btn btn-primary px-4">Enregistrer</button>
             </div>
-          </div>
-
-          {# Description org : requis, min 5 caractères #}
-          <div class="mb-3">
-            {{ form_label(form.description_org) }}
-            {{ form_widget(form.description_org, {
-              'attr': {
-                'class': 'form-control',
-                'required': 'required',
-                'minlength': '5',
-                'rows': '3',
-                'placeholder': 'Décrivez l\'organisateur...'
-              }
-            }) }}
-            <div class="text-danger mt-1" style="font-size: 0.95rem;">
-              {{ form_errors(form.description_org) }}
-            </div>
-          </div>
-
-          {# Téléphone : requis, 8 chiffres #}
-          <div class="mb-3">
-            {{ form_label(form.telef) }}
-            {{ form_widget(form.telef, {
-              'attr': {
-                'class': 'form-control',
-                'required': 'required',
-                'pattern': '[0-9]{8}',
-                'placeholder': 'Ex : 25123456',
-                'title': 'Le numéro doit contenir 8 chiffres'
-              }
-            }) }}
-            <div class="text-danger mt-1" style="font-size: 0.95rem;">
-              {{ form_errors(form.telef) }}
-            </div>
-          </div>
-
-          {# Espace : requis #}
-                  {{ form_row(form.espace) }}
-
-          </div>
-
-          <div class="text-center mt-4">
-            <button class="btn btn-primary px-4">{{ button_label|default('Save') }}</button>
-          </div>
-
           {{ form_end(form) }}
         </div>
       </div>
@@ -94,7 +39,88 @@
   </div>
 </div>
 
-<div class="text-center mt-3">
-  <a href="{{ path('app_organisateur_index') }}" class="btn btn-link">← Back to list</a>
+<!-- Modal de vérification -->
+<div class="modal fade" id="verificationModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content rounded-3">
+      <div class="modal-header">
+        <h5 class="modal-title">Vérification du code</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Un code a été envoyé à <strong id="phoneDisplay"></strong></p>
+        <input type="text" id="smsCode" class="form-control" placeholder="123456" maxlength="6" />
+        <div class="text-danger mt-2 small" id="smsError"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        <button type="button" class="btn btn-success" id="verifyBtn">Valider</button>
+      </div>
+    </div>
+  </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('organisateurForm');
+    const modal = new bootstrap.Modal(document.getElementById('verificationModal'));
+    const verifyBtn = document.getElementById('verifyBtn');
+    const smsError = document.getElementById('smsError');
+
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const response = await fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form)
+        });
+        
+        const result = await response.json();
+        
+        if (result.status === 'verification_required') {
+            document.getElementById('phoneDisplay').textContent = result.phone;
+            modal.show();
+            
+            // Envoi automatique du SMS
+            const smsResponse = await fetch('{{ path("app_send_verification") }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone: result.phone })
+            });
+            
+            const smsResult = await smsResponse.json();
+            if (!smsResult.success) {
+                smsError.textContent = smsResult.error || "Erreur d'envoi du SMS";
+            }
+        }
+    });
+
+    verifyBtn.addEventListener('click', async function() {
+        const code = document.getElementById('smsCode').value.trim();
+        smsError.textContent = '';
+        
+        if (code.length !== 6) {
+            smsError.textContent = 'Le code doit contenir 6 chiffres';
+            return;
+        }
+        
+        const response = await fetch('{{ path("app_verify_code") }}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code: code })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            window.location.href = '{{ path("app_organisateur_index") }}';
+        } else {
+            smsError.textContent = result.error || "Code invalide";
+        }
+    });
+});
+</script>
 {% endblock %}

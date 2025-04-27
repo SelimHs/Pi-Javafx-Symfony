@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\User; // 🔥 Très important : importer ta vraie entité User
+
 use App\Entity\Espace;
 use App\Form\EspaceType;
 use App\Repository\EspaceRepository;
@@ -17,19 +19,38 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 use App\Service\JsonBinService;
 use App\Service\SheetBestService;
 
+use App\Entity\Organisateur;
+use App\Repository\OrganisateurRepository;
 
 
 
 #[Route('/espace')]
 final class EspaceController extends AbstractController
 {
+    private $client;
+
+    public function __construct(HttpClientInterface $client)
+    {
+        $this->client = $client;
+    }
+
     #[Route(name: 'app_espace_index', methods: ['GET'])]
     public function index(EspaceRepository $espaceRepository): Response
     {
+        $espaces = $espaceRepository->findAll();
+        $user = $this->getUser();
+
+        $idUser = null;
+        if ($user instanceof User) { // ✅ Vérifie vraiment que c'est TON User
+            $idUser = $user->getId();
+        }
+
         return $this->render('espace/index.html.twig', [
-            'espaces' => $espaceRepository->findAll(),
+            'espaces' => $espaces,
+            'idUser' => $idUser, // 👈 injecte id user dans twig
         ]);
     }
+
 
     #[Route('/dashboard', name: 'dashboard_espace_index', methods: ['GET'])]
     public function indexBack(EspaceRepository $espaceRepository): Response
@@ -42,18 +63,22 @@ final class EspaceController extends AbstractController
     #[Route('/new', name: 'app_espace_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        // Vérifier si l'utilisateur est connecté
+        $user = $this->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour créer un espace.');
+            return $this->redirectToRoute('app_login');
+        }
+
         $espace = new Espace();
-        $form = $this->createForm(EspaceType::class, $espace, [
-            'is_edit' => false // champ désactivé
-        ]);
-        $espace = new Espace();
-        $espace->setDisponibilite('Disponible'); // ✅ valeur par défaut
+        $espace->setDisponibilite('Disponible'); // Valeur par défaut
+
+        // Associer l'utilisateur à l'espace
+        $espace->setUser($user);
+
         $form = $this->createForm(EspaceType::class, $espace, [
             'is_edit' => false
         ]);
-
-
-        $form = $this->createForm(EspaceType::class, $espace);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -68,6 +93,7 @@ final class EspaceController extends AbstractController
             $entityManager->persist($espace);
             $entityManager->flush();
 
+            $this->addFlash('success', 'Espace créé avec succès !');
             return $this->redirectToRoute('app_espace_index');
         }
 
@@ -82,6 +108,16 @@ final class EspaceController extends AbstractController
     {
         $espace = new Espace();
         $espace->setDisponibilite('Disponible'); // Valeur par défaut
+
+        // Récupérer l'utilisateur connecté
+        $user = $this->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour créer un espace.');
+            return $this->redirectToRoute('app_login');
+        }
+
+        // Associer l'utilisateur à l'espace
+        $espace->setUser($user);
 
         $form = $this->createForm(EspaceType::class, $espace, [
             'is_edit' => false
@@ -99,6 +135,7 @@ final class EspaceController extends AbstractController
             $entityManager->persist($espace);
             $entityManager->flush();
 
+            $this->addFlash('success', 'Espace créé avec succès !');
             return $this->redirectToRoute('dashboard_espace_index');
         }
 
@@ -117,7 +154,7 @@ final class EspaceController extends AbstractController
         $request->getSession()->set('idEspace', $espace->getIdEspace());
 
         // 🎥 Génération du lien de live stream basé sur la capacité
-        $ip = "192.168.137.174"; // Remplace par l’IP de ton téléphone ou serveur caméra
+        $ip = "192.168.137.174"; // Remplace par l'IP de ton téléphone ou serveur caméra
         $port = $espace->getCapacite();
         $liveURL = "http://$ip:$port/jsfs.html";
 
@@ -143,6 +180,19 @@ final class EspaceController extends AbstractController
     #[Route('/{idEspace}/edit', name: 'app_espace_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Espace $espace, EntityManagerInterface $entityManager): Response
     {
+        // Vérifier si l'utilisateur est connecté
+        $user = $this->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour modifier un espace.');
+            return $this->redirectToRoute('app_login');
+        }
+
+        // Vérifier si l'utilisateur est le propriétaire de l'espace
+        if ($espace->getUser() !== $user) {
+            $this->addFlash('error', 'Vous n\'êtes pas autorisé à modifier cet espace.');
+            return $this->redirectToRoute('app_espace_index');
+        }
+
         $form = $this->createForm(EspaceType::class, $espace, [
             'is_edit' => true
         ]);
@@ -156,12 +206,12 @@ final class EspaceController extends AbstractController
                     $imageFile->move($this->getParameter('uploads_directory'), $newFilename);
                     $espace->setImage($newFilename);
                 } catch (FileException $e) {
-                    // Handle error
+                    $this->addFlash('error', 'Erreur lors du téléchargement de l\'image.');
                 }
             }
 
             $entityManager->flush();
-
+            $this->addFlash('success', 'Espace modifié avec succès !');
             return $this->redirectToRoute('app_espace_show', ['idEspace' => $espace->getIdEspace()]);
         }
 
@@ -210,9 +260,23 @@ final class EspaceController extends AbstractController
     #[Route('/{idEspace}', name: 'app_espace_delete', methods: ['POST'])]
     public function delete(Request $request, Espace $espace, EntityManagerInterface $entityManager): Response
     {
+        // Vérifier si l'utilisateur est connecté
+        $user = $this->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour supprimer un espace.');
+            return $this->redirectToRoute('app_login');
+        }
+
+        // Vérifier si l'utilisateur est le propriétaire de l'espace
+        if ($espace->getUser() !== $user) {
+            $this->addFlash('error', 'Vous n\'êtes pas autorisé à supprimer cet espace.');
+            return $this->redirectToRoute('app_espace_index');
+        }
+
         if ($this->isCsrfTokenValid('delete' . $espace->getIdEspace(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($espace);
             $entityManager->flush();
+            $this->addFlash('success', 'Espace supprimé avec succès !');
         }
 
         return $this->redirectToRoute('app_espace_index');
@@ -235,14 +299,13 @@ final class EspaceController extends AbstractController
         $json = $request->getContent();
         $data = json_decode($json, true);
 
-        if (!$data) {
-            return new JsonResponse(['success' => false, 'error' => 'Données manquantes'], 400);
+        if (!$data || !isset($data['prix'])) {
+            return new JsonResponse(['success' => false, 'error' => 'Données incomplètes ou champ prix manquant.'], 400);
         }
 
         $url = 'https://api.sheetbest.com/sheets/4d538bcb-a52a-4dde-84e4-ddb7c9520d8e';
 
         try {
-            // 🔍 Vérifier les conflits existants
             $response = $client->request('GET', $url);
             $reservations = $response->toArray();
 
@@ -262,29 +325,42 @@ final class EspaceController extends AbstractController
                 }
             }
 
-            // ✅ Si pas de conflit : enregistrer la réservation
+            $user = $this->getUser();
+            if ($user instanceof User) { // ✅ Vérifie que c'est ton entité User
+                $data['id_user'] = $user->getId();
+            } else {
+                $data['id_user'] = ''; // ou -1 ou "Anonyme"
+            }
+
             $client->request('POST', $url, [
                 'json' => $data
             ]);
 
-            return new JsonResponse(['success' => true, 'message' => 'Réservation enregistrée']);
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Réservation enregistrée avec succès.',
+                'prix' => $data['prix']
+            ]);
         } catch (\Exception $e) {
-            return new JsonResponse(['success' => false, 'error' => 'Erreur API', 'message' => $e->getMessage()], 500);
+            return new JsonResponse([
+                'success' => false,
+                'error' => 'Erreur API',
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
 
-
     #[Route('/reservations', name: 'app_reservations_liste', methods: ['GET'])]
-    public function listReservations(HttpClientInterface $client): JsonResponse
+    public function listReservations(SheetBestService $sheetBest): JsonResponse
     {
         try {
-            $url = 'https://api.sheetbest.com/sheets/4d538bcb-a52a-4dde-84e4-ddb7c9520d8e';
-            $response = $client->request('GET', $url);
-            $reservations = $response->toArray();
-
+            $reservations = $sheetBest->getAll();
             return new JsonResponse($reservations);
         } catch (\Exception $e) {
-            return new JsonResponse(['error' => 'Erreur lors de la récupération des réservations.'], 500);
+            return new JsonResponse([
+                'error' => 'Erreur lors de la récupération des réservations.',
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
 }

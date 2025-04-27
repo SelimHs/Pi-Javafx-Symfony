@@ -21,18 +21,13 @@
         color: #000 !important;
         border-color: #ccc !important;
       }
-      body.dark-mode .form-control[readonly] {
-        background-color: #f0f0f0 !important;
-        color: #555 !important;
-        border: 1px solid #ccc !important;
-      }
     </style>
 
     <div class="container mt-5">
       <div class="card p-4 shadow-lg border-0 rounded-4">
         <h2 class="text-center mb-4 text-white">+ Réserver un Billet</h2>
 
-        {{ form_start(form, {'attr': {'class': 'row g-3','novalidate': 'novalidate'}}) }}
+        {{ form_start(form, {'attr': {'class': 'row g-3', 'id': 'reservation-form', 'novalidate': 'novalidate'}}) }}
 
           <div class="col-md-6">
             {{ form_label(form.proprietaire) }}
@@ -71,70 +66,153 @@
           <div class="col-md-8">
             {{ form_label(form.codePromo) }}
             <div class="input-group">
-              {{ form_widget(form.codePromo, {
-                'attr': {
-                  'class': 'form-control',
-                  'id': 'codePromo'
-                }
-              }) }}
+              {{ form_widget(form.codePromo, {'attr': {'class': 'form-control', 'id': 'codePromo'}}) }}
               <button type="button" id="verifierBtn" class="btn btn-success">✔ Vérifier</button>
             </div>
           </div>
 
           <div class="col-md-4 d-flex align-items-end">
-            <button type="submit" class="btn btn-warning w-100">✔ Confirmer la Réservation</button>
+            <button type="button" id="openPaymentModal" class="btn btn-warning w-100">✔ Confirmer la Réservation</button>
           </div>
 
         {{ form_end(form) }}
       </div>
     </div>
 
+    <!-- Modal Bootstrap pour paiement -->
+    <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-4">
+          <div class="modal-header">
+            <h5 class="modal-title">Paiement Sécurisé</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+          </div>
+          <div class="modal-body">
+            <form id="payment-form">
+              <div id="card-element" class="form-control mb-3" style="height: 50px;"></div>
+              <button id="payButton" class="btn btn-primary w-100">🔒 Payer</button>
+            </form>
+            <div id="payment-message" class="text-center mt-3"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts Stripe & Logic -->
+    <script src="https://js.stripe.com/v3/"></script>
+
     <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        const prixBase = {{ prixFinal }};
-        const prixInput = document.getElementById('billet_prix');
-        const typeSelect = document.getElementById('billet_type');
-        const codePromoInput = document.getElementById('codePromo');
-        const verifierBtn = document.getElementById('verifierBtn');
+    document.addEventListener('DOMContentLoaded', function () {
+      const prixBase = {{ prixFinal }};
+      const prixInput = document.getElementById('billet_prix');
+      const typeSelect = document.getElementById('billet_type');
+      const codePromoInput = document.getElementById('codePromo');
+      const verifierBtn = document.getElementById('verifierBtn');
 
-        const remises = {{ promoCodes|json_encode|raw }};
-        let remiseActuelle = 0;
+      let remiseActuelle = 0;
+      const remises = {{ promoCodes|json_encode|raw }};
 
-        function calculerPrix(type, remisePourcent = 0) {
-          let prix = prixBase;
-          if (type === 'DUO') prix += prixBase * 0.5;
-          else if (type === 'VIP') prix = prixBase * 3;
-          prix -= prix * (remisePourcent / 100);
-          return Math.round(Math.max(prix, 0));
+      function calculerPrix(type, remisePourcent = 0) {
+        let prix = prixBase;
+        if (type === 'DUO') prix += prixBase * 0.5;
+        else if (type === 'VIP') prix = prixBase * 3;
+        prix -= prix * (remisePourcent / 100);
+        return Math.round(Math.max(prix, 0));
+      }
+
+      function updatePrix() {
+        const type = typeSelect.value;
+        prixInput.value = calculerPrix(type, remiseActuelle);
+      }
+
+      verifierBtn.addEventListener('click', () => {
+        const code = codePromoInput.value.trim().toUpperCase();
+        if (remises.hasOwnProperty(code)) {
+          remiseActuelle = remises[code];
+          alert(`✅ Code promo "${code}" appliqué : -${remiseActuelle}%`);
+        } else {
+          remiseActuelle = 0;
+          alert('❌ Code promo invalide');
         }
-
-        function updatePrix() {
-          const type = typeSelect.value;
-          const prix = calculerPrix(type, remiseActuelle);
-          prixInput.value = prix;
-        }
-
-        if (verifierBtn) {
-          verifierBtn.addEventListener('click', () => {
-            const code = codePromoInput.value.trim().toUpperCase();
-            if (remises.hasOwnProperty(code)) {
-              remiseActuelle = remises[code];
-              alert(`✅ Code promo "${code}" appliqué : -${remiseActuelle}%`);
-            } else {
-              remiseActuelle = 0;
-              alert('❌ Code promo invalide');
-            }
-            updatePrix();
-          });
-        }
-
-        if (typeSelect) {
-          typeSelect.addEventListener('change', updatePrix);
-        }
-
         updatePrix();
       });
+
+      if (typeSelect) {
+        typeSelect.addEventListener('change', updatePrix);
+      }
+
+      updatePrix();
+
+      // 🔵 Stripe
+      const stripe = Stripe('pk_test_XXXXXXXXXXXXXXX'); // ← Mets ta clé publique ici
+      const elements = stripe.elements();
+      const card = elements.create('card', {
+        style: {
+          base: {
+            fontSize: '16px',
+            color: '#32325d',
+            '::placeholder': { color: '#aab7c4' }
+          },
+          invalid: { color: '#fa755a', iconColor: '#fa755a' }
+        }
+      });
+      card.mount('#card-element');
+
+      const openPaymentModal = document.getElementById('openPaymentModal');
+      openPaymentModal.addEventListener('click', async function (e) {
+        e.preventDefault();
+
+        // Valide le formulaire Symfony normalement
+        document.getElementById('reservation-form').submit();
+
+        // Quand submit OK, ouvrir Stripe modal
+        const paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
+        paymentModal.show();
+      });
+
+      const paymentForm = document.getElementById('payment-form');
+      paymentForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        document.getElementById('payButton').disabled = true;
+        document.getElementById('payment-message').textContent = "⏳ Traitement...";
+
+        const clientSecret = await fetchClientSecret();
+
+        const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+          payment_method: { card: card }
+        });
+
+        if (error) {
+          document.getElementById('payment-message').textContent = "❌ Paiement échoué : " + error.message;
+          document.getElementById('payButton').disabled = false;
+        } else if (paymentIntent.status === 'succeeded') {
+          document.getElementById('payment-message').textContent = "✅ Paiement réussi ! Redirection...";
+
+          setTimeout(() => {
+            window.location.href = "{{ path('app_event_index') }}";
+          }, 2000);
+        }
+      });
+
+      async function fetchClientSecret() {
+    if (clientSecret !== '') {
+        return clientSecret;
+    }
+
+    const response = await fetch('/create-payment-intent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prix: prixInput.value })
+    });
+
+    const data = await response.json();
+    return data.clientSecret;
+}
+
+    });
     </script>
+
   </main>
 </div>
 {% endblock %}

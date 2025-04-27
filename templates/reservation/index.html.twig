@@ -26,12 +26,26 @@
     </div>
 
     <div class="main-card mb-3 card">
-      <a href="{{ path('export_reservations_excel') }}" class="btn btn-primary">
-        📥 Exporter en Excel
-      </a>
       <div class="card-header">
-        Réservations enregistrées
+        <div class="row w-100 align-items-center">
+          <div class="col-md-6">
+            <h5 class="mb-0">Réservations enregistrées</h5>
+          </div>
+          <div class="col-md-6 d-flex justify-content-end gap-3 flex-wrap mt-2 mt-md-0">
+            <input type="text" id="searchReservation" class="form-control form-control-sm" placeholder="🔍 Rechercher" style="width: 180px;">
+            <select id="statutFilter" class="form-select form-select-sm" style="width: 180px;">
+              <option value="">-- Tous les statuts --</option>
+              <option value="confirmée">Confirmée</option>
+              <option value="en attente">En attente</option>
+              <option value="annulée">Annulée</option>
+            </select>
+            <a href="{{ path('export_reservations_excel') }}" class="btn btn-sm btn-outline-primary">
+              📥 Exporter en Excel
+            </a>
+          </div>
+        </div>
       </div>
+
       <div class="table-responsive">
         <table class="align-middle mb-0 table table-striped table-hover">
           <thead>
@@ -77,4 +91,30 @@
 
   </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const filterSelect = document.getElementById('statutFilter');
+    const searchInput = document.getElementById('searchReservation');
+    const rows = document.querySelectorAll('table tbody tr');
+
+    function filterRows() {
+      const selectedStatut = filterSelect.value.toLowerCase();
+      const searchValue = searchInput.value.trim().toLowerCase();
+
+      rows.forEach(row => {
+        const cellsText = row.innerText.toLowerCase();
+
+        const matchesSearch = !searchValue || cellsText.includes(searchValue);
+        const matchesStatut = !selectedStatut || cellsText.includes(selectedStatut);
+
+        row.style.display = (matchesSearch && matchesStatut) ? '' : 'none';
+      });
+    }
+
+    filterSelect.addEventListener('change', filterRows);
+    searchInput.addEventListener('input', filterRows);
+  });
+</script>
+
 {% endblock %}

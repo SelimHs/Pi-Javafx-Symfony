@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Flasher\Prime\FlasherInterface;
 
 use App\Service\AiPredictiveService;
 
@@ -36,6 +37,7 @@ final class ProduitController extends AbstractController
         ]);
     }
 
+
     #[Route('/new', name: 'dashboard_produit_index', methods: ['GET', 'POST'])]
     #[Route('/dashboard/new', name: 'dashboard_produit_new', methods: ['GET', 'POST'])]
     public function newProduit(Request $request, EntityManagerInterface $entityManager): Response
@@ -59,6 +61,9 @@ final class ProduitController extends AbstractController
             $entityManager->persist($produit);
             $entityManager->flush();
 
+            // ✅ Add Notyf Flash here
+            $this->addFlash('notyf_success', '🆕 Nouveau produit ajouté: ' . $produit->getNomProduit());
+
             return $this->redirectToRoute('app_produit_index');
         }
 
@@ -71,6 +76,7 @@ final class ProduitController extends AbstractController
             'form' => $form,
         ]);
     }
+ 
 
     #[Route('/{idProduit}', name: 'app_produit_show', methods: ['GET'])]
     public function show(Produit $produit): Response
