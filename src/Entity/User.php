@@ -58,7 +58,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     
     #[ORM\Column(type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $tokenExpiresAt = null;
-
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $profileImage = null;
+    public function getProfileImage(): ?string
+    {
+    return $this->profileImage;
+    }
+    public function setProfileImage(?string $profileImage): self
+    {
+    $this->profileImage = $profileImage;
+    return $this;
+    }
     public function __construct()
     {
         $this->espaces = new ArrayCollection();

@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier Mon Profil{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="card shadow-sm p-4">
+        <h2 class="mb-4">Modifier mon profil</h2>
+
+        {# AJOUT IMPORTANT pour accepter les fichiers (multipart) #}
+        {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+        
+            <div class="mb-3">
+                {{ form_row(form.nom) }}
+            </div>
+            <div class="mb-3">
+                {{ form_row(form.prenom) }}
+            </div>
+            <div class="mb-3">
+                {{ form_row(form.email) }}
+            </div>
+            <div class="mb-3">
+                {{ form_row(form.numeroTelephone) }}
+            </div>
+            <div class="mb-3">
+                {{ form_row(form.addresse) }}
+            </div>
+            <div class="mb-3">
+                {{ form_row(form.genre) }}
+            </div>
+
+            {# 🖼️ Champ de téléchargement de la photo de profil #}
+            <div class="mb-3">
+                {{ form_row(form.profileImage, {
+                    'label': 'Photo de profil (jpg, png)'
+                }) }}
+            </div>
+
+            <div class="text-center">
+                <button class="btn btn-success">Enregistrer</button>
+                <a href="{{ path('app_profile') }}" class="btn btn-secondary ms-2">Annuler</a>
+            </div>
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}

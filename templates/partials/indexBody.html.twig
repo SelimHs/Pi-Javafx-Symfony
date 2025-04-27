@@ -1,25 +1,81 @@
 
-
 <div class="sub-header">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-md-8">
-          <ul class="info">
-            <li><i class="fa fa-envelope"></i> info@company.com</li>
-            <li><i class="fa fa-map"></i> Sunny Isles Beach, FL 33160</li>
-          </ul>
-        </div>
-        <div class="col-lg-4 col-md-4">
-          <ul class="social-links">
-            <li><a href="#"><i class="fab fa-facebook"></i></a></li>
-            <li><a href="https://x.com/minthu" target="_blank"><i class="fab fa-twitter"></i></a></li>
-            <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
-            <li><a href="#"><i class="fab fa-instagram"></i></a></li>
-          </ul>
-        </div>
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-8 col-md-8">
+        <ul class="info">
+          <li><i class="fa fa-envelope"></i> lamma.eventgroups@gmail.com</li>
+          <li><i class="fa fa-map"></i> Esprit</li>
+        </ul>
+      </div>
+      <div class="col-lg-4 col-md-4 text-end">
+        {% if app.user %}
+          <div class="dropdown">
+            <button class="btn btn-sm btn-primary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fas fa-user"></i> Mon Compte
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+              <li>
+                <a class="dropdown-item" href="{{ path('app_profile') }}">
+                  <i class="fas fa-user-circle me-2"></i> Mon Profil
+                </a>
+              </li>
+              <li>
+               
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <a class="dropdown-item" href="#contact">
+                  <i class="fas fa-headset me-2"></i> Contactez-nous
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item text-danger" href="{{ path('app_logout') }}">
+                  <i class="fas fa-sign-out-alt me-2"></i> Déconnexion
+                </a>
+              </li>
+            </ul>
+          </div>
+        {% else %}
+          <a href="{{ path('app_login') }}" class="btn btn-sm btn-success">
+            <i class="fas fa-sign-in-alt"></i> Connexion
+          </a>
+        {% endif %}
       </div>
     </div>
   </div>
+</div>
+
+<style>
+  .dropdown-menu {
+    border: none;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 0.5rem 0;
+  }
+  
+  .dropdown-item {
+    padding: 0.5rem 1.5rem;
+    transition: all 0.2s;
+    border-radius: 4px;
+    margin: 0 0.5rem;
+    width: auto;
+  }
+  
+  .dropdown-item:hover {
+    background-color: #f8f9fa;
+    color: #0d6efd;
+  }
+  
+  .dropdown-divider {
+    margin: 0.5rem 0;
+  }
+  
+  .dropdown-toggle::after {
+    vertical-align: middle;
+    margin-left: 0.5rem;
+  }
+</style>
 
 
 

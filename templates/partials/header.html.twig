@@ -1,5 +1,5 @@
-  <!-- ***** Header Area Start ***** -->
-  <header class="header-area header-sticky">
+<!-- ***** Header Area Start ***** -->
+<header class="header-area header-sticky">
     <div class="container">
         <div class="row">
             <div class="col-12">
@@ -9,16 +9,24 @@
                         <h1>LAMMA</h1>
                     </a>
                     <!-- ***** Logo End ***** -->
+
                     <!-- ***** Menu Start ***** -->
                     <ul class="nav">
-                      <li><a href="{{ path('app_home') }}" class="active">Acceuil</a></li>
-                      <li><a href="{{ path('app_event_index') }}">Évènements</a></li>
-                      <li><a href="{{ path('app_espace_index') }}">Espaces</a></li>
-                      <li><a href="{{ path('app_produit_index') }}">Produits</a></li>
-                      <li><a href="contact.html">Contact Us</a></li>
-                      <li><a href="#"><i class="fa fa-calendar"></i> Schedule a visit</a></li>
-                  </ul>   
-                    <a class='menu-trigger'>
+                        <li><a href="{{ path('app_home') }}" class="{% if app.request.get('_route') == 'app_home' %}active{% endif %}">Accueil</a></li>
+                        <li><a href="{{ path('app_event_index') }}">Événements</a></li>
+                        <li><a href="{{ path('app_espace_index') }}">Espaces</a></li>
+                        <li><a href="{{ path('app_produit_index') }}">Produits</a></li>
+                        <li><a href="#contact">Contact</a></li>
+
+                        {% if app.user %}
+                            <li><a href="{{ path('app_profile') }}"><i class="fas fa-user-circle"></i> Mon Profil</a></li>
+                            <li><a href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt"></i> Déconnexion</a></li>
+                        {% else %}
+                            <li><a href="{{ path('app_login') }}"><i class="fas fa-sign-in-alt"></i> Connexion</a></li>
+                        {% endif %}
+                    </ul>
+
+                    <a class="menu-trigger">
                         <span>Menu</span>
                     </a>
                     <!-- ***** Menu End ***** -->
@@ -26,5 +34,5 @@
             </div>
         </div>
     </div>
-  </header>
-  <!-- ***** Header Area End ***** -->
+</header>
+<!-- ***** Header Area End ***** -->

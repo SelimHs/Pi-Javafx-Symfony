@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails Utilisateur{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <h1 class="mb-4 text-center">{{ user.nom }} {{ user.prenom }}</h1>
+
+    <div class="card shadow-sm rounded-4">
+        <div class="card-body p-4">
+            
+            <!-- 💬 Ici on affiche la photo -->
+        <div class="text-center my-4">
+    {% if user.profileImage %}
+        <img src="{{ asset('assets/images/avatars/' ~ user.profileImage) }}" 
+             alt="Photo de profil" 
+             class="rounded-circle shadow" 
+             style="width: 120px; height: 120px; object-fit: cover;">
+    {% else %}
+        <img src="{{ asset('assets/images/default-avatar.png') }}" 
+             alt="Photo de profil" 
+             class="rounded-circle shadow" 
+             style="width: 120px; height: 120px; object-fit: cover;">
+    {% endif %}
+</div>
+
+
+            <table class="table table-bordered mb-0">
+                <tbody>
+                    <tr>
+                        <th scope="row">ID</th>
+                        <td>{{ user.id }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Nom</th>
+                        <td>{{ user.nom }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Prénom</th>
+                        <td>{{ user.prenom }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Email</th>
+                        <td>{{ user.email }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Téléphone</th>
+                        <td>{{ user.numeroTelephone }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Adresse</th>
+                        <td>{{ user.addresse }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Genre</th>
+                        <td>{{ user.genre }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Rôle</th>
+                        <td>{{ user.type }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Compte enregistré</th>
+                        <td>{{ user.enregistrer ? 'Oui' : 'Non' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="mt-4 d-flex justify-content-between">
+        <a href="{{ path('admin_user_index') }}" class="btn btn-secondary">
+            ← Retour à la liste
+        </a>
+        <div>
+            <a href="{{ path('admin_user_edit', {'id': user.id}) }}" class="btn btn-primary me-2">
+                ✏️ Modifier
+            </a>
+            {{ include('admin_user/_delete_form.html.twig') }}
+        </div>
+    </div>
+</div>
+{% endblock %}
