@@ -12,6 +12,13 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
 class UserType extends AbstractType
 {
+    private bool $isAdminForm;
+
+    public function __construct(bool $isAdminForm = false)
+    {
+        $this->isAdminForm = $isAdminForm;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -21,37 +28,41 @@ class UserType extends AbstractType
             ->add('email')
             ->add('numeroTelephone')
             ->add('addresse')
-            ->add('type', ChoiceType::class, [
-                'choices' => [
-                    'Admin' => 'admin',
-                    'User' => 'user',
-                ],
-                'expanded' => true, // Radio button
-                'multiple' => false,
-                'label' => 'Type d\'utilisateur',
-            ])
             ->add('genre', ChoiceType::class, [
                 'choices' => [
                     'Homme' => 'homme',
                     'Femme' => 'femme',
                 ],
-                'placeholder' => 'Sélectionner un genre', 
-                'required' => false, // ✅ il faut laisser false
-                'empty_data' => 'homme', // ✅ par défaut remplir "homme" si vide
+                'placeholder' => 'Sélectionner un genre',
+                'required' => false,
+                'empty_data' => 'homme',
                 'label' => 'Genre',
             ])
             ->add('profileImage', FileType::class, [
                 'label' => 'Photo de profil',
                 'mapped' => false,
                 'required' => false,
-            ])
-        ;
+            ]);
+
+        // 🔥 Ajouter le champ 'type' uniquement si c'est l'admin qui utilise le formulaire
+        if ($options['admin_form']) {
+            $builder->add('type', ChoiceType::class, [
+                'choices' => [
+                    'Admin' => 'admin',
+                    'User' => 'user',
+                ],
+                'expanded' => true,
+                'multiple' => false,
+                'label' => 'Type d\'utilisateur',
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'admin_form' => false, // Par défaut, pas d'admin_form
         ]);
     }
 }

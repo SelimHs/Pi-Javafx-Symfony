@@ -1,21 +1,36 @@
 <!doctype html>
 <html lang="en">
 
-{% include 'partialsBack/headBack.html.twig'%}
+{% include 'partialsBack/headBack.html.twig' %}
 
 <body>
     <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
+        
         {% include 'partialsBack/navbar.html.twig' %}
+
         <div class="app-main">
-            {% include 'partialsBack/sidebar.html.twig'%}
-            {% block body %}
-            {% include 'partialsBack/mainBody.html.twig'%}
+            {% include 'partialsBack/sidebar.html.twig' %}
             
-            <script src="http://maps.google.com/maps/api/js?sensor=true"></script>
-            {% endblock %}
+            <main class="app-main__outer">
+                {% block body %}
+                {% include 'partialsBack/mainBody.html.twig' %}
+                {% endblock %}
+            </main>
         </div>
     </div>
+
+    {# Scripts JS principaux #}
     <script type="text/javascript" src="{{ asset('assets/scripts/main.js') }}"></script>
+
+    {# ➡️ Ici ajoute Chart.js pour tous les dashboards #}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    {# ➡️ Maps API si besoin #}
+    <script src="http://maps.google.com/maps/api/js?sensor=true"></script>
+
+    {% block javascripts %}
+    {# tu peux ajouter des scripts spécifiques ici si besoin #}
+    {% endblock %}
 </body>
 
 </html>

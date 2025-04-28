@@ -60,6 +60,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?\DateTimeInterface $tokenExpiresAt = null;
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $profileImage = null;
+    #[ORM\Column(type: 'boolean')]
+    private $isAccepted = false;
     public function getProfileImage(): ?string
     {
     return $this->profileImage;
@@ -245,4 +247,14 @@ public function setTokenExpiresAt(?\DateTimeInterface $tokenExpiresAt): self
     return $this;
 }
 
+public function isAccepted(): bool
+{
+    return $this->isAccepted;
+}
+
+public function setIsAccepted(bool $isAccepted): self
+{
+    $this->isAccepted = $isAccepted;
+    return $this;
+}
 }

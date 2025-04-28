@@ -74,6 +74,9 @@ class Authenticator extends AbstractLoginFormAuthenticator
                 $this->mailer->send($emailMessage);
 
                 throw new CustomUserMessageAuthenticationException('Your email is not verified. A new confirmation email has been sent.');
+                if (!$user->isAccepted() && in_array('ROLE_ADMIN', $user->getRoles())) {
+                    throw new CustomUserMessageAuthenticationException('Votre compte admin est en attente de validation.');
+                }
             }
         }
 

@@ -1,0 +1,97 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Profil - {{ user.prenom }} {{ user.nom }}{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                {# En-tête de la carte #}
+                <div class="card-header bg-primary text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2 class="h4 mb-0">Mon Profil</h2>
+                        <span class="badge bg-light text-dark">
+                            {% if 'ROLE_ADMIN' in user.roles %}
+                                Administrateur
+                            {% else %}
+                                Utilisateur
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+
+                {# Corps de la carte #}
+                <div class="card-body">
+                    {# Photo de profil #}
+                    <div class="text-center mb-4">
+                        {% if user.profileImage %}
+                            <img src="{{ asset('uploads/' ~ user.profileImage) }}" 
+                                 alt="Photo de profil de {{ user.prenom }} {{ user.nom }}" 
+                                 width="150" 
+                                 class="rounded-circle border border-4 border-primary shadow">
+                        {% else %}
+                            <div class="rounded-circle bg-light d-inline-flex align-items-center justify-content-center" 
+                                 style="width: 150px; height: 150px;">
+                                <i class="fas fa-user fa-3x text-muted"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    {# Informations du profil #}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-header bg-light">
+                                    <h3 class="h6 mb-0">Informations personnelles</h3>
+                                </div>
+                                <div class="card-body">
+                                    <dl class="mb-0">
+                                        <dt class="text-muted small">Nom</dt>
+                                        <dd class="mb-2">{{ user.nom }}</dd>
+                                        
+                                        <dt class="text-muted small">Prénom</dt>
+                                        <dd class="mb-2">{{ user.prenom }}</dd>
+                                        
+                                        <dt class="text-muted small">Email</dt>
+                                        <dd>{{ user.email }}</dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-header bg-light">
+                                    <h3 class="h6 mb-0">Coordonnées</h3>
+                                </div>
+                                <div class="card-body">
+                                    <dl class="mb-0">
+                                        <dt class="text-muted small">Téléphone</dt>
+                                        <dd class="mb-2">{{ user.numeroTelephone ?: 'Non renseigné' }}</dd>
+                                        
+                                        <dt class="text-muted small">Adresse</dt>
+                                        <dd>{{ user.addresse ?: 'Non renseignée' }}</dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {# Pied de page de la carte #}
+                <div class="card-footer bg-light">
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ path('app_logout') }}" class="btn btn-outline-danger">
+                            <i class="fas fa-sign-out-alt me-2"></i>Se déconnecter
+                        </a>
+                        <a href="{{ path('app_profile_edit') }}" class="btn btn-primary">
+                            <i class="fas fa-edit me-2"></i>Modifier le profil
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

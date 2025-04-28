@@ -1,42 +1,150 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Utilisateurs{% endblock %}
-
-{% block body %}
-<div class="container py-5">
-    <h1 class="mb-4">Liste des utilisateurs</h1>
-
-    <a href="{{ path('admin_user_new') }}" class="btn btn-success mb-4">➕ Ajouter un utilisateur</a>
-
-    <table class="table table-striped table-hover">
-        <thead>
-            <tr>
-                <th>Nom</th>
-                <th>Prénom</th>
-                <th>Email</th>
-                <th>Téléphone</th>
-                <th>Rôle</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for user in users %}
-            <tr>
-                <td>{{ user.nom }}</td>
-                <td>{{ user.prenom }}</td>
-                <td>{{ user.email }}</td>
-                <td>{{ user.numeroTelephone }}</td>
-                <td>{{ user.type }}</td>
-                <td>
-                    <a href="{{ path('admin_user_show', {'id': user.id}) }}" class="btn btn-sm btn-info">👁️ Voir</a>
-                    <a href="{{ path('admin_user_edit', {'id': user.id}) }}" class="btn btn-sm btn-primary">✏️ Modifier</a>
-                    {{ include('admin_user/_delete_form.html.twig', {'user': user}) }}
-                </td>
-            </tr>
-        {% else %}
-            <tr><td colspan="6" class="text-center">Aucun utilisateur trouvé.</td></tr>
-        {% endfor %}
-        </tbody>
-    </table>
+<!-- Dans la section ROW 1 : Widgets -->
+<div class="col-md-6 col-xl-4">
+    <div class="card mb-3 widget-content">
+        <div class="widget-content-outer">
+            <div class="widget-content-wrapper">
+                <div class="widget-content-left">
+                    <div class="widget-heading">Répartition par Genre</div>
+                    <div class="widget-subheading">Hommes vs Femmes</div>
+                </div>
+                <div class="widget-content-right">
+                    <div class="widget-numbers text-primary">{{ hommes + femmes }}</div>
+                </div>
+            </div>
+            <div class="widget-content-wrapper flex-column align-items-center">
+                <div class="widget-content-right w-100 d-flex justify-content-center">
+                    <canvas id="pieChartGenre" width="250" height="250" style="max-height: 250px;"></canvas>
+                </div>
+                <div class="widget-legend mt-3">
+                    <div class="legend-item me-3">
+                        <span class="legend-indicator bg-male"></span>
+                        <span>Hommes ({{ hommes }})</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-indicator bg-female"></span>
+                        <span>Femmes ({{ femmes }})</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-{% endblock %}
+
+<!-- CSS personnalisé -->
+<style>
+    .widget-legend {
+        display: flex;
+        justify-content: center;
+        font-size: 0.8rem;
+    }
+    .legend-indicator {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-right: 5px;
+    }
+    .bg-male {
+        background: linear-gradient(135deg, #36a2eb 0%, #1e88e5 100%);
+        box-shadow: 0 2px 4px rgba(54, 162, 235, 0.3);
+    }
+    .bg-female {
+        background: linear-gradient(135deg, #ff6384 0%, #f06292 100%);
+        box-shadow: 0 2px 4px rgba(255, 99, 132, 0.3);
+    }
+    .legend-item {
+        display: flex;
+        align-items: center;
+    }
+</style>
+
+<!-- Script amélioré -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const ctxPie = document.getElementById('pieChartGenre').getContext('2d');
+    
+    // Créer des gradients pour les couleurs
+    const maleGradient = ctxPie.createLinearGradient(0, 0, 0, 250);
+    maleGradient.addColorStop(0, 'rgba(54, 162, 235, 0.9)');
+    maleGradient.addColorStop(1, 'rgba(54, 162, 235, 0.5)');
+    
+    const femaleGradient = ctxPie.createLinearGradient(0, 0, 0, 250);
+    femaleGradient.addColorStop(0, 'rgba(255, 99, 132, 0.9)');
+    femaleGradient.addColorStop(1, 'rgba(255, 99, 132, 0.5)');
+    
+    // Configurer le pie chart
+    const pieChart = new Chart(ctxPie, {
+        type: 'doughnut',
+        data: {
+            labels: ['Hommes', 'Femmes'],
+            datasets: [{
+                data: [{{ hommes|default(0) }}, {{ femmes|default(0) }}],
+                backgroundColor: [maleGradient, femaleGradient],
+                borderColor: ['rgba(255, 255, 255, 0.8)', 'rgba(255, 255, 255, 0.8)'],
+                borderWidth: 2,
+                hoverBackgroundColor: ['#36a2eb', '#ff6384'],
+                hoverBorderColor: ['#fff', '#fff'],
+                hoverOffset: 10,
+                weight: 0.5
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '70%',
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0,0,0,0.85)',
+                    titleFont: { size: 14, weight: 'bold' },
+                    bodyFont: { size: 12 },
+                    padding: 12,
+                    cornerRadius: 8,
+                    displayColors: true,
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = context.raw || 0;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = Math.round((value / total) * 100);
+                            return `${label}: ${value} (${percentage}%)`;
+                        }
+                    }
+                }
+            },
+            animation: {
+                animateScale: true,
+                animateRotate: true,
+                duration: 1500,
+                easing: 'easeOutQuart'
+            },
+            layout: {
+                padding: {
+                    top: 10,
+                    bottom: 10
+                }
+            }
+        }
+    });
+    
+    // Animation personnalisée au chargement
+    animateValue("totalUsers", 0, {{ hommes + femmes }}, 1000);
+    
+    function animateValue(id, start, end, duration) {
+        const obj = document.querySelector(".widget-numbers");
+        let startTimestamp = null;
+        const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            const value = Math.floor(progress * (end - start) + start);
+            obj.textContent = value;
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            }
+        };
+        window.requestAnimationFrame(step);
+    }
+});
+</script>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Invitation à devenir Admin</title>
+</head>
+<body>
+    <h2>Bienvenue !</h2>
+
+    <p>Vous avez été invité à devenir Admin sur notre plateforme Lamma.</p>
+
+    <p>Cliquez sur le bouton ci-dessous pour créer votre compte admin :</p>
+
+    <p style="text-align: center;">
+        <a href="{{ url('register_admin', {token: token}) }}" style="padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;">
+            Créer mon compte Admin
+        </a>
+    </p>
+
+    <p><small>Ce lien expire dans 24h.</small></p>
+</body>
+</html>
