@@ -12,6 +12,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Knp\Snappy\Pdf;
+use Twig\Environment;
 
 #[Route('/fournisseur')]
 final class FournisseurController extends AbstractController
@@ -23,6 +25,28 @@ final class FournisseurController extends AbstractController
             'fournisseurs' => $fournisseurRepository->findAll(),
         ]);
     }
+
+    #[Route('/export', name: 'fournisseur_export_pdf', methods: ['GET'])]
+public function exportPdf(Pdf $knpSnappyPdf, Environment $twig, FournisseurRepository $repo): Response
+{
+    $fournisseurs = $repo->findAll();
+
+    $html = $twig->render('fournisseur/pdf.html.twig', [
+        'fournisseurs' => $fournisseurs,
+    ]);
+
+    $pdfContent = $knpSnappyPdf->getOutputFromHtml($html);
+
+    return new Response(
+        $pdfContent,
+        200,
+        [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="fournisseurs.pdf"'
+        ]
+    );
+}
+
 
     #[Route('/new', name: 'app_fournisseur_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager, TwilioService $twilioService): Response

@@ -16,17 +16,27 @@
             <div class="page-title-subheading">Liste des fournisseurs enregistrés avec leurs détails.</div>
           </div>
         </div>
-        <div class="page-title-actions">
-          <a href="{{ path('app_fournisseur_new') }}" class="btn btn-success">
-            <i class="pe-7s-plus mr-2"></i> Nouveau Fournisseur
+        <div class="page-title-actions d-flex gap-3 flex-wrap align-items-center">
+          <a href="{{ path('fournisseur_export_pdf') }}" target="_blank" class="btn btn-danger">
+            <i class="fas fa-file-pdf"></i> Exporter PDF
           </a>
+          <div class="input-group input-group-sm" style="width: 250px;">
+            <label class="input-group-text" for="typeFilter">Filtrer par type</label>
+            <select id="typeFilter" class="form-select">
+              <option value="">Tous les types</option>
+              <option value="Grossiste">Grossiste</option>
+              <option value="Fabricant">Fabricant</option>
+              <option value="Distributeur">Distributeur</option>
+              <option value="Autre">Autre</option>
+            </select>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="row">
+    <div class="row mt-4" id="fournisseurList">
       {% for fournisseur in fournisseurs %}
-        <div class="col-md-6 col-xl-4">
+        <div class="col-md-6 col-xl-4 fournisseur-card" data-type="{{ fournisseur.type|lower }}">
           <div class="card mb-4 shadow-sm">
             <div class="position-relative text-center p-3">
               <img 
@@ -68,4 +78,22 @@
     </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const typeFilter = document.getElementById('typeFilter');
+    const cards = document.querySelectorAll('.fournisseur-card');
+
+    typeFilter.addEventListener('change', function () {
+      const selectedType = this.value.toLowerCase();
+      cards.forEach(card => {
+        if (!selectedType || card.dataset.type === selectedType) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
+</script>
 {% endblock %}

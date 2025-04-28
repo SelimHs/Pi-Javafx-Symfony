@@ -1,12 +1,10 @@
 framework:
     notifier:
-        chatter_transports:
+        # Supprimez complètement la ligne octopush
         texter_transports:
+            vonage: 'vonage://%env(VONAGE_API_KEY)%:%env(VONAGE_API_SECRET)%@default?from=LammaApp'
         channel_policy:
-            # use chat/slack, chat/telegram, sms/twilio or sms/nexmo
-            urgent: ['email']
+            urgent: ['vonage']  # Utilisez vonage au lieu d'octopush
             high: ['email']
             medium: ['email']
             low: ['email']
-        admin_recipients:
-            - { email: admin@example.com }

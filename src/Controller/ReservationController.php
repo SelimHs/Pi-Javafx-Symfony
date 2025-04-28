@@ -18,12 +18,21 @@ use Symfony\Component\HttpClient\HttpClient;
 final class ReservationController extends AbstractController
 {
     #[Route(name: 'app_reservation_index', methods: ['GET'])]
-    public function index(ReservationRepository $reservationRepository): Response
-    {
-        return $this->render('reservation/index.html.twig', [
-            'reservations' => $reservationRepository->findAll(),
-        ]);
-    }
+public function index(ReservationRepository $reservationRepository): Response
+{
+    $reservations = $reservationRepository->findAll();
+
+    $totalReservations = count($reservations);
+    $totalConfirmees = count(array_filter($reservations, fn($r) => $r->getStatut() === 'confirmée'));
+    $totalAnnulee = count(array_filter($reservations, fn($r) => $r->getStatut() === 'annulée'));
+
+    return $this->render('reservation/index.html.twig', [
+        'reservations' => $reservations,
+        'totalReservations' => $totalReservations,
+        'totalConfirmees' => $totalConfirmees,
+        'totalAnnulee' => $totalAnnulee,
+    ]);
+}
 
     #[Route('/new', name: 'app_reservation_new', methods: ['GET', 'POST'])]
 public function new(Request $request, EntityManagerInterface $entityManager): Response
