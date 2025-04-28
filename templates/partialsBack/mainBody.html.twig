@@ -163,6 +163,17 @@
   </div>
 </div>
 
+<div class="col-md-12 col-lg-6">
+  <div class="main-card mb-3 card">
+    <div class="card-header">
+      Top Espaces Loués
+    </div>
+    <div class="card-body">
+      <canvas id="topEspacesChart" height="300"></canvas>
+    </div>
+  </div>
+</div>
+
         <div class="row">
             <div class="col-md-6 col-xl-4">
                 <div class="card mb-3 widget-content">
@@ -686,3 +697,68 @@ const revenuChart = new Chart(revenuCtx, {
 </script>
 
 
+<script>
+const ctxTopEspaces = document.getElementById('topEspacesChart').getContext('2d');
+
+// 🔥 Définir les couleurs manuellement
+const backgroundColors = [
+  'rgba(255, 215, 0, 0.9)',   // 🥇 Gold
+  'rgba(192, 192, 192, 0.9)', // 🥈 Silver
+  'rgba(205, 127, 50, 0.9)'   // 🥉 Bronze
+];
+
+// Remplir pour les autres (normal)
+const totalEspaces = {{ topEspacesStats|length }};
+for (let i = 3; i < totalEspaces; i++) {
+  backgroundColors.push('rgba(54, 162, 235, 0.7)'); // Bleu clair standard
+}
+
+const topEspacesChart = new Chart(ctxTopEspaces, {
+  type: 'bar',
+  data: {
+    labels: {{ topEspacesStats|map(stat => stat.espace)|json_encode|raw }},
+    datasets: [{
+      label: 'Nombre de Réservations',
+      data: {{ topEspacesStats|map(stat => stat.count)|json_encode|raw }},
+      backgroundColor: backgroundColors,
+      borderRadius: 10,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    responsive: true,
+    animation: {
+      duration: 2000,
+      easing: 'easeOutBounce'
+    },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: 'rgba(0,0,0,0.7)',
+        padding: 10,
+        bodyFont: { size: 14 }
+      },
+      datalabels: {
+        color: '#333',
+        anchor: 'end',
+        align: 'top',
+        font: {
+          weight: 'bold',
+          size: 14
+        },
+        formatter: (value) => value
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          stepSize: 1
+        }
+      }
+    }
+  },
+  plugins: [ChartDataLabels]
+});
+
+</script>

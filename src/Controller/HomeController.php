@@ -9,9 +9,17 @@ use App\Repository\BilletRepository;
 use App\Repository\EventRepository;
 use App\Repository\EspaceRepository;
 use App\Repository\FournisseurRepository;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 final class HomeController extends AbstractController
 {
+    private HttpClientInterface $client;
+
+    public function __construct(HttpClientInterface $client)
+    {
+        $this->client = $client;
+    }
+
     #[Route('/home', name: 'app_home')]
     public function index(): Response
     {
@@ -61,12 +69,48 @@ final class HomeController extends AbstractController
             return ['type' => $type, 'count' => $count];
         }, array_keys($fournisseurStats), array_values($fournisseurStats));
     
-        return $this->render('baseBack.html.twig', [
-            'billetStats' => $billetStats,
-            'espaces' => $espaceRepository->findAll(),
-            'fournisseurStats' => $fournisseurStats,
-            'revenuStats' => $revenuStats,
-        ]);
-    }
+         // 🛒 🔥 Lire les réservations d'espaces
+         $reservationsData = [];
+         try {
+             $response = $this->client->request('GET', 'https://api.sheetbest.com/sheets/4d538bcb-a52a-4dde-84e4-ddb7c9520d8e');
+             $reservationsData = $response->toArray();
+         } catch (\Exception $e) {
+             // gérer les erreurs éventuelles
+         }
+ 
+         $topEspaces = [];
+         foreach ($reservationsData as $reservation) {
+             $espaceId = $reservation['id_espace'] ?? null;
+             if ($espaceId) {
+                 if (!isset($topEspaces[$espaceId])) {
+                     $topEspaces[$espaceId] = 0;
+                 }
+                 $topEspaces[$espaceId]++;
+             }
+         }
+ 
+         // 🔵 Charger les noms des espaces
+         $espaceNames = [];
+         foreach ($espaceRepository->findAll() as $espace) {
+             $espaceNames[$espace->getIdEspace()] = $espace->getNomEspace();
+         }
+ 
+         $topEspacesFinal = [];
+         foreach ($topEspaces as $id => $count) {
+             $nom = $espaceNames[$id] ?? "Espace inconnu ($id)";
+             $topEspacesFinal[] = [
+                 'espace' => $nom,
+                 'count' => $count
+             ];
+         }
+ 
+         return $this->render('baseBack.html.twig', [
+             'billetStats' => $billetStats,
+             'espaces' => $espaceRepository->findAll(),
+             'fournisseurStats' => $fournisseurStats,
+             'revenuStats' => $revenuStats,
+             'topEspacesStats' => $topEspacesFinal, // ⬅️ Injecter dans Twig
+         ]);
+     }
     
 }
