@@ -40,7 +40,8 @@
           <div class="card mb-4 shadow-sm">
             <div class="position-relative text-center p-3">
               <img 
-                src="{{ asset('uploads/images/' ~ (fournisseur.imagePath ?: 'placeholder.jpg')) }}" 
+  src="{{ asset('uploads/' ~ (fournisseur.imagePath ?: 'placeholder.jpg')) }}" 
+
                 alt="{{ fournisseur.nomFournisseur }}" 
                 class="img-fluid rounded-circle" 
                 style="width: 100px; height: 100px; object-fit: cover;">

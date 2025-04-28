@@ -6,7 +6,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-
+use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\RemiseRepository;
 
 #[ORM\Entity(repositoryClass: RemiseRepository::class)]
@@ -30,6 +30,7 @@ class Remise
     }
 
     #[ORM\Column(name: 'codePromo', type: 'string', nullable: false)]
+    #[Assert\NotNull(message: 'CodePromo est vide.')]
     private ?string $codePromo = null;
 
     public function getCodePromo(): ?string
@@ -44,6 +45,7 @@ class Remise
     }
 
     #[ORM\Column(type: 'string', nullable: false)]
+    #[Assert\NotNull(message: 'Description est vide.')]
     private ?string $description = null;
 
     public function getDescription(): ?string
@@ -58,6 +60,7 @@ class Remise
     }
 
     #[ORM\Column(name: 'pourcentageRemise', type: 'decimal', nullable: false)]
+    #[Assert\NotNull(message: 'Pourcentage est vide.')]
     private ?float $pourcentageRemise = null;
 
     public function getPourcentageRemise(): ?float
@@ -72,6 +75,7 @@ class Remise
     }
 
     #[ORM\Column(name: 'dateExpiration', type: 'string', nullable: false)]
+    #[Assert\NotNull(message: 'Date est vide.')]
     private ?string $dateExpiration = null;
 
     public function getDateExpiration(): ?string

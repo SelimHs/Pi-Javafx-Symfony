@@ -13,7 +13,7 @@ class StripeService
         Stripe::setApiKey('sk_test_51QzP2uPFHNYg7RkVtRbawzVoW57klCf9OyWZ7r9zzUV7X9F8exNoDMFxUyiWqpVFr7jvGapsKGRsuBGFtLSvM34l00kPHtYFrm');
     }
 
-    public function createPaymentIntent(float $amount, string $currency = 'usd'): ?PaymentIntent
+    public function createPaymentIntent(float $amount, string $currency = 'tnd'): ?PaymentIntent
     {
         try {
             return PaymentIntent::create([
