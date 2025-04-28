@@ -37,14 +37,14 @@ final class HomeController extends AbstractController
         $billetStats = [];
         $revenuStats = [];
         $events = $eventRepo->findAll();
-        
+
         foreach ($events as $event) {
             $count = $billetRepo->count(['event' => $event]);
             $billetStats[] = [
                 'event' => $event->getNomEvent(),
                 'count' => $count,
             ];
-    
+
             $revenu = 0;
             foreach ($event->getBillets() as $billet) {
                 $revenu += $billet->getPrix();
@@ -54,7 +54,7 @@ final class HomeController extends AbstractController
                 'revenue' => $revenu,
             ];
         }
-    
+
         // Fournisseurs par type (si tu veux continuer aussi)
         $fournisseurStats = [];
         $fournisseurs = $fournisseurRepository->findAll();
@@ -68,49 +68,73 @@ final class HomeController extends AbstractController
         $fournisseurStats = array_map(function ($type, $count) {
             return ['type' => $type, 'count' => $count];
         }, array_keys($fournisseurStats), array_values($fournisseurStats));
-    
-         // 🛒 🔥 Lire les réservations d'espaces
-         $reservationsData = [];
-         try {
-             $response = $this->client->request('GET', 'https://api.sheetbest.com/sheets/4d538bcb-a52a-4dde-84e4-ddb7c9520d8e');
-             $reservationsData = $response->toArray();
-         } catch (\Exception $e) {
-             // gérer les erreurs éventuelles
-         }
- 
-         $topEspaces = [];
-         foreach ($reservationsData as $reservation) {
-             $espaceId = $reservation['id_espace'] ?? null;
-             if ($espaceId) {
-                 if (!isset($topEspaces[$espaceId])) {
-                     $topEspaces[$espaceId] = 0;
-                 }
-                 $topEspaces[$espaceId]++;
-             }
-         }
- 
-         // 🔵 Charger les noms des espaces
-         $espaceNames = [];
-         foreach ($espaceRepository->findAll() as $espace) {
-             $espaceNames[$espace->getIdEspace()] = $espace->getNomEspace();
-         }
- 
-         $topEspacesFinal = [];
-         foreach ($topEspaces as $id => $count) {
-             $nom = $espaceNames[$id] ?? "Espace inconnu ($id)";
-             $topEspacesFinal[] = [
-                 'espace' => $nom,
-                 'count' => $count
-             ];
-         }
- 
-         return $this->render('baseBack.html.twig', [
-             'billetStats' => $billetStats,
-             'espaces' => $espaceRepository->findAll(),
-             'fournisseurStats' => $fournisseurStats,
-             'revenuStats' => $revenuStats,
-             'topEspacesStats' => $topEspacesFinal, // ⬅️ Injecter dans Twig
-         ]);
-     }
-    
+
+        // 🛒 🔥 Lire les réservations d'espaces
+        $reservationsData = [];
+        try {
+            $response = $this->client->request('GET', 'https://api.sheetbest.com/sheets/4d538bcb-a52a-4dde-84e4-ddb7c9520d8e');
+            $reservationsData = $response->toArray();
+        } catch (\Exception $e) {
+            // gérer les erreurs éventuelles
+        }
+
+        $topEspaces = [];
+        foreach ($reservationsData as $reservation) {
+            $espaceId = $reservation['id_espace'] ?? null;
+            if ($espaceId) {
+                if (!isset($topEspaces[$espaceId])) {
+                    $topEspaces[$espaceId] = 0;
+                }
+                $topEspaces[$espaceId]++;
+            }
+        }
+
+        // 🔵 Charger les noms des espaces
+        $espaceNames = [];
+        foreach ($espaceRepository->findAll() as $espace) {
+            $espaceNames[$espace->getIdEspace()] = $espace->getNomEspace();
+        }
+
+        $topEspacesFinal = [];
+        foreach ($topEspaces as $id => $count) {
+            $nom = $espaceNames[$id] ?? "Espace inconnu ($id)";
+            $topEspacesFinal[] = [
+                'espace' => $nom,
+                'count' => $count
+            ];
+        }
+        // Après $topEspacesFinal...
+
+        $espaces = $espaceRepository->findAll();
+        $totalEspaces = count($espaces);
+
+        // 🔥 Espaces avec au moins un organisateur
+        $espacesAvecOrganisateur = array_filter($espaces, function ($espace) {
+            return count($espace->getOrganisateurs()) > 0;
+        });
+
+        // 🔥 Espaces disponibles
+        $espacesDisponibles = array_filter($espaces, function ($espace) {
+            return $espace->getDisponibilite() === 'Disponible';
+        });
+
+        // 🔥 Espaces réservés
+        $espacesReserves = array_unique(array_column($reservationsData, 'id_espace'));
+
+        $pourcentageOrganise = $totalEspaces > 0 ? round(count($espacesAvecOrganisateur) / $totalEspaces * 100) : 0;
+        $pourcentageDisponible = $totalEspaces > 0 ? round(count($espacesDisponibles) / $totalEspaces * 100) : 0;
+        $pourcentageReserve = $totalEspaces > 0 ? round(count($espacesReserves) / $totalEspaces * 100) : 0;
+
+
+        return $this->render('baseBack.html.twig', [
+            'billetStats' => $billetStats,
+            'espaces' => $espaceRepository->findAll(),
+            'fournisseurStats' => $fournisseurStats,
+            'revenuStats' => $revenuStats,
+            'topEspacesStats' => $topEspacesFinal,
+            'pourcentageOrganise' => $pourcentageOrganise,
+            'pourcentageDisponible' => $pourcentageDisponible,
+            'pourcentageReserve' => $pourcentageReserve,
+        ]);
+    }
 }
