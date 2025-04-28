@@ -25,6 +25,52 @@
       </div>
     </div>
 
+    <!-- 🔥 New Statistics Cards -->
+    <div class="row mb-4">
+      <div class="col-md-4">
+        <div class="card mb-3 widget-content bg-midnight-bloom">
+          <div class="widget-content-wrapper text-white">
+            <div class="widget-content-left">
+              <div class="widget-heading">Total Réservations</div>
+              <div class="widget-subheading">Nombre total</div>
+            </div>
+            <div class="widget-content-right">
+              <div class="widget-numbers text-white"><span>{{ totalReservations }}</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card mb-3 widget-content bg-arielle-smile">
+          <div class="widget-content-wrapper text-white">
+            <div class="widget-content-left">
+              <div class="widget-heading">Confirmées</div>
+              <div class="widget-subheading">Réservations confirmées</div>
+            </div>
+            <div class="widget-content-right">
+              <div class="widget-numbers text-white"><span>{{ totalConfirmees }}</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card mb-3 widget-content bg-grow-early">
+          <div class="widget-content-wrapper text-white">
+            <div class="widget-content-left">
+              <div class="widget-heading">Annulées</div>
+              <div class="widget-subheading">Réservations Annulées</div>
+            </div>
+            <div class="widget-content-right">
+              <div class="widget-numbers text-white"><span>{{ totalAnnulee }}</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 🔥 End New Statistics -->
+
     <div class="main-card mb-3 card">
       <div class="card-header">
         <div class="row w-100 align-items-center">
@@ -104,7 +150,6 @@
 
       rows.forEach(row => {
         const cellsText = row.innerText.toLowerCase();
-
         const matchesSearch = !searchValue || cellsText.includes(searchValue);
         const matchesStatut = !selectedStatut || cellsText.includes(selectedStatut);
 
@@ -116,5 +161,4 @@
     searchInput.addEventListener('input', filterRows);
   });
 </script>
-
 {% endblock %}

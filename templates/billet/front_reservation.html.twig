@@ -21,6 +21,14 @@
         color: #000 !important;
         border-color: #ccc !important;
       }
+
+      #typeInfo {
+        opacity: 0;
+        transition: opacity 0.5s ease;
+      }
+      #typeInfo.visible {
+        opacity: 1;
+      }
     </style>
 
     <div class="container mt-5">
@@ -51,6 +59,7 @@
             {{ form_label(form.type) }}
             {{ form_widget(form.type, {'attr': {'class': 'form-select', 'id': 'billet_type'}}) }}
             {{ form_errors(form.type) }}
+            <small id="typeInfo" class="form-text text-muted mt-1"></small> {# ✅ fine print here #}
           </div>
 
           <div class="col-md-6">
@@ -79,7 +88,7 @@
       </div>
     </div>
 
-    <!-- Modal Bootstrap pour paiement -->
+    <!-- Modal for Payment -->
     <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content p-4">
@@ -98,9 +107,8 @@
       </div>
     </div>
 
-    <!-- Scripts Stripe & Logic -->
+    <!-- Stripe and Logic Scripts -->
     <script src="https://js.stripe.com/v3/"></script>
-
     <script>
     document.addEventListener('DOMContentLoaded', function () {
       const prixBase = {{ prixFinal }};
@@ -108,9 +116,16 @@
       const typeSelect = document.getElementById('billet_type');
       const codePromoInput = document.getElementById('codePromo');
       const verifierBtn = document.getElementById('verifierBtn');
+      const reservationForm = document.getElementById('reservation-form');
+      const openPaymentModal = document.getElementById('openPaymentModal');
+      const paymentForm = document.getElementById('payment-form');
+      const payButton = document.getElementById('payButton');
+      const paymentMessage = document.getElementById('payment-message');
+      const typeInfo = document.getElementById('typeInfo');
 
       let remiseActuelle = 0;
       const remises = {{ promoCodes|json_encode|raw }};
+      let clientSecret = '';
 
       function calculerPrix(type, remisePourcent = 0) {
         let prix = prixBase;
@@ -123,6 +138,20 @@
       function updatePrix() {
         const type = typeSelect.value;
         prixInput.value = calculerPrix(type, remiseActuelle);
+      }
+
+      function updateTypeInfo() {
+        const type = typeSelect.value;
+        if (type === 'SIMPLE') {
+          typeInfo.textContent = "Ce billet est valable pour 1 personne.";
+        } else if (type === 'DUO') {
+          typeInfo.textContent = "Ce billet est valable pour 2 personnes.";
+        } else if (type === 'VIP') {
+          typeInfo.textContent = "Ce billet est valable pour 4 personnes.";
+        } else {
+          typeInfo.textContent = "";
+        }
+        typeInfo.classList.add('visible');
       }
 
       verifierBtn.addEventListener('click', () => {
@@ -138,81 +167,78 @@
       });
 
       if (typeSelect) {
-        typeSelect.addEventListener('change', updatePrix);
+        typeSelect.addEventListener('change', () => {
+          updatePrix();
+          updateTypeInfo();
+        });
       }
 
+      // Initial on load
       updatePrix();
+      updateTypeInfo();
 
-      // 🔵 Stripe
-      const stripe = Stripe('pk_test_XXXXXXXXXXXXXXX'); // ← Mets ta clé publique ici
+      // Stripe Payment
+      const stripe = Stripe('pk_test_51QzP2uPFHNYg7RkV82G27X88hJoMnK5XAY0R7Z46fmAIy5cpKCUgLD4uvC0mWh5IP4poVsrVrDWzHsrtryAoXkcv007AF6F4hh');
       const elements = stripe.elements();
       const card = elements.create('card', {
         style: {
-          base: {
-            fontSize: '16px',
-            color: '#32325d',
-            '::placeholder': { color: '#aab7c4' }
-          },
+          base: { fontSize: '16px', color: '#32325d', '::placeholder': { color: '#aab7c4' }},
           invalid: { color: '#fa755a', iconColor: '#fa755a' }
         }
       });
       card.mount('#card-element');
 
-      const openPaymentModal = document.getElementById('openPaymentModal');
       openPaymentModal.addEventListener('click', async function (e) {
         e.preventDefault();
-
-        // Valide le formulaire Symfony normalement
-        document.getElementById('reservation-form').submit();
-
-        // Quand submit OK, ouvrir Stripe modal
-        const paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
-        paymentModal.show();
+        if (!reservationForm.checkValidity()) {
+          reservationForm.reportValidity();
+          return;
+        }
+        try {
+          const response = await fetch('{{ path("app_create_payment_intent") }}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prix: prixInput.value })
+          });
+          const data = await response.json();
+          clientSecret = data.clientSecret;
+          const paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
+          paymentModal.show();
+        } catch (error) {
+          console.error('Error:', error);
+          paymentMessage.innerHTML = `<div style="color:red;">❌ Erreur lors de la préparation du paiement</div>`;
+        }
       });
 
-      const paymentForm = document.getElementById('payment-form');
       paymentForm.addEventListener('submit', async function (e) {
         e.preventDefault();
-
-        document.getElementById('payButton').disabled = true;
-        document.getElementById('payment-message').textContent = "⏳ Traitement...";
-
-        const clientSecret = await fetchClientSecret();
+        payButton.disabled = true;
+        paymentMessage.innerHTML = "<div class='spinner-border text-primary' role='status'></div> ⏳ Traitement...";
 
         const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
           payment_method: { card: card }
         });
 
         if (error) {
-          document.getElementById('payment-message').textContent = "❌ Paiement échoué : " + error.message;
-          document.getElementById('payButton').disabled = false;
+          paymentMessage.innerHTML = `<div style="color:red;">❌ Paiement échoué : ${error.message}</div>`;
+          payButton.disabled = false;
         } else if (paymentIntent.status === 'succeeded') {
-          document.getElementById('payment-message').textContent = "✅ Paiement réussi ! Redirection...";
-
-          setTimeout(() => {
-            window.location.href = "{{ path('app_event_index') }}";
-          }, 2000);
+          paymentMessage.innerHTML = `<div style="color:green; font-size: 22px;">✅ Paiement Réussi !</div><div style="font-size: 16px; color: gray;">Enregistrement de votre réservation...</div>`;
+          try {
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'payment_success';
+            hiddenInput.value = '1';
+            reservationForm.appendChild(hiddenInput);
+            reservationForm.submit();
+          } catch (error) {
+            console.error('Error:', error);
+            paymentMessage.innerHTML = `<div style="color:red;">❌ Erreur lors de l'enregistrement</div>`;
+          }
         }
       });
-
-      async function fetchClientSecret() {
-    if (clientSecret !== '') {
-        return clientSecret;
-    }
-
-    const response = await fetch('/create-payment-intent', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prix: prixInput.value })
-    });
-
-    const data = await response.json();
-    return data.clientSecret;
-}
-
     });
     </script>
-
   </main>
 </div>
 {% endblock %}
