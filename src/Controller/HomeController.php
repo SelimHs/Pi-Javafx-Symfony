@@ -103,6 +103,12 @@ final class HomeController extends AbstractController
                 'count' => $count
             ];
         }
+
+        // 🔥 TRIER du plus réservé au moins réservé
+        usort($topEspacesFinal, function ($a, $b) {
+            return $b['count'] <=> $a['count'];
+        });
+
         // Après $topEspacesFinal...
 
         $espaces = $espaceRepository->findAll();

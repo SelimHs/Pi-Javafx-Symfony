@@ -53,31 +53,31 @@ final class EspaceController extends AbstractController
 
 
     #[Route('/dashboard', name: 'dashboard_espace_index', methods: ['GET'])]
-public function indexBack(EspaceRepository $espaceRepository, OrganisateurRepository $organisateurRepo): Response
-{
-    $espaces = $espaceRepository->findAll();
+    public function indexBack(EspaceRepository $espaceRepository, OrganisateurRepository $organisateurRepo): Response
+    {
+        $espaces = $espaceRepository->findAll();
 
-    // 🔵 Statistiques :
-    $totalEspaces = count($espaces);
-    $espacesAvecOrganisateur = 0;
-    $espacesSansOrganisateur = 0;
+        // 🔵 Statistiques :
+        $totalEspaces = count($espaces);
+        $espacesAvecOrganisateur = 0;
+        $espacesSansOrganisateur = 0;
 
-    foreach ($espaces as $espace) {
-        $organisateurs = $organisateurRepo->findBy(['espace' => $espace]);
-        if (count($organisateurs) > 0) {
-            $espacesAvecOrganisateur++;
-        } else {
-            $espacesSansOrganisateur++;
+        foreach ($espaces as $espace) {
+            $organisateurs = $organisateurRepo->findBy(['espace' => $espace]);
+            if (count($organisateurs) > 0) {
+                $espacesAvecOrganisateur++;
+            } else {
+                $espacesSansOrganisateur++;
+            }
         }
-    }
 
-    return $this->render('espace/indexBack.html.twig', [
-        'espaces' => $espaces,
-        'totalEspaces' => $totalEspaces,
-        'espacesAvecOrganisateur' => $espacesAvecOrganisateur,
-        'espacesSansOrganisateur' => $espacesSansOrganisateur,
-    ]);
-}
+        return $this->render('espace/indexBack.html.twig', [
+            'espaces' => $espaces,
+            'totalEspaces' => $totalEspaces,
+            'espacesAvecOrganisateur' => $espacesAvecOrganisateur,
+            'espacesSansOrganisateur' => $espacesSansOrganisateur,
+        ]);
+    }
 
 
 
