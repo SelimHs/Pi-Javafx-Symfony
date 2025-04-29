@@ -100,7 +100,7 @@ final class HomeController extends AbstractController
             $nom = $espaceNames[$id] ?? "Espace inconnu ($id)";
             $topEspacesFinal[] = [
                 'espace' => $nom,
-                'count' => $count
+                'count' => $count   
             ];
         }
 
