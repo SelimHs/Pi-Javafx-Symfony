@@ -192,9 +192,15 @@
               <li>Détails : <span>{{ event.details|length > 40 ? event.details[:40] ~ '...' : event.details }}</span></li>
             </ul>
             <div class="main-button d-flex justify-content-between gap-2 align-items-center">
-              <a href="{{ path('app_event_show', {'idEvent': event.idEvent}) }}" class="btn btn-outline-primary w-50" style="padding: 10px 0; line-height: 1.2;">Voir Détails</a>
-              <a href="{{ path('app_billet_reservation', {'id': event.idEvent}) }}" class="btn btn-success w-50" style="padding: 10px 0; line-height: 1.2;">Réserver</a>
-            </div>
+  <a href="{{ path('app_event_show', {'idEvent': event.idEvent}) }}" class="btn btn-outline-primary w-50" style="padding: 10px 0; line-height: 1.2;">Voir Détails</a>
+  
+  {% if event.date > "now"|date("Y-m-d") %}
+    <a href="{{ path('app_billet_reservation', {'id': event.idEvent}) }}" class="btn btn-success w-50" style="padding: 10px 0; line-height: 1.2;">Réserver</a>
+  {% else %}
+    <button class="btn btn-secondary w-50" style="padding: 10px 0; line-height: 1.2;" disabled>Expiré</button>
+  {% endif %}
+</div>
+
           </div>
         </div>
       {% else %}

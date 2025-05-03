@@ -16,12 +16,6 @@
                       <li><a href="{{ path('app_espace_index') }}">Espaces</a></li>
                       <li><a href="{{ path('app_produit_index') }}">Produits</a></li>
                       <li><a href="contact.html">Contact Us</a></li>
-                      <li>
-                        <button class="btn btn-warning" id="btnNotifications">
-                            🔔 Voir notifications
-                        </button>
-                    </li>
-                      
                       <li><a href="#"><i class="fa fa-calendar"></i> Schedule a visit</a></li>
                   </ul>   
                     <a class='menu-trigger'>
@@ -32,42 +26,5 @@
             </div>
         </div>
     </div>
-    <!-- Notification Modal -->
-<div class="modal fade" id="notificationsModal" tabindex="-1" aria-labelledby="notificationsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="notificationsModalLabel">Notifications</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-        </div>
-        <div class="modal-body" id="notificationsContainer">
-          <!-- Notifications will appear here -->
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const btn = document.getElementById('btnNotifications');
-        btn?.addEventListener('click', () => {
-            {% for label, messages in app.flashes %}
-                {% for message in messages %}
-                    notyf.open({
-                        type: '{{ label|replace({'notyf_':''}) }}',
-                        message: '{{ message|e('js') }}'
-                    });
-                {% endfor %}
-            {% else %}
-                notyf.open({
-                    type: 'info',
-                    message: 'Pas de nouvelles notifications.'
-                });
-            {% endfor %}
-        });
-    });
-    </script>
-    
-  
   </header>
   <!-- ***** Header Area End ***** -->

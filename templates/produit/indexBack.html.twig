@@ -16,33 +16,28 @@
             <div class="page-title-subheading">Liste des produits en stock avec image, prix et quantités.</div>
           </div>
         </div>
-        <div class="page-title-actions">
-          <a href="{{ path('dashboard_produit_new') }}" class="btn btn-success">
-            <i class="pe-7s-plus mr-2"></i> Nouveau Produit
-          </a>
+        <div class="page-title-actions d-flex gap-3 flex-wrap align-items-center">
+          
+          <div class="input-group input-group-sm" style="width: 250px;">
+            <label class="input-group-text" for="filterCategorie">Filtrer par catégorie</label>
+            <select id="filterCategorie" class="form-select">
+              <option value="">Toutes les catégories</option>
+              <option value="Électronique">Électronique</option>
+              <option value="ALIMENTAIRE">Alimentaire</option>
+              <option value="AUTRES">Autres</option>
+            </select>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Barre de filtre -->
-    <div class="row mb-4">
-      <div class="col-md-4 offset-md-8 text-end">
-        <select id="filterCategorie" class="form-select form-select-sm w-100">
-          <option value="">-- Toutes les catégories --</option>
-          <option value="ALIMENTAIRE">ALIMENTAIRE</option>
-          <option value="Électronique">Électronique</option>
-          <option value="AUTRES">Autres</option>
-        </select>
-      </div>
-    </div>
-
     {% if produits is empty %}
-      <div class="alert alert-info text-center">Aucun produit trouvé.</div>
+      <div class="alert alert-info text-center mt-4">Aucun produit trouvé.</div>
     {% else %}
-      <div class="row" id="produitCards">
+      <div class="row mt-4" id="produitCards">
         {% for produit in produits %}
           <div class="col-md-6 col-xl-4 produit-card"
-               data-categorie="{{ produit.categorie }}">
+               data-categorie="{{ produit.categorie|lower }}">
             <div class="card mb-4 shadow-sm">
               <div class="position-relative">
                 <img src="{{ asset('uploads/' ~ (produit.imagePath ? produit.imagePath : 'placeholder.png')) }}"
@@ -78,7 +73,6 @@
 
     filter.addEventListener('change', function () {
       const selected = this.value.toLowerCase().trim();
-
       cards.forEach(card => {
         const categorie = card.dataset.categorie.toLowerCase().trim();
         const show = !selected || categorie === selected;

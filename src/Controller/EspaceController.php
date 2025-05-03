@@ -53,12 +53,33 @@ final class EspaceController extends AbstractController
 
 
     #[Route('/dashboard', name: 'dashboard_espace_index', methods: ['GET'])]
-    public function indexBack(EspaceRepository $espaceRepository): Response
+    public function indexBack(EspaceRepository $espaceRepository, OrganisateurRepository $organisateurRepo): Response
     {
+        $espaces = $espaceRepository->findAll();
+
+        // 🔵 Statistiques :
+        $totalEspaces = count($espaces);
+        $espacesAvecOrganisateur = 0;
+        $espacesSansOrganisateur = 0;
+
+        foreach ($espaces as $espace) {
+            $organisateurs = $organisateurRepo->findBy(['espace' => $espace]);
+            if (count($organisateurs) > 0) {
+                $espacesAvecOrganisateur++;
+            } else {
+                $espacesSansOrganisateur++;
+            }
+        }
+
         return $this->render('espace/indexBack.html.twig', [
-            'espaces' => $espaceRepository->findAll(),
+            'espaces' => $espaces,
+            'totalEspaces' => $totalEspaces,
+            'espacesAvecOrganisateur' => $espacesAvecOrganisateur,
+            'espacesSansOrganisateur' => $espacesSansOrganisateur,
         ]);
     }
+
+
 
     #[Route('/new', name: 'app_espace_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response

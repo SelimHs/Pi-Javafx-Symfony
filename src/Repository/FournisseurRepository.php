@@ -15,6 +15,15 @@ class FournisseurRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Fournisseur::class);
     }
+    public function countByType(): array
+{
+    return $this->createQueryBuilder('f')
+        ->select('f.type AS type, COUNT(f.idFournisseur) AS count')
+        ->groupBy('f.type')
+        ->getQuery()
+        ->getArrayResult();
+}
+
 
     //    /**
     //     * @return Fournisseur[] Returns an array of Fournisseur objects
