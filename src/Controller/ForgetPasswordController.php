@@ -9,21 +9,35 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Twilio\Rest\Client;
 use Twilio\Http\CurlClient;
+use Symfony\Component\Mailer\MailerInterface;
 
 #[Route('/forgot')]
 class ForgetPasswordController extends AbstractController
 {
     private string $twilioSid = 'AC8b17dc0551acb8be526df486feab53a7'; 
     private string $twilioToken = '5ef2d795c6ee34f15280a41e2a30f408';
-    private string $twilioPhone = '+1 978 625 3628'; // ✅ Your Twilio official number
+    private string $twilioPhone = '+1 978 625 3628';
+    private MailerInterface $mailer;
+    private HttpClientInterface $httpClient;
+    private ParameterBagInterface $params;
+
+    public function __construct(MailerInterface $mailer, HttpClientInterface $httpClient, ParameterBagInterface $params)
+    {
+        $this->mailer = $mailer;
+        $this->httpClient = $httpClient;
+        $this->params = $params;
+    }
 
     #[Route('/password', name: 'app_forgot_password')]
     public function request(Request $request, EntityManagerInterface $entityManager): Response
     {
         if ($request->isMethod('POST')) {
             $email = $request->request->get('email');
+            $method = $request->request->get('method');
             $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
 
             if (!$user) {
@@ -33,36 +47,40 @@ class ForgetPasswordController extends AbstractController
 
             $code = random_int(100000, 999999);
 
-            try {
-                $httpClient = new CurlClient([
-                    CURLOPT_SSL_VERIFYHOST => false,
-                    CURLOPT_SSL_VERIFYPEER => false,
-                ]);
+            if ($method === 'sms') {
+                try {
+                    $httpClient = new CurlClient([
+                        CURLOPT_SSL_VERIFYHOST => false,
+                        CURLOPT_SSL_VERIFYPEER => false,
+                    ]);
 
-                $twilio = new Client(
-                    $this->twilioSid,
-                    $this->twilioToken,
-                    null,
-                    null,
-                    $httpClient
-                );
+                    $twilio = new Client($this->twilioSid, $this->twilioToken, null, null, $httpClient);
+                    $twilio->messages->create(
+                        '+21650135096',
+                        [
+                            'from' => $this->twilioPhone,
+                            'body' => "Your reset password code is: $code",
+                        ]
+                    );
+                } catch (\Exception $e) {
+                    $this->addFlash('error', 'SMS Error: ' . $e->getMessage());
+                    return $this->redirectToRoute('app_forgot_password');
+                }
+            } elseif ($method === 'email') {
+                $emailMessage = (new \Symfony\Bridge\Twig\Mime\TemplatedEmail())
+                    ->from('lamma.eventgroups@gmail.com')
+                    ->to($user->getEmail())
+                    ->subject('Your Reset Password Code')
+                    ->htmlTemplate('security/reset_code_email.html.twig')
+                    ->context(['code' => $code]);
 
-                $twilio->messages->create(
-                    '+21650135096', // ✅ Send TO your verified phone number
-                    [
-                        'from' => $this->twilioPhone, // ✅ FROM Twilio number
-                        'body' => "Your reset password code is: $code",
-                    ]
-                );
-
-                return $this->render('security/enter_code.html.twig', [
-                    'real_code' => $code,
-                    'email' => $email
-                ]);
-            } catch (\Exception $e) {
-                $this->addFlash('error', 'SMS Error: ' . $e->getMessage());
-                return $this->redirectToRoute('app_forgot_password');
+                $this->mailer->send($emailMessage);
             }
+
+            return $this->render('security/enter_code.html.twig', [
+                'real_code' => $code,
+                'email' => $email
+            ]);
         }
 
         return $this->render('security/forget_password.html.twig');
@@ -85,7 +103,8 @@ class ForgetPasswordController extends AbstractController
             }
 
             return $this->render('security/reset_password.html.twig', [
-                'email' => $email
+                'email' => $email,
+                'site_key' => $this->params->get('RECAPTCHA_SITE_KEY')
             ]);
         }
 
@@ -93,12 +112,25 @@ class ForgetPasswordController extends AbstractController
     }
 
     #[Route('/reset-password', name: 'app_reset_password')]
-    public function resetPassword(
-        Request $request,
-        EntityManagerInterface $entityManager,
-        UserPasswordHasherInterface $passwordHasher
-    ): Response {
+    public function resetPassword(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
+    {
         if ($request->isMethod('POST')) {
+            $recaptcha = $request->request->get('g-recaptcha-response');
+
+            $secret = $this->params->get('RECAPTCHA_SECRET_KEY');
+            $response = $this->httpClient->request('POST', 'https://www.google.com/recaptcha/api/siteverify', [
+                'body' => [
+                    'secret' => $secret,
+                    'response' => $recaptcha
+                ]
+            ]);
+            $data = $response->toArray();
+
+            if (!$data['success']) {
+                $this->addFlash('error', 'reCAPTCHA validation failed. Please try again.');
+                return $this->redirectToRoute('app_forgot_password');
+            }
+
             $newPassword = $request->request->get('new_password');
             $email = $request->request->get('email');
 
@@ -113,7 +145,7 @@ class ForgetPasswordController extends AbstractController
             $user->setPassword($hashedPassword);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Your password has been updated! You can now login.');
+            $this->addFlash('success', 'Your password has been updated!');
             return $this->redirectToRoute('app_login');
         }
 

@@ -53,9 +53,11 @@
         </form>
 
         <!-- 🚀 Login avec visage séparé du formulaire -->
-        <button id="openFaceLogin" class="btn btn-primary w-100 mb-3 fw-bold">
-            📸 Login with your face
-        </button>
+       <button id="openFaceLogin" class="btn w-100 mb-3 fw-bold text-white"
+        style="background: linear-gradient(135deg, #f35525 0%, #ff6b3d 100%);">
+    📸 Login with your face
+</button>
+
 
         <div id="faceModal" class="text-center" style="display:none;">
             <video id="video" autoplay style="width:100%; max-width:300px; border-radius: 10px;"></video>
@@ -112,12 +114,14 @@
             <span class="small text-muted">or</span>
         </div>
 
-        <a href="{{ path('connect_google') }}"
-            class="btn btn-primary w-100 mb-3 fw-bold d-flex align-items-center justify-content-center"
-            style="gap: 8px;">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png?20230305195327" width="20" height="20" style="filter: brightness(0) invert(1);">
-            <span>Sign In with Google</span>
-        </a>
+     <!-- 🔴 Login with Google (red button + logo) -->
+<a href="{{ path('connect_google') }}"
+   class="btn w-100 mb-3 fw-bold text-white d-flex align-items-center justify-content-center"
+   style="height: 45px; background-color: #DB4437; gap: 10px;">
+    <i class="fab fa-google"></i>
+    <span>Sign In with Google</span>
+</a>
+
 
         <div class="text-center mb-2">
             <a href="{{ path('app_forgot_password') }}" class="small text-decoration-none text-primary">Forgot Password?</a>

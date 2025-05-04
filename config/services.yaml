@@ -5,6 +5,10 @@ parameters:
     espace_images_directory: '%kernel.project_dir%/public/assets/images'
     avatars_directory: '%kernel.project_dir%/public/assets/images/avatars'
 
+    # ✅ Ajout des clés reCAPTCHA
+    RECAPTCHA_SITE_KEY: '%env(RECAPTCHA_SITE_KEY)%'
+    RECAPTCHA_SECRET_KEY: '%env(RECAPTCHA_SECRET_KEY)%'
+
 services:
     _defaults:
         autowire: true

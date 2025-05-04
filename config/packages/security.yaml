@@ -28,4 +28,11 @@ security:
         - { path: ^/connect, roles: PUBLIC_ACCESS }
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/register, roles: PUBLIC_ACCESS }
+
+        # ✅ Ajoute ces trois lignes :
+        - { path: ^/forgot/password, roles: PUBLIC_ACCESS }
+        - { path: ^/forgot/verify-code, roles: PUBLIC_ACCESS }
+        - { path: ^/forgot/reset-password, roles: PUBLIC_ACCESS }
+
         - { path: ^/, roles: ROLE_USER }
+
