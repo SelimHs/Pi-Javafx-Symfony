@@ -1,3 +1,2 @@
-_security_logout:
-    resource: security.route_loader.logout
-    type: service
+# config/routes/security.yaml
+# <- ce fichier peut rester vide ou être supprimé

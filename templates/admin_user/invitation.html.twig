@@ -1,0 +1,66 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %}Envoyer Invitation Admin{% endblock %}
+
+{% block body %}
+<div class="app-main__outer">
+    <div class="app-main__inner">
+
+        <div class="app-page-title">
+            <div class="page-title-wrapper">
+                <div class="page-title-heading">
+                    <div class="page-title-icon">
+                        <i class="fas fa-envelope-open-text icon-gradient bg-mean-fruit"></i>
+                    </div>
+                    <div>
+                        Envoyer Invitation Admin
+                        <div class="page-title-subheading">Envoyez une invitation par email à un futur admin.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8 offset-md-2">
+            <div class="main-card mb-3 card">
+                <div class="card-header">
+                    Invitation Admin
+                    <div class="btn-actions-pane-right">
+                        <div role="group" class="btn-group-sm btn-group">
+                            <a href="{{ path('admin_user_pending') }}" class="btn btn-focus active">
+                                Invitations en attente
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    {% if app.user and 'ROLE_ADMIN' in app.user.roles %}
+                        <form method="post" action="{{ path('send_invitation_admin') }}">
+                            <div class="form-group">
+                                <label for="email">Adresse Email</label>
+                                <input type="email" name="email" id="email" class="form-control" placeholder="Entrer l'email de l'invité..." required>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary mt-3">
+                                Envoyer l'invitation
+                            </button>
+                        </form>
+                    {% else %}
+                        <div class="alert alert-danger mt-3">
+                            Vous devez être connecté en tant qu'Admin pour envoyer une invitation.
+                        </div>
+                    {% endif %}
+
+                    {% for message in app.flashes('success') %}
+                        <div class="alert alert-success mt-3">{{ message }}</div>
+                    {% endfor %}
+                    {% for message in app.flashes('error') %}
+                        <div class="alert alert-danger mt-3">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

@@ -48,38 +48,47 @@ class Authenticator extends AbstractLoginFormAuthenticator
     {
         $email = $request->get('email');
         $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
-
-        // 🔥 Manual verification check
+    
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
-
+    
+        // ✅ Auth via reconnaissance faciale
+        if ($request->attributes->get('_facial_auth') === true) {
+            if (!$user) {
+                throw new CustomUserMessageAuthenticationException('Utilisateur non trouvé.');
+            }
+    
+            return new Passport(
+                new UserBadge($email),
+                new PasswordCredentials('dummy'),
+                [new RememberMeBadge()]
+            );
+        }
+        // Cas standard avec vérification email
         if ($user) {
             if (!$user->isVerified()) {
-                // Generate a new token
                 $user->setVerificationToken(Uuid::v4()->toRfc4122());
                 $user->setTokenExpiresAt((new \DateTime())->modify('+1 hour'));
-
+    
                 $this->entityManager->persist($user);
                 $this->entityManager->flush();
-
-                // Send a new confirmation email
+    
                 $emailMessage = (new TemplatedEmail())
                     ->from(new Address('lamma.eventgroups@gmail.com', 'Lamma'))
                     ->to($user->getEmail())
                     ->subject('Please Confirm your Email')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
-                    ->context([
-                        'token' => $user->getVerificationToken(),
-                    ]);
-
+                    ->context(['token' => $user->getVerificationToken()]);
+    
                 $this->mailer->send($emailMessage);
-
-                throw new CustomUserMessageAuthenticationException('Your email is not verified. A new confirmation email has been sent.');
-                if (!$user->isAccepted() && in_array('ROLE_ADMIN', $user->getRoles())) {
-                    throw new CustomUserMessageAuthenticationException('Votre compte admin est en attente de validation.');
-                }
+    
+                throw new CustomUserMessageAuthenticationException('Votre email n\'est pas encore vérifié. Un nouveau mail a été envoyé.');
+            }
+    
+            if (!$user->isAccepted() && in_array('ROLE_ADMIN', $user->getRoles())) {
+                throw new CustomUserMessageAuthenticationException('Votre compte admin est en attente de validation.');
             }
         }
-
+    
         return new Passport(
             new UserBadge($email),
             new PasswordCredentials($request->get('password')),
@@ -89,6 +98,7 @@ class Authenticator extends AbstractLoginFormAuthenticator
             ]
         );
     }
+    
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {

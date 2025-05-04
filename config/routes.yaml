@@ -1,5 +1,7 @@
 controllers:
-    resource:
-        path: ../src/Controller/
-        namespace: App\Controller
+    resource: ../src/Controller/
     type: attribute
+face_auth:
+    path: /face-auth
+    controller: App\Controller\FaceAuthController::faceAuth
+    methods: [POST]

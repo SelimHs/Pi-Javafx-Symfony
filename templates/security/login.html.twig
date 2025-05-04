@@ -4,18 +4,14 @@
 
 {% block body %}
 <div class="container d-flex flex-column align-items-center justify-content-center min-vh-100">
-
-    <!-- 🔵 Titre principal -->
     <div class="text-center mb-4">
         <h1 class="display-5 fw-bold text-primary">LAMMA EVENT</h1>
         <p class="text-muted small">Manage your events easily and quickly</p>
     </div>
 
-    <!-- 🟣 Formulaire de connexion -->
     <div class="card p-5 shadow rounded-4 w-100" style="max-width: 420px;">
         <form method="post" class="dark-mode-form">
 
-            <!-- 🔴 Messages d'alerte -->
             {% if error %}
                 <div class="alert alert-danger small text-center mb-4">
                     {{ error.messageKey|trans(error.messageData, 'security') }}
@@ -29,16 +25,13 @@
                 </div>
             {% endif %}
 
-            <!-- 🟠 Titre du formulaire -->
             <h2 class="h5 text-center mb-4 fw-semibold">Welcome Back 👋</h2>
 
-            <!-- 🟡 Email input -->
             <div class="form-floating mb-3">
                 <input type="email" id="inputEmail" name="email" value="{{ last_username }}" class="form-control" placeholder="Email" autocomplete="email" required autofocus>
                 <label for="inputEmail">Email Address</label>
             </div>
 
-            <!-- 🟢 Password input + toggle button -->
             <div class="form-floating mb-3 position-relative">
                 <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" autocomplete="current-password" required>
                 <label for="inputPassword">Password</label>
@@ -47,37 +40,98 @@
                 </button>
             </div>
 
-            <!-- 🟤 CSRF token -->
             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-            <!-- 🟣 Remember Me -->
             <div class="form-check mb-4">
                 <input class="form-check-input" type="checkbox" id="rememberMe" name="_remember_me">
                 <label class="form-check-label small" for="rememberMe">Remember me</label>
             </div>
 
-            <!-- 🟠 Bouton de connexion -->
             <button type="submit" class="btn btn-primary w-100 mb-3 fw-bold">
                 🔒 Sign In
             </button>
-
-            <!-- 🔵 Liens secondaires -->
-            <div class="text-center mb-2">
-                <a href="{{ path('app_forgot_password') }}" class="small text-decoration-none text-primary">Forgot Password?</a>
-            </div>
-
-            <div class="text-center small">
-                Don't have an account? 
-                <a href="{{ path('app_register') }}" class="fw-bold text-decoration-none text-primary">Sign Up</a>
-            </div>
-
         </form>
+
+        <!-- 🚀 Login avec visage séparé du formulaire -->
+        <button id="openFaceLogin" class="btn btn-primary w-100 mb-3 fw-bold">
+            📸 Login with your face
+        </button>
+
+        <div id="faceModal" class="text-center" style="display:none;">
+            <video id="video" autoplay style="width:100%; max-width:300px; border-radius: 10px;"></video>
+            <br>
+            <button id="captureBtn" class="btn btn-danger mt-2">📷 Capturer</button>
+            <canvas id="canvas" style="display:none;"></canvas>
+        </div>
+
+        <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const captureBtn = document.getElementById('captureBtn');
+
+        document.getElementById('openFaceLogin').addEventListener('click', (e) => {
+            e.preventDefault(); // évite rechargement
+            navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+                video.srcObject = stream;
+                document.getElementById('faceModal').style.display = 'block';
+            }).catch(err => {
+                alert("Erreur d'accès caméra : " + err.message);
+            });
+        });
+
+        captureBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+
+            const ctx = canvas.getContext('2d');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            ctx.drawImage(video, 0, 0);
+
+            canvas.toBlob(blob => {
+                const formData = new FormData();
+                formData.append('image', blob, 'face.jpg');
+
+             fetch('/face-auth', {
+    method: 'POST',
+    body: formData
+})
+.then(res => res.json())
+.then(data => {
+    if (data.success) {
+        window.location.href = data.redirect; // 🔁 redirection dynamique
+    } else {
+        alert('❌ ' + data.message);
+    }
+});
+
+            });
+        });
+        </script>
+
+        <div class="text-center mb-3">
+            <span class="small text-muted">or</span>
+        </div>
+
+        <a href="{{ path('connect_google') }}"
+            class="btn btn-primary w-100 mb-3 fw-bold d-flex align-items-center justify-content-center"
+            style="gap: 8px;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png?20230305195327" width="20" height="20" style="filter: brightness(0) invert(1);">
+            <span>Sign In with Google</span>
+        </a>
+
+        <div class="text-center mb-2">
+            <a href="{{ path('app_forgot_password') }}" class="small text-decoration-none text-primary">Forgot Password?</a>
+        </div>
+
+        <div class="text-center small">
+            Don't have an account? 
+            <a href="{{ path('app_register') }}" class="fw-bold text-decoration-none text-primary">Sign Up</a>
+        </div>
     </div>
 </div>
 
-<!-- 🎨 CSS interne -->
+<!-- 🎨 Style -->
 <style>
-/* 🎨 Dark Mode */
 body.dark-mode .dark-mode-form {
     background-color: #2d2d3f;
     color: #e0e0e0;
@@ -88,11 +142,6 @@ body.dark-mode .dark-mode-form label {
     color: #e0e0e0;
     border: 1px solid #555;
 }
-body.dark-mode .dark-mode-form .form-control::placeholder {
-    color: #bbb;
-}
-
-/* 🎨 Bouton Affichage mot de passe */
 #togglePassword {
     font-size: 1.3rem;
     cursor: pointer;
@@ -104,7 +153,7 @@ body.dark-mode .dark-mode-form .form-control::placeholder {
 }
 </style>
 
-<!-- 🚀 JavaScript interne -->
+<!-- 👁️ Toggle password -->
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const togglePassword = document.getElementById('togglePassword');

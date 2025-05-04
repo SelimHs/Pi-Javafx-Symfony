@@ -56,17 +56,7 @@
                                    aria-haspopup="true" 
                                    aria-expanded="false" 
                                    class="p-0 btn">
-                                    {% if app.user.profileImage %}
-                                        <img width="42" 
-                                             class="rounded-circle" 
-                                             src="{{ asset('uploads/' ~ app.user.profileImage) }}" 
-                                             alt="Photo de profil">
-                                    {% else %}
-                                        <img width="42" 
-                                             class="rounded-circle" 
-                                             src="{{ asset('assets/images/avatars/default.png') }}" 
-                                             alt="Avatar par défaut">
-                                    {% endif %}
+                                    
                                     <i class="fa fa-angle-down ml-2 opacity-8"></i>
                                 </a>
                                 <div tabindex="-1" 
