@@ -50,8 +50,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Espace::class, mappedBy: 'user')]
     private Collection $espaces;
 
-    #[ORM\Column(name: "is_verified", type: "boolean")]
+    #[ORM\Column(name: "is_verified", type: "boolean", options: ["default" => false])]
     private bool $isVerified = false;
+
 
     #[ORM\Column(type: 'string', nullable: true)]
     private ?string $verificationToken = null;

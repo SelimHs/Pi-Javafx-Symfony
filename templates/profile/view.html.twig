@@ -4,153 +4,180 @@
 
 {% block body %}
 <div class="container py-4">
-    <div class="row justify-content-center">
-        <div class="col-lg-8 col-xl-6">
-            <!-- Carte Profil Professionnelle -->
-            <div class="card border-0 shadow-sm">
-                <div class="card-body p-4">
-                    <div class="d-flex align-items-start">
-                        <!-- Avatar avec badge de vérification -->
-                        <div class="position-relative me-4">
-                            <div class="avatar-container" style="width: 72px; height: 72px;">
-                                <img src="{{ user.profileImage ? asset('assets/images/avatars/' ~ user.profileImage) : asset('assets/images/default-avatar.png') }}" 
-                                     class="rounded-circle w-100 h-100 object-fit-cover border border-2 border-white shadow-sm"
-                                     alt="Photo de profil">
-                            </div>
-                            {% if user.isVerified %}
-                            <span class="position-absolute bottom-0 start-100 translate-middle p-1 bg-success rounded-circle border border-2 border-white">
-                                <i class="fas fa-check text-white" style="font-size: 0.6rem;"></i>
-                            </span>
-                            {% endif %}
-                        </div>
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-xl-6">
 
-                        <!-- Détails du profil -->
-                        <div class="flex-grow-1">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <div>
-                                    <h2 class="h5 mb-1">{{ user.prenom }} {{ user.nom }}</h2>
-                                    <div class="d-flex align-items-center">
-                                        <span class="badge bg-{{ user.type == 'admin' ? 'danger' : 'primary' }} me-2">
-                                            {{ user.type == 'admin' ? 'Administrateur' : 'Utilisateur' }}
-                                        </span>
-                                        <small class="text-muted">{{ user.email }}</small>
-                                    </div>
-                                </div>
-                                <div class="dropdown">
-                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="profileActions" data-bs-toggle="dropdown">
-                                        <i class="fas fa-cog"></i>
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-end">
-                                        <li>
-                                            <a class="dropdown-item" href="{{ path('app_profile_edit') }}">
-                                                <i class="fas fa-user-edit me-2"></i> Modifier profil
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="{{ path('app_profile_password') }}">
-                                                <i class="fas fa-key me-2"></i> Changer mot de passe
-                                            </a>
-                                        </li>
-                                        {% if is_granted('ROLE_ADMIN') %}
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li>
-                                            <a class="dropdown-item text-danger" href="#">
-                                                <i class="fas fa-tools me-2"></i> Administration
-                                            </a>
-                                        </li>
-                                        {% endif %}
-                                    </ul>
-                                </div>
-                            </div>
+      <!-- 💼 Carte Profil Professionnelle -->
+      <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-start">
 
-                            <!-- Informations principales -->
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <div class="info-card p-3 rounded bg-light">
-                                        <h6 class="text-uppercase small text-muted mb-2">Coordonnées</h6>
-                                        <ul class="list-unstyled mb-0">
-                                            <li class="mb-2">
-                                                <i class="fas fa-phone text-primary me-2"></i>
-                                                {{ user.numeroTelephone ?? 'Non renseigné' }}
-                                            </li>
-                                            <li>
-                                                <i class="fas fa-map-marker-alt text-primary me-2"></i>
-                                                {{ user.addresse ?? 'Non renseignée' }}
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="info-card p-3 rounded bg-light">
-                                        <h6 class="text-uppercase small text-muted mb-2">Informations</h6>
-                                        <ul class="list-unstyled mb-0">
-                                            <li class="mb-2">
-                                                <i class="fas fa-venus-mars text-primary me-2"></i>
-                                                {{ user.genre ?? 'Non spécifié' }}
-                                            </li>
-                                            <li>
-                                                <i class="fas fa-user-shield text-primary me-2"></i>
-                                                Statut: {{ user.isVerified ? 'Vérifié' : 'Non vérifié' }}
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <!-- 📷 Avatar -->
+            <div class="position-relative me-4">
+              <div class="avatar-container" style="width: 72px; height: 72px;">
+                <img src="{{ user.profileImage ? asset('assets/images/avatars/' ~ user.profileImage) : asset('assets/images/default-avatar.png') }}" 
+                     class="rounded-circle w-100 h-100 object-fit-cover border border-2 border-white shadow-sm"
+                     alt="Photo de profil">
+              </div>
+              {% if user.isVerified %}
+              <span class="position-absolute bottom-0 start-100 translate-middle p-1 bg-success rounded-circle border border-2 border-white">
+                <i class="fas fa-check text-white" style="font-size: 0.6rem;"></i>
+              </span>
+              {% endif %}
             </div>
 
-            <!-- Section Espaces si nécessaire -->
-            {% if user.espaces|length > 0 %}
-            <div class="card border-0 shadow-sm mt-4">
-                <div class="card-header bg-white border-0">
-                    <h5 class="mb-0"><i class="fas fa-store me-2"></i> Mes Espaces</h5>
+            <!-- 🧾 Infos Utilisateur -->
+            <div class="flex-grow-1">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <div>
+                  <h2 class="h5 mb-1">{{ user.prenom }} {{ user.nom }}</h2>
+                  <div class="d-flex align-items-center">
+                    <span class="badge bg-{{ user.type == 'admin' ? 'danger' : 'primary' }} me-2">
+                      {{ user.type == 'admin' ? 'Administrateur' : 'Utilisateur' }}
+                    </span>
+                    <small class="text-muted">{{ user.email }}</small>
+                  </div>
                 </div>
-                <div class="card-body">
-                    <div class="row g-3">
-                        {% for espace in user.espaces|slice(0, 4) %}
-                        <div class="col-md-6">
-                            <div class="d-flex align-items-center p-2 border rounded">
-                                <div class="flex-shrink-0 me-3">
-                                    <i class="fas fa-store fa-2x text-muted"></i>
-                                </div>
-                                <div class="flex-grow-1">
-                                    <h6 class="mb-0">{{ espace.nom }}</h6>
-                                    <small class="text-muted">{{ espace.adresse }}</small>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
+
+                <!-- ⚙️ Menu Profil -->
+                <div class="dropdown">
+                  <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                          type="button"
+                          id="profileActions"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                    <i class="fas fa-cog"></i>
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileActions">
+                    <li>
+                      <a class="dropdown-item" href="{{ path('app_profile_edit') }}">
+                        <i class="fas fa-user-edit me-2"></i> Modifier profil
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="{{ path('app_profile_password') }}">
+                        <i class="fas fa-key me-2"></i> Changer mot de passe
+                      </a>
+                    </li>
+                    {% if is_granted('ROLE_ADMIN') %}
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                      <a class="dropdown-item text-danger" href="#">
+                        <i class="fas fa-tools me-2"></i> Administration
+                      </a>
+                    </li>
+                    {% endif %}
+                  </ul>
                 </div>
-            </div>
-            {% endif %}
+              </div>
+
+              <!-- 📑 Détails Utilisateur -->
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <div class="info-card p-3 rounded bg-light">
+                    <h6 class="text-uppercase small text-muted mb-2">Coordonnées</h6>
+                    <ul class="list-unstyled mb-0">
+                      <li class="mb-2">
+                        <i class="fas fa-phone text-primary me-2"></i>
+                        {{ user.numeroTelephone ?? 'Non renseigné' }}
+                      </li>
+                      <li>
+                        <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                        {{ user.addresse ?? 'Non renseignée' }}
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="info-card p-3 rounded bg-light">
+                    <h6 class="text-uppercase small text-muted mb-2">Informations</h6>
+                    <ul class="list-unstyled mb-0">
+                      <li class="mb-2">
+                        <i class="fas fa-venus-mars text-primary me-2"></i>
+                        {{ user.genre ?? 'Non spécifié' }}
+                      </li>
+                      <li>
+                        <i class="fas fa-user-shield text-primary me-2"></i>
+                        Statut : {{ user.isVerified ? 'Vérifié' : 'Non vérifié' }}
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+            </div> <!-- /.flex-grow-1 -->
+          </div>
         </div>
+      </div>
+
+      <!-- 🏢 Espaces (si présents) -->
+      {% if user.espaces|length > 0 %}
+      <div class="card border-0 shadow-sm mt-4">
+        <div class="card-header bg-white border-0">
+          <h5 class="mb-0"><i class="fas fa-store me-2"></i> Mes Espaces</h5>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            {% for espace in user.espaces|slice(0, 4) %}
+            <div class="col-md-6">
+              <div class="d-flex align-items-center p-2 border rounded">
+                <div class="flex-shrink-0 me-3">
+                  <i class="fas fa-store fa-2x text-muted"></i>
+                </div>
+                <div class="flex-grow-1">
+                  <h6 class="mb-0">{{ espace.nom }}</h6>
+                  <small class="text-muted">{{ espace.adresse }}</small>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
     </div>
+  </div>
 </div>
+{% endblock %}
+
+{% block footer %}
+<footer class="bg-white text-center py-4 mt-5 border-top">
+  <div class="container">
+    <p class="mb-0">
+      © 2048 Villa Agency Co., Ltd. Tous droits réservés. 
+      Design : <a rel="nofollow" href="https://templatemo.com" target="_blank">TemplateMo</a>
+    </p>
+  </div>
+</footer>
 {% endblock %}
 
 {% block stylesheets %}
 {{ parent() }}
 <style>
-    .avatar-container {
-        position: relative;
-        display: inline-block;
-    }
-    
-    .info-card {
-        transition: all 0.2s;
-        height: 100%;
-    }
-    
-    .info-card:hover {
-        background-color: rgba(243, 85, 37, 0.05) !important;
-        transform: translateY(-2px);
-    }
-    
-    .dropdown-toggle::after {
-        display: none;
-    }
+  .avatar-container {
+    position: relative;
+    display: inline-block;
+  }
+
+  .info-card {
+    transition: all 0.2s;
+    height: 100%;
+  }
+
+  .info-card:hover {
+    background-color: rgba(243, 85, 37, 0.05) !important;
+    transform: translateY(-2px);
+  }
+
+  .dropdown-toggle::after {
+    display: none;
+  }
+
+  footer {
+    font-size: 0.9rem;
+    color: #555;
+  }
 </style>
 {% endblock %}
