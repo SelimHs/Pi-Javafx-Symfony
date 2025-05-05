@@ -57,27 +57,32 @@ class RegistrationController extends AbstractController
     public function verifyUserEmail(Request $request, EntityManagerInterface $entityManager): Response
     {
         $token = $request->query->get('token');
-
+    
         if (!$token) {
             $this->addFlash('verify_email_error', 'No token provided.');
             return $this->redirectToRoute('app_login');
         }
-
+    
         $user = $entityManager->getRepository(User::class)->findOneBy(['verificationToken' => $token]);
-
+    
         if (!$user) {
             $this->addFlash('verify_email_error', 'Invalid or expired verification link.');
             return $this->redirectToRoute('app_login');
         }
+    
         $user->setIsVerified(true);
         $user->setVerificationToken(null);
+    
+        // 👇 important : persist l’objet modifié
+        $entityManager->persist($user);
         $entityManager->flush();
-
+    
         $this->addFlash('success', 'Your email address has been successfully verified. You can now login.');
-
-        return $this->redirectToRoute('app_login');
+    
+        return $this->render('registration/email_verified.html.twig'); // si tu veux la page avec "✅ Congratulations"
+        // return $this->redirectToRoute('app_login'); // ou redirection directe vers login
     }
-
+    
     #[Route('/admin/verify-by-email', name: 'admin_verify_by_email', methods: ['POST'])]
     public function verifyByEmail(Request $request, EntityManagerInterface $entityManager): Response
     {
