@@ -77,4 +77,19 @@ class RegistrationController extends AbstractController
 
         return $this->redirectToRoute('app_login');
     }
+
+    #[Route('/admin/verify-by-email', name: 'admin_verify_by_email', methods: ['POST'])]
+    public function verifyByEmail(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $email = $request->request->get('email');
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
+        if (!$user) {
+            $this->addFlash('verify_email_error', 'No user found with that email.');
+            return $this->redirectToRoute('app_login');
+        }
+        $user->setIsVerified(true);
+        $entityManager->flush();
+        $this->addFlash('success', 'User has been verified by email.');
+        return $this->redirectToRoute('app_login');
+    }
 }

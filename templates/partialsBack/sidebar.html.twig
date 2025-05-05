@@ -41,7 +41,32 @@
                         LAMMA
                     </a>
                 </li>
+  <li class="app-sidebar__heading">Utilisateurs</li>
+                <li>
+                    <a href="#">
+                        <i class="metismenu-icon pe-7s-date"></i>
+                        Gestion Utilisateurs
+                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                    </a>
+                  <ul>
+    <li>
+        <a href="{{ path('admin_user_new') }}">
+            <i class="metismenu-icon"></i>Ajouter un Utilisateur
+        </a>
+    </li>
+    <li>
+      <a href="{{ path('admin_user_index') }}">
+        <i class="metismenu-icon"></i>Gérer les Utilisateurs
+      </a>
+    </li>
+    <li>
+        <a href="{{ path('admin_invitation_form') }}">
+            <i class="metismenu-icon"></i>Envoyer une invitation
+        </a>
+    </li>
+</ul>
 
+                </li>
                 <li class="app-sidebar__heading">Évènements</li>
                 <li>
                     <a href="#">

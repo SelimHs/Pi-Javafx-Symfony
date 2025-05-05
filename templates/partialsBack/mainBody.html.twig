@@ -1,412 +1,261 @@
-
-
 <div class="app-main__outer">
     <div class="app-main__inner">
+        <!-- Header avec titre et actions -->
         <div class="app-page-title">
             <div class="page-title-wrapper">
                 <div class="page-title-heading">
                     <div class="page-title-icon">
-                        <i class="pe-7s-car icon-gradient bg-mean-fruit">
-                        </i>
+                        <i class="pe-7s-graph1 icon-gradient bg-mean-fruit"></i>
                     </div>
-                    <div>Analytics Dashboard
-                        <div class="page-title-subheading">This is an example dashboard created using
-                            build-in elements and components.
-                        </div>
+                    <div>Tableau de Bord Administratif
+                        <div class="page-title-subheading">Analyse complète des performances et des statistiques</div>
                     </div>
                 </div>
                 <div class="page-title-actions">
-                    <button type="button" data-toggle="tooltip" title="Example Tooltip"
-                        data-placement="bottom" class="btn-shadow mr-3 btn btn-dark">
-                        <i class="fa fa-star"></i>
+                    <button type="button" class="btn-shadow mr-3 btn btn-dark" data-toggle="tooltip" 
+                            data-placement="bottom" title="Exporter les données">
+                        <i class="fa fa-file-export"></i>
                     </button>
                     <div class="d-inline-block dropdown">
-                       <div class="d-inline-block dropdown">
-    <div class="d-inline-block dropdown">
-    <button type="button" class="btn btn-info btn-shadow dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <span class="btn-icon-wrapper pr-2 opacity-7">
-            <i class="fas fa-users-cog"></i>
-        </span>
-        Gestion des Utilisateurs
-    </button>
-
-    <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in">
-        <h6 class="dropdown-header text-primary">Actions Utilisateur</h6>
-
-        <a class="dropdown-item" href="{{ path('admin_user_new') }}">
-            <i class="fas fa-user-plus text-success me-2"></i> Ajouter un Utilisateur
-        </a>
-
-        <a class="dropdown-item" href="{{ path('admin_user_index') }}">
-    <i class="fas fa-users text-primary me-2"></i> Gérer les Utilisateurs
-</a>
-
-    </div>
-</div>
-
-
-                        <div tabindex="-1" role="menu" aria-hidden="true"
-                            class="dropdown-menu dropdown-menu-right">
-                            <ul class="nav flex-column">
-                                <li class="nav-item">
-                                    <a href="javascript:void(0);" class="nav-link">
-                                        <i class="nav-link-icon lnr-inbox"></i>
-                                        <span>
-                                            Inbox
-                                        </span>
-                                        <div class="ml-auto badge badge-pill badge-secondary">86</div>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="javascript:void(0);" class="nav-link">
-                                        <i class="nav-link-icon lnr-book"></i>
-                                        <span>
-                                            Book
-                                        </span>
-                                        <div class="ml-auto badge badge-pill badge-danger">5</div>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="javascript:void(0);" class="nav-link">
-                                        <i class="nav-link-icon lnr-picture"></i>
-                                        <span>
-                                            Picture
-                                        </span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a disabled href="javascript:void(0);" class="nav-link disabled">
-                                        <i class="nav-link-icon lnr-file-empty"></i>
-                                        <span>
-                                            File Disabled
-                                        </span>
-                                    </a>
-                                </li>
-                            </ul>
+                        <button type="button" class="btn btn-primary btn-shadow dropdown-toggle" 
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="btn-icon-wrapper pr-2 opacity-7">
+                                <i class="fas fa-cog"></i>
+                            </span>
+                            Actions
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" href="#"><i class="fas fa-sync-alt mr-2"></i>Actualiser</a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-filter mr-2"></i>Filtrer</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#"><i class="fas fa-download mr-2"></i>Télécharger PDF</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-12 col-lg-6 offset-lg-3">
-    <div class="main-card mb-3 card">
-        <div class="card-header">
-            Invitation Admin
-         <div class="btn-actions-pane-right">
-    <div role="group" class="btn-group-sm btn-group">
-        <a href="{{ path('admin_user_pending') }}" class="btn btn-focus active">
-            Nouvelle invitation
-        </a>
-    </div>
-</div>
 
-        </div>
-        <div class="card-body">
-            {% if app.user and 'ROLE_ADMIN' in app.user.roles %}
-                <form method="post" action="{{ path('send_invitation_admin') }}">
-                    <div class="form-group">
-                        <label for="email">Adresse Email</label>
-                        <input type="email" class="form-control" name="email" id="email" placeholder="Entrer l'email de l'invité..." required>
-                    </div>
-                    <button type="submit" class="btn btn-primary mt-3">Envoyer l'invitation</button>
-                </form>
-            {% else %}
-                <p class="text-danger">Vous devez être connecté en tant qu'admin pour envoyer une invitation.</p>
-            {% endif %}
-
-            {% for message in app.flashes('success') %}
-                <div class="alert alert-success mt-3">{{ message }}</div>
-            {% endfor %}
-            {% for message in app.flashes('error') %}
-                <div class="alert alert-danger mt-3">{{ message }}</div>
-            {% endfor %}
-        </div>
-    </div>
-</div>
-
+        <!-- Cartes de statistiques principales -->
         <div class="row">
-            <div class="col-md-6 col-xl-4">
-               
-            </div>
-            <div class="row">
-    <div class="col-md-12 col-lg-6 offset-lg-3">
-        <div class="main-card mb-3 card">
-            <div class="card-header">Répartition Hommes / Femmes</div>
-            <div class="card-body">
-                <canvas id="pieChartGenre" width="400" height="400"></canvas>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script>
-const ctxPie = document.getElementById('pieChartGenre').getContext('2d');
-
-const pieChartGenre = new Chart(ctxPie, {
-    type: 'pie',
-    data: {
-        labels: ['Hommes', 'Femmes'],
-        datasets: [{
-            label: 'Répartition',
-            data: [{{ hommes|default(0) }}, {{ femmes|default(0) }}],
-            backgroundColor: [
-                'rgba(54, 162, 235, 0.8)',    // Bleu pour Hommes
-                'rgba(255, 99, 132, 0.8)'     // Rose pour Femmes
-            ],
-            borderColor: [
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 99, 132, 1)'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'bottom',
-            },
-            tooltip: {
-                backgroundColor: 'rgba(0,0,0,0.75)',
-                padding: 10,
-                cornerRadius: 6,
-            }
-        }
-    }
-});
-</script>
-
-
-            <div class="col-md-6 col-xl-4">
-                
-            </div>
-            <div class="col-md-6 col-xl-4">
-           
-            </div>
-            <div class="d-xl-none d-lg-block col-md-6 col-xl-4">
+            <div class="col-md-6 col-xl-3">
                 <div class="card mb-3 widget-content bg-premium-dark">
                     <div class="widget-content-wrapper text-white">
                         <div class="widget-content-left">
-                            <div class="widget-heading">Products Sold</div>
-                            <div class="widget-subheading">Revenue streams</div>
+                            <div class="widget-heading">Utilisateurs Totaux</div>
+                            <div class="widget-subheading">Inscriptions ce mois</div>
                         </div>
                         <div class="widget-content-right">
-                            <div class="widget-numbers text-warning"><span>$14M</span></div>
+                            <div class="widget-numbers text-white"><span>{{ total_users }}</span></div>
+                            <div class="widget-description"><i class="fa fa-arrow-up mr-1"></i>12%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <div class="card mb-3 widget-content bg-arielle-smile">
+                    <div class="widget-content-wrapper text-white">
+                        <div class="widget-content-left">
+                            <div class="widget-heading">Événements Actifs</div>
+                            <div class="widget-subheading">Événements à venir</div>
+                        </div>
+                        <div class="widget-content-right">
+                            <div class="widget-numbers text-white"><span>{{ active_events }}</span></div>
+                            <div class="widget-description"><i class="fa fa-calendar mr-1"></i>+3 nouveaux</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <div class="card mb-3 widget-content bg-grow-early">
+                    <div class="widget-content-wrapper text-white">
+                        <div class="widget-content-left">
+                            <div class="widget-heading">Billets Vendus</div>
+                            <div class="widget-subheading">30 derniers jours</div>
+                        </div>
+                        <div class="widget-content-right">
+                            <div class="widget-numbers text-white"><span>{{ tickets_sold }}</span></div>
+                            <div class="widget-description"><i class="fa fa-ticket-alt mr-1"></i>+24%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <div class="card mb-3 widget-content bg-night-fade">
+                    <div class="widget-content-wrapper">
+                        <div class="widget-content-left">
+                            <div class="widget-heading">Revenus</div>
+                            <div class="widget-subheading">Chiffre d'affaires</div>
+                        </div>
+                        <div class="widget-content-right">
+                            <div class="widget-numbers text-primary"><span>{{ revenue|number_format(0, ',', ' ') }} €</span></div>
+                            <div class="widget-description text-success"><i class="fa fa-chart-line mr-1"></i>18%</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Section principale avec graphiques -->
         <div class="row">
-            <div class="col-md-12 col-lg-6">
-             
-
-
-              
-            <div class="col-md-12 col-lg-6">
-                <div class="mb-3 card">
-                    <div class="card-header-tab card-header">
-                        <div class="card-header-title">
-                            <i class="header-icon lnr-rocket icon-gradient bg-tempting-azure"> </i>
-                            Bandwidth Reports
+            <!-- Graphique des ventes -->
+            <div class="col-md-12 col-lg-8">
+                <div class="main-card mb-3 card">
+                    <div class="card-header">
+                        <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
+                            Performance des Ventes
                         </div>
                         <div class="btn-actions-pane-right">
-                            <div class="nav">
-                                <a href="javascript:void(0);"
-                                    class="border-0 btn-pill btn-wide btn-transition active btn btn-outline-alternate">Tab
-                                    1</a>
-                                <a href="javascript:void(0);"
-                                    class="ml-1 btn-pill btn-wide border-0 btn-transition  btn btn-outline-alternate second-tab-toggle-alt">Tab
-                                    2</a>
+                            <div role="group" class="btn-group-sm btn-group">
+                                <button class="active btn btn-focus">Mensuel</button>
+                                <button class="btn btn-focus">Trimestriel</button>
+                                <button class="btn btn-focus">Annuel</button>
                             </div>
                         </div>
                     </div>
-                  
-                           
-                            
-                            <div class="pt-2 card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="widget-content">
-                                            <div class="widget-content-outer">
-                                                <div class="widget-content-wrapper">
-                                                    <div class="widget-content-left">
-                                                        <div class="widget-numbers fsize-3 text-muted">63%
-                                                        </div>
-                                                    </div>
-                                                    <div class="widget-content-right">
-                                                        <div class="text-muted opacity-6">Generated Leads
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="widget-progress-wrapper mt-1">
-                                                    <div
-                                                        class="progress-bar-sm progress-bar-animated-alt progress">
-                                                        <div class="progress-bar bg-danger"
-                                                            role="progressbar" aria-valuenow="63"
-                                                            aria-valuemin="0" aria-valuemax="100"
-                                                            style="width: 63%;"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                    <div class="card-body">
+                        <canvas id="sales-performance-chart" height="300"></canvas>
+                    </div>
+                    <div class="card-footer">
+                        <div class="text-muted">
+                            <small>Dernière mise à jour: {{ "now"|date("d/m/Y H:i") }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistiques utilisateurs -->
+            <div class="col-md-12 col-lg-4">
+                <div class="mb-3 card">
+                    <div class="card-header">
+                        <div class="card-title">Statistiques Utilisateurs</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="dashboard-donut-chart">
+                            <canvas id="user-stats-chart" height="200"></canvas>
+                        </div>
+                        <div class="mt-4">
+                            <div class="mb-3 progress">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 65%;" 
+                                     aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">Nouveaux: 65%</div>
+                            </div>
+                            <div class="mb-3 progress">
+                                <div class="progress-bar bg-info" role="progressbar" style="width: 35%;" 
+                                     aria-valuenow="35" aria-valuemin="0" aria-valuemax="100">Actifs: 35%</div>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar bg-warning" role="progressbar" style="width: 25%;" 
+                                     aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Inactifs: 25%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section secondaire avec graphiques et formulaire -->
+        <div class="row">
+            <!-- Répartition Hommes/Femmes -->
+            <div class="col-md-12 col-lg-6">
+                <div class="main-card mb-3 card">
+                    <div class="card-header">Démographie des Utilisateurs</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <canvas id="gender-chart" height="250"></canvas>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="widget-chart widget-chart2 text-left pt-3 pb-2">
+                                    <div class="widget-chat-wrapper-outer">
+                                        <div class="widget-chart-content">
+                                            <div class="widget-numbers text-success">64%</div>
+                                            <div class="widget-subheading">Taux d'engagement</div>
+                                        </div>
+                                        <div class="widget-chart-wrapper">
+                                            <canvas id="engagement-chart" height="100"></canvas>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="widget-content">
-                                            <div class="widget-content-outer">
-                                                <div class="widget-content-wrapper">
-                                                    <div class="widget-content-left">
-                                                        <div class="widget-numbers fsize-3 text-muted">32%
-                                                        </div>
-                                                    </div>
-                                                    <div class="widget-content-right">
-                                                        <div class="text-muted opacity-6">Submitted Tickers
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="widget-progress-wrapper mt-1">
-                                                    <div
-                                                        class="progress-bar-sm progress-bar-animated-alt progress">
-                                                        <div class="progress-bar bg-success"
-                                                            role="progressbar" aria-valuenow="32"
-                                                            aria-valuemin="0" aria-valuemax="100"
-                                                            style="width: 32%;"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="widget-content">
-                                            <div class="widget-content-outer">
-                                                <div class="widget-content-wrapper">
-                                                    <div class="widget-content-left">
-                                                        <div class="widget-numbers fsize-3 text-muted">71%
-                                                        </div>
-                                                    </div>
-                                                    <div class="widget-content-right">
-                                                        <div class="text-muted opacity-6">Server Allocation
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="widget-progress-wrapper mt-1">
-                                                    <div
-                                                        class="progress-bar-sm progress-bar-animated-alt progress">
-                                                        <div class="progress-bar bg-primary"
-                                                            role="progressbar" aria-valuenow="71"
-                                                            aria-valuemin="0" aria-valuemax="100"
-                                                            style="width: 71%;"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="widget-content">
-                                            <div class="widget-content-outer">
-                                                <div class="widget-content-wrapper">
-                                                    <div class="widget-content-left">
-                                                        <div class="widget-numbers fsize-3 text-muted">41%
-                                                        </div>
-                                                    </div>
-                                                    <div class="widget-content-right">
-                                                        <div class="text-muted opacity-6">Generated Leads
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="widget-progress-wrapper mt-1">
-                                                    <div
-                                                        class="progress-bar-sm progress-bar-animated-alt progress">
-                                                        <div class="progress-bar bg-warning"
-                                                            role="progressbar" aria-valuenow="41"
-                                                            aria-valuemin="0" aria-valuemax="100"
-                                                            style="width: 41%;"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                </div>
+                                <div class="pt-3">
+                                    <div class="text-muted opacity-6">Répartition par âge</div>
+                                    <canvas id="age-distribution-chart" height="100"></canvas>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6 col-xl-4">
-                <div class="card mb-3 widget-content">
-                    <div class="widget-content-outer">
-                  
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-xl-4">
-                <div class="card mb-3 widget-content">
-                    <div class="widget-content-outer">
-                        <div class="widget-content-wrapper">
-                            <div class="widget-content-left">
-                                <div class="widget-heading">Products Sold</div>
-                                <div class="widget-subheading">Revenue streams</div>
-                            </div>
-                            <div class="widget-content-right">
-                                <div class="widget-numbers text-warning">$3M</div>
+
+            <!-- Formulaire d'invitation admin -->
+            <div class="col-md-12 col-lg-6">
+                <div class="main-card mb-3 card">
+                    <div class="card-header">
+                        <div>Gestion des Administrateurs</div>
+                        <div class="btn-actions-pane-right">
+                            <div role="group" class="btn-group-sm btn-group">
+                                <a href="{{ path('admin_user_pending') }}" class="btn btn-primary active">
+                                    <i class="fas fa-user-clock mr-1"></i>En attente
+                                </a>
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-users mr-1"></i>Liste
+                                </button>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-xl-4">
-                <div class="card mb-3 widget-content">
-                    <div class="widget-content-outer">
-                        <div class="widget-content-wrapper">
-                            <div class="widget-content-left">
-                                <div class="widget-heading">Followers</div>
-                                <div class="widget-subheading">People Interested</div>
+                    <div class="card-body">
+                        {% if app.user and 'ROLE_ADMIN' in app.user.roles %}
+                            <form method="post" action="{{ path('send_invitation_admin') }}" class="needs-validation" novalidate>
+                                <div class="form-group">
+                                    <label for="email">Inviter un nouvel administrateur</label>
+                                    <div class="input-group">
+                                        <input type="email" class="form-control" name="email" id="email" 
+                                               placeholder="Email de l'invité" required>
+                                        <div class="input-group-append">
+                                            <button type="submit" class="btn btn-success">
+                                                <i class="fas fa-paper-plane mr-1"></i>Envoyer
+                                            </button>
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            Veuillez fournir une adresse email valide
+                                        </div>
+                                    </div>
+                                    <small class="form-text text-muted">
+                                        Un lien d'activation sera envoyé à cette adresse email
+                                    </small>
+                                </div>
+                            </form>
+                        {% else %}
+                            <div class="alert alert-danger">
+                                <i class="fas fa-exclamation-circle mr-2"></i>
+                                Accès réservé aux administrateurs
                             </div>
-                            <div class="widget-content-right">
-                                <div class="widget-numbers text-danger">45,9%</div>
+                        {% endif %}
+
+                        {% for message in app.flashes('success') %}
+                            <div class="alert alert-success mt-3">
+                                <i class="fas fa-check-circle mr-2"></i>{{ message }}
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="d-xl-none d-lg-block col-md-6 col-xl-4">
-                <div class="card mb-3 widget-content">
-                    <div class="widget-content-outer">
-                        <div class="widget-content-wrapper">
-                            <div class="widget-content-left">
-                                <div class="widget-heading">Income</div>
-                                <div class="widget-subheading">Expected totals</div>
+                        {% endfor %}
+                        {% for message in app.flashes('error') %}
+                            <div class="alert alert-danger mt-3">
+                                <i class="fas fa-exclamation-triangle mr-2"></i>{{ message }}
                             </div>
-                            <div class="widget-content-right">
-                                <div class="widget-numbers text-focus">$147</div>
-                            </div>
-                        </div>
-                        <div class="widget-progress-wrapper">
-                            <div class="progress-bar-sm progress-bar-animated-alt progress">
-                                <div class="progress-bar bg-info" role="progressbar" aria-valuenow="54"
-                                    aria-valuemin="0" aria-valuemax="100" style="width: 54%;"></div>
-                            </div>
-                            <div class="progress-sub-label">
-                                <div class="sub-label-left">Expenses</div>
-                                <div class="sub-label-right">100%</div>
-                            </div>
-                        </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Tableau des utilisateurs récents -->
         <div class="row">
             <div class="col-md-12">
                 <div class="main-card mb-3 card">
-                    <div class="card-header">Active Users
+                    <div class="card-header">
+                        <div>Activité Récente des Utilisateurs</div>
                         <div class="btn-actions-pane-right">
-                            <div role="group" class="btn-group-sm btn-group">
-                                <button class="active btn btn-focus">Last Week</button>
-                                <button class="btn btn-focus">All Month</button>
+                            <div class="nav">
+                                <a href="javascript:void(0);" class="border-0 btn-pill btn-wide btn-transition active btn btn-outline-alternate">Tous</a>
+                                <a href="javascript:void(0);" class="btn-pill btn-wide border-0 btn-transition btn btn-outline-alternate">Actifs</a>
+                                <a href="javascript:void(0);" class="btn-pill btn-wide border-0 btn-transition btn btn-outline-alternate">Nouveaux</a>
                             </div>
                         </div>
                     </div>
@@ -414,341 +263,320 @@ const pieChartGenre = new Chart(ctxPie, {
                         <table class="align-middle mb-0 table table-borderless table-striped table-hover">
                             <thead>
                                 <tr>
-                                    <th class="text-center">#</th>
-                                    <th>Name</th>
-                                    <th class="text-center">City</th>
-                                    <th class="text-center">Status</th>
+                                    <th class="text-center">ID</th>
+                                    <th>Utilisateur</th>
+                                    <th class="text-center">Inscription</th>
+                                    <th class="text-center">Activité</th>
+                                    <th class="text-center">Statut</th>
                                     <th class="text-center">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                {% for user in recent_users %}
                                 <tr>
-                                    <td class="text-center text-muted">#345</td>
+                                    <td class="text-center">{{ user.id }}</td>
                                     <td>
                                         <div class="widget-content p-0">
                                             <div class="widget-content-wrapper">
                                                 <div class="widget-content-left mr-3">
-                                                    <div class="widget-content-left">
-                                                        <img width="40" class="rounded-circle"
-                                                            src="assets/images/avatars/4.jpg" alt="">
-                                                    </div>
+                                                    <img width="40" class="rounded-circle" 
+                                                         src="{{ user.avatar|default('assets/images/avatars/default.jpg') }}" 
+                                                         alt="{{ user.fullName }}">
                                                 </div>
                                                 <div class="widget-content-left flex2">
-                                                    <div class="widget-heading">John Doe</div>
-                                                    <div class="widget-subheading opacity-7">Web Developer
-                                                    </div>
+                                                    <div class="widget-heading">{{ user.fullName }}</div>
+                                                    <div class="widget-subheading opacity-7">{{ user.email }}</div>
                                                 </div>
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="text-center">Madrid</td>
                                     <td class="text-center">
-                                        <div class="badge badge-warning">Pending</div>
+                                        {{ user.createdAt|date('d/m/Y') }}
                                     </td>
                                     <td class="text-center">
-                                        <button type="button" id="PopoverCustomT-1"
-                                            class="btn btn-primary btn-sm">Details</button>
+                                        {{ user.lastLogin|date('H:i d/m/Y') }}
+                                    </td>
+                                    <td class="text-center">
+                                        {% if user.isActive %}
+                                            <div class="badge badge-success">Actif</div>
+                                        {% else %}
+                                            <div class="badge badge-warning">Inactif</div>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-primary btn-sm">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-info btn-sm">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td class="text-center text-muted">#347</td>
-                                    <td>
-                                        <div class="widget-content p-0">
-                                            <div class="widget-content-wrapper">
-                                                <div class="widget-content-left mr-3">
-                                                    <div class="widget-content-left">
-                                                        <img width="40" class="rounded-circle"
-                                                            src="assets/images/avatars/3.jpg" alt="">
-                                                    </div>
-                                                </div>
-                                                <div class="widget-content-left flex2">
-                                                    <div class="widget-heading">Ruben Tillman</div>
-                                                    <div class="widget-subheading opacity-7">Etiam sit amet
-                                                        orci eget</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="text-center">Berlin</td>
-                                    <td class="text-center">
-                                        <div class="badge badge-success">Completed</div>
-                                    </td>
-                                    <td class="text-center">
-                                        <button type="button" id="PopoverCustomT-2"
-                                            class="btn btn-primary btn-sm">Details</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="text-center text-muted">#321</td>
-                                    <td>
-                                        <div class="widget-content p-0">
-                                            <div class="widget-content-wrapper">
-                                                <div class="widget-content-left mr-3">
-                                                    <div class="widget-content-left">
-                                                        <img width="40" class="rounded-circle"
-                                                            src="assets/images/avatars/2.jpg" alt="">
-                                                    </div>
-                                                </div>
-                                                <div class="widget-content-left flex2">
-                                                    <div class="widget-heading">Elliot Huber</div>
-                                                    <div class="widget-subheading opacity-7">Lorem ipsum
-                                                        dolor sic</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="text-center">London</td>
-                                    <td class="text-center">
-                                        <div class="badge badge-danger">In Progress</div>
-                                    </td>
-                                    <td class="text-center">
-                                        <button type="button" id="PopoverCustomT-3"
-                                            class="btn btn-primary btn-sm">Details</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="text-center text-muted">#55</td>
-                                    <td>
-                                        <div class="widget-content p-0">
-                                            <div class="widget-content-wrapper">
-                                                <div class="widget-content-left mr-3">
-                                                    <div class="widget-content-left">
-                                                        <img width="40" class="rounded-circle"
-                                                            src="assets/images/avatars/1.jpg" alt=""></div>
-                                                </div>
-                                                <div class="widget-content-left flex2">
-                                                    <div class="widget-heading">Vinnie Wagstaff</div>
-                                                    <div class="widget-subheading opacity-7">UI Designer
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="text-center">Amsterdam</td>
-                                    <td class="text-center">
-                                        <div class="badge badge-info">On Hold</div>
-                                    </td>
-                                    <td class="text-center">
-                                        <button type="button" id="PopoverCustomT-4"
-                                            class="btn btn-primary btn-sm">Details</button>
-                                    </td>
-                                </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
                     <div class="d-block text-center card-footer">
-                        <button class="mr-2 btn-icon btn-icon-only btn btn-outline-danger"><i
-                                class="pe-7s-trash btn-icon-wrapper"> </i></button>
-                        <button class="btn-wide btn btn-success">Save</button>
+                        <button class="btn-wide btn btn-primary">Voir plus</button>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6 col-lg-3">
-                <div class="card-shadow-danger mb-3 widget-chart widget-chart2 text-left card">
-                    <div class="widget-content">
-                        <div class="widget-content-outer">
-                            <div class="widget-content-wrapper">
-                                <div class="widget-content-left pr-2 fsize-1">
-                                    <div class="widget-numbers mt-0 fsize-3 text-danger">71%</div>
-                                </div>
-                                <div class="widget-content-right w-100">
-                                    <div class="progress-bar-xs progress">
-                                        <div class="progress-bar bg-danger" role="progressbar"
-                                            aria-valuenow="71" aria-valuemin="0" aria-valuemax="100"
-                                            style="width: 71%;"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="widget-content-left fsize-1">
-                                <div class="text-muted opacity-6">Income Target</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="card-shadow-success mb-3 widget-chart widget-chart2 text-left card">
-                    <div class="widget-content">
-                        <div class="widget-content-outer">
-                            <div class="widget-content-wrapper">
-                                <div class="widget-content-left pr-2 fsize-1">
-                                    <div class="widget-numbers mt-0 fsize-3 text-success">54%</div>
-                                </div>
-                                <div class="widget-content-right w-100">
-                                    <div class="progress-bar-xs progress">
-                                        <div class="progress-bar bg-success" role="progressbar"
-                                            aria-valuenow="54" aria-valuemin="0" aria-valuemax="100"
-                                            style="width: 54%;"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="widget-content-left fsize-1">
-                                <div class="text-muted opacity-6">Expenses Target</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="card-shadow-warning mb-3 widget-chart widget-chart2 text-left card">
-                    <div class="widget-content">
-                        <div class="widget-content-outer">
-                            <div class="widget-content-wrapper">
-                                <div class="widget-content-left pr-2 fsize-1">
-                                    <div class="widget-numbers mt-0 fsize-3 text-warning">32%</div>
-                                </div>
-                                <div class="widget-content-right w-100">
-                                    <div class="progress-bar-xs progress">
-                                        <div class="progress-bar bg-warning" role="progressbar"
-                                            aria-valuenow="32" aria-valuemin="0" aria-valuemax="100"
-                                            style="width: 32%;"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="widget-content-left fsize-1">
-                                <div class="text-muted opacity-6">Spendings Target</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="card-shadow-info mb-3 widget-chart widget-chart2 text-left card">
-                    <div class="widget-content">
-                        <div class="widget-content-outer">
-                            <div class="widget-content-wrapper">
-                                <div class="widget-content-left pr-2 fsize-1">
-                                    <div class="widget-numbers mt-0 fsize-3 text-info">89%</div>
-                                </div>
-                                <div class="widget-content-right w-100">
-                                    <div class="progress-bar-xs progress">
-                                        <div class="progress-bar bg-info" role="progressbar"
-                                            aria-valuenow="89" aria-valuemin="0" aria-valuemax="100"
-                                            style="width: 89%;"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="widget-content-left fsize-1">
-                                <div class="text-muted opacity-6">Totals Target</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="app-wrapper-footer">
-        <div class="app-footer">
-            <div class="app-footer__inner">
-                <div class="app-footer-left">
-                    <ul class="nav">
-                        <li class="nav-item">
-                            <a href="javascript:void(0);" class="nav-link">
-                                Footer Link 1
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="javascript:void(0);" class="nav-link">
-                                Footer Link 2
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="app-footer-right">
-                    <ul class="nav">
-                        <li class="nav-item">
-                            <a href="javascript:void(0);" class="nav-link">
-                                Footer Link 3
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="javascript:void(0);" class="nav-link">
-                                <div class="badge badge-success mr-1 ml-0">
-                                    <small>NEW</small>
-                                </div>
-                                Footer Link 4
-                            </a>
-                        </li>
-                    </ul>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<script>
-    const ctx = document.getElementById('billetChart').getContext('2d');
+<!-- Scripts pour les graphiques -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 
-    // Create a vertical gradient background for the bars
-    const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-    gradient.addColorStop(0, 'rgba(54, 162, 235, 0.9)');
-    gradient.addColorStop(1, 'rgba(54, 162, 235, 0.3)');
-    
-    const billetChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: {{ billetStats|map(stat => stat.event)|json_encode|raw }},
-        datasets: [{
-          label: 'Billets Vendus',
-          data: {{ billetStats|map(stat => stat.count)|json_encode|raw }},
-          backgroundColor: gradient,
-          borderColor: 'rgba(54, 162, 235, 1)',
-          borderWidth: 1,
-          borderRadius: 10
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          datalabels: {
-            anchor: 'end',
-            align: 'top',
-            color: '#444',
-            font: {
-              weight: 'bold'
-            },
-            formatter: Math.round
-          },
-          legend: {
-            display: false
-          },
-          tooltip: {
-            backgroundColor: 'rgba(0,0,0,0.75)',
-            titleFont: { size: 14 },
-            bodyFont: { size: 12 },
-            cornerRadius: 6,
-            padding: 10
-          }
+<script>
+    // Graphique de performance des ventes
+    const salesCtx = document.getElementById('sales-performance-chart').getContext('2d');
+    const salesChart = new Chart(salesCtx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'],
+            datasets: [{
+                label: 'Billets vendus',
+                data: [120, 190, 170, 220, 300, 280, 350, 400, 380, 450, 500, 600],
+                backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 2,
+                tension: 0.3,
+                fill: true
+            }, {
+                label: 'Revenus (k€)',
+                data: [2.4, 3.8, 3.4, 4.4, 6.0, 5.6, 7.0, 8.0, 7.6, 9.0, 10.0, 12.0],
+                backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 2,
+                tension: 0.3,
+                fill: true,
+                yAxisID: 'y1'
+            }]
         },
-        animation: {
-          duration: 1200,
-          easing: 'easeOutQuart'
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              stepSize: 1
+        options: {
+            responsive: true,
+            interaction: {
+                mode: 'index',
+                intersect: false,
             },
-            grid: {
-              color: 'rgba(200,200,200,0.1)'
-            }
-          },
-          x: {
-            ticks: {
-              autoSkip: false,
-              maxRotation: 45,
-              minRotation: 45
+            plugins: {
+                tooltip: {
+                    backgroundColor: 'rgba(0,0,0,0.8)',
+                    padding: 12,
+                    cornerRadius: 8,
+                    usePointStyle: true,
+                },
+                legend: {
+                    position: 'top',
+                    labels: {
+                        usePointStyle: true,
+                        padding: 20
+                    }
+                }
             },
-            grid: {
-              display: false
+            scales: {
+                y: {
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
+                    title: {
+                        display: true,
+                        text: 'Billets vendus'
+                    }
+                },
+                y1: {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    grid: {
+                        drawOnChartArea: false,
+                    },
+                    title: {
+                        display: true,
+                        text: 'Revenus (k€)'
+                    }
+                }
             }
-          }
         }
-      },
-      plugins: [ChartDataLabels]
     });
-    
+
+    // Graphique des statistiques utilisateurs
+    const userStatsCtx = document.getElementById('user-stats-chart').getContext('2d');
+    const userStatsChart = new Chart(userStatsCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Nouveaux', 'Actifs', 'Inactifs'],
+            datasets: [{
+                data: [65, 35, 25],
+                backgroundColor: [
+                    'rgba(40, 167, 69, 0.8)',
+                    'rgba(23, 162, 184, 0.8)',
+                    'rgba(255, 193, 7, 0.8)'
+                ],
+                borderColor: [
+                    'rgba(40, 167, 69, 1)',
+                    'rgba(23, 162, 184, 1)',
+                    'rgba(255, 193, 7, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            cutout: '70%',
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        boxWidth: 12,
+                        padding: 20
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0,0,0,0.8)',
+                    padding: 12,
+                    cornerRadius: 8
+                }
+            }
+        }
+    });
+
+    // Graphique de répartition hommes/femmes
+    const genderCtx = document.getElementById('gender-chart').getContext('2d');
+    const genderChart = new Chart(genderCtx, {
+        type: 'pie',
+        data: {
+            labels: ['Hommes', 'Femmes', 'Autres'],
+            datasets: [{
+                data: [{{ hommes|default(60) }}, {{ femmes|default(35) }}, 5],
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.8)',
+                    'rgba(255, 99, 132, 0.8)',
+                    'rgba(153, 102, 255, 0.8)'
+                ],
+                borderColor: [
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(153, 102, 255, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'right',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            label += context.raw + '%';
+                            return label;
+                        }
+                    }
+                },
+                datalabels: {
+                    formatter: (value) => {
+                        return value + '%';
+                    },
+                    color: '#fff',
+                    font: {
+                        weight: 'bold'
+                    }
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
+
+    // Graphique d'engagement
+    const engagementCtx = document.getElementById('engagement-chart').getContext('2d');
+    const engagementChart = new Chart(engagementCtx, {
+        type: 'line',
+        data: {
+            labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
+            datasets: [{
+                data: [45, 60, 55, 70, 65, 80, 75],
+                borderColor: 'rgba(40, 167, 69, 1)',
+                borderWidth: 2,
+                tension: 0.4,
+                pointBackgroundColor: 'rgba(40, 167, 69, 1)',
+                pointRadius: 4,
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    display: false
+                },
+                x: {
+                    display: false
+                }
+            }
+        }
+    });
+
+    // Graphique de répartition par âge
+    const ageCtx = document.getElementById('age-distribution-chart').getContext('2d');
+    const ageChart = new Chart(ageCtx, {
+        type: 'bar',
+        data: {
+            labels: ['<18', '18-24', '25-34', '35-44', '45-54', '55+'],
+            datasets: [{
+                data: [5, 25, 35, 20, 10, 5],
+                backgroundColor: 'rgba(108, 117, 125, 0.6)',
+                borderColor: 'rgba(108, 117, 125, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    display: false
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+
+    // Validation du formulaire
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
 </script>

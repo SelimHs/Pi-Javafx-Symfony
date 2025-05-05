@@ -16,6 +16,15 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/admin')]
 class InvitationAdminController extends AbstractController
 {
+    // 👉 Route GET pour afficher la page de formulaire d'invitation
+    #[Route('/invitation', name: 'admin_invitation_form', methods: ['GET'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function showInvitationForm(): Response
+    {
+        return $this->render('admin_user/Envoyer_invi.html.twig');
+    }
+
+    // 👉 Route POST pour envoyer l'invitation
     #[Route('/send-invitation', name: 'send_invitation_admin', methods: ['POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function sendInvitation(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
@@ -24,7 +33,7 @@ class InvitationAdminController extends AbstractController
 
         if (!$email) {
             $this->addFlash('error', 'Email invalide.');
-            return $this->redirectToRoute('admin_dashboard');
+            return $this->redirectToRoute('admin_invitation_form');
         }
 
         // Générer un token d'invitation
@@ -39,7 +48,7 @@ class InvitationAdminController extends AbstractController
             'expires_at' => $expiresAt->format('Y-m-d H:i:s'),
         ]);
 
-        // Envoyer email
+        // Envoyer l'email d'invitation
         $emailMessage = (new TemplatedEmail())
             ->from(new Address('lamma.eventgroups@gmail.com', 'Lamma Admin'))
             ->to($email)
@@ -52,6 +61,6 @@ class InvitationAdminController extends AbstractController
         $mailer->send($emailMessage);
 
         $this->addFlash('success', 'Invitation envoyée avec succès à ' . $email);
-        return $this->redirectToRoute('app_home');
+        return $this->redirectToRoute('admin_invitation_form');
     }
 }

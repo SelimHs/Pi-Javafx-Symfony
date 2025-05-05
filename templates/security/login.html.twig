@@ -3,6 +3,11 @@
 {% block title %}Login | Lamma Event{% endblock %}
 
 {% block body %}
+{% for label, messages in app.flashes %}
+    {% for message in messages %}
+        <div class="alert alert-{{ label }} text-center">{{ message }}</div>
+    {% endfor %}
+{% endfor %}
 <div class="container d-flex flex-column align-items-center justify-content-center min-vh-100">
     <div class="text-center mb-4">
         <h1 class="display-5 fw-bold text-primary">LAMMA EVENT</h1>
@@ -50,6 +55,15 @@
             <button type="submit" class="btn btn-primary w-100 mb-3 fw-bold">
                 🔒 Sign In
             </button>
+        </form>
+
+        <!-- Separate Resend Verification Email Form -->
+        <form method="post" action="{{ path('app_login') }}" class="mt-2">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+            <div class="input-group mb-2">
+                <input type="email" name="email" class="form-control" placeholder="Enter your email to resend verification" required>
+                <button type="submit" name="resend_verification" value="1" class="btn btn-outline-primary">Resend Verification Email</button>
+            </div>
         </form>
 
         <!-- 🚀 Login avec visage séparé du formulaire -->

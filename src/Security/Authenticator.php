@@ -66,22 +66,7 @@ class Authenticator extends AbstractLoginFormAuthenticator
         // Cas standard avec vérification email
         if ($user) {
             if (!$user->isVerified()) {
-                $user->setVerificationToken(Uuid::v4()->toRfc4122());
-                $user->setTokenExpiresAt((new \DateTime())->modify('+1 hour'));
-    
-                $this->entityManager->persist($user);
-                $this->entityManager->flush();
-    
-                $emailMessage = (new TemplatedEmail())
-                    ->from(new Address('lamma.eventgroups@gmail.com', 'Lamma'))
-                    ->to($user->getEmail())
-                    ->subject('Please Confirm your Email')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
-                    ->context(['token' => $user->getVerificationToken()]);
-    
-                $this->mailer->send($emailMessage);
-    
-                throw new CustomUserMessageAuthenticationException('Votre email n\'est pas encore vérifié. Un nouveau mail a été envoyé.');
+                throw new CustomUserMessageAuthenticationException('Votre email n\'est pas encore vérifié. Veuillez vérifier votre boîte mail.');
             }
     
             if (!$user->isAccepted() && in_array('ROLE_ADMIN', $user->getRoles())) {

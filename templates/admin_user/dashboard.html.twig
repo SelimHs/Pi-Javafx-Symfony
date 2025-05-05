@@ -1,0 +1,14 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block body %}
+    {% include 'partialsBack/mainBody.html.twig' with {
+        total_users: total_users,
+        active_events: active_events,
+        tickets_sold: tickets_sold,
+        revenue: revenue,
+        hommes: hommes,
+        femmes: femmes,
+        billetStats: billetStats,
+        recent_users: recent_users
+    } %}
+{% endblock %}
