@@ -10,14 +10,36 @@
                     </a>
                     <!-- ***** Logo End ***** -->
                     <!-- ***** Menu Start ***** -->
-                    <ul class="nav">
-                      <li><a href="{{ path('app_home') }}" class="active">Acceuil</a></li>
-                      <li><a href="{{ path('app_event_index') }}">Évènements</a></li>
-                      <li><a href="{{ path('app_espace_index') }}">Espaces</a></li>
-                      <li><a href="{{ path('app_produit_index') }}">Produits</a></li>
-                      <li><a href="contact.html">Contact Us</a></li>
-                      <li><a href="#"><i class="fa fa-calendar"></i> Schedule a visit</a></li>
-                  </ul>   
+                    <!-- ***** Menu Start ***** -->
+<ul class="nav">
+  <li><a href="{{ path('app_home') }}" class="active">Accueil</a></li>
+  <li><a href="{{ path('app_event_index') }}">Évènements</a></li>
+  <li><a href="{{ path('app_espace_index') }}">Espaces</a></li>
+  <li><a href="{{ path('app_produit_index') }}">Produits</a></li>
+  <li><a href="contact.html">Contact Us</a></li>
+
+  {% if app.user %}
+      <li>
+        <a href="#" class="disabled" style="cursor: default;">
+          👋 Bonjour, {{ app.user.nom }}
+        </a>
+      </li>
+      <li>
+        <a href="{{ path('app_logout') }}">
+          <i class="fa fa-sign-out"></i> Déconnexion
+        </a>
+      </li>
+  {% else %}
+      <li>
+        <a href="{{ path('app_login') }}">
+          <i class="fa fa-user"></i> Connexion
+        </a>
+      </li>
+  {% endif %}
+</ul>
+
+
+
                     <a class='menu-trigger'>
                         <span>Menu</span>
                     </a>

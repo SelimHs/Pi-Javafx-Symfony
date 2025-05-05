@@ -1,37 +1,145 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Connexion{% endblock %}
 
 {% block body %}
-<form method="post">
+<style>
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: #f3f4f6;
+    font-family: 'Segoe UI', sans-serif;
+    overflow-x: hidden;
+  }
+
+  main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+
+  .login-card {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    animation: fadeInUp 0.6s ease;
+  }
+
+  .login-title {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #333;
+    font-weight: 600;
+  }
+
+  .form-control:focus {
+    box-shadow: 0 0 0 2px rgba(100, 116, 139, 0.2);
+    border-color: #6366f1;
+  }
+
+  .btn-primary {
+    background-color: #6366f1;
+    border: none;
+  }
+
+  .btn-primary:hover {
+    background-color: #4f46e5;
+  }
+
+  .form-check-label {
+    font-size: 0.9rem;
+    color: #555;
+  }
+
+  .signup-link {
+    color: #6366f1;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .signup-link:hover {
+    color: #4f46e5;
+    text-decoration: underline;
+  }
+
+  footer {
+    margin-top: auto;
+    background: #111;
+    color: #fff;
+    padding: 1rem 0;
+    text-align: center;
+    font-size: 0.8rem;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      transform: translateY(30px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+</style>
+
+<main>
+  <div class="login-card">
     {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+      <div class="alert alert-danger">
+        {{ error.messageKey|trans(error.messageData, 'security') }}
+      </div>
     {% endif %}
 
     {% if app.user %}
-        <div class="mb-3">
-            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
-        </div>
+      <div class="alert alert-info text-center">
+        Connecté en tant que {{ app.user.userIdentifier }} —
+        <a href="{{ path('app_logout') }}">Se déconnecter</a>
+      </div>
     {% endif %}
 
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-    <label for="inputEmail">Email</label>
-    <input type="email" value="{{ last_username }}" name="_username" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-    <label for="inputPassword">Password</label>
-    <input type="password" name="_password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+    <h2 class="login-title">Connexion à Lamma</h2>
 
-    <input type="hidden" name="_csrf_token"
-           value="{{ csrf_token('authenticate') }}"
-    >
+    <form method="post">
+      <div class="mb-3">
+        <label for="inputEmail" class="form-label">Adresse e-mail</label>
+        <input type="email" value="{{ last_username }}" name="_username" id="inputEmail"
+               class="form-control" autocomplete="email" required autofocus>
+      </div>
 
-    <div class="checkbox mb-3">
-        <label>
-            <input type="checkbox" name="_remember_me"> Remember me
+      <div class="mb-3">
+        <label for="inputPassword" class="form-label">Mot de passe</label>
+        <input type="password" name="_password" id="inputPassword"
+               class="form-control" autocomplete="current-password" required>
+      </div>
+
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+      <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" name="_remember_me" id="rememberMe">
+        <label class="form-check-label" for="rememberMe">
+          Se souvenir de moi
         </label>
-    </div>
+      </div>
 
-    <button class="btn btn-lg btn-primary" type="submit">
-        Sign in
-    </button>
-</form>
+      <button class="btn btn-primary w-100" type="submit">Se connecter</button>
+
+      <div class="text-center mt-3">
+        <span>Vous n’avez pas de compte ?</span>
+        <a href="{{ path('app_register') }}" class="signup-link">Créer un compte</a>
+      </div>
+    </form>
+  </div>
+</main>
+
+<footer>
+  Copyright © 2048 Villa Agency Co., Ltd. All rights reserved. Design: TemplateMo
+</footer>
 {% endblock %}

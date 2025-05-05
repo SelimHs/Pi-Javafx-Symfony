@@ -179,7 +179,7 @@ final class BilletController extends AbstractController
 
         $reservation->setEvent($event);
         $reservation->setDateReservation(new \DateTime());
-        $reservation->setStatut('confirmée');
+        $reservation->setStatut('En Attente');
         $reservation->setUser($em->getRepository(\App\Entity\User::class)->find(1)); // change ce user plus tard
 
         if ($form->isSubmitted() && $form->isValid()) {

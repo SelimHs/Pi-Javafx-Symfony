@@ -33,6 +33,22 @@ final class ReservationController extends AbstractController
             'totalAnnulee' => $totalAnnulee,
         ]);
     }
+    #[Route('/valider-billets', name: 'app_reservation_valider_billets', methods: ['POST'])]
+public function validerBilletsEnAttente(ReservationRepository $reservationRepository, EntityManagerInterface $em): RedirectResponse
+{
+    $enAttente = $reservationRepository->findBy(['statut' => 'en attente']);
+
+    foreach ($enAttente as $reservation) {
+        $reservation->setStatut('confirmée');
+    }
+
+    $em->flush();
+
+    $this->addFlash('success', count($enAttente) . ' billet(s) en attente ont été confirmés.');
+    return $this->redirectToRoute('app_reservation_index');
+}
+
+
 
     #[Route('/new', name: 'app_reservation_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
