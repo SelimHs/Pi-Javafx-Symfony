@@ -2,6 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Espace;
+use App\Form\EspaceType;
+use App\Repository\EspaceRepository;
+
 use App\Entity\Organisateur;
 use App\Form\OrganisateurType;
 use App\Repository\OrganisateurRepository;
@@ -10,10 +14,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Vonage\Client;
+use Vonage\SMS\Message\SMS;
+use Symfony\Component\Notifier\TexterInterface;
+use Symfony\Component\Notifier\Message\SmsMessage;
 
 #[Route('/organisateur')]
 final class OrganisateurController extends AbstractController
 {
+    
+
     #[Route(name: 'app_organisateur_index', methods: ['GET'])]
     public function index(OrganisateurRepository $organisateurRepository): Response
     {
@@ -23,61 +35,140 @@ final class OrganisateurController extends AbstractController
     }
 
     #[Route('/new', name: 'app_organisateur_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $em, SessionInterface $session): Response
     {
         $organisateur = new Organisateur();
         $form = $this->createForm(OrganisateurType::class, $organisateur);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($organisateur);
-            $entityManager->flush();
-
-            // 🔁 Rediriger vers la page de détails de l'espace
-            $espaceId = $organisateur->getEspace()?->getIdEspace(); // méthode safe pour éviter une erreur si null
-
-            if ($espaceId) {
-                return $this->redirectToRoute('app_espace_show', ['idEspace' => $espaceId]);
-            }
-
-            // Si pas d'espace, revenir à la liste générale
-            return $this->redirectToRoute('app_organisateur_index');
+            $session->set('pending_organisateur', $organisateur);
+            return new JsonResponse([
+                'status' => 'verification_required',
+                'phone' => $organisateur->getTelef()
+            ]);
         }
 
         return $this->render('organisateur/new.html.twig', [
-            'organisateur' => $organisateur,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
-    // Route ajout depuis le détail d’un espace
-    #[Route('/newBack/{idEspace}', name: 'dashboard_organisateur_new', methods: ['GET', 'POST'])]
-    public function newBack(Request $request, int $idEspace, EntityManagerInterface $entityManager): Response
+
+    #[Route('/send-verification', name: 'app_send_verification', methods: ['POST'])]
+    public function sendVerification(Request $request, SessionInterface $session): JsonResponse
     {
-        $organisateur = new Organisateur();
-
-        // Lier à l'espace
-        $espace = $entityManager->getRepository(\App\Entity\Espace::class)->find($idEspace);
-        if (!$espace) {
-            throw $this->createNotFoundException('Espace non trouvé');
+        $phone = $request->toArray()['phone'] ?? null;
+        if (!$phone) {
+            return new JsonResponse(['success' => false, 'error' => 'Numéro manquant']);
         }
 
-        $organisateur->setEspace($espace);
+        $otp = random_int(100000, 999999);
+        $session->set('otp_code', $otp);
+        $internationalPhone = '+216' . ltrim($phone, '0');
 
-        $form = $this->createForm(OrganisateurType::class, $organisateur);
-        $form->handleRequest($request);
+        try {
+            $response = $this->vonageClient->sms()->send(
+                new SMS($internationalPhone, 'LammaApp', "Votre code Lamma : $otp")
+            );
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($organisateur);
-            $entityManager->flush();
+            $message = $response->current();
 
-            return $this->redirectToRoute('dashboard_espace_show', ['idEspace' => $idEspace]);
+            if ($message->getStatus() == 0) {
+                return new JsonResponse(['success' => true]);
+            }
+            return new JsonResponse([
+                'success' => false,
+                'error' => $this->getVonageErrorMessage($message->getStatus())
+            ]);
+        } catch (\Throwable $e) {
+            return $this->sendWithNotifier($internationalPhone, $otp);
+        }
+    }
+    private function getVonageErrorMessage(int $code): string
+    {
+        return match ($code) {
+            1 => 'Trop de requêtes - Veuillez réessayer plus tard',
+            2 => 'Numéro de téléphone invalide',
+            3 => 'Quota de messages dépassé',
+            4 => 'Compte Vonage suspendu',
+            5 => 'Erreur d\'authentification',
+            6 => 'Paramètres de message invalides',
+            7 => 'Numéro blacklisté',
+            8 => 'Partenaire non autorisé',
+            9 => 'Erreur de traitement',
+            default => "Erreur technique (code: $code) - Contactez l'administrateur"
+        };
+    }
+    private function sendWithNotifier(string $phone, string $message): JsonResponse
+    {
+        try {
+            $sms = new SmsMessage($phone, $message);
+            $this->texter->send($sms);
+            return new JsonResponse(['success' => true]);
+        } catch (\Throwable $e) {
+            return new JsonResponse([
+                'success' => false,
+                'error' => 'Échec de l\'envoi SMS: ' . $e->getMessage()
+            ]);
+        }
+    }
+    
+    #[Route('/verify-code', name: 'app_verify_code', methods: ['POST'])]
+    public function verifyCode(Request $request, SessionInterface $session, EntityManagerInterface $em): JsonResponse
+    {
+        $data = $request->toArray();
+        $code = $data['code'] ?? null;
+        $storedCode = $session->get('otp_code');
+
+        if ($storedCode && $code === (string)$storedCode) {
+            /** @var Organisateur $organisateur */
+            $organisateur = $session->get('pending_organisateur');
+
+            if ($organisateur) {
+                try {
+                    // Gestion spéciale de l'espace sans cascade persist
+                    if ($organisateur->getEspace()) {
+                        // Si l'espace existe déjà en base (a un ID)
+                        if ($organisateur->getEspace()->getIdEspace()) {
+                            $espace = $em->find(Espace::class, $organisateur->getEspace()->getIdEspace());
+                            if ($espace) {
+                                $organisateur->setEspace($espace);
+                            } else {
+                                throw new \Exception("L'espace associé n'existe pas en base");
+                            }
+                        }
+                        // Si c'est un nouvel espace (n'a pas d'ID)
+                        else {
+                            $em->persist($organisateur->getEspace());
+                            $em->flush(); // Flush pour obtenir l'ID
+                        }
+                    }
+
+                    $em->persist($organisateur);
+                    $em->flush();
+
+                    $session->remove('otp_code');
+                    $session->remove('pending_organisateur');
+
+                    return $this->json([
+                        'success' => true,
+                        'redirect' => $this->generateUrl('app_espace_index')
+                    ]);
+                } catch (\Exception $e) {
+                    return $this->json([
+                        'success' => false,
+                        'error' => 'Erreur lors de l\'enregistrement: ' . $e->getMessage()
+                    ]);
+                }
+            }
         }
 
-        return $this->render('organisateur/newBack.html.twig', [
-            'organisateur' => $organisateur,
-            'form' => $form,
+        return $this->json([
+            'success' => false,
+            'error' => 'Code invalide ou session expirée'
         ]);
     }
+
 
     // Route ajout général depuis la liste des organisateurs
     #[Route('/newBack', name: 'dashboard_organisateur_new_general', methods: ['GET', 'POST'])]

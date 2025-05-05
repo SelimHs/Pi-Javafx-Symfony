@@ -21,44 +21,35 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_ADMIN')]
 class AdminUserController extends AbstractController
 {
-    #[Route('/dashboard', name: 'admin_user_dashboard', methods: ['GET'])]
-    public function dashboard(
-        UserRepository $userRepository,
-        EventRepository $eventRepository
-    ): Response {
-        // Statistiques utilisateurs
-        $totalUsers = $userRepository->count([]);
-        $hommes = $userRepository->countByGenre('homme');
-        $femmes = $userRepository->countByGenre('femme');
-        $newUsers = $userRepository->countNewThisMonth();
+    #[Route('/admin/dashboard', name: 'admin_dashboard')]
+    public function dashboard(EntityManagerInterface $em, EspaceRepository $espaceRepo, TicketRepository $ticketRepo, EventRepository $eventRepo): Response
+    {
+        $totalEspaces = $espaceRepo->count([]);
+        $espacesOrganises = $espaceRepo->countOrganised();
+        $espacesDisponibles = $espaceRepo->countAvailable();
+        $espacesReserves = $espaceRepo->countReserved();
     
-        // Statistiques événements
-        $activeEvents = $eventRepository->count(['isActive' => true]);
-        $upcomingEvents = $eventRepository->findUpcomingEvents(3);
+        $pourcentageOrganise = $totalEspaces > 0 ? round(($espacesOrganises / $totalEspaces) * 100) : 0;
+        $pourcentageDisponible = $totalEspaces > 0 ? round(($espacesDisponibles / $totalEspaces) * 100) : 0;
+        $pourcentageReserve = $totalEspaces > 0 ? round(($espacesReserves / $totalEspaces) * 100) : 0;
     
-        // Billets & revenus fictifs par défaut (pour compatibilité avec le template)
-        $ticketsSold = 0;
-        $revenue = 0;
+        $billetStats = $ticketRepo->getBilletsParEvenement();
+        $revenuStats = $ticketRepo->getRevenuParEvenement();
+        $fournisseurStats = $em->getRepository(Fournisseur::class)->getStatsParType();
+        $topEspacesStats = $espaceRepo->getTopEspacesLoue();
     
-        // Statistiques billets simulées
-        $billetStats = $eventRepository->getTicketStatsByEvent();
-    
-        // Utilisateurs récents
-        $recentUsers = $userRepository->findBy([], ['createdAt' => 'DESC'], 5);
-    
-        return $this->render('admin_user/dashboard.html.twig', [
-            'total_users' => $totalUsers,
-            'hommes' => $hommes,
-            'femmes' => $femmes,
-            'new_users' => $newUsers,
-            'active_events' => $activeEvents,
-            'upcoming_events' => $upcomingEvents,
-            'tickets_sold' => $ticketsSold,
-            'revenue' => $revenue,
+        return $this->render('event/indexBack.html.twig', [
+            'pourcentageOrganise' => $pourcentageOrganise,
+            'pourcentageDisponible' => $pourcentageDisponible,
+            'pourcentageReserve' => $pourcentageReserve,
             'billetStats' => $billetStats,
-            'recent_users' => $recentUsers
+            'revenuStats' => $revenuStats,
+            'fournisseurStats' => $fournisseurStats,
+            'topEspacesStats' => $topEspacesStats,
         ]);
     }
+    
+
    
     #[Route('/', name: 'admin_user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response

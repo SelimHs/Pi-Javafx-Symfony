@@ -3,6 +3,18 @@
 {% block title %}Events{% endblock %}
 
 {% block body %}
+
+{# 🔥 Inclusion du contenu statistique du dashboard (mainBody) #}
+{% include 'partialsBack/mainBody.html.twig' with {
+    pourcentageOrganise: pourcentageOrganise,
+    pourcentageDisponible: pourcentageDisponible,
+    pourcentageReserve: pourcentageReserve,
+    billetStats: billetStats,
+    revenuStats: revenuStats,
+    fournisseurStats: fournisseurStats,
+    topEspacesStats: topEspacesStats
+} %}
+
 <div class="app-main__outer">
   <div class="app-main__inner">
     <div class="app-page-title">
@@ -85,4 +97,5 @@
     });
   });
 </script>
+
 {% endblock %}
