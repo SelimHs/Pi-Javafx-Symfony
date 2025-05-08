@@ -108,7 +108,7 @@ public class FournisseurMainController implements Initializable {
                 "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 3, 3); " +
                 "-fx-min-width: 230px; -fx-max-width: 230px; -fx-alignment: center; -fx-spacing: 12;");
 
-        // 🏢 Nom du fournisseur en gras
+        // 🏢 Nom du fournisseur
         Label nom = new Label("🏢 " + f.getNomFournisseur());
         nom.setStyle("-fx-font-size: 18px; -fx-text-fill: #2C3E50; -fx-font-weight: bold;");
 
@@ -120,70 +120,68 @@ public class FournisseurMainController implements Initializable {
         Label type = new Label("🏷 " + f.getType());
         type.setStyle("-fx-font-size: 14px; -fx-text-fill: #34495E;");
 
-        // 📞 Téléphone avec une couleur distincte
+        // 📞 Téléphone
         Label tel = new Label("📞 " + f.getTelephone());
         tel.setStyle("-fx-font-size: 14px; -fx-text-fill: #2980B9;");
 
-        // 📌 Conteneur horizontal pour les icônes
+        // 📷 Image du fournisseur
+        ImageView fournImage = null;
+        if (f.getImagePath() != null && !f.getImagePath().isEmpty()) {
+            String basePath = "D:/3A15_S1/pidev/gestion_espace/images/fournisseurs/";
+            File imageFile = f.getImagePath().contains(File.separator)
+                    ? new File(f.getImagePath())
+                    : new File(basePath + f.getImagePath());
+
+            if (imageFile.exists()) {
+                fournImage = new ImageView(new Image(imageFile.toURI().toString()));
+                fournImage.setFitHeight(120);
+                fournImage.setFitWidth(200);
+                fournImage.setPreserveRatio(true);
+                fournImage.setSmooth(true);
+            } else {
+                System.out.println("⚠ Fichier image introuvable : " + imageFile.getAbsolutePath());
+            }
+        }
+
+        // 📌 Icônes : Voir, Modifier, Supprimer
         HBox buttonContainer = new HBox(8);
         buttonContainer.setStyle("-fx-alignment: center;");
 
-        // 🔍 Icône Voir Détails
+        // 🔍 Voir Détails
         Button detailsButton = new Button();
         detailsButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
         detailsButton.setOnAction(e -> showFournisseurDetails(f));
-
         ImageView detailsIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/details-icon.png")));
         detailsIcon.setFitWidth(18);
         detailsIcon.setFitHeight(18);
         detailsButton.setGraphic(detailsIcon);
 
-
-        // ✏️ Icône Modifier
+        // ✏️ Modifier
         Button modifyButton = new Button();
         modifyButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
         modifyButton.setOnAction(e -> goToModifierFournisseur(f, e));
-
         ImageView editIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/edit-icon.png")));
         editIcon.setFitWidth(18);
         editIcon.setFitHeight(18);
         modifyButton.setGraphic(editIcon);
 
-        // 🗑️ Icône Supprimer
+        // 🗑️ Supprimer
         Button deleteButton = new Button();
         deleteButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
         deleteButton.setOnAction(e -> deleteFournisseur(f));
-
         ImageView trashIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/trash-icon.png")));
         trashIcon.setFitWidth(18);
         trashIcon.setFitHeight(18);
         deleteButton.setGraphic(trashIcon);
-// 📷 Image du fournisseur
-        ImageView fournImage = new ImageView();
-        fournImage.setFitHeight(120);
-        fournImage.setFitWidth(200);
-        fournImage.setPreserveRatio(true);
-        fournImage.setSmooth(true);
 
-// Vérifier si le fournisseur a un chemin d'image
-        if (f.getImagePath() != null && !f.getImagePath().isEmpty()) {
-            File imageFile = new File(f.getImagePath());
-            if (imageFile.exists()) {
-                fournImage.setImage(new Image(imageFile.toURI().toString()));  // Chargement depuis le disque
-            } else {
-                System.out.println("⚠ Fichier image introuvable : " + f.getImagePath());
-                fournImage.setImage(new Image(getClass().getResourceAsStream("/images/fournisseur-placeholder.jpg")));
-            }
-        } else {
-            // Placeholder si aucun chemin n'est défini
-            fournImage.setImage(new Image(getClass().getResourceAsStream("/images/fournisseur-placeholder.jpg")));
-        }
-
-        // Ajout des icônes au conteneur
         buttonContainer.getChildren().addAll(detailsButton, modifyButton, deleteButton);
 
-        // Ajout des éléments à la carte
-        card.getChildren().addAll(fournImage,nom, desc, type, tel, buttonContainer);
+        // 📌 Ajout des éléments à la carte
+        if (fournImage != null) {
+            card.getChildren().add(fournImage);
+        }
+        card.getChildren().addAll(nom, desc, type, tel, buttonContainer);
+
         return card;
     }
 

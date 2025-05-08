@@ -3,12 +3,21 @@ package tn.esprit.models;
 public class Produit {
 
     public enum CategorieProduit {
-        ELECTRONIQUE,
-        VETEMENTS,
-        ALIMENTAIRE,
-        MEUBLES,
-        SPORT
+        ELECTRONIQUE, VETEMENTS, ALIMENTAIRE, MEUBLES, SPORT, INCONNU;
+
+        public static CategorieProduit safeValueOf(String value) {
+            try {
+                return CategorieProduit.valueOf(
+                        value.toUpperCase().replace("É", "E").replace("È", "E").replace("Ê", "E")
+                );
+            } catch (Exception e) {
+                return INCONNU;
+            }
+        }
     }
+
+
+
 
     private int idProduit;
     private String nomProduit;

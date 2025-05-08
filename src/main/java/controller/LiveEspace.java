@@ -43,7 +43,7 @@ public class LiveEspace {
         );
 
         // 📡 Définir l'URL du live stream avec la capacité comme port
-        String ip = "192.168.137.64"; // Remplace par l’IP de ton téléphone
+        String ip = "192.168.137.174"; // Remplace par l’IP de ton téléphone
         int port = espace.getCapacite(); // 🔥 Utilisation de la capacité comme port
 
         String liveURL = "http://" + ip + ":" + port + "/jsfs.html";

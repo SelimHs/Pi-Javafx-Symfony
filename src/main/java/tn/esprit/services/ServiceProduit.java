@@ -58,7 +58,7 @@ public class ServiceProduit implements Iservice<Produit> {
                         rs.getString("nomProduit"),
                         rs.getInt("prixProduit"),
                         rs.getString("description"),
-                        Produit.CategorieProduit.valueOf(rs.getString("categorie").toUpperCase()),
+                        Produit.CategorieProduit.safeValueOf(rs.getString("categorie")),
                         rs.getInt("quantite"),
                         fournisseur,
                         rs.getString("imagePath") // ✅ Récupération de l'image
@@ -131,11 +131,12 @@ public class ServiceProduit implements Iservice<Produit> {
                         rs.getString("nomProduit"),
                         rs.getInt("prixProduit"),
                         rs.getString("description"),
-                        Produit.CategorieProduit.valueOf(rs.getString("categorie").toUpperCase()),
+                        Produit.CategorieProduit.safeValueOf(rs.getString("categorie")),
                         rs.getInt("quantite"),
                         fournisseur,
-                        rs.getString("imagePath") // ✅ Récupération du chemin de l'image
+                        rs.getString("imagePath")
                 );
+
             }
         } catch (SQLException e) {
             System.out.println("Erreur lors de la recherche du produit : " + e.getMessage());

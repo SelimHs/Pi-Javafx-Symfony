@@ -75,20 +75,23 @@ public class FrontProduit {
         produitImage.setSmooth(true);
 
         // 🔍 Vérifier si l'image existe en base
-        if (produit.getImagePath() != null && !produit.getImagePath().isEmpty()) {
-            File imageFile = new File(produit.getImagePath());
-            if (imageFile.exists()) {
-                // 🚀 Charger l'image du produit
-                produitImage.setImage(new Image(imageFile.toURI().toString()));
+        try {
+            if (produit.getImagePath() != null && !produit.getImagePath().isEmpty()) {
+                File imageFile = new File(produit.getImagePath());
+                if (imageFile.exists()) {
+                    produitImage.setImage(new Image(imageFile.toURI().toString()));
+                } else {
+                    System.out.println("⚠ Fichier image introuvable : " + produit.getImagePath());
+                    produitImage.setImage(new Image(getClass().getResourceAsStream("/images/produit-placeholder.jpg")));
+                }
             } else {
-                // 🛑 Fallback si le fichier n'existe pas
-                System.out.println("⚠ Fichier image introuvable : " + produit.getImagePath());
                 produitImage.setImage(new Image(getClass().getResourceAsStream("/images/produit-placeholder.jpg")));
             }
-        } else {
-            // 🛑 Si aucun chemin n'est spécifié, on affiche le placeholder
+        } catch (Exception e) {
+            System.out.println("❌ Erreur lors du chargement de l'image : " + e.getMessage());
             produitImage.setImage(new Image(getClass().getResourceAsStream("/images/produit-placeholder.jpg")));
         }
+
 
         // 📌 Nom du produit
         Label title = new Label(produit.getNomProduit());
