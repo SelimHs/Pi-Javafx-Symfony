@@ -1,23 +1,182 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Inscription{% endblock %}
 
 {% block body %}
-    {% for flash_error in app.flashes('verify_email_error') %}
-        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-    {% endfor %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-5">
+                    <h2 class="text-center mb-4">Créer un compte</h2>
 
-    <h1>Register</h1>
+                    {% for flash_error in app.flashes('verify_email_error') %}
+                        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+                    {% endfor %}
 
-    {{ form_errors(registrationForm) }}
+                    {{ form_start(registrationForm, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+                    <div class="mb-4">
+                        {{ form_label(registrationForm.email, 'Adresse email', {'label_attr': {'class': 'form-label'}}) }}
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                            {{ form_widget(registrationForm.email, {
+                                'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': 'exemple@email.com'
+                                }
+                            }) }}
+                        </div>
+                        <div class="form-text text-danger">{{ form_errors(registrationForm.email) }}</div>
+                    </div>
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+                    <div class="mb-4">
+                        {{ form_label(registrationForm.plainPassword, 'Mot de passe', {'label_attr': {'class': 'form-label'}}) }}
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                            {{ form_widget(registrationForm.plainPassword, {
+                                'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': '••••••••'
+                                }
+                            }) }}
+                        </div>
+                        <div class="form-text text-danger">{{ form_errors(registrationForm.plainPassword) }}</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            {{ form_label(registrationForm.nom, 'Nom', {'label_attr': {'class': 'form-label'}}) }}
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                {{ form_widget(registrationForm.nom, {
+                                    'attr': {
+                                        'class': 'form-control',
+                                        'placeholder': 'Votre nom'
+                                    }
+                                }) }}
+                            </div>
+                            <div class="form-text text-danger">{{ form_errors(registrationForm.nom) }}</div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            {{ form_label(registrationForm.prenom, 'Prénom', {'label_attr': {'class': 'form-label'}}) }}
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                {{ form_widget(registrationForm.prenom, {
+                                    'attr': {
+                                        'class': 'form-control',
+                                        'placeholder': 'Votre prénom'
+                                    }
+                                }) }}
+                            </div>
+                            <div class="form-text text-danger">{{ form_errors(registrationForm.prenom) }}</div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        {{ form_label(registrationForm.numeroTelephone, 'Numéro de téléphone', {'label_attr': {'class': 'form-label'}}) }}
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                            {{ form_widget(registrationForm.numeroTelephone, {
+                                'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': 'Votre numéro de téléphone'
+                                }
+                            }) }}
+                        </div>
+                        <div class="form-text text-danger">{{ form_errors(registrationForm.numeroTelephone) }}</div>
+                    </div>
+
+                    <div class="mb-4">
+                        {{ form_label(registrationForm.addresse, 'Adresse', {'label_attr': {'class': 'form-label'}}) }}
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                            {{ form_widget(registrationForm.addresse, {
+                                'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': 'Votre adresse'
+                                }
+                            }) }}
+                        </div>
+                        <div class="form-text text-danger">{{ form_errors(registrationForm.addresse) }}</div>
+                    </div>
+
+                    <div class="mb-4">
+                        {{ form_label(registrationForm.genre, 'Genre', {'label_attr': {'class': 'form-label'}}) }}
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-venus-mars"></i></span>
+                            {{ form_widget(registrationForm.genre, {
+                                'attr': {
+                                    'class': 'form-select'
+                                }
+                            }) }}
+                        </div>
+                        <div class="form-text text-danger">{{ form_errors(registrationForm.genre) }}</div>
+                    </div>
+
+                    <div class="mb-4 form-check">
+                        {{ form_widget(registrationForm.agreeTerms, {
+                            'attr': {
+                                'class': 'form-check-input'
+                            }
+                        }) }}
+                        {{ form_label(registrationForm.agreeTerms, 'J\'accepte les conditions d\'utilisation', {
+                            'label_attr': {
+                                'class': 'form-check-label'
+                            }
+                        }) }}
+                        <div class="form-text text-danger">{{ form_errors(registrationForm.agreeTerms) }}</div>
+                    </div>
+
+                    <div class="d-grid gap-2 mb-3">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-user-plus me-2"></i>S'inscrire
+                        </button>
+                    </div>
+
+                    {{ form_end(registrationForm) }}
+
+                    <div class="text-center mt-4">
+                        <p class="mb-0">Déjà inscrit ? <a href="{{ path('app_login') }}" class="text-primary">Se connecter</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card {
+    background: #ffffff;
+    transition: all 0.3s ease;
+}
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+.input-group-text {
+    background-color: #f8f9fa;
+    border-right: none;
+}
+.form-control, .form-select {
+    border-left: none;
+}
+.form-control:focus, .form-select:focus {
+    box-shadow: none;
+    border-color: #ced4da;
+}
+.btn-primary {
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    border: none;
+    transition: all 0.3s ease;
+}
+.btn-primary:hover {
+    background: linear-gradient(45deg, #0056b3, #003d82);
+    transform: translateY(-2px);
+}
+.form-check-input:checked {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+</style>
 {% endblock %}
