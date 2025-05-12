@@ -180,7 +180,12 @@ final class BilletController extends AbstractController
         $reservation->setEvent($event);
         $reservation->setDateReservation(new \DateTime());
         $reservation->setStatut('En Attente');
-        $reservation->setUser($em->getRepository(\App\Entity\User::class)->find(1)); // change ce user plus tard
+        $user = $this->getUser();
+        if (!$user) {
+            $this->addFlash("error", "Vous devez être connecté pour réserver un billet.");
+            return $this->redirectToRoute("app_login");
+        }
+        $reservation->setUser($user);
 
         if ($form->isSubmitted() && $form->isValid()) {
             if ($billet->getType() === 'DUO') {
