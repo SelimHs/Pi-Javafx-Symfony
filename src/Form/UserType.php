@@ -30,6 +30,17 @@ class UserType extends AbstractType
                 'label' => 'Type d\'utilisateur',
             ])
             ->add('genre')
+            ->add('type', ChoiceType::class, [  
+                'choices' => [
+                    'Admin' => 'admin',
+                    'Client' => 'user', // 🟢 affiché comme "Client" mais stocké comme "user"
+                ],
+                'expanded' => true, 
+                'multiple' => false,
+                'label' => 'Type d\'utilisateur',
+                'data' => 'client', // 👈 valeur par défaut ici
+            ])
+            
           
         ;
     }

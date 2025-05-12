@@ -34,6 +34,8 @@ final class UserController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $user = new User();
+        $user->setType('client'); // 👈 valeur par défaut ici
+
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 

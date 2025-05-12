@@ -27,18 +27,6 @@ class ReservationType extends AbstractType
                 'min' => (new \DateTime())->format('Y-m-d\TH:i'),
             ],
             'label' => 'Date et Heure de Réservation',
-        ])
-        
-
-
-
-        ->add('user', EntityType::class, [
-            'class' => User::class,
-            'choice_label' => function(User $user) {
-                return $user->getNom() . ' ' . $user->getPrenom();
-            },
-            'placeholder' => 'Sélectionnez un utilisateur',
-            'attr' => ['class' => 'form-select']
         ]);
     }
 

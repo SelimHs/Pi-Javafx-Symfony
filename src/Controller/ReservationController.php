@@ -34,26 +34,36 @@ final class ReservationController extends AbstractController
         ]);
     }
     #[Route('/valider-billets', name: 'app_reservation_valider_billets', methods: ['POST'])]
-public function validerBilletsEnAttente(ReservationRepository $reservationRepository, EntityManagerInterface $em): RedirectResponse
-{
-    $enAttente = $reservationRepository->findBy(['statut' => 'en attente']);
+    public function validerBilletsEnAttente(ReservationRepository $reservationRepository, EntityManagerInterface $em): RedirectResponse
+    {
+        $enAttente = $reservationRepository->findBy(['statut' => 'en attente']);
 
-    foreach ($enAttente as $reservation) {
-        $reservation->setStatut('confirmée');
+        foreach ($enAttente as $reservation) {
+            $reservation->setStatut('confirmée');
+        }
+
+        $em->flush();
+
+        $this->addFlash('success', count($enAttente) . ' billet(s) en attente ont été confirmés.');
+        return $this->redirectToRoute('app_reservation_index');
     }
-
-    $em->flush();
-
-    $this->addFlash('success', count($enAttente) . ' billet(s) en attente ont été confirmés.');
-    return $this->redirectToRoute('app_reservation_index');
-}
 
 
 
     #[Route('/new', name: 'app_reservation_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+
+        // Vérifier si l'utilisateur est connecté
+        $user = $this->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour créer un espace.');
+            return $this->redirectToRoute('app_login');
+        }
         $reservation = new Reservation();
+
+        $reservation->setUser($user);
+
         $form = $this->createForm(ReservationType::class, $reservation);
         $form->handleRequest($request);
 
@@ -69,6 +79,8 @@ public function validerBilletsEnAttente(ReservationRepository $reservationReposi
             'form' => $form,
         ]);
     }
+
+
 
 
     #[Route('/export/reservations', name: 'export_reservations_excel')]
