@@ -24,7 +24,7 @@ public class UsersService implements service.IService<Users> {
     @Override
     public void add(Users user) {
         // Hash du mot de passe avant de l'ajouter à la base
-        String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
+        String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(10)); // même coût = 10
 
         // Requête SQL pour ajouter l'utilisateur
         String sql = "INSERT INTO user (nom, prenom, password, email, numeroTelephone, addresse, type, genre) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -141,16 +141,19 @@ public class UsersService implements service.IService<Users> {
             if (rs.next()) {
                 String storedPasswordHash = rs.getString("password");
 
-                // Vérification du mot de passe
-                boolean isPasswordCorrect = checkPassword(password, storedPasswordHash);
+                // ⚠️ Conversion obligatoire pour compatibilité Symfony → Java
+                if (storedPasswordHash.startsWith("$2y$")) {
+                    storedPasswordHash = storedPasswordHash.replaceFirst("^\\$2y\\$", "\\$2a\\$");
+                }
 
-                return isPasswordCorrect;
+                return BCrypt.checkpw(password, storedPasswordHash);
             }
         } catch (SQLException e) {
             System.err.println("Error authenticating user: " + e.getMessage());
         }
         return false; // L'email n'existe pas ou le mot de passe est incorrect
     }
+
 
     // Vérifier si un email existe dans la base de données
     public boolean isEmailExist(String email) {

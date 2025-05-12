@@ -173,12 +173,10 @@ public class Login {
 
         if ("admin".equalsIgnoreCase(userRole)) {
             fxmlPath = "/Acceuil.fxml";
-        } else if ("client".equalsIgnoreCase(userRole)) {
-            fxmlPath = "/FrontAcceuil.fxml";
         } else {
-            showAlert("Erreur", "Votre rôle est inconnu, impossible de vous connecter.");
-            return;
+            fxmlPath = "/FrontAcceuil.fxml";
         }
+
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
